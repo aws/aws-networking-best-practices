@@ -1,10 +1,18 @@
+# Project information
 site_name: Networking Best Practices
 site_url: https://aws.github.io/aws/aws-networking-best-practices/
-repo_name: "aws/aws-networking-best-practices"
+site_description: >-
+  AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.
+
+# Repository
+repo_name: "networking-best-practices"
 repo_url: https://github.com/aws/aws-networking-best-practices/
-edit_uri: edit/master/content/
 docs_dir: "content"
+
+# Copyright
 copyright: "<a href=\"https://aws.amazon.com/privacy/\">Privacy</a> | <a href=\"https://aws.amazon.com/accessibility/\">Accessibility</a> | <a href=\"https://aws.amazon.com/terms/\">Site Terms</a> | <a href=\"#__consent\">Cookie Preferences </a> | &copy; 2024, Amazon Web Services, Inc. or its affiliates. All rights reserved."
+
+# Configuration
 theme:
   name: material
   logo: assets/logo.png
@@ -27,38 +35,8 @@ theme:
     - navigation.expand
     - navigation.path
     - navigation.footer
-nav:
-  - Introduction:
-    - index.md
-    - About this Guide: howto/about.md
-    - How to contribute: howto/contribute.md
-  - Networking Basics:
-    - basics/index.md
-    - Page 1: basics/page1.md
-  - Connectivity within AWS:
-    - internalconnectivity/index.md
-  - Connectivity to the Internet:
-    - internetconnectivity/index.md
-  - Connectivity to on-premises and multicloud:
-    - hybridconnectivity/index.md
-  - Network Security:
-    - security/index.md
-  - Monitoring, Logging & Observability:    
-    - monitoringobservability/index.md
 
-markdown_extensions:
-  - toc:
-      permalink: true
-  - admonition
-  - codehilite
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
-  - pymdownx.details
-extra_css:
-  - stylesheets/extra.css
+# Additional configuration
 extra:
   generator: false
   analytics:
@@ -85,9 +63,61 @@ extra:
       as to measure the effectiveness of our documentation and whether users
       find what they're searching for. With your consent, you're helping us to
       make our documentation better.
+
+# Extensions
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
+  - tables
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - footnotes
+
+extra_css:
+  - stylesheets/extra.css
+
+# Plugins
 plugins:
   - git-revision-date-localized:
       enable_creation_date: true
       fallback_to_build_date: true
   - git-authors
   - social
+
+# Page tree
+nav:
+  - Introduction:
+    - index.md
+    - How to contribute: community/contribute.md
+  - Networking Basics:
+    - basics/index.md
+    - Page 1: basics/page1.md
+  - Connectivity within AWS:
+    - internalconnectivity/index.md
+  - Connectivity to the Internet:
+    - internetconnectivity/index.md
+  - Connectivity to on-premises and multicloud:
+    - hybridconnectivity/index.md
+  - Network Security:
+    - security/index.md
+  - Monitoring, Logging & Observability:    
+    - monitoringobservability/index.md
