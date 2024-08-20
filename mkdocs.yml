@@ -8,6 +8,7 @@ site_description: >-
 repo_name: "networking-best-practices"
 repo_url: https://github.com/aws/aws-networking-best-practices/
 docs_dir: "content"
+edit_uri: edit/main/content/
 
 # Copyright
 copyright: "<a href=\"https://aws.amazon.com/privacy/\">Privacy</a> | <a href=\"https://aws.amazon.com/accessibility/\">Accessibility</a> | <a href=\"https://aws.amazon.com/terms/\">Site Terms</a> | <a href=\"#__consent\">Cookie Preferences </a> | &copy; 2024, Amazon Web Services, Inc. or its affiliates. All rights reserved."
@@ -26,6 +27,9 @@ theme:
   features:
     - tabs
     - content.code.copy
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
     - announce.dismiss
     - header.autohide
     - toc.follow
@@ -110,14 +114,25 @@ nav:
     - How to contribute: community/contribute.md
   - Networking Basics:
     - basics/index.md
-    - Page 1: basics/page1.md
   - Connectivity within AWS:
-    - internalconnectivity/index.md
+    - internal-connectivity/index.md
+    - Setting up your first VPC: internal-connectivity/first-vpc.md
+    - Connecting VPCs in the same Region: internal-connectivity/vpc-same-region.md
+    - Connecting VPCs across Regions: internal-connectivity/vpc-other-region.md
   - Connectivity to the Internet:
-    - internetconnectivity/index.md
+    - internet-connectivity/index.md
+    - Egress Traffic: internet-connectivity/egress.md
+    - Ingress Traffic: internet-connectivity/ingress.md
   - Connectivity to on-premises and multicloud:
-    - hybridconnectivity/index.md
+    - hybrid-connectivity/index.md
+    - Network to Network: hybrid-connectivity/network-to-network.md
+    - Clients to Network: hybrid-connectivity/clients-to-network.md
+    - Clients to Applications: hybrid-connectivity/clients-to-apps.md
+    - Application Networking: hybrid-connectivity/app-networking.md
   - Network Security:
     - security/index.md
+    - Perimeter Controls: security/perimeter-inbound.md
+    - Outbound Controls: security/outbound.md
+    - Network Segmentation: security/segmentation.md
   - Monitoring, Logging & Observability:    
-    - monitoringobservability/index.md
+    - monitoring-observability/index.md
