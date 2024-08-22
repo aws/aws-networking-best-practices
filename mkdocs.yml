@@ -5,9 +5,9 @@ site_description: >-
   AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.
 
 # Repository
-repo_name: "networking-best-practices"
+repo_name: "Github Repo"
 repo_url: https://github.com/aws/aws-networking-best-practices/
-docs_dir: "content"
+docs_dir: content
 edit_uri: edit/main/content/
 
 # Copyright
@@ -126,7 +126,9 @@ plugins:
   - git-committers:
       repository: aws/aws-networking-best-practices
       branch: main
+      docs_path: content
   - social
+  - search
 
 # Page tree
 nav:
