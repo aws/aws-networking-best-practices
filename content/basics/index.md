@@ -1,4 +1,25 @@
-# Where do I start? 
+# Networking Basics
+
+## How many VPCs should I have per account?
+* 1 VPC per account
+* Use Control Tower  for a Multiaccount strategy
+
+## How many subnets should I use?
+Subnet Strategy for e.g. 3 tier workload
+
+## How many route tables?
+
+
+## How many NAT Gateways (NGW)?
+
+
+## How to use Internet Gateways (IGW) or Egress-Only Internet Gateways (EIGW)?
+
+
+## IP addressing
+
+
+# Additional resources to get started? 
 
   [skills builder]: https://aws.amazon.com/training/learn-about/advanced-networking/
 
