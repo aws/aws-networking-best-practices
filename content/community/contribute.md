@@ -36,7 +36,7 @@ In this section, we guide your through our processes.
 
     ---
 
-    [:octicons-arrow-right-24: Report a correction](https://github.com/aws/aws-networking-best-practices/issues/new?assignees=&labels=correction&projects=&template=correction.md&title=)
+    [:octicons-arrow-right-24: Report a correction][report a correction]
 
 -   :material-lightbulb-on-20: &nbsp;
     __Want to submit an idea?__
@@ -47,7 +47,7 @@ In this section, we guide your through our processes.
 
     ---
 
-    [:octicons-arrow-right-24: Request a new best practice](https://github.com/aws/aws-networking-best-practices/issues/new?assignees=&labels=enhancement&projects=&template=new-best-practice.md&title=)
+    [:octicons-arrow-right-24: Request a new best practice][new best practice]
 
 -   :material-account-question-outline: &nbsp;
     __Have a question or need help?__
@@ -58,7 +58,7 @@ In this section, we guide your through our processes.
 
     ---
 
-    [:octicons-arrow-right-24: Ask a question](https://repost.aws/questions/ask)
+    [:octicons-arrow-right-24: Ask a question][ask a question]
 
 </div>
 
@@ -90,9 +90,9 @@ In this section, we guide your through our processes.
 
 </div>
 
-  [report a bug]: reporting-a-bug.md
-  [report a docs issue]: reporting-a-docs-issue.md
-  [request a change]: requesting-a-change.md
+  [report a correction]: report-a-correction.md
+  [new best practice]: new-best-practice.md
+  [ask a question]: https://repost.aws/questions/ask
   [add translations]: adding-translations.md
   [create a pull request]: making-a-pull-request.md
 
