@@ -116,6 +116,11 @@ markdown_extensions:
   - def_list
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - footnotes
 
 extra_css:
@@ -140,6 +145,7 @@ nav:
     - How to contribute: community/contribute.md
     - Report a correction: community/report-a-correction.md
     - New best practice: community/new-best-practice.md
+    - Making a pull request: community/making-a-pull-request.md
     - Philosophy: community/philosophy.md
     - Conventions: community/conventions.md
   - Networking Basics:
