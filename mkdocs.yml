@@ -113,6 +113,9 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - footnotes
 
 extra_css:
@@ -135,13 +138,17 @@ nav:
   - Introduction:
     - index.md
     - How to contribute: community/contribute.md
+    - Report a correction: community/report-a-correction.md
+    - New best practice: community/new-best-practice.md
+    - Philosophy: community/philosophy.md
+    - Conventions: community/conventions.md
   - Networking Basics:
     - basics/index.md
   - Connectivity within AWS:
     - internal-connectivity/index.md
     - Setting up your first VPC: internal-connectivity/first-vpc.md
-    - Connecting VPCs in the same Region: internal-connectivity/vpc-same-region.md
-    - Connecting VPCs across Regions: internal-connectivity/vpc-other-region.md
+    - Within the same Region: internal-connectivity/vpc-same-region.md
+    - Across Regions: internal-connectivity/vpc-other-region.md
   - Connectivity to the Internet:
     - internet-connectivity/index.md
     - Egress Traffic: internet-connectivity/egress.md

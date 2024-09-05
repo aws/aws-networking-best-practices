@@ -6,6 +6,7 @@ Fixes # (issue)
 
 # Checklist:
 
-- [ ] My submission follows the style guidelines of this project
+- [ ] My submission follows the [philosophy](https://aws.github.io/aws-networking-best-practices/community/philosophy/) of this project
+- [ ] My submission follows the [conventions](https://aws.github.io/aws-networking-best-practices/community/conventions/) of this project
 
 By submitting this pull request, I confirm that you can use, modify, copy, and redistribute this contribution, under the terms of your choice.
