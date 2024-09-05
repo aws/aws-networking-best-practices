@@ -22,7 +22,7 @@ when you follow our guidelines, we can help you much faster.
 
 In this section, we guide your through our processes.
 
-### Creating an issue
+### Creating an issue or contributing
 
 <div class="grid cards" markdown>
 
@@ -59,23 +59,6 @@ In this section, we guide your through our processes.
     ---
 
     [:octicons-arrow-right-24: Ask a question][ask a question]
-
-</div>
-
-### Contributing
-
-<div class="grid cards" markdown>
-
--   :material-translate: &nbsp;
-    __Missing support for your language?__
-
-    ---
-
-    Add or improve translations for a new or already supported language
-
-    ---
-
-    [:octicons-arrow-right-24: Add translations][add translations]
 
 -   :material-source-pull: &nbsp;
     __Want to create a pull request?__
