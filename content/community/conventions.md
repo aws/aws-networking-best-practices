@@ -18,6 +18,22 @@ Create architecture diagrams with accessibility in mind. Text (or lines) and the
 
 - __Use alt text thoughtfully__: Include alt text on visuals to briefly describe the content.
 
+
+### Diagram styling
+Use the following guidance to align your diagram's style with AWS' visual style and language. Does your diagram check off all these element guidelines?
+
+- __Background Color__: Use white (#FFFFFF) as the background color. Do not leave the background transparent.
+
+- __Lines and arrows__: Lines should have a minimum thickness/width of 1 pt. Use solid lines for primary connections and containers. Secondary connections and containers can be represented as Dashed lines. For arrow pointer styles use open arrow pointers over closed ones. 
+
+- __Colors__: Do not modify the colors provided by official icon libraries - use as is because they contain semantic meaning (e.g., certain colors represent a service category). If you need to add additional colors to your diagram, make sure the color values are included within the [AWS Brand color palette](https://design.amazon.com/styleguide/9188F3F120Af/aws/visual-identity/color/).
+
+- __Typography (fonts)__: Use the weight Regular in most cases. Bold can be used to provide extra emphasis if needed. Do not use Thin or Light (they fail accessibility standards below most diagram-needed font sizes). The minimum font size should be 12px. Use the color #16191F or #000000 for most icon/illustration labels. In diagrams *italics* is preferred over ^^underlines^^. (In a diagram with arrows/lines, underlines can add unnecessary visual noise).
+
+- __Labels and text__: Center align the label with the icon and place it under the icon. Do not embed explanatory text into images - it neither accessible nor localizable. Use only short labels for each illustrative object or icon. If you'd like to highlight specific parts of the diagram with explanatory text, use callouts. This is better for accessibility, localization, and regional compliance.
+
+- __Outside framing__: Apply a padding of 8px equally to the top, bottom, left, and right of your image. Do not apply a visible outside border to the diagram, and we recommend staying away from border shadows and fades.
+
 ## Representing IP addresses
 
 ### Example IP ranges and addresses
