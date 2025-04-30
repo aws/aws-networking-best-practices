@@ -40,4 +40,4 @@ jobs:
           payload: |
             status: "${{ job.status }}"
             repo: "${{ github.repository }}"
-            option: "false"
+            user: "${{ github.actor }}"
