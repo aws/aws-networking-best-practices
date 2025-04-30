@@ -8,6 +8,10 @@ This section explains several conventions used in this best practices guide.
 
 Use the [most recent set of AWS Architecture Icons](https://aws.amazon.com/architecture/icons/) in any architecture diagrams. Only use icons for what they actually represent. 
 
+### Format and tooling 
+
+Provide architecture diagrams in PNG file format with a light neutral background, such as white. Each diagram needs to be accompanied by the source in [draw.io](https://www.drawio.com/) format to allow future modifications. 
+
 ### Accessibility
 
 Create architecture diagrams with accessibility in mind. Text (or lines) and the background should have a contrast ration of [at least 4.5:1](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html). Generally, white or black on a strongly contrasting background is the best choice. 
