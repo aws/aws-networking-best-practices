@@ -31,3 +31,10 @@ jobs:
                 mkdocs-git-committers-plugin-2 \
                 "mkdocs-material[imaging]"
       - run: mkdocs gh-deploy --force
+
+      - name: Send GitHub Action data to a Slack workflow
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          payload-delimiter: "_"
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: webhook-trigger
