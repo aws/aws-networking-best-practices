@@ -1,5 +1,6 @@
-# Internet Connectivity
-Connectivity between AWS and the Internet. 
+# External Network Access
+
+Enable secure, scalable internet connectivity for your AWS workloads. Learn how to manage inbound traffic from the internet to your applications and outbound traffic from your resources to external services.
 
 <div class="grid cards" markdown>
 
@@ -24,3 +25,5 @@ Connectivity between AWS and the Internet.
     ---
 
     [:octicons-arrow-right-24: Ingress](ingress.md)
+
+</div>

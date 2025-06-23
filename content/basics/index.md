@@ -1,4 +1,6 @@
-# Networking Basics
+# Multi-Environment Connectivity
+
+Connect your AWS infrastructure with on-premises data centers, other cloud providers, and remote users. This section covers architectural patterns and best practices for building secure, reliable hybrid and multi-cloud network connections.
 
 ## How many VPCs should I have per account?
 * 1 VPC per account
