@@ -1,26 +1,22 @@
 # Contributing
 
-The AWS Networking Best Practices Guide is an actively maintained and constantly 
-evolving project serving a diverse user base with versatile backgrounds and needs. 
-In order to efficiently address the requirements of all our users, evaluate change 
-requests, and fix bugs, we put in a lot of work.
+Welcome to the AWS Networking Best Practices Guide! We're a community-driven project that thrives on contributions from users like you. Whether you want to report an issue, suggest improvements, or share your expertise, we'd love your help in making this guide better for everyone.
 
-  [issue tracker]: https://github.com/aws/aws-networking-best-practices/issues
+## New to contributing?
 
-## How you can contribute
+Here are the most common ways to get started:
 
-We understand that reporting bugs, raising change requests, as well as engaging
-in discussions can be time-consuming, which is why we've carefully optimized our
-issue templates and defined guidelines to improve the overall interaction
-within the project. We've invested a lot of time and effort into making our
-[issue tracker] as efficient as possible.
+!!! tip "Quick Start Guide"
 
-Our goal is to ensure that our documentation, as well as issue tracker are 
-__well-structured__, __easy to navigate__, and __searchable__, so you can 
-find what you need quickly and efficiently. Thus,
-when you follow our guidelines, we can help you much faster.
+    **Found an error or missing info?** → [Report a correction](report-a-correction.md)
+    
+    **Have a networking question?** → [Ask on AWS re:Post](https://repost.aws/questions/ask)
+    
+    **Want to suggest a new best practice?** → [Request a new best practice](new-best-practice.md)
+    
+    **Ready to contribute content?** → [Create a pull request](making-a-pull-request.md)
 
-In this section, we guide your through our processes.
+Most contributions start with reporting issues or asking questions. Don't worry about getting everything perfect – our community is here to help!
 
 ### Creating an issue or contributing
 
@@ -79,6 +75,12 @@ In this section, we guide your through our processes.
   [add translations]: adding-translations.md
   [create a pull request]: making-a-pull-request.md
 
+
+## Contribution Guidelines
+
+We've streamlined our processes to make contributing as easy as possible. Following these simple guidelines helps us respond to your contributions quickly and effectively.
+
+
 ## Checklist
 
 Before interacting within the project, please take a moment to consider the
@@ -86,55 +88,48 @@ following questions. By doing so, you can ensure that you are using the correct
 issue template and that you provide all necessary information when interacting
 with our community.
 
-!!! warning "Issues, discussions, and comments are forever"
+## Good vs. Poor Contributions
 
-    Please note that everything you write is permanent and will remain
-    for everyone to read – forever. Therefore, please always be nice and
-    constructive, follow our contribution guidelines, and comply with our
-    [Code of Conduct].
+### ✅ Good Examples
 
-### Before creating an issue
+**Documentation Gap**: "The Networking Basics section lacks guidance on CIDR block planning for multi-region deployments. I'd like to contribute a best practices section covering IP address allocation strategies, including examples for small (< 10 VPCs) and large (> 50 VPCs) organizations."
 
-- Are you using the appropriate issue template, or is there another issue
-  template that better fits the context of your request?
+**Content Enhancement**: "The current Connectivity within AWS section covers basic setup but missing advanced routing scenarios. I can add a section on route table design patterns for hub-and-spoke architectures with specific examples and diagrams."
 
-- Have you checked if a similar bug report or change request has already been
-  created, or have you stumbled upon something that might be related?
+**New Best Practice**: "Based on our experience with AWS Network Firewall in production, I'd like to contribute a section on rule optimization and performance tuning, including cost considerations and monitoring strategies."
 
-- Did your fill out every field as requested and did you provide all additional
-  information we maintainers need to comprehend your request?
+### ❌ Poor Examples
 
-### Before asking a question
+**Vague Request**: "Need more info about networking"
 
-- Is the topic a question for our [AWS re:Post Networking & Content Delivery](https://repost.aws/topics/TA-2izgznkTKe0-VdIELPAgg/networking-content-delivery) community, or is it a bug report or
-  change request that should better be raised on our [issue tracker]?
+**Too Broad**: "Fix all the documentation"
 
-- Is there an open discussion on the topic of your request? If the answer is yes,
-  does your question match the direction of the discussion, or should you open a
-  new discussion?
+**No Context**: "Add something about security groups"
 
-- Did your provide our community with all the necessary information to
-  understand your question and help you quickly, or can you make it easier to
-  help you?
 
-### Before commenting
+!!! note "Community Guidelines"
+    All contributions are public and permanent. Please be constructive, respectful, and follow our [Code of Conduct](https://aws.github.io/code-of-conduct).
 
-- Is your comment relevant to the topic of the current page, post, issue, or
-  discussion, or is it a better idea to create a new issue or discussion?
+## Before You Contribute
 
-- Does your comment add value to the conversation? Is it constructive and
-  respectful to our community and us maintainers? Could you just use a
-  [:octicons-smiley-16: reaction][reaction] instead?
+Here's a quick checklist to ensure your contribution is helpful and gets the attention it deserves:
 
-  [Code of Conduct]: https://github.com/aws/aws-networking-best-practices/blob/main/CODE_OF_CONDUCT.md
-  [reaction]: https://github.blog/2016-03-10-add-reactions-to-pull-requests-issues-and-comments/
+- **Search first**: Check if someone has already reported the same issue or asked a similar question
+- **Use the right channel**: 
+  - Technical questions → [AWS re:Post](https://repost.aws/questions/ask)
+  - Bug reports or feature requests → [GitHub Issues](https://github.com/aws/aws-networking-best-practices/issues)
+- **Provide context**: Include relevant details like AWS services, regions, or error messages
+- **Be respectful**: Follow our [Code of Conduct](https://aws.github.io/code-of-conduct) and keep discussions constructive
+
+!!! info "Remember"
+    Complete issue templates help us understand your request faster. Don't worry if you're unsure about something – our community is here to help!
 
 ## Rights and responsibilities
 
 As maintainers, we are entrusted with the __responsibility__ to moderate
 communication within our community, including the authority to close, remove,
 reject, or edit issues, discussions, comments, commits, and to block users who
-__do not align__ with our contribution guidelines and our [Code of Conduct].
+__do not align__ with our contribution guidelines and our [Code of Conduct](https://aws.github.io/code-of-conduct).
 This role requires us to be actively involved in maintaining the integrity and
 positive atmosphere of our community. Upholding these standards decisively
 ensures a respectful and inclusive environment for all members.
@@ -142,7 +137,7 @@ ensures a respectful and inclusive environment for all members.
 
 ### Code of Conduct
 
-Our [Code of Conduct] outlines the expectation for all community members to
+Our [Code of Conduct](https://aws.github.io/code-of-conduct) outlines the expectation for all community members to
 treat one another with respect, employing inclusive and welcoming language. Our
 commitment is to foster a positive and supportive environment, free of
 inappropriate, offensive, or harmful behavior.

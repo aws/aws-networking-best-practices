@@ -1,59 +1,36 @@
-# Propose as new best practice
+# Propose a New Best Practice
 
-This AWS Networking Architecture guidance is a powerful resource and tool for
-designing and planning your AWS-based network. With a very higher number of 
-users, we understand that our project serves a wide range of users cases, which
-is why we have created the following guide.
+Have an idea for improving AWS networking guidance? We'd love to hear it! This page walks you through proposing new best practices that benefit the entire community.
 
----
+## Quick Overview
 
-Put yourself in our shoes – with a project of this size, it can be challenging
-to maintain existing guidance while constantly adding new best practices at the
-same time. We highly value every idea or contribution from our community, and
-we kindly ask you to take the time to read the following guidelines before
-submitting your new best practice proposal in our public [issue tracker]. This will help us
-better understand the proposed change and how it will benefit our community.
+Before submitting your proposal:
 
-This guide is our best effort to explain the criteria and reasoning behind our
-decisions when evaluating new best practice proposals and considering them for
-implementation.
+1. **Check if it's really a new best practice** (not a [bug report])
+2. **Research existing solutions** and reference them
+3. **Discuss with the community** on AWS re:Post
+4. **Submit a detailed proposal** using our template
 
-  [issue tracker]: https://github.com/aws/aws-networking-best-practices/issues
+Ready to get started? Continue reading for the complete process.
 
-## Before creating an issue
+  [bug report]: report-a-correction.md
 
-Before you invest your time to fill out and submit a new best practice proposal, we kindly
-ask you to do some preliminary work by answering some questions to determine if
-your idea is a good fit for the AWS Networking Architecture guide and matches
-the project's [philosophy] and tone.
+## What Makes a Good Proposal
 
-__Please do the following things before creating an issue.__
+### Is This Really a New Best Practice?
+New best practices should add significant value to the community. Ask yourself:
 
-  [philosophy]: philosophy.md
+* Does this solve a common networking challenge?
+* Would this benefit multiple organizations, not just yours?
+* Is this networking-specific guidance (not general AWS advice)?
 
-### It's not a bug, it's a feature
+**Not sure?** If you're reporting an error or inconsistency, use our [correction report](report-a-correction.md) instead.
 
-Proposals of new best practices are intended to suggest minor adjustments, ideas
-for new best practice guides, or to kindly influence the project's direction and
-vision. It is important to note that these proposals are not intended for reporting
-corrections or bugs, as they're missing essential information for debugging.
+### Do Your Research
 
-If you want to report a bug, please refer to our [reporting a correction guide] instead.
-
-  [bug reporting guide]: report-a-correction.md
-
-### Look for sources of inspiration
-
-If you have seen your best practice idea documented in another public website,
-please reference it, as this allows us to evaluate potential fit more quickly. Explain
-what you like and dislike about this existing best practices documentation.
-
-### Connect with our community
-
-Our [AWS re:Post Networking & Content Delivery community] is the best place to connect
-with our community. When evaluating new ideas, it's essential to seek input from other
-users and consider alternative viewpoints. This approach helps to implement new best 
-practices guides in a way that benefits a large number of users.
+* Search for existing solutions in AWS documentation, blogs, and forums
+* Reference any existing guidance and explain how your proposal improves it
+* Check our [community discussions](https://repost.aws/topics/TA-2izgznkTKe0-VdIELPAgg/networking-content-delivery) for related topics
 
 [:octicons-comment-discussion-16:&nbsp; Join the discussion][AWS re:Post Networking & Content Delivery community]{ .md-button .md-button--primary }
 
@@ -61,10 +38,7 @@ practices guides in a way that benefits a large number of users.
 
 ## Issue template
 
-Now that you have taken the time to do the necessary preliminary work and ensure
-that your idea meets our requirements, you are invited to create a proposal for a
-new best practice. The following guide will walk you through all the necessary steps to
-help you submit a comprehensive and useful issue:
+Ready to submit your proposal? Use this template to ensure you include all the necessary information:
 
 - [Title]
 - [Context] <small>optional</small>
@@ -187,23 +161,19 @@ __We'll take it from here.__
 
 ---
 
-## Rejected requests
+## After You Submit
 
-__Your new best practice proposal got rejected? We're sorry for that.__ We understand it can
-be frustrating when your ideas don't get accepted, but as the maintainers of a
-very popular project, we always need to consider the needs of our entire
-community, sometimes forcing us to make tough decisions.
+Once you've submitted your proposal:
 
-We always have to consider and balance many factors when evaluating change
-requests, and we explain the reasoning behind our decisions whenever we can.
-If you're unsure why your new best practice proposal was rejected, please don't hesitate
-to ask for clarification.
+* **Be patient** - Review takes time as we consider community impact
+* **Engage in discussion** - Respond to questions and feedback
+* **Be open to changes** - Your idea might evolve through community input
+* **Stay involved** - Consider helping implement approved proposals
 
-The following principles (in no particular order) form the basis for our
-decisions:
+## If Your Proposal is Rejected
 
-- [ ] Alignment with vision and tone of the project
-- [ ] Effort of implementation and maintenance
-- [ ] Usefulness to the majority of users
-- [ ] Simplicity and ease of use
-- [ ] Accessibility
+We understand rejection can be disappointing. We evaluate proposals based on:
+- Community benefit and broad applicability
+- Alignment with project goals
+- Implementation and maintenance effort
+- Clarity and completeness
