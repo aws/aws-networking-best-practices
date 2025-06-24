@@ -39,34 +39,33 @@ jobs:
           
           # Extract markdown files from nav section
           python3 << 'EOF'
-          import yaml
+          import re
           import os
           import glob
           
+          # Read mkdocs.yml and extract nav section manually
           with open('mkdocs.yml', 'r') as f:
-              config = yaml.safe_load(f)
+              content = f.read()
           
-          # Get all markdown files
+          # Extract nav section using regex
+          nav_match = re.search(r'^nav:\s*\n((?:[ \t]+.*\n)*)', content, re.MULTILINE)
+          if not nav_match:
+              print("No nav section found in mkdocs.yml")
+              exit(1)
+          
+          nav_content = nav_match.group(1)
+          
+          # Find all .md file references in nav
+          nav_files = set()
+          for line in nav_content.split('\n'):
+              # Look for .md files in the nav section
+              md_matches = re.findall(r'([\w/-]+\.md)', line)
+              nav_files.update(md_matches)
+          
+          # Get all actual markdown files
           md_files = set()
           for file in glob.glob('content/**/*.md', recursive=True):
               md_files.add(file.replace('content/', ''))
-          
-          # Get files referenced in nav
-          nav_files = set()
-          def extract_files(nav_item):
-              if isinstance(nav_item, dict):
-                  for key, value in nav_item.items():
-                      if isinstance(value, str) and value.endswith('.md'):
-                          nav_files.add(value)
-                      elif isinstance(value, list):
-                          for item in value:
-                              extract_files(item)
-              elif isinstance(nav_item, list):
-                  for item in nav_item:
-                      extract_files(item)
-          
-          if 'nav' in config:
-              extract_files(config['nav'])
           
           # Find orphaned files
           orphaned = md_files - nav_files
@@ -82,6 +81,8 @@ jobs:
               for file in sorted(missing):
                   print(f"  - {file}")
               exit(1)
+          
+          print("Navigation structure check completed successfully")
           EOF
 
   meta-check:

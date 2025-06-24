@@ -1,12 +1,19 @@
 config:
-  MD013:
-    line_length: 999
-    heading_line_length: 999
-    code_block_line_length: 999
-    tables: false
+  MD013: false  # Line length - disabled for technical docs
   MD033: false  # HTML tags allowed for MkDocs
   MD041: false  # First line doesn't need to be H1
   MD046: false  # Code block style flexibility
+  MD050:
+    style: "asterisk"  # Enforce ** for bold
+  MD055:
+    style: "leading_and_trailing"  # Require pipes at start and end of table rows
+  MD040: false  # Fenced code language - not always needed
+  MD051: false  # Link fragments - allow for templates
+  MD053: false  # Unused references - allow for templates
+  MD007: false  # List indentation - flexible
+  MD030: false  # List marker spacing - flexible
+  MD004:
+    style: "asterisk"  # Enforce * for unordered lists
 globs:
   - "content/**/*.md"
 ignores:

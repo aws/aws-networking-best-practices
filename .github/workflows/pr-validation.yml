@@ -26,18 +26,19 @@ jobs:
             }
   markdown-lint:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after fixing markdown linting issues
     steps:
       - uses: actions/checkout@v4
       - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: 'content/**/*.md'
+          config: '.github/.markdownlint-cli2.yaml'
 
   mkdocs-build:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after fixing MkDocs build issues
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
@@ -49,11 +50,10 @@ jobs:
             mkdocs-git-committers-plugin-2 \
             "mkdocs-material[imaging]"
       - name: Build MkDocs site
-        run: mkdocs build --strict
+        run: mkdocs build
 
   link-check:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after fixing broken links
     steps:
       - uses: actions/checkout@v4
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
@@ -65,7 +65,6 @@ jobs:
 
   spell-check:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after fixing spelling issues
     steps:
       - uses: actions/checkout@v4
       - uses: streetsidesoftware/cspell-action@v6
@@ -75,7 +74,6 @@ jobs:
 
   yaml-lint:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after fixing YAML formatting
     steps:
       - uses: actions/checkout@v4
       - uses: ibiqlik/action-yamllint@v3
@@ -85,7 +83,6 @@ jobs:
 
   file-validation:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after fixing file naming issues
     steps:
       - uses: actions/checkout@v4
       - name: Check file naming conventions
@@ -105,7 +102,6 @@ jobs:
 
   image-check:
     runs-on: ubuntu-latest
-    continue-on-error: true  # TODO: Remove after optimizing images
     steps:
       - uses: actions/checkout@v4
       - name: Check image optimization

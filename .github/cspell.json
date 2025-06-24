@@ -59,7 +59,11 @@
     "multicast",
     "unicast",
     "ipv4",
-    "ipv6"
+    "ipv6",
+    "venv",
+    "VIRTUALENV",
+    "behaviour",
+    "fontawesome"
   ],
   "ignorePaths": [
     "node_modules/**",

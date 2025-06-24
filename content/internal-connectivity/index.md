@@ -2,22 +2,23 @@
 
 Connect your AWS workloads and services within the AWS cloud. Learn best practices to establish communication between VPCs in the same region and across multiple regions to build integrated, multi-tier applications.
 
-
 <div class="grid cards" markdown>
 
--   :material-star-plus-outline: &nbsp;
-    __Your first VPC__
+*   :material-star-plus-outline: &nbsp;
+
+    **Your first VPC**
 
     ---
 
-    Setting up your first Virtual Private Cloud (VPC). 
+    Setting up your first Virtual Private Cloud (VPC).
 
     ---
 
     [:octicons-arrow-right-24: First VPC](first-vpc.md)
 
--   :material-cloud-sync: &nbsp;
-    __Same Region__
+*   :material-cloud-sync: &nbsp;
+
+    **Same Region**
 
     ---
 
@@ -27,8 +28,9 @@ Connect your AWS workloads and services within the AWS cloud. Learn best practic
 
     [:octicons-arrow-right-24: Same Region](vpc-same-region.md)
 
--   :material-cloud-arrow-right: &nbsp;
-    __Across Regions__
+*   :material-cloud-arrow-right: &nbsp;
+
+    **Across Regions**
 
     ---
 
