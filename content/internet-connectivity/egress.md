@@ -7,4 +7,3 @@
 ## Distributed
 
 * Covered Areas: NATGW, Egress Proxies, Egress Security using ANF+GWLB, DNS Firewall,
-

@@ -13,4 +13,3 @@ L4+:
 * DNS (Multi region Profiles, Private Hosted DNS)
 
 ## Combining Traditional and Application Networking
-

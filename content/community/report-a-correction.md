@@ -12,13 +12,13 @@ guide to submit an issue on our [issue tracker].
  Please thoroughly read this guide before creating a new documentation correction
  issue, and provide the following information as part of the issue:
 
-- [Report a correction](#report-a-correction)
-  - [Issue template](#issue-template)
-    - [Title](#title)
-    - [Description](#description)
-    - [Related links](#related-links)
-    - [Proposed change optional { #proposed-change }](#proposed-change-optional--proposed-change-)
-    - [Checklist](#checklist)
+* [Report a correction](#report-a-correction)
+  * [Issue template](#issue-template)
+    * [Title](#title)
+    * [Description](#description)
+    * [Related links](#related-links)
+    * [Proposed change optional { #proposed-change }](#proposed-change-optional--proposed-change-)
+    * [Checklist](#checklist)
 
 ### Title
 

@@ -1,5 +1,4 @@
 
-
 ## Networking Connectivity
 
 Connectivity at L3: Covered Areas: VPC Peering, TGW, Cloud WAN
@@ -13,4 +12,3 @@ Connectivity at L4+:
 * DNS (Profiles, Private Hosted DNS)
 
 ## Combining Traditional and Application Networking
-
