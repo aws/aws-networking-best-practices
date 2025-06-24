@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-mkdocs
+        with:
+          fetch-depth: 0
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
@@ -23,9 +24,10 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
+      - uses: ./.github/actions/setup-mkdocs
       - run: mkdocs gh-deploy --force
-
       - name: Send GitHub Action data to a Slack workflow
+        if: always()
         uses: slackapi/slack-github-action@v2.0.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
