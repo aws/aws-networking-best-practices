@@ -1,0 +1,98 @@
+name: Content Quality
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'content/**/*.md'
+
+jobs:
+  prose-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install prose linting tools
+        run: |
+          npm install -g write-good alex
+      - name: Check writing quality
+        run: |
+          echo "Checking prose quality..."
+          find content -name "*.md" -exec write-good --no-passive {} \; || true
+      - name: Check inclusive language
+        run: |
+          echo "Checking for inclusive language..."
+          find content -name "*.md" -exec alex {} \; || true
+
+  structure-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate navigation structure
+        run: |
+          # Check that all markdown files are referenced in mkdocs.yml
+          echo "Checking navigation structure..."
+          
+          # Extract markdown files from nav section
+          python3 << 'EOF'
+          import yaml
+          import os
+          import glob
+          
+          with open('mkdocs.yml', 'r') as f:
+              config = yaml.safe_load(f)
+          
+          # Get all markdown files
+          md_files = set()
+          for file in glob.glob('content/**/*.md', recursive=True):
+              md_files.add(file.replace('content/', ''))
+          
+          # Get files referenced in nav
+          nav_files = set()
+          def extract_files(nav_item):
+              if isinstance(nav_item, dict):
+                  for key, value in nav_item.items():
+                      if isinstance(value, str) and value.endswith('.md'):
+                          nav_files.add(value)
+                      elif isinstance(value, list):
+                          for item in value:
+                              extract_files(item)
+              elif isinstance(nav_item, list):
+                  for item in nav_item:
+                      extract_files(item)
+          
+          if 'nav' in config:
+              extract_files(config['nav'])
+          
+          # Find orphaned files
+          orphaned = md_files - nav_files
+          if orphaned:
+              print("Warning: Files not in navigation:")
+              for file in sorted(orphaned):
+                  print(f"  - {file}")
+          
+          # Find missing files
+          missing = nav_files - md_files
+          if missing:
+              print("Error: Navigation references missing files:")
+              for file in sorted(missing):
+                  print(f"  - {file}")
+              exit(1)
+          EOF
+
+  meta-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check page metadata
+        run: |
+          echo "Checking for proper page titles..."
+          
+          # Check that each markdown file has a proper title
+          for file in $(find content -name "*.md"); do
+            if ! head -20 "$file" | grep -q "^# "; then
+              echo "Warning: $file may be missing a main heading"
+            fi
+          done

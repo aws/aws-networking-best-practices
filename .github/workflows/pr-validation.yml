@@ -1,0 +1,103 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'content/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/**'
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: 'content/**/*.md'
+
+  mkdocs-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install dependencies
+        run: |
+          pip install \
+            mkdocs-material \
+            mkdocs-git-revision-date-localized-plugin \
+            mkdocs-git-committers-plugin-2 \
+            "mkdocs-material[imaging]"
+      - name: Build MkDocs site
+        run: mkdocs build --strict
+
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          config-file: '.github/mlc_config.json'
+          folder-path: 'content'
+
+  spell-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: streetsidesoftware/cspell-action@v6
+        with:
+          files: 'content/**/*.md'
+          config: '.github/cspell.json'
+
+  yaml-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: mkdocs.yml
+          config_file: .github/yamllint.yml
+
+  file-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check file naming conventions
+        run: |
+          # Check for spaces in filenames
+          if find content -name "* *" -type f | grep -q .; then
+            echo "Error: Files with spaces found:"
+            find content -name "* *" -type f
+            exit 1
+          fi
+          
+          # Check for uppercase in markdown files
+          if find content -name "*.md" | grep -E '[A-Z]' | grep -q .; then
+            echo "Warning: Uppercase letters in markdown filenames:"
+            find content -name "*.md" | grep -E '[A-Z]'
+          fi
+
+  image-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check image optimization
+        run: |
+          # Find large images (>500KB)
+          find content -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) -size +500k -exec ls -lh {} \; > large_images.txt
+          if [ -s large_images.txt ]; then
+            echo "Warning: Large images found (>500KB):"
+            cat large_images.txt
+          fi
+          
+          # Check for missing alt text in markdown
+          if grep -r "!\[]\(" content/ --include="*.md" | grep -q .; then
+            echo "Error: Images without alt text found:"
+            grep -r "!\[]\(" content/ --include="*.md"
+            exit 1
+          fi
