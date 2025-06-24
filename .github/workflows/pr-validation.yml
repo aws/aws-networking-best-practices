@@ -9,6 +9,21 @@ on:
       - '.github/workflows/**'
 
 jobs:
+  checklist-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR checklist completion
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prBody = context.payload.pull_request.body || '';
+            
+            const philosophyChecked = /- \[[xX]\].*philosophy/i.test(prBody);
+            const conventionsChecked = /- \[[xX]\].*conventions/i.test(prBody);
+            
+            if (!philosophyChecked || !conventionsChecked) {
+              core.setFailed('Please check all required items in the PR checklist');
+            }
   markdown-lint:
     runs-on: ubuntu-latest
     steps:
