@@ -1,5 +1,9 @@
 config:
-  MD013: false  # Line length - disabled for flexibility
+  MD013:
+    line_length: 999
+    heading_line_length: 999
+    code_block_line_length: 999
+    tables: false
   MD033: false  # HTML tags allowed for MkDocs
   MD041: false  # First line doesn't need to be H1
   MD046: false  # Code block style flexibility
