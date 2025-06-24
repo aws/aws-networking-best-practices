@@ -151,7 +151,7 @@ jobs:
               content = f.read()
           
           # Extract nav section using regex
-          nav_match = re.search(r'^nav:\\s*\\n((?:[ \\t]+.*\\n)*)', content, re.MULTILINE)
+          nav_match = re.search(r'^nav:\s*\n((?:[ \t]+.*\n)*)', content, re.MULTILINE)
           if not nav_match:
               print("No nav section found in mkdocs.yml")
               exit(1)
@@ -160,9 +160,9 @@ jobs:
           
           # Find all .md file references in nav
           nav_files = set()
-          for line in nav_content.split('\\n'):
+          for line in nav_content.split('\n'):
               # Look for .md files in the nav section
-              md_matches = re.findall(r'([\\w/-]+\\.md)', line)
+              md_matches = re.findall(r'([\w/-]+\.md)', line)
               nav_files.update(md_matches)
           
           # Get all actual markdown files
