@@ -5,16 +5,9 @@ inputs:
     description: 'Python version to use'
     required: false
     default: '3.x'
-  fetch-depth:
-    description: 'Git fetch depth for checkout'
-    required: false
-    default: '1'
 runs:
   using: 'composite'
   steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: ${{ inputs.fetch-depth }}
     - uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}

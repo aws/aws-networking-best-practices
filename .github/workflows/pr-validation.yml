@@ -36,9 +36,10 @@ jobs:
   mkdocs-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/setup-mkdocs
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: ./.github/actions/setup-mkdocs
       - name: Build MkDocs site
         run: mkdocs build
 
