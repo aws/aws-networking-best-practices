@@ -1,7 +1,7 @@
 # Introduction
 
-Comprehensive AWS networking guidance developed by the user community and validated by AWS Networking Specialists.
-
+Comprehensive AWS networking guidance developed by the user community and 
+validated by AWS Networking Specialists.
 
 <div class="grid cards" markdown>
 
@@ -10,7 +10,8 @@ Comprehensive AWS networking guidance developed by the user community and valida
 
     ---
 
-    Essential AWS networking concepts including VPCs, subnets, routing, and core infrastructure components.
+    Essential AWS networking concepts including VPCs, subnets, routing, and 
+    core infrastructure components.
 
     ---
 
@@ -21,7 +22,8 @@ Comprehensive AWS networking guidance developed by the user community and valida
 
     ---
 
-    Inter-service communication across regions, availability zones, and VPCs within your AWS environment.
+    Inter-service communication across regions, availability zones, and VPCs 
+    within your AWS environment.
 
     ---
 
@@ -32,7 +34,8 @@ Comprehensive AWS networking guidance developed by the user community and valida
 
     ---
 
-    Enable scalable internet access for your AWS workloads with optimized routing and traffic management.
+    Enable scalable internet access for your AWS workloads with optimized 
+    routing and traffic management.
 
     ---
 
@@ -43,7 +46,8 @@ Comprehensive AWS networking guidance developed by the user community and valida
 
     ---
 
-    Establish secure connectivity between AWS, on-premises data centers, and multi-cloud environments.
+    Establish secure connectivity between AWS, on-premises data centers, and 
+    multi-cloud environments.
 
     ---
 
@@ -54,7 +58,8 @@ Comprehensive AWS networking guidance developed by the user community and valida
 
     ---
 
-    Secure your AWS network with defense-in-depth strategies, access controls, and threat protection.
+    Secure your AWS network with defense-in-depth strategies, access controls, 
+    and threat protection.
 
     ---
 
@@ -65,13 +70,19 @@ Comprehensive AWS networking guidance developed by the user community and valida
 
     ---
 
-    Monitor network performance, troubleshoot connectivity issues, and gain visibility into your AWS network.
+    Monitor network performance, troubleshoot connectivity issues, and gain 
+    visibility into your AWS network.
 
     ---
 
     [:octicons-arrow-right-24: Monitoring, Logging & Observability](monitoring-observability/)
+
 </div>
 
 ## Contribute
 
-Help improve this guide by [reporting issues](community/report-a-correction/), [suggesting new best practices](http://127.0.0.1:8000/aws/aws-networking-best-practices/community/new-best-practice/), or [contributing content](http://127.0.0.1:8000/aws/aws-networking-best-practices/community/making-a-pull-request/). Join our community-driven effort to create comprehensive AWS networking resources for everyone.
+Help improve this guide by [reporting issues](community/report-a-correction.md), 
+[suggesting new best practices](community/new-best-practice.md), or 
+[contributing content](community/making-a-pull-request.md). Join our 
+community-driven effort to create comprehensive AWS networking resources for 
+everyone.
