@@ -12,6 +12,8 @@ config:
   MD053: false  # Unused references - allow for templates
   MD007: false  # List indentation - flexible
   MD030: false  # List marker spacing - flexible
+  MD004:
+    style: "asterisk"  # Enforce * for unordered lists
 globs:
   - "content/**/*.md"
 ignores:

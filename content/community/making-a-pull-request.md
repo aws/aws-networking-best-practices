@@ -171,7 +171,7 @@ very documentation in front of you.
 6. **Do** ask yourself if the cost of making the changes stands in a good
 
    relation to the benefits they will bring. Some otherwise sensible changes can
-   add complexity for comparatively little gain, might break existing behaviour
+   add complexity for comparatively little gain, might break existing behavior
    or might be brittle when other changes need to be made.
 
 7. **Do** merge in concurrent changes frequently to minimize the chance of
