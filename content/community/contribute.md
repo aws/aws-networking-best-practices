@@ -9,11 +9,11 @@ Here are the most common ways to get started:
 !!! tip "Quick Start Guide"
 
     **Found an error or missing info?** → [Report a correction](report-a-correction.md)
-    
+
     **Have a networking question?** → [Ask on AWS re:Post](https://repost.aws/questions/ask)
-    
+
     **Want to suggest a new best practice?** → [Request a new best practice](new-best-practice.md)
-    
+
     **Ready to contribute content?** → [Create a pull request](making-a-pull-request.md)
 
 Most contributions start with reporting issues or asking questions. Don't worry about getting everything perfect – our community is here to help!
@@ -22,8 +22,9 @@ Most contributions start with reporting issues or asking questions. Don't worry 
 
 <div class="grid cards" markdown>
 
--   :material-file-document-remove-outline: &nbsp;
-    __Missing information in our docs?__
+*   :material-file-document-remove-outline: &nbsp;
+
+    **Missing information in our docs?**
 
     ---
 
@@ -34,8 +35,9 @@ Most contributions start with reporting issues or asking questions. Don't worry 
 
     [:octicons-arrow-right-24: Report a correction][report a correction]
 
--   :material-lightbulb-on-20: &nbsp;
-    __Want to submit an idea?__
+*   :material-lightbulb-on-20: &nbsp;
+
+    **Want to submit an idea?**
 
     ---
 
@@ -45,8 +47,9 @@ Most contributions start with reporting issues or asking questions. Don't worry 
 
     [:octicons-arrow-right-24: Request a new best practice][new best practice]
 
--   :material-account-question-outline: &nbsp;
-    __Have a question or need help?__
+*   :material-account-question-outline: &nbsp;
+
+    **Have a question or need help?**
 
     ---
 
@@ -56,8 +59,9 @@ Most contributions start with reporting issues or asking questions. Don't worry 
 
     [:octicons-arrow-right-24: Ask a question][ask a question]
 
--   :material-source-pull: &nbsp;
-    __Want to create a pull request?__
+*   :material-source-pull: &nbsp;
+
+    **Want to create a pull request?**
 
     ---
 
@@ -75,11 +79,9 @@ Most contributions start with reporting issues or asking questions. Don't worry 
   [add translations]: adding-translations.md
   [create a pull request]: making-a-pull-request.md
 
-
 ## Contribution Guidelines
 
 We've streamlined our processes to make contributing as easy as possible. Following these simple guidelines helps us respond to your contributions quickly and effectively.
-
 
 ## Checklist
 
@@ -106,7 +108,6 @@ with our community.
 
 **No Context**: "Add something about security groups"
 
-
 !!! note "Community Guidelines"
     All contributions are public and permanent. Please be constructive, respectful, and follow our [Code of Conduct](https://aws.github.io/code-of-conduct).
 
@@ -114,12 +115,17 @@ with our community.
 
 Here's a quick checklist to ensure your contribution is helpful and gets the attention it deserves:
 
-- **Search first**: Check if someone has already reported the same issue or asked a similar question
-- **Use the right channel**: 
-  - Technical questions → [AWS re:Post](https://repost.aws/questions/ask)
-  - Bug reports or feature requests → [GitHub Issues](https://github.com/aws/aws-networking-best-practices/issues)
-- **Provide context**: Include relevant details like AWS services, regions, or error messages
-- **Be respectful**: Follow our [Code of Conduct](https://aws.github.io/code-of-conduct) and keep discussions constructive
+* **Search first**: Check if someone has already reported the same issue or asked a similar question
+
+* **Use the right channel**:
+
+  * Technical questions → [AWS re:Post](https://repost.aws/questions/ask)
+
+  * Bug reports or feature requests → [GitHub Issues](https://github.com/aws/aws-networking-best-practices/issues)
+
+* **Provide context**: Include relevant details like AWS services, regions, or error messages
+
+* **Be respectful**: Follow our [Code of Conduct](https://aws.github.io/code-of-conduct) and keep discussions constructive
 
 !!! info "Remember"
     Complete issue templates help us understand your request faster. Don't worry if you're unsure about something – our community is here to help!
@@ -127,13 +133,14 @@ Here's a quick checklist to ensure your contribution is helpful and gets the att
 ## Rights and responsibilities
 
 As maintainers, we are entrusted with the **responsibility** to moderate
+
 communication within our community, including the authority to close, remove,
 reject, or edit issues, discussions, comments, commits, and to block users who
 **do not align** with our contribution guidelines and our [Code of Conduct](https://aws.github.io/code-of-conduct).
+
 This role requires us to be actively involved in maintaining the integrity and
 positive atmosphere of our community. Upholding these standards decisively
 ensures a respectful and inclusive environment for all members.
-
 
 ### Code of Conduct
 
@@ -146,17 +153,19 @@ We take any violations seriously and will take appropriate action in response to
 uphold these values.[^1]
 
   [^1]:
-    __Warning and blocking policy:__
+    **Warning and blocking policy:**
     Given the increasing popularity of our project and our commitment to a
     healthy community, we've defined clear guidelines on how we proceed with
     violations:
 
     1.1. **First warning:** Users displaying repeated inappropriate, offensive,
+
     or harmful behavior will receive a first warning. This warning serves as a
     formal notice that their behavior is not in alignment with our community
     standards and Code of Conduct. The first warning is permanent.
 
     1.2. **Second warning and opportunity for resolution:** If the behavior
+
     persists, a second warning will be issued. Upon receiving the second
     warning, the user will be given a 5-day period for reflection, during which
     they are encouraged to publicly explain or apologize for their actions.
@@ -164,6 +173,7 @@ uphold these values.[^1]
     misunderstanding.
 
     1.3. **Blocking:** Should there be no response or improvement in behavior
+
     following the second warning, we reserve the right to block the user from
     the community and repository. Blocking is considered a last resort, used
     only when absolutely necessary to protect the community's integrity and
@@ -184,18 +194,21 @@ submitting new issues or starting discussions to help avoid duplicates. Your
 cooperation is crucial in keeping our community's discussions constructive and
 organized.
 
-  - **Mandatory completion of issue templates:** We need all of the information
+  * **Mandatory completion of issue templates:** We need all of the information
+
   required in our issue templates because it ensures that every user and
   maintainer, regardless of their experience, can understand the content and
   severity of your bug report or change request.
 
-  - **Closing incomplete issues:**
+  * **Closing incomplete issues:**
+
   We *reserve the right to close issues lacking essential information*, such as
   those not adhering to the quality standards and requirements specified in our
   issue templates. Such issues can be reopened once the missing information has
   been provided.
 
-  - **Handling duplicates:** To maintain organized and efficient
+  * **Handling duplicates:** To maintain organized and efficient
+
   communication within our [issue tracker], we *reserve the right to close any
   duplicated issues*. Opening multiple channels to ask the same question or report the
   same issue across different forums hinders our ability to manage and address
@@ -207,10 +220,12 @@ organized.
 
     We further *reserve the right to immediately close issues that
     are reopened without providing new information* or simply because users have
+
     not yet received a response to their issue/question, as the issue is marked as
     incomplete.
 
-  - **Limitations of automated tools:**  While we believe in the value and
+  * **Limitations of automated tools:**  While we believe in the value and
+
   efficiency that automated tools bring to identifying potential issues (such
   as those identified by Lighthouse, Accessibility tools, and others), simply
   submitting an issue generated by these tools does not constitute a complete
@@ -220,5 +235,6 @@ organized.
   substitute the requirement for a minimal reproduction or a thorough discussion
   of the findings. *We reserve the right to mark these issues as incomplete and
   close them.* This practice ensures that we are addressing genuine concerns
+
   with precision and clarity, rather than navigating through extensive automated
   outputs.

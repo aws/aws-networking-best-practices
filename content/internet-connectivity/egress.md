@@ -1,8 +1,10 @@
 # Egress Internet Connectivity
 
 ## Centralized
-* Covered Areas: NATGW, Egress Proxies, Egress Security using ANF+GWLB, DNS Firewall, 
+
+* Covered Areas: NATGW, Egress Proxies, Egress Security using ANF+GWLB, DNS Firewall,
 
 ## Distributed
-* Covered Areas: NATGW, Egress Proxies, Egress Security using ANF+GWLB, DNS Firewall, 
+
+* Covered Areas: NATGW, Egress Proxies, Egress Security using ANF+GWLB, DNS Firewall,
 

@@ -7,9 +7,13 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 **New to pull requests?** Here's the essential process:
 
 1. **Fork** the repository on GitHub
-2. **Create a branch** for your changes  
+
+2. **Create a branch** for your changes
+
 3. **Make your edits** and commit them
+
 4. **Submit a pull request** with a clear description
+
 5. **Respond to feedback** from reviewers
 
 **Need more details?** Continue reading for the complete workflow.
@@ -17,51 +21,70 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 ## Before You Submit
 
 !!! tip "Checklist"
-    - [ ] Changes follow our [conventions](conventions.md)
-    - [ ] All links work correctly
-    - [ ] Commit messages are descriptive
-    - [ ] Referenced any related issues in your PR description
-    - [ ] Tested that documentation builds without errors
+    * [ ] Changes follow our [conventions](conventions.md)
 
+    * [ ] All links work correctly
 
+    * [ ] Commit messages are descriptive
+
+    * [ ] Referenced any related issues in your PR description
+
+    * [ ] Tested that documentation builds without errors
 
 ## Step-by-Step Process
 
 ### 1. Fork and Clone
-- Fork the [aws-networking-best-practices] repository on GitHub
-- Clone your fork to your local machine
-- Create a new branch: `git checkout -b your-feature-name`
+
+* Fork the [aws-networking-best-practices] repository on GitHub
+
+* Clone your fork to your local machine
+
+* Create a new branch: `git checkout -b your-feature-name`
 
 [aws-networking-best-practices]: https://github.com/aws/aws-networking-best-practices
 
-
 ### 2. Make Changes
-- Edit the documentation files
-- Commit changes in logical chunks with clear messages
-- Push to your fork regularly: `git push origin your-feature-name`
+
+* Edit the documentation files
+
+* Commit changes in logical chunks with clear messages
+
+* Push to your fork regularly: `git push origin your-feature-name`
 
 ### 3. Create Pull Request
-- Open a draft pull request early for feedback
-- Include a clear description of your changes
-- Reference any related issues or discussions
+
+* Open a draft pull request early for feedback
+
+* Include a clear description of your changes
+
+* Reference any related issues or discussions
 
 ### 4. Review Process
-- Respond to reviewer feedback promptly
-- Make requested changes and push updates
-- Your PR will be merged once approved
+
+* Respond to reviewer feedback promptly
+
+* Make requested changes and push updates
+
+* Your PR will be merged once approved
 
 !!! example "Good Commit Messages"
-    - ✅ "Add Transit Gateway best practices for multi-account setups"
-    - ✅ "Fix broken link in VPC peering documentation"
-    - ❌ "Update docs"
-    - ❌ "Various fixes"
+    * ✅ "Add Transit Gateway best practices for multi-account setups"
+
+    * ✅ "Fix broken link in VPC peering documentation"
+
+    * ❌ "Update docs"
+
+    * ❌ "Various fixes"
 
 ## What Happens Next?
 
 After your pull request is merged:
-- Your changes will appear in the live documentation
-- You can delete your feature branch
-- Consider contributing more - we appreciate ongoing contributors!
+
+* Your changes will appear in the live documentation
+
+* You can delete your feature branch
+
+* Consider contributing more - we appreciate ongoing contributors!
 
 Thank you for helping improve AWS networking guidance for the community.
 
@@ -132,22 +155,27 @@ very documentation in front of you.
 1. **Don't** just create a pull request with changes that are not explained.
 
 2. **Do** discuss what you intend to do with people in the discussions so that the
+
    rationale for any changes is clear before you write or modify code.
 
 3. **Do** link to the discussion or any issues to provide the context for a pull
+
    request.
 
 4. **Do** ask questions if you are uncertain about anything.
 
 5. **Do** ask yourself if what you are doing benefits the wider community and
+
    makes the AWS Networking Best Practices guide a better resource.
 
 6. **Do** ask yourself if the cost of making the changes stands in a good
+
    relation to the benefits they will bring. Some otherwise sensible changes can
    add complexity for comparatively little gain, might break existing behaviour
    or might be brittle when other changes need to be made.
 
 7. **Do** merge in concurrent changes frequently to minimize the chance of
+
    conflicting changes that may be difficult to resolve.
 
 ## Common Issues
@@ -155,6 +183,7 @@ very documentation in front of you.
 **Build errors?** Check that all markdown syntax is correct and links are valid.
 
 **Merge conflicts?** Sync your fork with the main repository:
+
 ```bash
 git remote add upstream https://github.com/aws/aws-networking-best-practices.git
 git fetch upstream
