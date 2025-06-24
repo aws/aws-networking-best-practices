@@ -4,18 +4,6 @@ Connect your AWS workloads and services within the AWS cloud. Learn best practic
 
 <div class="grid cards" markdown>
 
-*   :material-star-plus-outline: &nbsp;
-
-    **Your first VPC**
-
-    ---
-
-    Setting up your first Virtual Private Cloud (VPC).
-
-    ---
-
-    [:octicons-arrow-right-24: First VPC](first-vpc.md)
-
 *   :material-cloud-sync: &nbsp;
 
     **Same Region**
