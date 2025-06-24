@@ -18,8 +18,8 @@ jobs:
           script: |
             const prBody = context.payload.pull_request.body || '';
             
-            const philosophyChecked = /- \[[xX]\].*philosophy/i.test(prBody);
-            const conventionsChecked = /- \[[xX]\].*conventions/i.test(prBody);
+            const philosophyChecked = /- \[[xX]\].*(?:\[philosophy\]|philosophy)/i.test(prBody);
+            const conventionsChecked = /- \[[xX]\].*(?:\[conventions\]|conventions)/i.test(prBody);
             
             if (!philosophyChecked || !conventionsChecked) {
               core.setFailed('Please check all required items in the PR checklist');
@@ -39,16 +39,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-      - name: Install dependencies
-        run: |
-          pip install \
-            mkdocs-material \
-            mkdocs-git-revision-date-localized-plugin \
-            mkdocs-git-committers-plugin-2 \
-            "mkdocs-material[imaging]"
+      - uses: ./.github/actions/setup-mkdocs
       - name: Build MkDocs site
         run: mkdocs build
 
@@ -119,3 +110,96 @@ jobs:
             grep -r "!\[]\(" content/ --include="*.md"
             exit 1
           fi
+
+  prose-check:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install prose linting tools
+        run: |
+          npm install -g write-good alex
+      - name: Check writing quality
+        run: |
+          echo "Checking prose quality..."
+          find content -name "*.md" -exec write-good --no-passive {} \; || true
+      - name: Check inclusive language
+        run: |
+          echo "Checking for inclusive language..."
+          find content -name "*.md" -exec alex {} \; || true
+
+  structure-check:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate navigation structure
+        run: |
+          # Check that all markdown files are referenced in mkdocs.yml
+          echo "Checking navigation structure..."
+          
+          python3 << 'EOF'
+          import re
+          import os
+          import glob
+          
+          # Read mkdocs.yml and extract nav section manually
+          with open('mkdocs.yml', 'r') as f:
+              content = f.read()
+          
+          # Extract nav section using regex
+          nav_match = re.search(r'^nav:\s*\n((?:[ \t]+.*\n)*)', content, re.MULTILINE)
+          if not nav_match:
+              print("No nav section found in mkdocs.yml")
+              exit(1)
+          
+          nav_content = nav_match.group(1)
+          
+          # Find all .md file references in nav
+          nav_files = set()
+          for line in nav_content.split('\n'):
+              # Look for .md files in the nav section
+              md_matches = re.findall(r'([\w/-]+\.md)', line)
+              nav_files.update(md_matches)
+          
+          # Get all actual markdown files
+          md_files = set()
+          for file in glob.glob('content/**/*.md', recursive=True):
+              md_files.add(file.replace('content/', ''))
+          
+          # Find orphaned files
+          orphaned = md_files - nav_files
+          if orphaned:
+              print("Warning: Files not in navigation:")
+              for file in sorted(orphaned):
+                  print(f"  - {file}")
+          
+          # Find missing files
+          missing = nav_files - md_files
+          if missing:
+              print("Error: Navigation references missing files:")
+              for file in sorted(missing):
+                  print(f"  - {file}")
+              exit(1)
+          
+          print("Navigation structure check completed successfully")
+          EOF
+
+  meta-check:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check page metadata
+        run: |
+          echo "Checking for proper page titles..."
+          
+          # Check that each markdown file has a proper title
+          for file in $(find content -name "*.md"); do
+            if ! head -20 "$file" | grep -q "^# "; then
+              echo "Warning: $file may be missing a main heading"
+            fi
+          done

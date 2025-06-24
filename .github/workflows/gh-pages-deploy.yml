@@ -11,13 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Configure Git Credentials
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
       - uses: actions/cache@v4
         with:
@@ -25,14 +24,10 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install \
-                mkdocs-material \
-                mkdocs-git-revision-date-localized-plugin \
-                mkdocs-git-committers-plugin-2 \
-                "mkdocs-material[imaging]"
+      - uses: ./.github/actions/setup-mkdocs
       - run: mkdocs gh-deploy --force
-
       - name: Send GitHub Action data to a Slack workflow
+        if: always()
         uses: slackapi/slack-github-action@v2.0.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
