@@ -1,0 +1,28 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^http://127.0.0.1"
+    },
+    {
+      "pattern": "^https://example.com"
+    },
+    {
+      "pattern": "^https://github.com/aws/aws-networking-best-practices"
+    }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206, 999],
+  "ignoreHttpsErrors": true,
+  "replacementPatterns": [
+    {
+      "pattern": "^community/([^/]+)/$",
+      "replacement": "community/$1.md"
+    }
+  ]
+}
