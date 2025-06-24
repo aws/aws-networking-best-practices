@@ -9,6 +9,10 @@
          <lastmod>2025-06-24</lastmod>
     </url>
     <url>
+         <loc>https://aws.github.io/aws/aws-networking-best-practices/basics/first-vpc/</loc>
+         <lastmod>2025-06-24</lastmod>
+    </url>
+    <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/contribute/</loc>
          <lastmod>2025-06-24</lastmod>
     </url>
@@ -54,10 +58,6 @@
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internal-connectivity/</loc>
-         <lastmod>2025-06-24</lastmod>
-    </url>
-    <url>
-         <loc>https://aws.github.io/aws/aws-networking-best-practices/internal-connectivity/first-vpc/</loc>
          <lastmod>2025-06-24</lastmod>
     </url>
     <url>
