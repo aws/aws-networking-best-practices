@@ -15,8 +15,8 @@ jobs:
             const prBody = context.payload.pull_request.body || '';
             
             // Check for required checklist items
-            const philosophyChecked = /- \[[xX]\].*philosophy/i.test(prBody);
-            const conventionsChecked = /- \[[xX]\].*conventions/i.test(prBody);
+            const philosophyChecked = /- \[[xX]\].*(?:\[philosophy\]|philosophy)/i.test(prBody);
+            const conventionsChecked = /- \[[xX]\].*(?:\[conventions\]|conventions)/i.test(prBody);
             
             let errors = [];
             
