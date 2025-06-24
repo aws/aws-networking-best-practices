@@ -5,6 +5,22 @@ providers, and remote users. This section covers architectural patterns and
 best practices for building secure, reliable hybrid and multi-cloud network
 connections.
 
+<div class="grid cards" markdown>
+
+*   :material-star-plus-outline: &nbsp;
+
+    **Your first VPC**
+
+    ---
+
+    Setting up your first Virtual Private Cloud (VPC).
+
+    ---
+
+    [:octicons-arrow-right-24: First VPC](first-vpc.md)
+
+</div>
+
 ## How many VPCs should I have per account?
 
 * 1 VPC per account

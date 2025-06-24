@@ -161,9 +161,9 @@ nav:
       - Conventions: community/conventions.md
   - Networking Basics:
       - basics/index.md
+      - Setting up your first VPC: basics/first-vpc.md
   - Connectivity within AWS:
       - internal-connectivity/index.md
-      - Setting up your first VPC: internal-connectivity/first-vpc.md
       - Within the same Region: internal-connectivity/vpc-same-region.md
       - Across Regions: internal-connectivity/vpc-other-region.md
   - Connectivity to the Internet:
