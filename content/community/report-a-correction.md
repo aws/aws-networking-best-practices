@@ -9,16 +9,13 @@ guide to submit an issue on our [issue tracker].
 
 ## Issue template
 
- Please thoroughly read this guide before creating a new documentation correction
- issue, and provide the following information as part of the issue:
+ Please thoroughly read this guide before creating a [new documentation correction
+ issue](https://github.com/aws/aws-networking-best-practices/issues/new?template=correction.md), and provide the following information as part of the issue:
 
-* [Report a correction](#report-a-correction)
-  * [Issue template](#issue-template)
-    * [Title](#title)
-    * [Description](#description)
-    * [Related links](#related-links)
-    * [Proposed change optional { #proposed-change }](#proposed-change-optional--proposed-change-)
-    * [Checklist](#checklist)
+- Title
+- Description
+- Related links
+- Proposed change optional
 
 ### Title
 
@@ -74,12 +71,5 @@ proposal. This field is optional but very helpful.
 > **Why we need this**: an improvement proposal can be beneficial for other
 > users who encounter the same issue, as they offer solutions before we
 > maintainers can update the documentation.
-
-### Checklist
-
-Thanks for following the guide and providing valuable feedback for our
-documentation – you are almost done. The checklist ensures that you have read
-this guide and have worked to your best knowledge to provide us with every piece
-of information we need to improve it.
 
 **We'll take it from here.**

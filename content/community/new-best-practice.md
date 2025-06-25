@@ -46,29 +46,14 @@ New best practices should add significant value to the community. Ask yourself:
 
 ## Issue template
 
-Ready to submit your proposal? Use this template to ensure you include all the necessary information:
+Ready to submit your proposal? Use [this template](https://github.com/aws/aws-networking-best-practices/issues/new?template=new-best-practice.md) to ensure you include all the necessary information:
 
-* [Title]
-
-* [Context] <small>optional</small>
-
-* [Description]
-
-* [Related links]
-
-* [Use cases]
-
-* [Visuals] <small>optional</small>
-
-* [Checklist]
-
-  [Title]: #title
-  [Context]: #context
-  [Description]: #description
-  [Related links]: #related-links
-  [Use cases]: #use-cases
-  [Visuals]: #visuals
-  [Checklist]: #checklist
+* Title
+* Context <small>optional</small>
+* Description
+* Related links
+* Use cases
+* Visuals <small>optional</small>
 
 ### Title
 
@@ -166,13 +151,6 @@ it and describing how it was implemented and incorporated.
 > documented in other public websites can help us understand its potential impact and
 > feasibility, which helps us maintainers evaluate and
 > triage new best practice proposals.
-
-### Checklist
-
-Thanks for following the guide and creating a high-quality new best practice proposal – you
-are almost done. The checklist ensures that you have read this guide and have
-worked to your best knowledge to provide us with every piece of information to
-review your idea.
 
 **We'll take it from here.**
 
