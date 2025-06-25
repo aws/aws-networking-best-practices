@@ -12,10 +12,10 @@ guide to submit an issue on our [issue tracker].
  Please thoroughly read this guide before creating a [new documentation correction
  issue](https://github.com/aws/aws-networking-best-practices/issues/new?template=correction.md), and provide the following information as part of the issue:
 
-- Title
-- Description
-- Related links
-- Proposed change optional
+* Title
+* Description
+* Related links
+* Proposed change optional
 
 ### Title
 

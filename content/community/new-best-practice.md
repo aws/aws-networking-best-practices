@@ -88,7 +88,7 @@ here and not in another AWS documentation or blog post.
 
 *   **Explain the <u>what</u>, not the <u>why</u>** – don't explain
 
-    [the benefits of your idea][Use cases] here, we're getting there.
+    the benefits of your idea here, we're getting there.
     Focus on describing the proposed solution as precisely as possible.
 
 *   **Keep it short and concise** – be brief and to the point when describing
