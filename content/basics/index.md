@@ -4,43 +4,59 @@ Connect your AWS infrastructure with on-premises data centers, other cloud
 providers, and remote users. This section covers architectural patterns and
 best practices for building secure, reliable hybrid and multi-cloud network
 connections.
+
 ## (Proposed)
 
 ## VPC IP Addressing and CIDR Planning
+
 Choosing IP ranges and avoiding conflicts, CIDR notation and subnet sizing,
 
 ## IPv4 vs. IPv6 in VPCs
+
 Dual-stack networking and protocol-specific considerations. 
 
 ## Single AZ and Multi-AZ considerations
+
 How to distribute resources across AZs for resilience. Fundamental architectural concept that impacts subnet design and app availability.
 
 ## Single VPC vs. Multiple VPCs per Account
+
 When to use one large VPC vs multiple smaller VPCs.
 
 ## VPC Sharing
+
 When to use it vs separate VPCs per account. "should we share or separate?
 
 ## Subnet Strategies
+
 "how many subnets do I need?" and common patterns (public/private).
 
 ## ENIs
+
 How EC2 instances connect to VPCs and concepts like primary/secondary IPs.
 
 ## Route Tables and Traffic Flow
+
 How routing works within VPCs and how traffic decisions are made.
 
 ## IGW/EIGW and NAT GWs
+
 Basic internet connectivity patterns and the decision between Centralized vs distributed NAT patterns, high availability.
 
 ## VPC DNS Resolution, DHCP Options
+
 Name resolution within VPC
 
 ## Security Groups vs. Network ACLs
+
 Difference between these and when to use each approach.
+
 ## Network Performance and Sizing
+
 Instance bandwidth considerations, placement groups. 
+
 ## IPAM Basics
+
 IP allocation strategies and avoiding address exhaustion.
 
 
