@@ -5,39 +5,66 @@ providers, and remote users. This section covers architectural patterns and
 best practices for building secure, reliable hybrid and multi-cloud network
 connections.
 
-<div class="grid cards" markdown>
+## [Proposed]
 
-*   :material-star-plus-outline: &nbsp;
+## 1. VPC IP Addressing and CIDR Planning
 
-    **Your first VPC**
+Choosing IP ranges and avoiding conflicts, CIDR notation and subnet sizing.
 
-    ---
+## 2. IPv4 vs. IPv6 in VPCs
+Dual-stack networking and protocol-specific considerations. Private vs public vs Elastic IPs. Basics of BYOIP.
 
-    Setting up your first Virtual Private Cloud (VPC).
+## 3. AWS Regions and Availability Zone considerations
 
-    ---
+How to distribute resources across AWS Regions, AZs, and LZs for resilience. Fundamental architectural concept that impacts region/subnet design and app availability.
 
-    [:octicons-arrow-right-24: First VPC](first-vpc.md)
 
-</div>
+## 4. Single VPC vs. Multiple VPCs per Accoun
 
-## How many VPCs should I have per account?
+When to use one large VPC vs multiple smaller VPCs.
 
-* 1 VPC per account
+## 5. VPC Sharing
 
-* Use Control Tower for a Multi-account strategy
+When to use it vs separate VPCs per account. "should we share or separate?
 
-## How many subnets should I use?
+## 6. Subnet Strategies
+"how many subnets do I need?" and common patterns (public/private).
 
-Subnet Strategy for e.g. 3 tier workload
+## 7. ENIs
 
-## How many route tables?
+How EC2 instances connect to VPCs and concepts like primary/secondary IPs.
 
-## How many NAT Gateways (NGW)?
+## 8. Route Tables and Traffic Flow
 
-## How to use Internet Gateways (IGW) or Egress-Only Internet Gateways?
+How routing works within VPCs and how traffic decisions are made.
 
-## IP addressing
+## 9. Gateways
+
+When to use virtual private gateways, internet gateway, NAT gateways, transit gateways, and Direct Connect gateways
+
+## 10. Internet connectivity patterns
+
+Basic internet connectivity patterns and the decision between Centralized vs distributed NAT patterns, high availability.
+
+## 11. Accessing AWS services
+
+When to use IGW/NAT gateway vs gateway/interface endpoints to access AWS services
+
+## 12. VPC DNS Resolution, DHCP Options
+Name resolution within VPC
+
+## 13. Security Groups vs. Network ACLs
+Difference between these and when to use each approach.
+
+## 14. Network Performance and Sizing
+
+Instance bandwidth considerations, placement groups.
+
+## 15. IPAM Basics
+IP allocation strategies and avoiding address exhaustion.
+
+
+
 
 ## Additional resources to get started?
 
