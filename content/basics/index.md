@@ -4,40 +4,46 @@ Connect your AWS infrastructure with on-premises data centers, other cloud
 providers, and remote users. This section covers architectural patterns and
 best practices for building secure, reliable hybrid and multi-cloud network
 connections.
+## (Proposed)
 
-<div class="grid cards" markdown>
+## VPC IP Addressing and CIDR Planning
+Choosing IP ranges and avoiding conflicts, CIDR notation and subnet sizing,
 
-*   :material-star-plus-outline: &nbsp;
+## IPv4 vs. IPv6 in VPCs
+Dual-stack networking and protocol-specific considerations. 
 
-    **Your first VPC**
+## Single AZ and Multi-AZ considerations
+How to distribute resources across AZs for resilience. Fundamental architectural concept that impacts subnet design and app availability.
 
-    ---
+## Single VPC vs. Multiple VPCs per Account
+When to use one large VPC vs multiple smaller VPCs.
 
-    Setting up your first Virtual Private Cloud (VPC).
+## VPC Sharing
+When to use it vs separate VPCs per account. "should we share or separate?
 
-    ---
+## Subnet Strategies
+"how many subnets do I need?" and common patterns (public/private).
 
-    [:octicons-arrow-right-24: First VPC](first-vpc.md)
+## ENIs
+How EC2 instances connect to VPCs and concepts like primary/secondary IPs.
 
-</div>
+## Route Tables and Traffic Flow
+How routing works within VPCs and how traffic decisions are made.
 
-## How many VPCs should I have per account?
+## IGW/EIGW and NAT GWs
+Basic internet connectivity patterns and the decision between Centralized vs distributed NAT patterns, high availability.
 
-* 1 VPC per account
+## VPC DNS Resolution, DHCP Options
+Name resolution within VPC
 
-* Use Control Tower for a Multi-account strategy
+## Security Groups vs. Network ACLs
+Difference between these and when to use each approach.
+## Network Performance and Sizing
+Instance bandwidth considerations, placement groups. 
+## IPAM Basics
+IP allocation strategies and avoiding address exhaustion.
 
-## How many subnets should I use?
 
-Subnet Strategy for e.g. 3 tier workload
-
-## How many route tables?
-
-## How many NAT Gateways (NGW)?
-
-## How to use Internet Gateways (IGW) or Egress-Only Internet Gateways?
-
-## IP addressing
 
 ## Additional resources to get started?
 
