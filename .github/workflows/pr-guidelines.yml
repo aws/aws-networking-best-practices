@@ -1,0 +1,31 @@
+name: PR Guidelines Check
+
+on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize]
+
+jobs:
+  check-guidelines:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check multiple markdown files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            
+            const mdFiles = execSync(`git diff --name-only origin/${{ github.base_ref }}...HEAD | grep "\.md$" || true`)
+              .toString().trim().split('\n').filter(f => f);
+            
+            if (mdFiles.length > 1) {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## 📝 Multiple Markdown Files Detected\n\nThis PR modifies ${mdFiles.length} markdown files:\n${mdFiles.map(f => `- \`${f}\``).join('\n')}\n\n**Recommendation:** Consider submitting changes for one markdown file at a time to:\n- Simplify review process\n- Reduce merge conflicts\n- Enable focused discussions\n\nIf these changes are related, please explain the relationship in the PR description.`
+              });
+            }
