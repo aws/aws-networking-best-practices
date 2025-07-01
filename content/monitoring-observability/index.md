@@ -53,4 +53,3 @@ Monitor network performance, analyze traffic patterns, and troubleshoot connecti
     [:octicons-arrow-right-24: AWS External Traffic](external-traffic.md)
 
 </div>
-

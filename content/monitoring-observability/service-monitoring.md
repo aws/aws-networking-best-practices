@@ -17,5 +17,3 @@ For quotas:
 | (s) | Soft quota - Adjustable by customer. Number afterwards indicates medium/hard limit. |
 | (m) | Medium quota - Contact AWS to discuss these and possible alternative architectures. |
 | (h) | Hard quota – Cannot be adjusted. |
-
-
