@@ -183,3 +183,7 @@ nav:
       - Network Segmentation: security/segmentation.md
   - Monitoring, Logging & Observability:
       - monitoring-observability/index.md
+      - Notifications: monitoring-observability/notifications.md
+      - AWS Services: monitoring-observability/service-monitoring.md
+      - AWS Internal Traffic: monitoring-observability/internal-traffic.md
+      - AWS External Traffic: monitoring-observability/external-traffic.md
