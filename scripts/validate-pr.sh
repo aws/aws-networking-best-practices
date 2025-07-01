@@ -74,9 +74,9 @@ if [ -s /tmp/large_images.txt ]; then
     cat /tmp/large_images.txt
 fi
 
-if grep -r "!\[]\(" content/ --include="*.md" | grep -q .; then
+if grep -r "!\[\](" content/ --include="*.md" | grep -q .; then
     echo "❌ Images without alt text found:"
-    grep -r "!\[]\(" content/ --include="*.md"
+    grep -r "!\[\](" content/ --include="*.md"
     ERRORS=$((ERRORS+1))
 fi
 

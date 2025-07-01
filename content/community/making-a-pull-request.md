@@ -160,26 +160,28 @@ Before submitting your pull request, run the validation script to catch issues e
 
 This script runs the same checks as our automated PR validation, including:
 
-- Markdown linting
-- MkDocs build test
-- Link checking
-- Spell checking
-- YAML validation
-- File naming conventions
-- Image optimization checks
-- Navigation structure validation
-- IP address validation
+* Markdown linting
+* MkDocs build test
+* Link checking
+* Spell checking
+* YAML validation
+* File naming conventions
+* Image optimization checks
+* Navigation structure validation
+* IP address validation
 
 ### Required Dependencies
 
 Install these tools for full validation:
 
 **Node.js packages:**
+
 ```bash
 npm install -g markdownlint-cli2 markdown-link-check cspell
 ```
 
 **Python packages:**
+
 ```bash
 pip install yamllint mkdocs-material
 ```
