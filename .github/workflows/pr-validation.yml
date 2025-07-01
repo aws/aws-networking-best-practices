@@ -18,8 +18,8 @@ jobs:
           script: |
             const prBody = context.payload.pull_request.body || '';
             
-            const philosophyChecked = /- \[[xX]\].*(?:\[philosophy\]|philosophy)/i.test(prBody);
-            const conventionsChecked = /- \[[xX]\].*(?:\[conventions\]|conventions)/i.test(prBody);
+            const philosophyChecked = /- \[[xX*✓+]\].*(?:\[philosophy\]|philosophy)/i.test(prBody);
+            const conventionsChecked = /- \[[xX*✓+]\].*(?:\[conventions\]|conventions)/i.test(prBody);
             
             if (!philosophyChecked || !conventionsChecked) {
               core.setFailed('Please check all required items in the PR checklist');
