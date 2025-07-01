@@ -85,6 +85,22 @@
          <lastmod>2025-07-01</lastmod>
     </url>
     <url>
+         <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/external-traffic/</loc>
+         <lastmod>2025-07-01</lastmod>
+    </url>
+    <url>
+         <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/internal-traffic/</loc>
+         <lastmod>2025-07-01</lastmod>
+    </url>
+    <url>
+         <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/notifications/</loc>
+         <lastmod>2025-07-01</lastmod>
+    </url>
+    <url>
+         <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/service-monitoring/</loc>
+         <lastmod>2025-07-01</lastmod>
+    </url>
+    <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/security/</loc>
          <lastmod>2025-07-01</lastmod>
     </url>

@@ -10,28 +10,28 @@
       
       
       
-        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/security/">
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/notifications/">
       
       
-        <link rel="prev" href="../hybrid-connectivity/app-networking/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="perimeter-inbound/">
+        <link rel="next" href="../service-monitoring/">
       
       
-      <link rel="icon" href="../assets/favicon.ico">
+      <link rel="icon" href="../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.15">
     
     
       
-        <title>External Network Access - Networking Best Practices</title>
+        <title>Notifications - Networking Best Practices</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -50,9 +50,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -71,11 +71,11 @@
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="External Network Access - Networking Best Practices" >
+        <meta  property="og:title"  content="Notifications - Networking Best Practices" >
       
         <meta  property="og:description"  content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." >
       
-        <meta  property="og:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/security/index.png" >
+        <meta  property="og:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/monitoring-observability/notifications.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -83,15 +83,15 @@
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://aws.github.io/aws/aws-networking-best-practices/security/" >
+        <meta  property="og:url"  content="https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/notifications/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="External Network Access - Networking Best Practices" >
+        <meta  name="twitter:title"  content="Notifications - Networking Best Practices" >
       
         <meta  name="twitter:description"  content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." >
       
-        <meta  name="twitter:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/security/index.png" >
+        <meta  name="twitter:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/monitoring-observability/notifications.png" >
       
     
     
@@ -114,7 +114,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#external-network-access" class="md-skip">
+        <a href="#notifications" class="md-skip">
           Skip to content
         </a>
       
@@ -130,9 +130,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
       
-  <img src="../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -149,7 +149,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              External Network Access
+              Notifications
             
           </span>
         </div>
@@ -275,9 +275,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
       
-  <img src="../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     Networking Best Practices
@@ -336,7 +336,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href=".." class="md-nav__link ">
+            <a href="../.." class="md-nav__link ">
               
   
   
@@ -371,7 +371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/contribute/" class="md-nav__link">
+      <a href="../../community/contribute/" class="md-nav__link">
         
   
   
@@ -394,7 +394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/report-a-correction/" class="md-nav__link">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
         
   
   
@@ -417,7 +417,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/new-best-practice/" class="md-nav__link">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
         
   
   
@@ -440,7 +440,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/making-a-pull-request/" class="md-nav__link">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
         
   
   
@@ -463,7 +463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/philosophy/" class="md-nav__link">
+      <a href="../../community/philosophy/" class="md-nav__link">
         
   
   
@@ -486,7 +486,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/conventions/" class="md-nav__link">
+      <a href="../../community/conventions/" class="md-nav__link">
         
   
   
@@ -538,7 +538,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../basics/" class="md-nav__link ">
+            <a href="../../basics/" class="md-nav__link ">
               
   
   
@@ -573,7 +573,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../basics/first-vpc/" class="md-nav__link">
+      <a href="../../basics/first-vpc/" class="md-nav__link">
         
   
   
@@ -627,7 +627,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../internal-connectivity/" class="md-nav__link ">
+            <a href="../../internal-connectivity/" class="md-nav__link ">
               
   
   
@@ -662,7 +662,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../internal-connectivity/vpc-same-region/" class="md-nav__link">
+      <a href="../../internal-connectivity/vpc-same-region/" class="md-nav__link">
         
   
   
@@ -685,7 +685,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../internal-connectivity/vpc-other-region/" class="md-nav__link">
+      <a href="../../internal-connectivity/vpc-other-region/" class="md-nav__link">
         
   
   
@@ -739,7 +739,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../internet-connectivity/" class="md-nav__link ">
+            <a href="../../internet-connectivity/" class="md-nav__link ">
               
   
   
@@ -774,7 +774,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../internet-connectivity/egress/" class="md-nav__link">
+      <a href="../../internet-connectivity/egress/" class="md-nav__link">
         
   
   
@@ -797,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../internet-connectivity/ingress/" class="md-nav__link">
+      <a href="../../internet-connectivity/ingress/" class="md-nav__link">
         
   
   
@@ -855,7 +855,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../hybrid-connectivity/" class="md-nav__link ">
+            <a href="../../hybrid-connectivity/" class="md-nav__link ">
               
   
   
@@ -890,7 +890,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hybrid-connectivity/network-to-network/" class="md-nav__link">
+      <a href="../../hybrid-connectivity/network-to-network/" class="md-nav__link">
         
   
   
@@ -913,7 +913,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hybrid-connectivity/clients-to-network/" class="md-nav__link">
+      <a href="../../hybrid-connectivity/clients-to-network/" class="md-nav__link">
         
   
   
@@ -936,7 +936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hybrid-connectivity/clients-to-apps/" class="md-nav__link">
+      <a href="../../hybrid-connectivity/clients-to-apps/" class="md-nav__link">
         
   
   
@@ -959,7 +959,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../hybrid-connectivity/app-networking/" class="md-nav__link">
+      <a href="../../hybrid-connectivity/app-networking/" class="md-nav__link">
         
   
   
@@ -986,8 +986,6 @@
       
   
   
-    
-  
   
   
     
@@ -1007,15 +1005,17 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../security/" class="md-nav__link ">
               
   
   
@@ -1028,13 +1028,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_6" id="__nav_6_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Network Security
@@ -1050,7 +1050,7 @@
   
   
     <li class="md-nav__item">
-      <a href="perimeter-inbound/" class="md-nav__link">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
         
   
   
@@ -1073,7 +1073,7 @@
   
   
     <li class="md-nav__item">
-      <a href="outbound/" class="md-nav__link">
+      <a href="../../security/outbound/" class="md-nav__link">
         
   
   
@@ -1096,7 +1096,7 @@
   
   
     <li class="md-nav__item">
-      <a href="segmentation/" class="md-nav__link">
+      <a href="../../security/segmentation/" class="md-nav__link">
         
   
   
@@ -1123,6 +1123,8 @@
       
   
   
+    
+  
   
   
     
@@ -1144,17 +1146,15 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../monitoring-observability/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -1173,7 +1173,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Monitoring, Logging & Observability
@@ -1186,10 +1186,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../monitoring-observability/notifications/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1200,6 +1209,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -1212,7 +1222,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../monitoring-observability/service-monitoring/" class="md-nav__link">
+      <a href="../service-monitoring/" class="md-nav__link">
         
   
   
@@ -1235,7 +1245,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../monitoring-observability/internal-traffic/" class="md-nav__link">
+      <a href="../internal-traffic/" class="md-nav__link">
         
   
   
@@ -1258,7 +1268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../monitoring-observability/external-traffic/" class="md-nav__link">
+      <a href="../external-traffic/" class="md-nav__link">
         
   
   
@@ -1315,7 +1325,7 @@
 
 
   
-    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/security/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/monitoring-observability/notifications.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1324,43 +1334,15 @@
     
       
     
-    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/security/index.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/monitoring-observability/notifications.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="external-network-access">External Network Access<a class="headerlink" href="#external-network-access" title="Permanent link">&para;</a></h1>
-<p>Enable secure, scalable internet connectivity for your AWS workloads. Learn how to manage inbound traffic from the internet to your applications and outbound traffic from your resources to external services.</p>
-<div class="grid cards">
-<ul>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> &nbsp;</p>
-<p><strong>Perimeter Controls</strong></p>
-<hr />
-<p>Protect a network's boundaries from unauthorized access.</p>
-<hr />
-<p><a href="perimeter-inbound/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Perimeter Controls</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M2 2.75C2 1.784 2.784 1 3.75 1h2.5a.75.75 0 0 1 0 1.5h-2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h2.5a.75.75 0 0 1 0 1.5h-2.5A1.75 1.75 0 0 1 2 13.25Zm10.44 4.5-1.97-1.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.749.749 0 0 1-1.275-.326.75.75 0 0 1 .215-.734l1.97-1.97H6.75a.75.75 0 0 1 0-1.5Z"/></svg></span> &nbsp;</p>
-<p><strong>Outbound Controls</strong></p>
-<hr />
-<p>Manage and restrict the flow of network traffic leaving a network.</p>
-<hr />
-<p><a href="outbound/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Outbound Controls</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 2v20c-5.1-.5-9-4.8-9-10s3.9-9.5 9-10m2 0v9h9c-.5-4.8-4.2-8.5-9-9m0 11v9c4.7-.5 8.5-4.2 9-9z"/></svg></span> &nbsp;</p>
-<p><strong>Network Segmentation</strong></p>
-<hr />
-<p>Divide a network into smaller, isolated segments to better control traffic flows.</p>
-<hr />
-<p><a href="segmentation/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Network Segmentation</a></p>
-</li>
-</ul>
-</div>
+<h1 id="notifications">Notifications<a class="headerlink" href="#notifications" title="Permanent link">&para;</a></h1>
+<p>Setting up and testing automated notifications and alarms is critical for insuring you are aware of potential issues as soon as possible.</p>
 
 
 
@@ -1383,7 +1365,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 24, 2025 05:57:38 UTC">June 24, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 1, 2025 22:36:01 UTC">July 1, 2025</span>
   </span>
 
     
@@ -1393,7 +1375,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2024 20:54:37 UTC">August 20, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 1, 2025 22:36:01 UTC">July 1, 2025</span>
   </span>
 
     
@@ -1480,7 +1462,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../hybrid-connectivity/app-networking/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Application Networking">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Visibility &amp;amp; Troubleshooting">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1490,20 +1472,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Application Networking
+                Visibility &amp; Troubleshooting
               </div>
             </div>
           </a>
         
         
           
-          <a href="perimeter-inbound/" class="md-footer__link md-footer__link--next" aria-label="Next: Perimeter Controls">
+          <a href="../service-monitoring/" class="md-footer__link md-footer__link--next" aria-label="Next: AWS Services">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Perimeter Controls
+                AWS Services
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1614,10 +1596,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.56ea9cef.min.js"></script>
+      <script src="../../assets/javascripts/bundle.56ea9cef.min.js"></script>
       
     
   </body>
