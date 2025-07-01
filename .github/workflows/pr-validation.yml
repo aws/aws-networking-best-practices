@@ -188,6 +188,60 @@ jobs:
           print("Navigation structure check completed successfully")
           EOF
 
+  ip-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate IP addresses
+        run: |
+          python3 << 'EOF'
+          import re
+          import ipaddress
+          import glob
+          import sys
+          
+          def validate_ipv4(ip):
+              try:
+                  addr = ipaddress.IPv4Address(ip)
+                  return str(addr) == ip
+              except:
+                  return False
+          
+          def validate_ipv6(ip):
+              try:
+                  addr = ipaddress.IPv6Address(ip)
+                  return str(addr) == ip.lower() and '::' not in ip.replace('::', ':::')
+              except:
+                  return False
+          
+          errors = []
+          ipv4_pattern = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
+          ipv6_pattern = r'\b(?:[0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}\b'
+          
+          for file in glob.glob('content/**/*.md', recursive=True):
+              if 'community/conventions.md' in file:
+                  continue
+              
+              with open(file, 'r') as f:
+                  content = f.read()
+              
+              for match in re.finditer(ipv4_pattern, content):
+                  ip = match.group()
+                  if not validate_ipv4(ip):
+                      errors.append(f"{file}: Invalid IPv4 '{ip}'")
+              
+              for match in re.finditer(ipv6_pattern, content):
+                  ip = match.group()
+                  if ':' in ip and not validate_ipv6(ip):
+                      errors.append(f"{file}: Invalid IPv6 '{ip}' (use lowercase, compressed format)")
+          
+          if errors:
+              for error in errors:
+                  print(error)
+              sys.exit(1)
+          print("IP address validation passed")
+          EOF
+
   meta-check:
     runs-on: ubuntu-latest
     continue-on-error: true
