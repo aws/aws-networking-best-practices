@@ -1799,17 +1799,17 @@
 <h2 id="representing-ip-addresses">Representing IP addresses<a class="headerlink" href="#representing-ip-addresses" title="Permanent link">&para;</a></h2>
 <p>Use approved documentation ranges to avoid conflicts with real networks and ensure examples work universally. Our automated validation checks enforce these standards.</p>
 <h3 id="example-ip-ranges-and-addresses">Example IP ranges and addresses<a class="headerlink" href="#example-ip-ranges-and-addresses" title="Permanent link">&para;</a></h3>
-<p>Use one of the multiple available <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses">documentation ranges</a> for IPv4 and IPv6 addresses, when documenting "public" IP addresses. A good example would be <code>192.0.2.0/24</code> for an IPv4 range or <code>2001:db8::/32</code> for an IPv6 range.</p>
-<p>For "internal range" examples use <a href="https://datatracker.ietf.org/doc/html/rfc1918">RFC1918</a> (<code>10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16</code>), <a href="https://datatracker.ietf.org/doc/html/rfc6598">RFC6598</a> (<code>100.64.0.0/10</code>), or <a href="https://datatracker.ietf.org/doc/html/rfc6815">RFC6815</a> space (<code>198.19.0.0/16</code>), which is all supported within VPC.</p>
+<p>Use one of the multiple available <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses">documentation ranges</a> for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> addresses, when documenting "public" IP addresses. A good example would be <code>192.0.2.0/24</code> for an <abbr title="Internet Protocol version 4">IPv4</abbr> range or <code>2001:db8::/32</code> for an <abbr title="Internet Protocol version 6">IPv6</abbr> range.</p>
+<p>For "internal range" examples use <a href="https://datatracker.ietf.org/doc/html/rfc1918">RFC1918</a> (<code>10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16</code>), <a href="https://datatracker.ietf.org/doc/html/rfc6598">RFC6598</a> (<code>100.64.0.0/10</code>), or <a href="https://datatracker.ietf.org/doc/html/rfc6815">RFC6815</a> space (<code>198.19.0.0/16</code>), which is all supported within <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
 <h4 id="complete-network-examples">Complete Network Examples<a class="headerlink" href="#complete-network-examples" title="Permanent link">&para;</a></h4>
-<p><strong>Multi-tier VPC setup:</strong></p>
+<p><strong>Multi-tier <abbr title="Virtual Private Cloud">VPC</abbr> setup:</strong></p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VPC: 10.0.0.0/16
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Public subnet: 10.0.1.0/24
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Private subnet: 10.0.2.0/24
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Database subnet: 10.0.3.0/24
 </span></code></pre></div>
-<h3 id="representing-ipv6-addresses-and-networks">Representing IPv6 addresses and networks<a class="headerlink" href="#representing-ipv6-addresses-and-networks" title="Permanent link">&para;</a></h3>
-<p>Adhere to <a href="https://datatracker.ietf.org/doc/html/rfc5952">RFC5952</a> when representing IPv6 addresses.</p>
+<h3 id="representing-ipv6-addresses-and-networks">Representing <abbr title="Internet Protocol version 6">IPv6</abbr> addresses and networks<a class="headerlink" href="#representing-ipv6-addresses-and-networks" title="Permanent link">&para;</a></h3>
+<p>Adhere to <a href="https://datatracker.ietf.org/doc/html/rfc5952">RFC5952</a> when representing <abbr title="Internet Protocol version 6">IPv6</abbr> addresses.</p>
 <table>
 <thead>
 <tr>
