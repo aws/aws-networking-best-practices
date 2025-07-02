@@ -3,6 +3,7 @@ name: PR Validation
 on:
   pull_request:
     branches: [main, master]
+    types: [opened, synchronize, reopened]
     paths:
       - 'content/**'
       - 'mkdocs.yml'
