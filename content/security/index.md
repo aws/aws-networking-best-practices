@@ -4,9 +4,7 @@ Enable secure, scalable internet connectivity for your AWS workloads. Learn how 
 
 <div class="grid cards" markdown>
 
-*   :material-shield: &nbsp;
-
-    **Perimeter Controls**
+*   :material-shield: **Perimeter Controls**
 
     ---
 
@@ -16,9 +14,7 @@ Enable secure, scalable internet connectivity for your AWS workloads. Learn how 
 
     [:octicons-arrow-right-24: Perimeter Controls](perimeter-inbound.md)
 
-*   :octicons-sign-out-16: &nbsp;
-
-    **Outbound Controls**
+*   :octicons-sign-out-16: **Outbound Controls**
 
     ---
 
@@ -28,9 +24,7 @@ Enable secure, scalable internet connectivity for your AWS workloads. Learn how 
 
     [:octicons-arrow-right-24: Outbound Controls](outbound.md)
 
-*   :material-chart-pie: &nbsp;
-
-    **Network Segmentation**
+*   :material-chart-pie: **Network Segmentation**
 
     ---
 

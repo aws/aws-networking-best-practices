@@ -4,9 +4,7 @@ Connect your AWS infrastructure with on-premises data centers, other cloud provi
 
 <div class="grid cards" markdown>
 
-*   :fontawesome-solid-network-wired: &nbsp;
-
-    **Network to Network**
+*   :fontawesome-solid-network-wired: **Network to Network**
 
     ---
 
@@ -16,9 +14,7 @@ Connect your AWS infrastructure with on-premises data centers, other cloud provi
 
     [:octicons-arrow-right-24: Network to Network](network-to-network.md)
 
-*   :material-account-network: &nbsp;
-
-    **Clients to Network**
+*   :material-account-network: **Clients to Network**
 
     ---
 
@@ -28,9 +24,7 @@ Connect your AWS infrastructure with on-premises data centers, other cloud provi
 
     [:octicons-arrow-right-24: Clients to Network](clients-to-network.md)
 
-*   :material-server-network: &nbsp;
-
-    **Clients to Applications**
+*   :material-server-network: **Clients to Applications**
 
     ---
 
@@ -40,9 +34,7 @@ Connect your AWS infrastructure with on-premises data centers, other cloud provi
 
     [:octicons-arrow-right-24: Clients to Applications](clients-to-apps.md)
 
-*   :material-console-network: &nbsp;
-
-    **Application Networking**
+*   :material-console-network: **Application Networking**
 
     ---
 

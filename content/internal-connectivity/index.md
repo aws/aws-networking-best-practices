@@ -4,9 +4,7 @@ Connect your AWS workloads and services within the AWS cloud. Learn best practic
 
 <div class="grid cards" markdown>
 
-*   :material-cloud-sync: &nbsp;
-
-    **Same Region**
+*   :material-cloud-sync: **Same Region**
 
     ---
 
@@ -16,9 +14,7 @@ Connect your AWS workloads and services within the AWS cloud. Learn best practic
 
     [:octicons-arrow-right-24: Same Region](vpc-same-region.md)
 
-*   :material-cloud-arrow-right: &nbsp;
-
-    **Across Regions**
+*   :material-cloud-arrow-right: **Across Regions**
 
     ---
 

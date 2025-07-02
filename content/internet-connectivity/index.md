@@ -4,9 +4,7 @@ Enable secure, scalable internet connectivity for your AWS workloads. Learn how 
 
 <div class="grid cards" markdown>
 
-*   :material-cloud-arrow-right: &nbsp;
-
-    **Egress**
+*   :material-cloud-arrow-right: **Egress**
 
     ---
 
@@ -16,9 +14,7 @@ Enable secure, scalable internet connectivity for your AWS workloads. Learn how 
 
     [:octicons-arrow-right-24: Egress](egress.md)
 
-*   :material-cloud-arrow-left: &nbsp;
-
-    **Ingress**
+*   :material-cloud-arrow-left: **Ingress**
 
     ---
 

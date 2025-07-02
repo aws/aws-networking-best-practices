@@ -7,9 +7,17 @@ connections.
 
 <div class="grid cards" markdown>
 
-*   :material-star-plus-outline: &nbsp;
+*   :material-school-outline: **AWS Prerequisites**
 
-    **Your first VPC**
+    ---
+
+    Essential AWS knowledge needed before starting with networking.
+
+    ---
+
+    [:octicons-arrow-right-24: AWS Prerequisites](aws-prerequisites.md)
+
+*   :material-star-plus-outline: **Your first VPC**
 
     ---
 
