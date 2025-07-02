@@ -29,3 +29,8 @@ Enable secure, scalable internet connectivity for your AWS workloads. Learn how 
     [:octicons-arrow-right-24: Ingress](ingress.md)
 
 </div>
+
+![Image title](../assets/internet-connectivity/Example.png){ width="300" }
+/// caption
+Example image caption - [Drawio Source](../assets/internet-connectivity/Example.drawio)
+///

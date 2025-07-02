@@ -133,6 +133,7 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
   - footnotes
+  - pymdownx.blocks.caption
 
 extra_css:
   - stylesheets/extra.css

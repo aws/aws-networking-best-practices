@@ -18,4 +18,5 @@ runs:
           mkdocs-material \
           mkdocs-git-revision-date-localized-plugin \
           mkdocs-git-committers-plugin-2 \
-          "mkdocs-material[imaging]"
+          "mkdocs-material[imaging]" \
+          "pymdown-extensions>=10.0"

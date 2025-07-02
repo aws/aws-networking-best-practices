@@ -64,3 +64,8 @@ past AWS re:Invent events. Here are a couple of examples:
 * [AWS networking foundations] from re:Invent 2023
 
 * [Networking foundations] from re:Invent 2021
+
+![Image title](../assets/basics/Example.png){ width="300" }
+/// caption
+Example image caption - [Drawio Source](../assets/basics/Example.drawio)
+///
