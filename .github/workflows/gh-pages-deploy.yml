@@ -33,12 +33,14 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger
           payload: |
-            status: "${{ job.status }}"
-            repo: "${{ github.repository }}"
-            user: "${{ github.actor }}"
-            commit_message: "${{ github.event.head_commit.message }}"
-            commit_sha: "${{ github.sha }}"
-            branch: "${{ github.ref_name }}"
-            commit_url: "<${{ github.event.head_commit.url }}>"
-            pages_url: "<https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}>"
+            {
+              "status": "${{ job.status }}",
+              "repo": "${{ github.repository }}",
+              "user": "${{ github.actor }}",
+              "commit_message": "${{ github.event.head_commit.message }}",
+              "commit_sha": "${{ github.sha }}",
+              "branch": "${{ github.ref_name }}",
+              "commit_url": "<${{ github.event.head_commit.url }}>",
+              "pages_url": "<https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}>"
+            }
 
