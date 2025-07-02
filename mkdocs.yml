@@ -100,13 +100,16 @@ markdown_extensions:
   - toc:
       permalink: true
   - admonition
+  - abbr
   - codehilite
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
       pygments_lang_class: true
   - pymdownx.inlinehilite
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
   - pymdownx.superfences
   - pymdownx.details
   - pymdownx.tabbed:
@@ -149,6 +152,10 @@ plugins:
       docs_path: content
   - social
   - search
+
+# Watch additional directories
+watch:
+  - includes
 
 # Page tree
 nav:
