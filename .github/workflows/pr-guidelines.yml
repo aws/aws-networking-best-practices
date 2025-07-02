@@ -3,7 +3,7 @@ name: PR Guidelines Check
 on:
   pull_request_target:
     branches: [main, master]
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 jobs:
   check-guidelines:
