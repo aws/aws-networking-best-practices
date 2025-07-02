@@ -29,3 +29,8 @@ Connect your AWS workloads and services within the AWS cloud. Learn best practic
     [:octicons-arrow-right-24: Across Regions](vpc-same-region.md)
 
 </div>
+
+![Image title](../assets/internal-connectivity/Example.png){ width="300" }
+/// caption
+Example image caption - [Drawio Source](../assets/internal-connectivity/Example.drawio)
+///

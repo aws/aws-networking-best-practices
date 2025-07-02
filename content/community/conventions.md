@@ -10,13 +10,54 @@ Use the [most recent set of AWS Architecture Icons](https://aws.amazon.com/archi
 
 ### Format and tooling
 
-Provide architecture diagrams in PNG file format with a light neutral background, such as white. Each diagram needs to be accompanied by the source in [draw.io](https://www.drawio.com/) format to allow future modifications.
+Provide architecture diagrams in PNG file format with a light neutral background, such as white. Leave a border of 8px around all elements. Each diagram needs to be accompanied by the source in [draw.io](https://www.drawio.com/) format to allow future modifications.
+
+#### File Organization
+
+Store files using this structure:
+
+```
+content/
+  assets/
+    basics/
+      vpc-setup-diagram.png
+      vpc-setup-diagram.drawio
+    security/
+      network-acl-flow.png
+      network-acl-flow.drawio
+```
+
+#### Technical Requirements
+
+* **File format**: PNG with transparent or white background
+* **Dimensions**: Maximum 1200px wide, maintain aspect ratio
+* **File size**: Keep under 500KB for optimal loading
+* **Resolution**: 72-96 DPI for web display
+
+![Image title](../assets/community/Example.png){ width="300" }
+/// caption
+Example image caption - [Drawio Source](../assets/community/Example.drawio)
+///
 
 ### Accessibility
 
-Create architecture diagrams with accessibility in mind. Text (or lines) and the background should have a contrast ration of [at least 4.5:1](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html). Generally, white or black on a strongly contrasting background is the best choice.
+Create architecture diagrams with accessibility in mind. Text (or lines) and the background should have a contrast ratio of [at least 4.5:1](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html). Generally, white or black on a strongly contrasting background is the best choice.
 
-* **Keep it simple**: Create diagrams that are as simple as possible; split content over several diagrams if needed.
+#### Accessibility Examples
+
+**Good contrast combinations:**
+
+* Black text (#000000) on white background (#FFFFFF) - 21:1 ratio
+* Dark gray text (#16191F) on white background - 12.6:1 ratio
+
+**Poor contrast combinations:**
+
+* Light gray text (#CCCCCC) on white background - 1.6:1 ratio ❌
+* Yellow text on white background - 1.1:1 ratio ❌
+
+#### Guidelines
+
+* **Keep it simple**: Create diagrams that are as simple as possible; split content over several diagrams if needed. If you can't sketch it on a napkin, it's too complicated.
 
 * **Use double encoding**: Avoid using color as a sole indicator of difference.
 
@@ -40,11 +81,24 @@ Use the following guidance to align your diagram's style with AWS' visual style 
 
 ## Representing IP addresses
 
+Use approved documentation ranges to avoid conflicts with real networks and ensure examples work universally. Our automated validation checks enforce these standards.
+
 ### Example IP ranges and addresses
 
 Use one of the multiple available [documentation ranges](https://en.wikipedia.org/wiki/Reserved_IP_addresses) for IPv4 and IPv6 addresses, when documenting "public" IP addresses. A good example would be ```192.0.2.0/24``` for an IPv4 range or ```2001:db8::/32``` for an IPv6 range.
 
 For "internal range" examples use [RFC1918](https://datatracker.ietf.org/doc/html/rfc1918) (```10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16```), [RFC6598](https://datatracker.ietf.org/doc/html/rfc6598) (```100.64.0.0/10```), or [RFC6815](https://datatracker.ietf.org/doc/html/rfc6815) space (```198.19.0.0/16```), which is all supported within VPC.
+
+#### Complete Network Examples
+
+**Multi-tier VPC setup:**
+
+```
+VPC: 10.0.0.0/16
+  Public subnet: 10.0.1.0/24
+  Private subnet: 10.0.2.0/24
+  Database subnet: 10.0.3.0/24
+```
 
 ### Representing IPv6 addresses and networks
 
@@ -56,3 +110,16 @@ Adhere to [RFC5952](https://datatracker.ietf.org/doc/html/rfc5952) when represen
 | :material-close:{ style="color: #EF5350" } **Wrong** | ```2001:0db8:0000:1234::``` |
 | :material-close:{ style="color: #EF5350" } **Wrong** | ```2001:DB8:0:1234::``` |
 | :material-close:{ style="color: #EF5350" } **Wrong** | ```2001:0DB8:0000:1234::``` |
+
+## Quick Checklist
+
+Before submitting diagrams:
+
+* [ ] Uses latest AWS Architecture Icons
+* [ ] PNG format with white background
+* [ ] Includes matching .drawio source file
+* [ ] Text contrast ratio ≥ 4.5:1
+* [ ] Font size ≥ 12px
+* [ ] Uses approved IP ranges
+* [ ] File size < 500KB
+* [ ] Descriptive alt text included

@@ -12,3 +12,8 @@ Connectivity at L4+:
 * DNS (Profiles, Private Hosted DNS)
 
 ## Combining Traditional and Application Networking
+
+![Image title](../assets/internal-connectivity/Example.png){ width="300" }
+/// caption
+Example image caption - [Drawio Source](../assets/internal-connectivity/Example.drawio)
+///

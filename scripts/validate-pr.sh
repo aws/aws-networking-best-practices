@@ -32,7 +32,12 @@ fi
 # Link check
 echo "🔗 Checking links..."
 if command -v markdown-link-check &> /dev/null; then
-    find content -name "*.md" -exec markdown-link-check --config .github/mlc_config.json {} \; || ERRORS=$((ERRORS+1))
+    LINK_ERRORS=0
+    find content -name "*.md" -exec markdown-link-check --config .github/mlc_config.json {} \; | tee /tmp/link_check.log
+    if grep -q "ERROR:" /tmp/link_check.log; then
+        echo "❌ Dead links found"
+        ERRORS=$((ERRORS+1))
+    fi
 else
     echo "⚠️  markdown-link-check not installed. Install with: npm install -g markdown-link-check"
 fi
