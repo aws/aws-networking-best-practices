@@ -18,7 +18,7 @@ jobs:
             action: "${{ github.event.action }}"
             issue_title: "${{ github.event.issue.title }}"
             issue_number: "${{ github.event.issue.number }}"
-            issue_url: "${{ github.event.issue.html_url }}"
+            issue_url: "<${{ github.event.issue.html_url }}>"
             user: "${{ github.event.issue.user.login }}"
             repo: "${{ github.repository }}"
             labels: "${{ toJson(github.event.issue.labels.*.name) }}"

@@ -22,9 +22,57 @@ jobs:
             const changedFiles = execSync(`git diff --name-only origin/${{ github.base_ref }}...HEAD`)
               .toString().trim().split('\n').filter(f => f.endsWith('.md'));
             
+            // Skip preview if multiple markdown files detected (handled by pr-guidelines workflow)
+            if (changedFiles.length > 1) {
+              console.log(`Skipping preview for ${changedFiles.length} files - multiple file warning will be shown instead`);
+              return;
+            }
+            
             for (const file of changedFiles) {
               const diffOutput = execSync(`git diff origin/${{ github.base_ref }}...HEAD -- "${file}"`)
                 .toString();
+              
+              function processMarkdown(lines) {
+                return lines.map(line => {
+                  // Fix relative image paths to GitHub raw URLs
+                  line = line.replace(/!\[([^\]]*)\]\(\.\.\/assets\/([^)]+)\)/g, 
+                    '![$1](https://github.com/aws/aws-networking-best-practices/raw/main/content/assets/$2)');
+                  
+                  // Convert MkDocs image attributes to HTML
+                  line = line.replace(/!\[([^\]]*)\]\(([^)]+)\)\{[^}]*width="([^"]+)"[^}]*\}/g, 
+                    '<img src="$2" alt="$1" width="$3">');
+                  
+                  // Remove MkDocs caption syntax and convert to simple text
+                  line = line.replace(/^\/\/\/ caption$/gm, '**Caption:**');
+                  
+                  // Convert Material Design icons to emoji equivalents
+                  const iconMap = {
+                    ':material-eye-check:': '👁️✅',
+                    ':material-exclamation-thick:': '⚠️',
+                    ':material-alarm-light:': '🚨',
+                    ':material-image-auto-adjust:': '⚙️',
+                    ':material-check:': '✅',
+                    ':material-close:': '❌',
+                    ':fontawesome-solid-road-barrier:': '🚧',
+                    ':octicons-stop-16:': '🛑',
+                    ':octicons-arrow-right-24:': '→',
+                    ':material-star-plus-outline:': '⭐'
+                  };
+                  
+                  // Replace icons with emoji equivalents
+                  Object.entries(iconMap).forEach(([icon, emoji]) => {
+                    line = line.replace(new RegExp(icon.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), emoji);
+                  });
+                  
+                  // Clean up table formatting for better GitHub display
+                  if (line.includes('|') && line.includes(':material-') || line.includes(':fontawesome-') || line.includes(':octicons-')) {
+                    // Additional cleanup for any remaining icon syntax in tables
+                    line = line.replace(/:([a-z-]+):/g, '🔹');
+                  }
+                  
+                  return line;
+                }).join('\n');
+              }
               
               const addedLines = diffOutput.split('\n')
                 .filter(line => line.startsWith('+') && !line.startsWith('+++'))
@@ -47,11 +95,13 @@ jobs:
                 let body = `## 📖 Preview: \`${file}\`\n\n`;
                 
                 if (addedLines.length > 0) {
-                  body += `### New Content\n\n${addedLines.join('\n')}\n\n`;
+                  const processedNew = processMarkdown(addedLines);
+                  body += `### New Content\n\n${processedNew}\n\n`;
                 }
                 
                 if (removedLines.length > 0) {
-                  body += `<details>\n<summary>👁️ Show replaced content</summary>\n\n${removedLines.join('\n')}\n\n</details>`;
+                  const processedOld = processMarkdown(removedLines);
+                  body += `<details>\n<summary>👁️ Show replaced content</summary>\n\n${processedOld}\n\n</details>`;
                 }
                 
                 await github.rest.issues.createComment({
