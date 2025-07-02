@@ -4,21 +4,17 @@ Monitor network performance, analyze traffic patterns, and troubleshoot connecti
 
 <div class="grid cards" markdown>
 
-*   :octicons-alert-24: &nbsp;
-
-    **Notifications**
+*   :octicons-alert-24: **Notifications**
 
     ---
 
-    Setting up and testing automated notifications and alarms is critical for insuring you are aware of potential issues as soon as possible.
+    Set up automated notifications and alarms to detect issues quickly.
 
     ---
 
     [:octicons-arrow-right-24: Notifications](notifications.md)
 
-*   :octicons-server-24: &nbsp;
-
-    **AWS Services**
+*   :octicons-server-24: **AWS Services**
 
     ---
 
@@ -28,25 +24,21 @@ Monitor network performance, analyze traffic patterns, and troubleshoot connecti
 
     [:octicons-arrow-right-24: AWS Services](service-monitoring.md)
 
-*   :octicons-arrow-both-24: &nbsp;
-
-    **AWS Internal Traffic**
+*   :octicons-arrow-both-24: **AWS Internal Traffic**
 
     ---
 
-    See VPC Flow Logs, Athena analysis, CloudWatch, and other tools to understand what network activity inside AWS is going on.
+    Monitor internal AWS network activity using VPC Flow Logs, CloudWatch, and Athena.
 
     ---
 
     [:octicons-arrow-right-24: AWS Internal Traffic](internal-traffic.md)
 
-*   :octicons-cloud-24: &nbsp;
-
-    **AWS External Traffic**
+*   :octicons-cloud-24: **AWS External Traffic**
 
     ---
 
-    AWS provides several mechanisms to understand where your traffic is going, and how external customer traffic is performing.
+    Monitor outbound traffic destinations and external customer traffic performance.
 
     ---
 

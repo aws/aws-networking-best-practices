@@ -162,6 +162,7 @@ nav:
       - Conventions: community/conventions.md
   - Networking Basics:
       - basics/index.md
+      - AWS Prerequisites: basics/aws-prerequisites.md
       - Setting up your first VPC: basics/first-vpc.md
   - Connectivity within AWS:
       - internal-connectivity/index.md
@@ -186,5 +187,5 @@ nav:
       - monitoring-observability/index.md
       - Notifications: monitoring-observability/notifications.md
       - AWS Services: monitoring-observability/service-monitoring.md
-      - AWS Internal Traffic: monitoring-observability/internal-traffic.md
-      - AWS External Traffic: monitoring-observability/external-traffic.md
+      - Internal Traffic: monitoring-observability/internal-traffic.md
+      - External Traffic: monitoring-observability/external-traffic.md

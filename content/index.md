@@ -5,9 +5,7 @@ validated by AWS Networking Specialists.
 
 <div class="grid cards" markdown>
 
-*   :material-network: &nbsp;
-
-    **Foundation & Core Concepts**
+*   :material-network: **Foundation & Core Concepts**
 
     ---
 
@@ -18,9 +16,7 @@ validated by AWS Networking Specialists.
 
     [:octicons-arrow-right-24: Networking Basics](basics/)
 
-*   :material-lan-connect: &nbsp;
-
-    **Internal Connectivity**
+*   :material-lan-connect: **Internal Connectivity**
 
     ---
 
@@ -31,9 +27,7 @@ validated by AWS Networking Specialists.
 
     [:octicons-arrow-right-24: Connectivity within AWS](internal-connectivity/)
 
-*   :material-web: &nbsp;
-
-    **External Network Access**
+*   :material-web: **External Network Access**
 
     ---
 
@@ -44,9 +38,7 @@ validated by AWS Networking Specialists.
 
     [:octicons-arrow-right-24: Internet Connectivity](internet-connectivity/)
 
-*   :material-cloud-sync: &nbsp;
-
-    **Multi-Environment Connectivity**
+*   :material-cloud-sync: **Multi-Environment Connectivity**
 
     ---
 
@@ -57,9 +49,7 @@ validated by AWS Networking Specialists.
 
     [:octicons-arrow-right-24: Hybrid and multi-cloud](hybrid-connectivity/)
 
-*   :material-lock-outline: &nbsp;
-
-    **Security & Access Control**
+*   :material-lock-outline: **Security & Access Control**
 
     ---
 
@@ -70,9 +60,7 @@ validated by AWS Networking Specialists.
 
     [:octicons-arrow-right-24: Network Security](security/)
 
-*   :material-monitor-eye: &nbsp;
-
-    **Visibility & Troubleshooting**
+*   :material-monitor-eye: **Visibility & Troubleshooting**
 
     ---
 
