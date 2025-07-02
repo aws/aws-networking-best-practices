@@ -21,31 +21,68 @@ connections.
 
     ---
 
-    Setting up your first Virtual Private Cloud (VPC).
-
-    ---
+      ---
 
     [:octicons-arrow-right-24: First VPC](first-vpc.md)
 
 </div>
 
-## How many VPCs should I have per account?
+## 1. AWS Regions and Availability Zone considerations
 
-* 1 VPC per account
+How to distribute resources across AWS Regions, AZs, and LZs for resilience. Fundamental architectural concept that impacts region/subnet design and app availability.
 
-* Use Control Tower for a Multi-account strategy
+## 2. VPC IP Addressing and CIDR Planning
 
-## How many subnets should I use?
+Choosing IP ranges and avoiding conflicts, CIDR notation and subnet sizing.
 
-Subnet Strategy for e.g. 3 tier workload
+## 3. IPv4 vs. IPv6 in VPCs
 
-## How many route tables?
+Dual-stack networking and protocol-specific considerations. Private vs public vs Elastic IPs. Basics of BYOIP.
 
-## How many NAT Gateways (NGW)?
+## 4. Single VPC vs. Multiple VPCs per Account
 
-## How to use Internet Gateways (IGW) or Egress-Only Internet Gateways?
+When to use one large VPC vs multiple smaller VPCs.
 
-## IP addressing
+## 5. VPC Sharing
+
+When to use it vs separate VPCs per account. "should we share or separate?
+
+## 6. Subnet Strategies
+
+"how many subnets do I need?" and common patterns (public/private).
+
+## 7. Elasrtic Network Interfaces (ENIs)
+
+How EC2 instances connect to VPCs and concepts like primary/secondary IPs.
+
+## 8. Route Tables and Traffic Flow
+
+How routing works within VPCs and how traffic decisions are made.
+
+## 9. Gateways
+
+When to use virtual private gateways, internet gateway, NAT gateways, transit gateways, and Direct Connect gateways
+
+## 10. Internet connectivity patterns
+
+Basic internet connectivity patterns and the decision between Centralized vs distributed NAT patterns, high availability.
+
+## 11. Accessing AWS services
+
+When to use IGW/NAT gateway vs gateway/interface endpoints to access AWS services
+
+## 12. VPC DNS Resolution, DHCP Options
+
+Name resolution within VPC
+
+## 13. Security Groups vs. Network ACLs
+
+Difference between these and when to use each approach.
+
+## 14. Network Performance and Sizing
+
+Instance bandwidth considerations, placement groups.
+
 
 ## Additional resources to get started?
 
