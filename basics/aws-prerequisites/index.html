@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/security/outbound/">
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/basics/aws-prerequisites/">
       
       
-        <link rel="prev" href="../perimeter-inbound/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../segmentation/">
+        <link rel="next" href="../first-vpc/">
       
       
       <link rel="icon" href="../../assets/favicon.ico">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Outbound Controls - Networking Best Practices</title>
+        <title>AWS Prerequisites - Networking Best Practices</title>
       
     
     
@@ -71,11 +71,11 @@
       
         <meta  property="og:type"  content="website" >
       
-        <meta  property="og:title"  content="Outbound Controls - Networking Best Practices" >
+        <meta  property="og:title"  content="AWS Prerequisites - Networking Best Practices" >
       
         <meta  property="og:description"  content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." >
       
-        <meta  property="og:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/security/outbound.png" >
+        <meta  property="og:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/basics/aws-prerequisites.png" >
       
         <meta  property="og:image:type"  content="image/png" >
       
@@ -83,15 +83,15 @@
       
         <meta  property="og:image:height"  content="630" >
       
-        <meta  property="og:url"  content="https://aws.github.io/aws/aws-networking-best-practices/security/outbound/" >
+        <meta  property="og:url"  content="https://aws.github.io/aws/aws-networking-best-practices/basics/aws-prerequisites/" >
       
         <meta  name="twitter:card"  content="summary_large_image" >
       
-        <meta  name="twitter:title"  content="Outbound Controls - Networking Best Practices" >
+        <meta  name="twitter:title"  content="AWS Prerequisites - Networking Best Practices" >
       
         <meta  name="twitter:description"  content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." >
       
-        <meta  name="twitter:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/security/outbound.png" >
+        <meta  name="twitter:image"  content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/basics/aws-prerequisites.png" >
       
     
     
@@ -114,7 +114,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#coming-soon" class="md-skip">
+        <a href="#aws-prerequisites" class="md-skip">
           Skip to content
         </a>
       
@@ -149,7 +149,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Outbound Controls
+              AWS Prerequisites
             
           </span>
         </div>
@@ -513,6 +513,8 @@
       
   
   
+    
+  
   
   
     
@@ -530,17 +532,15 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../basics/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -559,7 +559,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Networking Basics
@@ -572,10 +572,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../basics/aws-prerequisites/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    AWS Prerequisites
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -586,6 +608,128 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#essential-aws-knowledge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Essential AWS Knowledge
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Essential AWS Knowledge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-account-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Account Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-and-access-management-iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity and Access Management (IAM)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-infrastructure-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Infrastructure Concepts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended Learning Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Learning Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-well-architected-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Well-Architected Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-training-and-certification" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Training and Certification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Knowledge Check
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -598,7 +742,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../basics/first-vpc/" class="md-nav__link">
+      <a href="../first-vpc/" class="md-nav__link">
         
   
   
@@ -1011,8 +1155,6 @@
       
   
   
-    
-  
   
   
     
@@ -1032,15 +1174,17 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../security/" class="md-nav__link ">
               
   
   
@@ -1059,7 +1203,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Network Security
@@ -1075,7 +1219,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../perimeter-inbound/" class="md-nav__link">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
         
   
   
@@ -1095,19 +1239,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
         
   
   
@@ -1118,7 +1253,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -1131,7 +1265,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../segmentation/" class="md-nav__link">
+      <a href="../../security/segmentation/" class="md-nav__link">
         
   
   
@@ -1336,6 +1470,116 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#essential-aws-knowledge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Essential AWS Knowledge
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Essential AWS Knowledge">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-account-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Account Structure
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-and-access-management-iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity and Access Management (IAM)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-infrastructure-concepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Infrastructure Concepts
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-learning-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recommended Learning Resources
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recommended Learning Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-well-architected-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Well-Architected Framework
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-training-and-certification" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Training and Certification
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      Knowledge Check
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next Steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1350,7 +1594,7 @@
 
 
   
-    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/security/outbound.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/basics/aws-prerequisites.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1359,15 +1603,69 @@
     
       
     
-    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/security/outbound.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/basics/aws-prerequisites.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="coming-soon">Coming Soon<a class="headerlink" href="#coming-soon" title="Permanent link">&para;</a></h1>
-<p>This section is under development.</p>
+<h1 id="aws-prerequisites">AWS Prerequisites<a class="headerlink" href="#aws-prerequisites" title="Permanent link">&para;</a></h1>
+<p>Before diving into AWS networking, ensure you understand these foundational AWS concepts. These services and concepts are essential for implementing networking solutions effectively.</p>
+<h2 id="essential-aws-knowledge">Essential AWS Knowledge<a class="headerlink" href="#essential-aws-knowledge" title="Permanent link">&para;</a></h2>
+<h3 id="aws-account-structure">AWS Account Structure<a class="headerlink" href="#aws-account-structure" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AWS Accounts</strong> - Understand account boundaries and resource isolation</li>
+<li><strong>AWS Organizations</strong> - Multi-account management and governance</li>
+<li><strong>Account strategies</strong> - When to use single vs. multiple accounts</li>
+</ul>
+<h3 id="identity-and-access-management-iam">Identity and Access Management (IAM)<a class="headerlink" href="#identity-and-access-management-iam" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Users, Groups, and Roles</strong> - Authentication and authorization basics</li>
+<li><strong>Policies</strong> - Permission management and least privilege principles</li>
+<li><strong>Cross-account access</strong> - Sharing resources between accounts securely</li>
+</ul>
+<h3 id="core-infrastructure-concepts">Core Infrastructure Concepts<a class="headerlink" href="#core-infrastructure-concepts" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Regions and Availability Zones</strong> - Geographic distribution and high availability</li>
+<li><strong>Resource naming</strong> - Consistent tagging and naming conventions</li>
+<li><strong>Service limits</strong> - Understanding quotas and how to request increases</li>
+</ul>
+<h2 id="recommended-learning-resources">Recommended Learning Resources<a class="headerlink" href="#recommended-learning-resources" title="Permanent link">&para;</a></h2>
+<h3 id="aws-well-architected-framework">AWS Well-Architected Framework<a class="headerlink" href="#aws-well-architected-framework" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html">Security Pillar</a> - Foundation security concepts</li>
+<li><a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html">Reliability Pillar</a> - Building resilient systems</li>
+</ul>
+<h3 id="aws-training-and-certification">AWS Training and Certification<a class="headerlink" href="#aws-training-and-certification" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://aws.amazon.com/training/course-descriptions/cloud-practitioner-essentials/">AWS Cloud Practitioner Essentials</a> - AWS fundamentals</li>
+<li><a href="https://aws.amazon.com/training/course-descriptions/essentials/">AWS Technical Essentials</a> - Core AWS services overview</li>
+</ul>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://aws.amazon.com/getting-started/">AWS Getting Started Guide</a> - Step-by-step AWS introduction</li>
+<li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/">AWS IAM User Guide</a> - Identity and access management</li>
+<li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/">AWS Organizations User Guide</a> - Multi-account management</li>
+</ul>
+<h2 id="knowledge-check">Knowledge Check<a class="headerlink" href="#knowledge-check" title="Permanent link">&para;</a></h2>
+<p>Before proceeding with networking topics, you should be comfortable with:</p>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Creating and managing AWS accounts</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Understanding IAM roles and policies</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Working with AWS Organizations (if using multiple accounts)</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Basic AWS CLI or Console navigation</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Understanding AWS service limits and quotas</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Applying consistent resource tagging strategies</li>
+</ul>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Once you're comfortable with these prerequisites, you're ready to start with <a href="../first-vpc/">Setting up your first VPC</a>.</p>
+<figure>
+<p><img alt="Image title" src="../../assets/basics/Example.png" width="300" /></p>
+<figcaption>
+<p>Example image caption - <a href="../../assets/basics/Example.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 
 
 
@@ -1390,7 +1688,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 24, 2025 06:22:40 UTC">June 24, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 2, 2025 03:24:12 UTC">July 2, 2025</span>
   </span>
 
     
@@ -1400,7 +1698,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2024 20:54:37 UTC">August 20, 2024</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 2, 2025 03:24:12 UTC">July 2, 2025</span>
   </span>
 
     
@@ -1487,7 +1785,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../perimeter-inbound/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Perimeter Controls">
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Multi-Environment Connectivity">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1497,20 +1795,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Perimeter Controls
+                Multi-Environment Connectivity
               </div>
             </div>
           </a>
         
         
           
-          <a href="../segmentation/" class="md-footer__link md-footer__link--next" aria-label="Next: Network Segmentation">
+          <a href="../first-vpc/" class="md-footer__link md-footer__link--next" aria-label="Next: Setting up your first VPC">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Network Segmentation
+                Setting up your first VPC
               </div>
             </div>
             <div class="md-footer__button md-icon">
