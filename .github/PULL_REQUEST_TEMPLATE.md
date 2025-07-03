@@ -1,25 +1,30 @@
 # 📝 Description
 
-Provide a clear summary of your changes and why they're needed. Help reviewers understand the context and impact.
+<!-- 
+🚨 IMPORTANT: Replace this entire section with your own description
+Delete everything from here down to the "Checklist" section and write your own summary
+-->
 
-**What to include:**
-- What you changed (which files/sections)
-- Why you made the change (problem being solved)
-- How it improves the documentation
-- Any related discussions or issues
+[Replace this with a clear summary of what you changed and why]
 
-**Good examples:**
-- ✅ "Add Transit Gateway best practices section to address common multi-account connectivity patterns. Includes routing recommendations and security considerations based on customer feedback in issue #123."
-- ✅ "Fix broken links in VPC peering documentation and update outdated console screenshots to match current AWS interface."
-- ✅ "Reorganize networking fundamentals section for better learning flow, moving basic concepts before advanced topics as suggested in discussion #456."
+## What Changed
+[List the main pages or sections you modified]
 
-**Avoid:**
-- ❌ "Update docs"
-- ❌ "Various fixes"
-- ❌ "Add content"
+## Why This Change
+[Explain the problem you're solving or improvement you're making]
 
 **Related issue/discussion:**
 Fixes #(issue) or Relates to #(discussion)
+
+<!--
+Need help writing a good description? Here are some examples:
+
+✅ Good: "Add Transit Gateway best practices section to address common multi-account connectivity patterns. Includes routing recommendations and security considerations based on customer feedback in issue #123."
+
+✅ Good: "Reorganize networking fundamentals section for better learning flow, moving basic concepts before advanced topics as suggested in discussion #456."
+
+❌ Avoid: "Update docs", "Various fixes", "Add content"
+-->
 
 # Checklist:
 Tick the boxes before submitting: 
