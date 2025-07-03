@@ -1,0 +1,26 @@
+name: Slack Notification
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK }}
+          webhook-type: webhook-trigger
+          payload: |
+            {
+              "status": "success",
+              "repo": "${{ github.repository }}",
+              "user": "${{ github.actor }}",
+              "commit_message": "${{ github.event.head_commit.message }}",
+              "commit_sha": "${{ github.sha }}",
+              "branch": "${{ github.ref_name }}",
+              "commit_url": "${{ github.event.head_commit.url }}",
+              "pages_url": "https://aws.github.io/aws-networking-best-practices"
+            }
