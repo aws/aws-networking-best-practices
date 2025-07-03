@@ -5,6 +5,10 @@ on:
     branches: [main, master]
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   check-guidelines:
     runs-on: ubuntu-latest
