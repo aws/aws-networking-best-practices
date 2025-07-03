@@ -1,9 +1,8 @@
-# Multi-Environment Connectivity
+# Networking Basics
 
-Connect your AWS infrastructure with on-premises data centers, other cloud
-providers, and remote users. This section covers architectural patterns and
-best practices for building secure, reliable hybrid and multi-cloud network
-connections.
+Fundamental concepts for AWS networking. This section covers core
+VPC concepts, IP addressing, routing, security, and connectivity patterns
+that form the building blocks for all AWS network architectures.
 
 <div class="grid cards" markdown>
 
