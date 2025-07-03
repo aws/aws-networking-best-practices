@@ -3,7 +3,12 @@ name: PR Guidelines Check
 on:
   pull_request:
     branches: [main, master]
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
 
 jobs:
   check-guidelines:
