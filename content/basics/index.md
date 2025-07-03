@@ -53,7 +53,7 @@ When to use it vs separate VPCs per account. "should we share or separate?
 
 "how many subnets do I need?" and common patterns (public/private).
 
-## 7. Elasrtic Network Interfaces (ENIs)
+## 7. Elastic Network Interfaces (ENIs)
 
 How EC2 instances connect to VPCs and concepts like primary/secondary IPs.
 
