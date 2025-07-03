@@ -4,13 +4,33 @@ on:
   pull_request:
     branches: [main, master]
     types: [opened, synchronize, reopened]
-    paths:
-      - 'content/**'
-      - 'mkdocs.yml'
-      - '.github/workflows/**'
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.changes.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            docs:
+              - 'content/**'
+              - 'mkdocs.yml'
+              - '.github/workflows/**'
+
   checklist-validation:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Check PR checklist completion
@@ -26,28 +46,39 @@ jobs:
               core.setFailed('Please check all required items in the PR checklist');
             }
   markdown-lint:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: DavidAnson/markdownlint-cli2-action@v16
         with:
           globs: 'content/**/*.md'
           config: '.github/.markdownlint-cli2.yaml'
 
   mkdocs-build:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: ./.github/actions/setup-mkdocs
       - name: Build MkDocs site
         run: mkdocs build
 
   link-check:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
@@ -56,27 +87,39 @@ jobs:
           folder-path: 'content'
 
   spell-check:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: streetsidesoftware/cspell-action@v6
         with:
           files: 'content/**/*.md'
           config: '.github/cspell.json'
 
   yaml-lint:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: mkdocs.yml
           config_file: .github/yamllint.yml
 
   file-validation:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Check file naming conventions
         run: |
           # Check for spaces in filenames
@@ -93,9 +136,13 @@ jobs:
           fi
 
   image-check:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Check image optimization
         run: |
           # Find large images (>500KB)
@@ -113,10 +160,14 @@ jobs:
           fi
 
   prose-check:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
@@ -133,10 +184,14 @@ jobs:
           find content -name "*.md" -exec alex {} \; || true
 
   structure-check:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Validate navigation structure
         run: |
           # Check that all markdown files are referenced in mkdocs.yml
@@ -190,9 +245,13 @@ jobs:
           EOF
 
   ip-validation:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Validate IP addresses
         run: |
           python3 << 'EOF'
@@ -266,6 +325,8 @@ jobs:
           EOF
 
   meta-check:
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
