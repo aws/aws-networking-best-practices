@@ -21,7 +21,9 @@ connections.
 
     ---
 
-      ---
+    Setting up your first Virtual Private Cloud (VPC).
+
+    ---
 
     [:octicons-arrow-right-24: First VPC](first-vpc.md)
 
