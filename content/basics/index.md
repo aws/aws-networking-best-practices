@@ -85,7 +85,6 @@ Difference between these and when to use each approach.
 
 Instance bandwidth considerations, placement groups.
 
-
 ## Additional resources to get started?
 
 [skills builder]: https://aws.amazon.com/training/learn-about/advanced-networking/
