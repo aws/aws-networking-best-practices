@@ -1,6 +1,9 @@
 name: PR Validation
 
 on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize, reopened]
   pull_request_target:
     branches: [main, master]
     types: [opened, synchronize, reopened]

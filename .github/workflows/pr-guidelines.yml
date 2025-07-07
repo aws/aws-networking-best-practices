@@ -1,6 +1,9 @@
 name: PR Guidelines Check
 
 on:
+  pull_request:
+    branches: [main, master]
+    types: [opened, synchronize, reopened]
   pull_request_target:
     branches: [main, master]
     types: [opened, synchronize, reopened]

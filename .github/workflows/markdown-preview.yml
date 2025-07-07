@@ -1,6 +1,10 @@
 name: Markdown Preview
 
 on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'content/**/*.md'
   pull_request_target:
     branches: [main, master]
     paths:
