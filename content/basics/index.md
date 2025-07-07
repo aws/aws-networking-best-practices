@@ -35,6 +35,7 @@ How to distribute resources across AWS Regions, AZs, and LZs for resilience. Fun
 ## 2. VPC IP Addressing and CIDR Planning
 
 Choosing IP ranges and avoiding conflicts, CIDR notation and subnet sizing.
+Blah
 
 ## 3. IPv4 vs. IPv6 in VPCs
 
