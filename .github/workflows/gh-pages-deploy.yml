@@ -37,7 +37,7 @@ jobs:
               "status": "${{ job.status }}",
               "repo": "${{ github.repository }}",
               "user": "${{ github.actor }}",
-              "commit_message": "${{ github.event.head_commit.message }}",
+              "commit_message": ${{ toJSON(github.event.head_commit.message) }},
               "commit_sha": "${{ github.sha }}",
               "branch": "${{ github.ref_name }}",
               "commit_url": "${{ github.event.head_commit.url }}",
