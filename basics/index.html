@@ -1456,6 +1456,66 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="14. Network Performance and Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-burst-vs-sustained-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding Burst vs. Sustained Performance**
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Guidelines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-placement-groups-for-performance-critical-workloads" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Placement Groups for performance-critical workloads
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-az-communication-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-AZ communication patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implement-network-performance-monitoring-and-alerting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implement Network Performance Monitoring and alerting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relevant Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1548,7 +1608,39 @@ that form the building blocks for all AWS network architectures.</p>
 <h2 id="13-security-groups-vs-network-acls">13. Security Groups vs. Network ACLs<a class="headerlink" href="#13-security-groups-vs-network-acls" title="Permanent link">&para;</a></h2>
 <p>Difference between these and when to use each approach.</p>
 <h2 id="14-network-performance-and-sizing">14. Network Performance and Sizing<a class="headerlink" href="#14-network-performance-and-sizing" title="Permanent link">&para;</a></h2>
-<p>Instance bandwidth considerations, placement groups.</p>
+<p><abbr title="Elastic Compute Cloud">EC2</abbr> instance networking capabilities can vary based on instance family, size, and placement decisions. A common myth may that "bigger instances always mean better network performance" or that placement groups are only relevant for <a href="https://aws.amazon.com/hpc">High Performance Computing (HPC)</a>. In reality, network performance scaling is nuanced, with considerations around burst vs. sustained performance, cross-<abbr title="Availability Zone">AZ</abbr> traffic patterns, and the interplay between compute, storage, and network resources.</p>
+<h3 id="understanding-burst-vs-sustained-performance">Understanding Burst vs. Sustained Performance**<a class="headerlink" href="#understanding-burst-vs-sustained-performance" title="Permanent link">&para;</a></h3>
+<p>Many customers select instance types based on CPU and memory requirements while treating network performance as secondary. This leads to compute-optimized instances handling network-intensive workloads, or memory-optimized instances being oversized when network throughput may create the bottleneck.</p>
+<p>Network performance scales non-linearly within instance families. For example, an <abbr title="Elastic Compute Cloud">EC2</abbr> c5.large instance provides <a href="https://docs.aws.amazon.com/ec2/latest/instancetypes/co.html#co_network">750 Mbps baseline with up to 10 Gbps</a> burst, while a c5.xlarge instance offers the same 10 Gbps burst but delivers better sustained performance at 1.25 Gbps baseline. Mismatched ratios waste resources—you pay for unused compute while network performance constrains you, or you have abundant network capacity but insufficient compute resources to use it effectively.</p>
+<p><abbr title="Elastic Compute Cloud">EC2</abbr> instance network specifications list burst capabilities that aren’t sustained. <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html">Certain <abbr title="Elastic Compute Cloud">EC2</abbr> instances</a> use baseline bandwidth with network I/O credits to burst beyond baseline on a best-effort basis. Applications exceeding baseline throughput during peak hours face performance degradation when burst credits exhaust. This can affect for e.g., batch processing workloads, database migrations, and backup operations requiring sustained high throughput.</p>
+<h3 id="key-guidelines">Key Guidelines<a class="headerlink" href="#key-guidelines" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html">Monitor baseline and burst network performance</a> for your specific <abbr title="Elastic Compute Cloud">EC2</abbr> instance type</li>
+<li>Instance bandwidth apply to inbound and outbound traffic, depending on destination and traffic flow patterns <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html">(single flow vs multi-flow)</a></li>
+<li>All <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#instance-hypervisor-type">Nitro-based instances</a> use <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ena-express.html">Elastic Network Adapter (ENA) Express</a> for enhanced networking, powered by AWS Scalable Reliable Datagram (SRD) technology that uses dynamic routing to increase throughput and minimize latency</li>
+<li>Non-Nitro instance types use <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html">Enhanced Networking</a> with Single Root I/O Virtualization (SR-IOV) for high-performance networking on supported instance types.</li>
+<li>Calculate sustained network throughput requirements separately from peak burst needs. For workloads requiring sustained high throughput, choose instance types where your required throughput stays at or below baseline performance. For periodic high-throughput workloads, schedule them during low-traffic periods to leverage burst capacity recovery. Consider multiple smaller instances instead of fewer larger ones to achieve better sustained aggregate throughput. Some instance types support <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configure-bandwidth-weighting.html">configurable bandwidth</a> weighting between network processing and Elastic Block Store (EBS) operations. Default baseline bandwidth settings are determined by instance type.</li>
+<li>The ENA driver publishes <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html">network performance metrics</a> from enabled instances. Use these metrics to troubleshoot performance issues, choose appropriate instance sizes for workloads, plan scaling activities proactively, and benchmark applications to determine whether they maximize available instance performance.</li>
+</ul>
+<h3 id="use-placement-groups-for-performance-critical-workloads">Use Placement Groups for performance-critical workloads<a class="headerlink" href="#use-placement-groups-for-performance-critical-workloads" title="Permanent link">&para;</a></h3>
+<p>A <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html">placement group</a> (optional) is a logical grouping of instances within an Availability Zone that helps you to influence the placement of individual <abbr title="Elastic Compute Cloud">EC2</abbr> instances to meet specific requirements for performance, latency, or compliance. Placement groups are often treated as an all-or-nothing decision, with entire applications placed in cluster placement groups or none at all. In practice, the most effective approach involves selective use of different placement group types (<a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-strategies.html#placement-groups-cluster">Cluster</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-strategies.html#placement-groups-partition">Partition</a> or <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-strategies.html#placement-groups-spread">Spread</a>) for different tiers of your architecture. Cluster placement groups can significantly reduce latency between instances for the same <abbr title="Availability Zone">AZ</abbr> communication, but they concentrate failure risk. Spread placement groups reduce failure correlation but may increase latency. Partition placement groups offer a middle ground but are frequently overlooked for database sharding or distributed system deployments.</p>
+<p><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ena-improve-network-latency-linux.html">Reduce the number of network hops</a> for data packets. Use cluster placement groups selectively for tightly coupled components like database primary-replica pairs or application servers that perform frequent inter-node communication. Reserve spread placement groups for independent application instances behind load balancers. Leverage partition placement groups for distributed databases like Cassandra or MongoDB where you need both performance and failure isolation. Never place your entire infrastructure in a single cluster placement group—instead, create multiple smaller groups aligned with your application's communication patterns.</p>
+<p>Placement groups can't span regions but can span AZs (except cluster type). When launching instances into an existing placement group, always use the same instance type and launch them simultaneously when possible to avoid capacity issues. If you receive placement group capacity errors, try launching in a different <abbr title="Availability Zone">AZ</abbr> within the same region, or temporarily launch smaller instance types and resize later.</p>
+<h3 id="cross-az-communication-patterns">Cross-<abbr title="Availability Zone">AZ</abbr> communication patterns<a class="headerlink" href="#cross-az-communication-patterns" title="Permanent link">&para;</a></h3>
+<p>Many customers focus on high availability by spreading resources across AZs without considering the cumulative cost impact of cross-<abbr title="Availability Zone">AZ</abbr> data transfer. This can represent a significant portion of the total infrastructure costs for data-intensive applications.</p>
+<p>Cross-<abbr title="Availability Zone">AZ</abbr> data transfer costs <a href="https://aws.amazon.com/ec2/pricing/on-demand/">$0.01-0.02 per GB</a> depending on the AWS Region, which accumulates quickly for applications with chatty microservices or frequent database replication. More critically, cross-<abbr title="Availability Zone">AZ</abbr> latency is typically ~1-2ms higher than intra-<abbr title="Availability Zone">AZ</abbr> communication, which can compound in applications making hundreds of service calls per request.</p>
+<p>Implement <abbr title="Availability Zone">AZ</abbr> affinity in your application architecture where feasible. Use Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>)/Network Load Balancer (<abbr title="Network Load Balancer">NLB</abbr>) <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html#disable-cross-zone">target group attributes</a> to enable cross-zone load balancing only when necessary—disable it for applications that can tolerate some imbalance to reduce cross-<abbr title="Availability Zone">AZ</abbr> traffic. For database architectures, consider read replicas in the same <abbr title="Availability Zone">AZ</abbr> as your primary application servers for read-heavy workloads. Design your microservices communication patterns to minimize cross-<abbr title="Availability Zone">AZ</abbr> calls—consider using message queues or event-driven architectures to reduce synchronous cross-<abbr title="Availability Zone">AZ</abbr> communication.</p>
+<p>Use <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a> with cost allocation tags to identify your highest cross-<abbr title="Availability Zone">AZ</abbr> traffic patterns. Many applications generate surprising amounts of cross-<abbr title="Availability Zone">AZ</abbr> traffic through health checks, monitoring agents, or chatty service meshes. Consider using <a href="https://aws.amazon.com/about-aws/global-infrastructure/localzones/">AWS Local Zones</a> for applications requiring ultra-low latency to specific geographic areas, as they can reduce both latency and data transfer costs compared to cross-<abbr title="Availability Zone">AZ</abbr> communication.</p>
+<h3 id="implement-network-performance-monitoring-and-alerting">Implement Network Performance Monitoring and alerting<a class="headerlink" href="#implement-network-performance-monitoring-and-alerting" title="Permanent link">&para;</a></h3>
+<p>Network performance issues are often discovered reactively through user complaints or application timeouts rather than proactive monitoring. Many monitoring setups focus on CPU and memory utilization while overlooking network metrics that can predict performance bottlenecks. Network performance degradation often appears gradually and can be masked by application-level retries or gray failures. By the time users notice problems, the issue may have been developing for days or weeks, making root cause analysis more difficult. Set up Amazon CloudWatch <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html">network performance monitoring alerts</a>.</p>
+<p>Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs with <a href="https://repost.aws/knowledge-center/vpc-flow-logs-and-cloudwatch-logs-insights">Amazon CloudWatch Insights</a> to analyze traffic patterns and identify optimization opportunities. Network performance issues often correlate with other infrastructure changes, so maintain good change management practices and baseline your network performance before and after deployments. Consider using AWS X-Ray for distributed tracing to identify network bottlenecks in microservices architectures.</p>
+<h3 id="relevant-resources">Relevant Resources<a class="headerlink" href="#relevant-resources" title="Permanent link">&para;</a></h3>
+<ol>
+<li><a href="https://aws.amazon.com/ec2/instance-types/">Amazon <abbr title="Elastic Compute Cloud">EC2</abbr> Instance Types Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html">Placement Groups Best Practices</a></li>
+<li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html">Enhanced Networking on Linux</a></li>
+<li><a href="https://youtu.be/_hiNXKQZc0M"><abbr title="Elastic Compute Cloud">EC2</abbr> Nitro networking under the hood</a></li>
+</ol>
 <h2 id="additional-resources-to-get-started">Additional resources to get started?<a class="headerlink" href="#additional-resources-to-get-started" title="Permanent link">&para;</a></h2>
 <p>If you're new to AWS networking, it's important to get a solid foundation
 before diving into deployment design. We recommend starting with some basic
@@ -1596,7 +1688,7 @@ past AWS re:Invent events. Here are a couple of examples:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 3, 2025 05:04:25 UTC">July 3, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 15, 2025 20:09:22 UTC">July 15, 2025</span>
   </span>
 
     
