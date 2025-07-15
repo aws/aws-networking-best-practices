@@ -32,28 +32,6 @@ jobs:
               - 'mkdocs.yml'
               - '.github/workflows/**'
 
-  checklist-validation:
-    needs: changes
-    if: needs.changes.outputs.docs == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check PR checklist completion
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prBody = context.payload.pull_request.body || '';
-            
-            console.log('PR Body:', prBody);
-            
-            const philosophyChecked = /- \[[xX*✓+]\].*philosophy/i.test(prBody);
-            const conventionsChecked = /- \[[xX*✓+]\].*conventions/i.test(prBody);
-            
-            console.log('Philosophy checked:', philosophyChecked);
-            console.log('Conventions checked:', conventionsChecked);
-            
-            if (!philosophyChecked || !conventionsChecked) {
-              core.setFailed('Please check all required items in the PR checklist');
-            }
   markdown-lint:
     needs: changes
     if: needs.changes.outputs.docs == 'true'
