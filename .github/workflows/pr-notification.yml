@@ -1,0 +1,26 @@
+name: PR Notification
+
+on:
+  pull_request:
+    types: [opened]
+    branches: [main, master]
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send PR notification to Slack
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL_NEWPR }}
+          webhook-type: webhook-trigger
+          payload: |
+            {
+              "event": "pull_request_opened",
+              "repo": "${{ github.repository }}",
+              "pr_number": "${{ github.event.pull_request.number }}",
+              "pr_title": ${{ toJSON(github.event.pull_request.title) }},
+              "pr_author": "${{ github.event.pull_request.user.login }}",
+              "pr_url": "${{ github.event.pull_request.html_url }}",
+              "branch": "${{ github.event.pull_request.head.ref }}"
+            }
