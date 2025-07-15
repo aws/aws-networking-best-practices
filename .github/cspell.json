@@ -24,6 +24,7 @@
     "cloudtrail",
     "cloudwatch",
     "cname",
+    "Datagram",
     "ddos",
     "dhcp",
     "dns",
@@ -41,6 +42,7 @@
     "fargate",
     "fontawesome",
     "fqdn",
+    "Gbps",
     "globalaccelerator",
     "gwlb",
     "http",
@@ -53,6 +55,7 @@
     "ipv6",
     "kms",
     "lambda",
+    "Mbps",
     "mkdocs",
     "mtu",
     "multicast",
@@ -91,7 +94,8 @@
     "vpcs",
     "vpn",
     "vxlan",
-    "waf"
+    "waf",
+    "xlarge"
   ],
   "ignorePaths": [
     "node_modules/**",
