@@ -45,8 +45,3 @@ Monitor network performance, analyze traffic patterns, and troubleshoot connecti
     [:octicons-arrow-right-24: AWS External Traffic](external-traffic.md)
 
 </div>
-
-![Image title](../assets/monitoring-observability/Example.png){ width="300" }
-/// caption
-Example image caption - [Drawio Source](../assets/monitoring-observability/Example.drawio)
-///
