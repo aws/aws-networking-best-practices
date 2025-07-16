@@ -7,3 +7,38 @@
 [data-md-color-scheme="slate"] {
   --md-primary-fg-color:        #141f2e;
 }
+
+/* START: Custom admonition for services styling with material icons */
+.md-typeset .admonition.metrics,
+.md-typeset details.metrics {
+  border-color: #448aff;
+}
+.md-typeset .metrics > .admonition-title,
+.md-typeset .metrics > summary {
+  background-color: rgba(68, 138, 255, 0.1);
+  border-color: #448aff;
+}
+.md-typeset .metrics > .admonition-title::before,
+.md-typeset .metrics > summary::before {
+  background-color: #448aff;
+  -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"/></svg>');
+  mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"/></svg>');
+}
+
+.md-typeset .admonition.quotas,
+.md-typeset details.quotas {
+  border-color: #ff9100;
+}
+.md-typeset .quotas > .admonition-title,
+.md-typeset .quotas > summary {
+  background-color: rgba(255, 145, 0, 0.1);
+  border-color: #ff9100;
+}
+.md-typeset .quotas > .admonition-title::before,
+.md-typeset .quotas > summary::before {
+  background-color: #ff9100;
+  -webkit-mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M16.5,11.5V10H14V13H16.5V11.5H18V16H16.5V14.5H14V16H12.5V14.5H10V16H8.5V11.5H10V13H12.5V10H10V11.5H8.5V7H10V8.5H12.5V7H14V8.5H16.5V7H18V11.5H16.5Z"/></svg>');
+  mask-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M16.5,11.5V10H14V13H16.5V11.5H18V16H16.5V14.5H14V16H12.5V14.5H10V16H8.5V11.5H10V13H12.5V10H10V11.5H8.5V7H10V8.5H12.5V7H14V8.5H16.5V7H18V11.5H16.5Z"/></svg>');
+}
+
+/* END: Custom admonition for services styling with material icons */
