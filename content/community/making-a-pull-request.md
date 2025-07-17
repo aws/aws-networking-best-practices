@@ -18,57 +18,75 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 
 **Need more details?** Continue reading for the complete workflow.
 
+## Before You Submit
+
+!!! tip "Checklist"
+    * [ ] Changes follow our [conventions](conventions.md)
+
+    * [ ] All links work correctly
+
+    * [ ] Commit messages are descriptive
+
+    * [ ] Referenced any related issues in your PR description
+
+    * [ ] Tested that documentation builds without errors
+
 ## Step-by-Step Process
 
 ### 1. Fork the repository on GitHub
 
-1. Go to the [aws-networking-best-practices] repository on GitHub
-2. Click on the 'Fork' action at the top, to the right of the "aws-networking-best-practices" banner.
-3. Fork the repository into your own space - you can name it whatever you like, although keeping it as `aws-networking-best-practices` is recommended.
+* Fork the [aws-networking-best-practices] repository on GitHub ([GitHub Docs: Forking a repository][fork-docs]{:target="_blank"})
+
+* Clone your fork to your local machine ([GitHub Docs: Cloning a repository][clone-docs]{:target="_blank"})
+
+* Create a new branch: `git checkout -b your-feature-name` ([GitHub Docs: Git branches][branch-docs]{:target="_blank"})
 
 [aws-networking-best-practices]: https://github.com/aws/aws-networking-best-practices
+[fork-docs]: https://docs.github.com/en/get-started/quickstart/fork-a-repo
+[clone-docs]: https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
+[branch-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches
 
 ### 2. Create a branch for your changes
 
-Checkout the main branch of your own fork:
+* Edit the documentation files
 
-1. cd to a clean directory
-2. Do `git clone git@github.com:(fork path)` - You can get the fork path by clicking the green "Code" dropdown in the website for your fork, selecting the SSH tab, and copying the path from there
-3. Prepare your environment - see [Environment setup](#environment-setup) below.
+* Commit changes in logical chunks with clear messages ([GitHub Docs: About commits][commit-docs]{:target="_blank"})
 
-We strongly recommend you use branching in your fork. To do so, make a branch by `git checkout -b (new-branch-name)`.  The branch name should be something short but meaningful to what you're doing - `add-new-service-info` or such. A full description will come later.
+* Push to your fork regularly: `git push origin your-feature-name` ([GitHub Docs: Pushing changes][push-docs]{:target="_blank"})
+
+[commit-docs]: https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits
+[push-docs]: https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository
 
 ### 3. Make your edits and commit them
 
-1. Edit the documentation files. Use whatever tool you like, although having one that allows Markdown preview is very helpful. Ensure you follow the patterns laid out in other sections - consistency in look and feel is important.
+* Open a draft pull request early for feedback ([GitHub Docs: Draft PRs][draft-pr-docs]{:target="_blank"})
 
-2. Commit changes in logical chunks with clear messages. Do this by:
-    * Do `git add (files that have been changed)`. If there are old files no longer needed, remove them from the repo with `git rm (files to remove)`
-    * Do `git status` to verify you are on a branch, and the files you want changed show under `Changes to be committed:`
-    * Do `git commit -m "Brief message describing your changes"` - This message should be short (60 characters or so), as it is what will show up as a comment next to files you are changing.
-    * If everything looks good, so `git push origin (branch-name)`.
+* Include a clear description of your changes
 
-3. If you are the fork owner, manage your fork by accepting the branches into your main for consistency.
-    * You should resync your main from the aws fork before doing this by going to the GitHub website and clicking 'Sync fork'.
-    * Do `git checkout main`
-    * Do `git pull` to ensure you're up-to-date
-    * Do `git merge (branch-name)`
-    * Do `git commit -m "Same message as the branch message"`
-    * Do `git push origin main`
+* Reference any related issues or discussions ([GitHub Docs: Linking issues][linking-issues]{:target="_blank"})
+
+[draft-pr-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#draft-pull-requests
+[linking-issues]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
 
 ### 4. Submit a pull request with a clear description
 
-1. Go through the [Local Validation](#local-validation) steps below right before you're ready for your work to be sent to the main site for review.
-2. Go to the GitHub web page (you can do this from either the main site or your fork), go to the 'Pull requests' tab at the top, and click 'New pull request'. Ensure the left side is 'aws/aws-networking-best-practices', branch 'main', and the right side is your fork and correct branch (likely main, if you followed the steps above). Fill out the pre-filled text at the top of the PR, and check the boxes needed (in Markdown editor, use `[x]` to check boxes).
-3. Submit your pull request.
-
-### 5. Review Process
-
-* Respond to reviewer feedback promptly
+* Respond to reviewer feedback promptly ([GitHub Docs: Creating a PR][create-pr-docs]{:target="_blank"})
 
 * Make requested changes and push updates
 
 * Your PR will be merged once approved
+
+[create-pr-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
+
+### 5. Review Process
+
+* Respond to reviewer feedback promptly ([GitHub Docs: PR reviews][pr-review-docs]{:target="_blank"})
+
+* Make requested changes and push updates
+
+* Your PR will be merged once approved
+
+[pr-review-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews
 
 !!! example "Good Commit Messages"
     * ✅ "Add Transit Gateway best practices for multi-account setups"
@@ -96,7 +114,7 @@ Thank you for helping improve AWS networking guidance for the community.
 First, clone the repository.
 
     ```
-    git clone (fork-url)
+    git clone https://github.com/YOUR-USERNAME/aws-networking-best-practices
     cd aws-networking-best-practices
     ```
 Next, create a new [Python virtual environment][venv] and
@@ -239,9 +257,9 @@ hosting. Before you consider making a pull request, you should familiarize
 yourself with the documentation on GitHub, the service we are using. The
 following articles are of particular importance:
 
-1. [Forking a repository]
-2. [Creating a pull request from a fork]
-3. [Creating a pull request]
+1. [Forking a repository]{:target="_blank"}
+2. [Creating a pull request from a fork]{:target="_blank"}
+3. [Creating a pull request]{:target="_blank"}
 
 Note that they provide tailored documentation for different operating systems
 and different ways of interacting with GitHub. We do our best in the
