@@ -48,7 +48,7 @@ We strongly recommend you use branching in your fork. To do so, make a branch by
     * Do `git commit -m "Brief message describing your changes"` - This message should be short (60 characters or so), as it is what will show up as a comment next to files you are changing.
     * If everything looks good, so `git push origin (branch-name)`.
 
-3. If you are the fork owner, manage your fork by accepting the branches into your main for consistency. 
+3. If you are the fork owner, manage your fork by accepting the branches into your main for consistency.
     * You should resync your main from the aws fork before doing this by going to the GitHub website and clicking 'Sync fork'.
     * Do `git checkout main`
     * Do `git pull` to ensure you're up-to-date
