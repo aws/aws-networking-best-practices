@@ -4,9 +4,6 @@ on:
   pull_request_target:
     types: [opened]
     branches: [main, master]
-  pull_request:
-    types: [opened]
-    branches: [main, master]
 
 jobs:
   notify-slack:
