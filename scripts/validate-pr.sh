@@ -159,7 +159,7 @@ def validate_ipv4(ip):
 def validate_ipv6(ip):
     try:
         addr = ipaddress.IPv6Address(ip)
-        return str(addr) == ip.lower() and ip.count('::') < 2
+        return addr.compressed == ip
     except:
         return False
 
