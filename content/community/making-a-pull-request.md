@@ -149,7 +149,8 @@ Then, install all Python dependencies:
                 mkdocs-material \
                 mkdocs-git-revision-date-localized-plugin \
                 mkdocs-git-committers-plugin-2 \
-                "mkdocs-material[imaging]"
+                "mkdocs-material[imaging]" \
+                yamllint
     ```
 
 ### Live Preview
