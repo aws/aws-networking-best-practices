@@ -4,6 +4,9 @@ on:
     branches:
       - master 
       - main
+
+# Only run in the main repository, not in forks
+if: github.repository == 'aws/aws-networking-best-practices'
 permissions:
   contents: write
 jobs:
