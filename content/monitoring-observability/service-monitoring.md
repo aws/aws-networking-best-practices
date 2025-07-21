@@ -158,7 +158,7 @@ For quotas:
 
     | Component | Quota | Type |
     | --- | --- | --- |
-    | Network traffic (per GWLB) | 100 Gpbs | :octicons-stop-16:{ title="Hard quota – Cannot be adjusted."} |
+    | Network traffic (per GWLB) | 100 Gbps | :octicons-stop-16:{ title="Hard quota – Cannot be adjusted."} |
     | Network traffic (per GWLBe) | 100 Gbps | :octicons-stop-16:{ title="Hard quota – Cannot be adjusted."} |
 
 ## Route53 Endpoints, Resolver, and Resolver DNS Firewall
@@ -197,6 +197,7 @@ For quotas:
     | Number | Notes |
     | :--: | --- |
     | 1 | AWS CloudWatch "AWS/NATGateway" namespace:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td>:material-alarm-light:{ Alarm any time the condition exists. }</td><td>PacketsDropCount</td><td>More than 0.1% per second</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>ErrorPortAllocation</td><td>More than 2 per second</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>BytesInFromSource + BytesInFromDestination</td><td>Approaching 100 Gbps</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>PacketsInFromSource + PacketsInFromDestination</td><td>Approaching 10 Mpps</td></tr></tbody></table> |
+    | 2 | See [Internet Gateway](#internet-gateway) section. |
 
 === "Quotas"
     Always check these against the [official NAT Gateway quotas.](https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html)
@@ -219,10 +220,11 @@ For quotas:
 === "Metrics"
     | Number | Notes |
     | :--: | --- |
-    | 1 | Monitor instances (see Instances page) for network traffic exceeded. |
+    | 1 | Monitor [instances](#instances) for network traffic exceeded. |
     | 2 | Consider enabling [CloudWatch Internet Monitor](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-InternetMonitor.html) |
     | 3 | Consider using [Network Access Analyzer](https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html) |
     | 4 | Consider enabling [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) |
+    | 5 | See [NAT Gateway](#nat-gateway) section. |
 
 === "Quotas"
     Always check these against the [official Internet Gateway quotas.](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html)
@@ -265,7 +267,7 @@ For quotas:
 === "Metrics"
     | Number | Notes |
     | :--: | --- |
-    | 1 | AWS CloudWatch "agent" namespace, per network interface:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td>:material-alarm-light:{ Alarm any time the condition exists. }</td><td>conntrack_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>conntrack_allowance_availabile</td><td>Approaching zero</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>bw_(in&#129;out)_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>Per interface RX dropped count</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>queue_<X>_tx_queue_stop</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>pps_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>linklocal_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-eye-check:{ These statistics should always be monitored, and may be alarmed depending on specific use case. }</td><td>Output from “tc –s qdisc show <interface>”</td><td>Shows drops increasing quickly</td></tr></tbody></table> |
+    | 1 | AWS CloudWatch "agent" namespace, per network interface:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td>:material-alarm-light:{ Alarm any time the condition exists. }</td><td>conntrack_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>conntrack_allowance_available</td><td>Approaching zero</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>bw_(in&#129;out)_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>Per interface RX dropped count</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>queue_<X>_tx_queue_stop</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>pps_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-exclamation-thick:{ These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. }</td><td>linklocal_allowance_exceeded</td><td>Increasing quickly</td></tr><tr><td>:material-eye-check:{ These statistics should always be monitored, and may be alarmed depending on specific use case. }</td><td>Output from “tc –s qdisc show <interface>”</td><td>Shows drops increasing quickly</td></tr></tbody></table> |
     | 2 | AWS CloudWatch “AWS/EC2” namespace contains many metrics to monitor, the exact ones depend on the details of the workload – CPUUtilization is a common one. See [the EC2 metrics page](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html) for more. |
     | 3 | Consider enabling [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html). |
 
@@ -298,4 +300,3 @@ For quotas:
     | Component | Quota | Type |
     | --- | --- | --- |
     | Bits per second, per endpoint | 100 Gbps | :octicons-stop-16:{ title="Hard quota – Cannot be adjusted."} |
-

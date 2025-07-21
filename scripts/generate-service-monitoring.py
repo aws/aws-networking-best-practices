@@ -180,7 +180,7 @@ if __name__ == '__main__':
                                {'type': 'metrics', 'ns': 'AWS/GatewayELB', 'per': 'target group', 'data':
                                    [['warn', 'UnhealthyHostCount', 'Staying over 0']]},
                                {'type': 'text', 'v': 'Per target monitoring.'}],
-                        quotas=[['Network traffic (per GWLB)', '100 Gpbs', 'hard'], ['Network traffic (per GWLBe)', '100 Gbps', 'hard']],
+                        quotas=[['Network traffic (per GWLB)', '100 Gbps', 'hard'], ['Network traffic (per GWLBe)', '100 Gbps', 'hard']],
                         quotas_url='https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/quotas-limits.html')
 
     text += gen_service('Route53 Endpoints, Resolver, and Resolver DNS Firewall', 'R53',
@@ -200,7 +200,8 @@ if __name__ == '__main__':
                             [['crit', 'PacketsDropCount', 'More than 0.1% per second'],
                              ['warn', 'ErrorPortAllocation', 'More than 2 per second'],
                              ['warn', 'BytesInFromSource + BytesInFromDestination', 'Approaching 100 Gbps'],
-                             ['warn', 'PacketsInFromSource + PacketsInFromDestination', 'Approaching 10 Mpps']]}],
+                             ['warn', 'PacketsInFromSource + PacketsInFromDestination', 'Approaching 10 Mpps']]},
+                               {'type': 'text', 'v': 'See [Internet Gateway](#internet-gateway) section.'}],
                         quotas=[['Bits per seconds', '5 Gbps cold, able to scale up to 100 Gbps', 'hard'],
                                 ['Packets per second', '1 Mpps cold, able to scale up to 10 Mpps', 'hard'],
                                 ['Simultaneous connections from a source IP to each unique destination (can be mitigated by adding additional public IPs to the NAT gateway)', '55,000', 'hard'],
@@ -208,10 +209,11 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html')
 
     text += gen_service('Internet Gateway', 'IGW',
-                        items=[{'type': 'text', 'v': 'Monitor instances (see Instances page) for network traffic exceeded.'},
+                        items=[{'type': 'text', 'v': 'Monitor [instances](#instances) for network traffic exceeded.'},
                                {'type': 'text', 'v': 'Consider enabling [CloudWatch Internet Monitor](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-InternetMonitor.html)'},
                                {'type': 'text', 'v': 'Consider using [Network Access Analyzer](https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html)'},
-                               {'type': 'text', 'v': 'Consider enabling [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html)'}],
+                               {'type': 'text', 'v': 'Consider enabling [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html)'},
+                               {'type': 'text', 'v': 'See [NAT Gateway](#nat-gateway) section.'}],
                         quotas=[['Traffic to the internet, per instance', '5 Gbps or 50% of network bandwidth for instances with more than 32 vCPUs', 'hard']],
                         quotas_url='https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html')
 
@@ -235,7 +237,7 @@ if __name__ == '__main__':
     text += gen_service('Instances', 'Inst',
                         items=[{'type': 'metrics', 'ns': 'agent', 'per': 'network interface', 'data':
                             [['crit', 'conntrack_allowance_exceeded', 'Increasing quickly'],
-                             ['warn', 'conntrack_allowance_availabile', 'Approaching zero'],
+                             ['warn', 'conntrack_allowance_available', 'Approaching zero'],
                              ['warn', 'bw_(in|out)_allowance_exceeded', 'Increasing quickly'],
                              ['warn', 'Per interface RX dropped count', 'Increasing quickly'],
                              ['warn', 'queue_<X>_tx_queue_stop', 'Increasing quickly'],
@@ -257,28 +259,5 @@ if __name__ == '__main__':
                         quotas=[['Bits per second, per endpoint', '100 Gbps', 'hard']],
                         quotas_url='https://docs.aws.amazon.com/network-firewall/latest/developerguide/quotas.html')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     with open('service-monitoring.md', 'w') as f:
-        f.write(text)
-
-
-
-
-
-
-
+        f.write(text[:-1])
