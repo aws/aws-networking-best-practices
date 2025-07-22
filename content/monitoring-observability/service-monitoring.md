@@ -7,17 +7,17 @@ For the metrics, the following symbols are used:
 
 | Symbol | Meaning |
 | :-: | --- |
-| :material-alarm-light:{ title=Alarm any time the condition exists. } | Alarm any time the condition exists. |
-| :material-exclamation-thick:{ title=These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. } | These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. |
-| :material-eye-check:{ title=These statistics should always be monitored, and may be alarmed depending on specific use case. } | These statistics should always be monitored, and may be alarmed depending on specific use case. |
+| :material-alarm-light:{ title="Alarm any time the condition exists". } | Alarm any time the condition exists. |
+| :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. |
+| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | These statistics should always be monitored, and may be alarmed depending on specific use case. |
 
 For quotas:
 
 | Symbol | Meaning |
 | :-: | --- |
-| :octicons-stop-16:{ title=Hard quota – Cannot be adjusted. } | Hard quota – Cannot be adjusted. |
-| :fontawesome-solid-road-barrier:{ title=Medium quota - Contact AWS to discuss these and possible alternative architectures. } | Medium quota - Contact AWS to discuss these and possible alternative architectures. |
-| :material-image-auto-adjust:{ title=Soft quota - Adjustable by customer. } | Soft quota - Adjustable by customer. |
+| :octicons-stop-16:{ title="Hard quota – Cannot be adjusted." } | Hard quota – Cannot be adjusted. |
+| :fontawesome-solid-road-barrier:{ title="Medium quota - Contact AWS to discuss these and possible alternative architectures." } | Medium quota - Contact AWS to discuss these and possible alternative architectures. |
+| :material-image-auto-adjust:{ title="Soft quota - Adjustable by customer." } | Soft quota - Adjustable by customer. |
 
 !!! info "Remember"
     Always validate the quotas below against the official AWS documentation - in case of differences, the official quotas should be used. Not all quotas are repeated here - only the most critical ones to keep an eye on.
