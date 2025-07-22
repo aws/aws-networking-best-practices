@@ -34,16 +34,6 @@ Connect your AWS infrastructure with on-premises data centers, other cloud provi
 
     [:octicons-arrow-right-24: Clients to Applications](clients-to-apps.md)
 
-*   :material-console-network: **Application Networking**
-
-    ---
-
-    Allow applications to connect to each other within AWS and beyond.
-
-    ---
-
-    [:octicons-arrow-right-24: Application Networking](app-networking.md)
-
 </div>
 
 ![Image title](../assets/hybrid-connectivity/Example.png){ width="300" }

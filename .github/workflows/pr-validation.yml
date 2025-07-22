@@ -1,9 +1,6 @@
 name: PR Validation
 
 on:
-  pull_request:
-    branches: [main, master]
-    types: [opened, synchronize, reopened]
   pull_request_target:
     branches: [main, master]
     types: [opened, synchronize, reopened]
@@ -252,7 +249,8 @@ jobs:
               '2001:db8::/32', '3fff::/20',
               '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
               '169.254.0.0/16', '127.0.0.0/8', '224.0.0.0/4', '240.0.0.0/4', '100.64.0.0/10',
-              'fe80::/10', 'fc00::/7', '::1/128', 'ff00::/8', '::/128', '::ffff:0:0/96'
+              'fe80::/10', 'fc00::/7', '::1/128', 'ff00::/8', '::/128', '::ffff:0:0/96',
+              'fd00:ec2::/64'   # Used by AWS and appears in our documentation frequently.
           ]
           doc_networks = [ipaddress.ip_network(r) for r in doc_ranges]
           
@@ -266,7 +264,7 @@ jobs:
           def validate_ipv6(ip):
               try:
                   addr = ipaddress.IPv6Address(ip)
-                  return str(addr) == ip.lower() and '::' not in ip.replace('::', ':::')
+                  return addr.compressed == ip
               except:
                   return False
           

@@ -14,6 +14,8 @@ config:
   MD030: false  # List marker spacing - flexible
   MD004:
     style: "asterisk"  # Enforce * for unordered lists
+  MD024:
+    siblings_only: true  # Allow duplicate headings in different sections
 globs:
   - "content/**/*.md"
 ignores:

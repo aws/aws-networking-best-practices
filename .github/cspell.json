@@ -100,7 +100,9 @@
     "vpn",
     "vxlan",
     "waf",
-    "xlarge"
+    "xlarge",
+    "hostnames",
+    "SIEM"
   ],
   "ignorePaths": [
     "node_modules/**",
