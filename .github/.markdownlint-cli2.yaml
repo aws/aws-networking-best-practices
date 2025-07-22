@@ -1,7 +1,6 @@
 config:
   MD013: false  # Line length - disabled for technical docs
   MD033: false  # HTML tags allowed for MkDocs
-  MD037: false  # ignore no-space-in-emphasis - we use _ _ for rowspan
   MD041: false  # First line doesn't need to be H1
   MD046: false  # Code block style flexibility
   MD050:
