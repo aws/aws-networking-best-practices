@@ -1297,6 +1297,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#network-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Load Balancer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gateway-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gateway Load Balancer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#route53-endpoints-resolver-and-resolver-dns-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      Route53 Endpoints, Resolver, and Resolver DNS Firewall
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      NAT Gateway
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internet-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internet Gateway
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-privatelink" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS PrivateLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-network-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Network Firewall
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1421,6 +1493,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#network-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Load Balancer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gateway-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gateway Load Balancer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#route53-endpoints-resolver-and-resolver-dns-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      Route53 Endpoints, Resolver, and Resolver DNS Firewall
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      NAT Gateway
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internet-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internet Gateway
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-privatelink" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS PrivateLink
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      Instances
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-network-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS Network Firewall
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1453,6 +1597,7 @@
   
 
 
+<!--- Never modify this file directly. Update the scripts/generate-service-monitoring.py instead. -->
 <h1 id="aws-services-monitoring">AWS Services Monitoring<a class="headerlink" href="#aws-services-monitoring" title="Permanent link">&para;</a></h1>
 <p>Guidance about the important metrics to monitor and alarm on, listed by service.</p>
 <p>For the metrics, the following symbols are used:</p>
@@ -1465,16 +1610,16 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;"><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
-<td>These statistics should always be monitored, and may be alarmed depending on specific use case.</td>
+<td style="text-align: center;"><span any="any" class="twemoji" condition="condition" exists.="exists." the="the" time="time" title="Alarm"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td>Alarm any time the condition exists.</td>
 </tr>
 <tr>
-<td style="text-align: center;"><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td style="text-align: center;"><span A="A" a="a" alarms="alarms" as="as" be="be" class="twemoji" condition="condition" couple="couple" expected="expected" for="for" if="if" increments="increments" minutes.="minutes." networking.="networking." normal="normal" occasionally="occasionally" of="of" part="part" persists="persists" several="several" should="should" statistics="statistics" the="the" title="These" trigger="trigger"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
 <td>These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking.</td>
 </tr>
 <tr>
-<td style="text-align: center;"><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
-<td>Alarm any time the condition exists.</td>
+<td style="text-align: center;"><span alarmed="alarmed" always="always" and="and" be="be" case.="case." class="twemoji" depending="depending" may="may" monitored_="monitored," on="on" should="should" specific="specific" statistics="statistics" title="These" use="use"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td>These statistics should always be monitored, and may be alarmed depending on specific use case.</td>
 </tr>
 </tbody>
 </table>
@@ -1488,16 +1633,16 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;"><span class="twemoji" title="Soft quota - Adjustable by customer."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 10v9H5V5h9V3H5c-1.08 0-2 .9-2 2v14c0 1.1.92 2 2 2h14c1.12 0 2-.9 2-2v-9zm-2 0 .94-2.06L20 7l-2.06-.94L17 4l-.94 2.06L14 7l2.06.94zm-3.75.75L12 8l-1.25 2.75L8 12l2.75 1.25L12 16l1.25-2.75L16 12z"/></svg></span></td>
-<td>Soft quota - Adjustable by customer.</td>
+<td style="text-align: center;"><span Cannot="Cannot" _="–" adjusted.="adjusted." be="be" class="twemoji" quota="quota" title="Hard"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+<td>Hard quota – Cannot be adjusted.</td>
 </tr>
 <tr>
-<td style="text-align: center;"><span class="twemoji" title="Medium quota - Contact AWS to discuss these and possible alternative architectures."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v384c0 17.7 14.3 32 32 32s32-14.3 32-32V266.3L149.2 96H64V64c0-17.7-14.3-32-32-32m373.2 64h-74.3l-5.4 10.7L234.8 288h74.3l5.4-10.7zm-42.4 192h74.3l5.4-10.7L533.2 96h-74.3l-5.4 10.7zm-160-192-5.4 10.7L106.8 288h74.3l5.4-10.7L277.2 96h-74.3zm288 192H576v160c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v53.7z"/></svg></span></td>
+<td style="text-align: center;"><span -="-" AWS="AWS" Contact="Contact" alternative="alternative" and="and" architectures.="architectures." class="twemoji" discuss="discuss" possible="possible" quota="quota" these="these" title="Medium" to="to"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v384c0 17.7 14.3 32 32 32s32-14.3 32-32V266.3L149.2 96H64V64c0-17.7-14.3-32-32-32m373.2 64h-74.3l-5.4 10.7L234.8 288h74.3l5.4-10.7zm-42.4 192h74.3l5.4-10.7L533.2 96h-74.3l-5.4 10.7zm-160-192-5.4 10.7L106.8 288h74.3l5.4-10.7L277.2 96h-74.3zm288 192H576v160c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v53.7z"/></svg></span></td>
 <td>Medium quota - Contact AWS to discuss these and possible alternative architectures.</td>
 </tr>
 <tr>
-<td style="text-align: center;"><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
-<td>Hard quota – Cannot be adjusted.</td>
+<td style="text-align: center;"><span -="-" Adjustable="Adjustable" by="by" class="twemoji" customer.="customer." quota="quota" title="Soft"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 10v9H5V5h9V3H5c-1.08 0-2 .9-2 2v14c0 1.1.92 2 2 2h14c1.12 0 2-.9 2-2v-9zm-2 0 .94-2.06L20 7l-2.06-.94L17 4l-.94 2.06L14 7l2.06.94zm-3.75.75L12 8l-1.25 2.75L8 12l2.75 1.25L12 16l1.25-2.75L16 12z"/></svg></span></td>
+<td>Soft quota - Adjustable by customer.</td>
 </tr>
 </tbody>
 </table>
@@ -1509,83 +1654,177 @@
 <figure>
 <p><img alt="Application Load Balancer" src="../../assets/monitoring-observability/Service-ALB.png" /></p>
 <figcaption>
-<p>Application Load Balancer - <a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
 </figcaption>
 </figure>
-<div class="admonition metrics">
-<p class="admonition-title">Metrics to Monitor</p>
-</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Metrics</label><label for="__tabbed_1_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
 <th style="text-align: center;">Number</th>
 <th>Notes</th>
+<th></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">1</td>
-<td>AWS CloudWatch "AWS/ApplicationELB" namespace:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span> </td><td>RejectedConnectionCount</td><td>Going up more than 2/min</td></tr><tr><td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td><td>UnhealthyHostCount</td><td>Higher than 0 for longer than required for scaling<tr><td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td><td>ELBAuthError, ELBAuthLatency</td><td>Going unusually high, if authentication is in use</td></tr></td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>ConsumedLCUs</td><td>None - monitor for cost</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>ActiveConnectionCount, NewConnectionCount, ProcessedBytes ProcessedPackets</td><td>Outside of expectations or use CloudWatch anomaly detection bands</td></tr></tbody></table></td>
+<td rowspan="7" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/ApplicationELB" namespace:</td>
 </tr>
 <tr>
-<td style="text-align: center;">2</td>
-<td>AWS CloudWatch "AWS/ApplicationELB" namespace, per target group:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td><td>UnhealthyRequestRoutingCount, UnhealthyStateDNS, UnhealthyStateRouting</td><td>Higher than 0 for longer than required for scaling</td></tr></tbody></table></td>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
 </tr>
 <tr>
-<td style="text-align: center;">3</td>
-<td>AWS CloudWatch "AWS/ApplicationELB" namespace, per target group:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td><td>TargetConnectionErrorCount</td><td>Increasing</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>TargetResponseTime</td><td>Going unusually high</td></tr></tbody></table></td>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>RejectedConnectionCount</code></td>
+<td>Going up more than 2/min</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnhealthyHostCount</code></td>
+<td>Higher than 0 for longer than expected for scaling.</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>ELBAuthError, ELBAuthLatency</code></td>
+<td>Going usually high, if user authentication is in use.</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ConsumedLCUs</code></td>
+<td>None - monitor for cost</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ActiveConnectionCount, NewConnectionCount, ProcessedBytes, ProcessedPackets</code></td>
+<td>Outside of band.</td>
+</tr>
+<tr>
+<td rowspan="3" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/ApplicationELB" namespace, per target group:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnhealthyRequestCount, UnhealthyStateDNS, UnhealthyStateRouting</code></td>
+<td>Higher than 0 for longer than expected for scaling.</td>
+</tr>
+<tr>
+<td rowspan="4" style="text-align: center;vertical-align:top;">3</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/ApplicationELB" namespace, per target group:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>TargetConnectionErrorCount</code></td>
+<td>Increasing</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>TargetResponseTime</code></td>
+<td>Going unusually high</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td colspan="3" style="text-align:left;">Consider enabling access and/or connection logs.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition quotas">
-<p class="admonition-title">Operational Quotas</p>
 </div>
-<p>Copied from the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-limits.html">official Application Load Balancer quotas</a>.</p>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-limits.html">official Application Load Balancer quotas.</a></p>
 <p>No key operational quotas.</p>
+</div>
+</div>
+</div>
 <h2 id="aws-direct-connect">AWS Direct Connect<a class="headerlink" href="#aws-direct-connect" title="Permanent link">&para;</a></h2>
 <figure>
 <p><img alt="AWS Direct Connect" src="../../assets/monitoring-observability/Service-DX.png" /></p>
 <figcaption>
-<p>AWS Direct Connect - <a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
 </figcaption>
 </figure>
-<div class="admonition metrics">
-<p class="admonition-title">Metrics to Monitor</p>
-</div>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Metrics</label><label for="__tabbed_2_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
 <th style="text-align: center;">Number</th>
 <th>Notes</th>
+<th></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: center;">1</td>
-<td>Monitor your router’s incoming and outgoing BPS and <abbr title="Packets Per Second">PPS</abbr>, along with number of routes advertised and received against quotas.</td>
+<td colspan="3" style="text-align:left;">Monitor your router’s incoming and outgoing BPS and <abbr title="Packets Per Second">PPS</abbr>, along with number of routes advertised and received against quotas.</td>
 </tr>
 <tr>
-<td style="text-align: center;">2</td>
-<td>AWS CloudWatch "AWS/<abbr title="AWS Direct Connect">DX</abbr>" namespace, per connection:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span> </td><td>ConnectionState</td><td>Equals 0</td></tr><tr><td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span> </td><td>ConnectionEncryptionState</td><td>Equals 0 if MACSec is enabled</td></tr><tr><td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td><td>ConnectionErrorCount</td><td>Going up more than 1/min</td></tr><tr><td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td><td>ConnectionLightLevel(Rx&#124;Tx)</td><td>Outside the range of:<br/>1/10G: -14.4 to 2.5<br/>100G: Tx: -4.3 to 4.5<br/>Rx: -10.6 to 4.5<br/>400G: Tx: -1 to 6.09<br/>Rx: -12 to 7.09</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>ConnectionBps(Ingress&#124;Egress)</td><td>80% of your link speed</td></tr></tbody></table><br/>AWS CloudWatch "AWS/<abbr title="AWS Direct Connect">DX</abbr>" namespace, per VIF:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>VirtualInterfaceBps(Ingress&#124;Egress)</td><td>Exceeding plan</td></tr></tbody></table></td>
+<td rowspan="7" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/<abbr title="AWS Direct Connect">DX</abbr>" namespace, per connection:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>ConnectionState</code></td>
+<td>Equals 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>ConnectionEncryptionState</code></td>
+<td>Equals 0 if MACsec is enabled</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>ConnectionErrorCount</code></td>
+<td>Going up more than 1/min</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>ConnectionLightLevel(Rx|Tx)</code></td>
+<td>Outside the range of:<br><table><tbody><tr><td>1/10G:</td><td>Rx and Tx</td><td>-14.4 to 2.5</td></tr><tr><td rowspan="2">100G</td><td>Tx</td><td>-4.3 to 4.5</td></tr><tr><td>Rx</td><td>-10.6 to 4.5</td></tr><tr><td rowspan="2">400G</td><td>Tx</td><td>-1 to 6.09</td></tr><tr><td>Rx</td><td>-12 to 7.09</td></tr></tbody></table></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ConnectionBps(Ingress|Egress)</code></td>
+<td>80% of your link speed</td>
 </tr>
 <tr>
 <td style="text-align: center;">3</td>
-<td><abbr title="AWS Direct Connect">DX</abbr> Gateway is not in the traffic path, and does not have metrics to monitor.</td>
+<td colspan="3" style="text-align:left;"><abbr title="AWS Direct Connect">DX</abbr> Gateway is not in the traffic path, and does not have metrics to monitor.</td>
 </tr>
 <tr>
 <td style="text-align: center;">4</td>
-<td>See Transit Gateway.</td>
+<td colspan="3" style="text-align:left;">See <a href="#aws-transit-gateway">AWS Transit Gateway</a>.</td>
 </tr>
 <tr>
 <td style="text-align: center;">5</td>
-<td>Virtual Private Gateways do not have metrics to monitor.</td>
+<td colspan="3" style="text-align:left;">Virtual Private Gateways do not have metrics to monitor</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition quotas">
-<p class="admonition-title">Operational Quotas</p>
 </div>
-<p>Copied from the <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html">official AWS Direct Connect quotas</a>.</p>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html">official AWS Direct Connect quotas.</a></p>
 <table>
 <thead>
 <tr>
@@ -1602,56 +1841,79 @@
 </tr>
 <tr>
 <td>Routes from customer to AWS, per <abbr title="Border Gateway Protocol">BGP</abbr> session, per AFI (public)</td>
-<td>1,000</td>
+<td>1000</td>
 <td><span class="twemoji" title="Medium quota - Contact AWS to discuss these and possible alternative architectures."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v384c0 17.7 14.3 32 32 32s32-14.3 32-32V266.3L149.2 96H64V64c0-17.7-14.3-32-32-32m373.2 64h-74.3l-5.4 10.7L234.8 288h74.3l5.4-10.7zm-42.4 192h74.3l5.4-10.7L533.2 96h-74.3l-5.4 10.7zm-160-192-5.4 10.7L106.8 288h74.3l5.4-10.7L277.2 96h-74.3zm288 192H576v160c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v53.7z"/></svg></span></td>
 </tr>
 <tr>
-<td>Routes from Transit Gateway to customer, combined AFI</td>
+<td>Routes from Transit Gateway to customer, combined AFIs</td>
 <td>200</td>
 <td><span class="twemoji" title="Medium quota - Contact AWS to discuss these and possible alternative architectures."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v384c0 17.7 14.3 32 32 32s32-14.3 32-32V266.3L149.2 96H64V64c0-17.7-14.3-32-32-32m373.2 64h-74.3l-5.4 10.7L234.8 288h74.3l5.4-10.7zm-42.4 192h74.3l5.4-10.7L533.2 96h-74.3l-5.4 10.7zm-160-192-5.4 10.7L106.8 288h74.3l5.4-10.7L277.2 96h-74.3zm288 192H576v160c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v53.7z"/></svg></span></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
 <h2 id="aws-site-to-site-vpn">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#aws-site-to-site-vpn" title="Permanent link">&para;</a></h2>
 <figure>
 <p><img alt="AWS Site-to-Site VPN" src="../../assets/monitoring-observability/Service-S2SVPN.png" /></p>
 <figcaption>
-<p>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> - <a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
 </figcaption>
 </figure>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>Key metrics to monitor</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Metrics</label><label for="__tabbed_3_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
 <th style="text-align: center;">Number</th>
 <th>Notes</th>
+<th></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: center;">1</td>
-<td>Monitor your router’s incoming and outgoing BPS and <abbr title="Packets Per Second">PPS</abbr>, and alarm on tunnel down or errors.</td>
+<td colspan="3" style="text-align:left;">Monitor your router’s incoming and outgoing BPS and <abbr title="Packets Per Second">PPS</abbr>, and alarm on tunnel down or errors.</td>
 </tr>
 <tr>
 <td style="text-align: center;">2</td>
-<td>See Direct Connect</td>
+<td colspan="3" style="text-align:left;">See <a href="#aws-direct-connect">Direct Connect</a></td>
 </tr>
 <tr>
-<td style="text-align: center;">3</td>
-<td>AWS CloudWatch "AWS/<abbr title="Virtual Private Network">VPN</abbr>" namespace, per connection:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span> </td><td>TunnelState</td><td>Equals 0 (down)</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>TunnelData(In&#124;Out)</td><td>Exceeding 1.0 Gbps</td></tr></tbody></table></td>
+<td rowspan="4" style="text-align: center;vertical-align:top;">3</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/<abbr title="Virtual Private Network">VPN</abbr>" namespace, per tunnel:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>TunnelState</code></td>
+<td>Equals 0 (down)</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>TunnelDataIn, TunnelDataOut</code></td>
+<td>Exceeding 1.0 Gbps</td>
 </tr>
 <tr>
 <td style="text-align: center;">4</td>
-<td>See Transit Gateway</td>
+<td colspan="3" style="text-align:left;">See <a href="#aws-transit-gateway">AWS Transit Gateway</a></td>
 </tr>
 <tr>
 <td style="text-align: center;">5</td>
-<td>Virtual Private Gateways do not have metrics to monitor.</td>
+<td colspan="3" style="text-align:left;">Virtual Private Gateways do not have metrics to monitor.</td>
 </tr>
 </tbody>
 </table>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 2a8 8 0 0 1 8 8c0 2.4-1 4.5-2.7 6-1.4-1.3-3.3-2-5.3-2s-3.8.7-5.3 2C5 16.5 4 14.4 4 12a8 8 0 0 1 8-8m2 1.89c-.38.01-.74.26-.9.65l-1.29 3.23-.1.23c-.71.13-1.3.6-1.57 1.26-.41 1.03.09 2.19 1.12 2.6s2.19-.09 2.6-1.12c.26-.66.14-1.42-.29-1.98l.1-.26 1.29-3.21.01-.03c.2-.51-.05-1.09-.56-1.3-.13-.05-.26-.07-.41-.07M10 6a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1M7 9a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1m10 0a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1"/></svg></span> <strong>Key operational quotas</strong></p>
-<p>Copied from the <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html">official AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> quotas</a>.</p>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html">official AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> quotas.</a></p>
 <table>
 <thead>
 <tr>
@@ -1662,7 +1924,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Bandwidth</td>
+<td>Bandwidth per tunnel</td>
 <td>1.25 Gbps</td>
 <td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
 </tr>
@@ -1673,38 +1935,86 @@
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
 <h2 id="aws-transit-gateway">AWS Transit Gateway<a class="headerlink" href="#aws-transit-gateway" title="Permanent link">&para;</a></h2>
 <figure>
 <p><img alt="AWS Transit Gateway" src="../../assets/monitoring-observability/Service-TGW.png" /></p>
 <figcaption>
-<p>AWS Transit Gateway - <a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
 </figcaption>
 </figure>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>Key metrics to monitor</strong></p>
+<div class="tabbed-set tabbed-alternate" data-tabs="4:2"><input checked="checked" id="__tabbed_4_1" name="__tabbed_4" type="radio" /><input id="__tabbed_4_2" name="__tabbed_4" type="radio" /><div class="tabbed-labels"><label for="__tabbed_4_1">Metrics</label><label for="__tabbed_4_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <table>
 <thead>
 <tr>
 <th style="text-align: center;">Number</th>
 <th>Notes</th>
+<th></th>
+<th></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: center;">1</td>
-<td>AWS CloudWatch "AWS/TransitGateway" namespace, per attachment:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>(Packets&#124;Bytes)DropCount(Blackhole&#124;NoRoute)</td><td>Greater than 1% of traffic</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>Bytes(In&#124;Out)</td><td>Approaching 100 Gbps</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>Packets(In&#124;Out)</td><td>Approaching 7.5 Mpps</td></tr></tbody></table></td>
+<td rowspan="5" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/TransitGateway" namespace, per attachment:</td>
 </tr>
 <tr>
-<td style="text-align: center;">2</td>
-<td>AWS CloudWatch "AWS/TransitGateway" namespace, per TransitGateway:<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>(Packets&#124;Bytes)DropCount(Blackhole&#124;NoRoute)</td><td>Greater than 1% of traffic</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>Bytes(In&#124;Out)</td><td>None (alarm on attachments)</td></tr><tr><td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td><td>Packets(In&#124;Out)</td><td>None (alarm on attachments)</td></tr></tbody></table></td>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>(Packet|Bytes)DropCount(Blackhole|NoRoute)</code></td>
+<td>Greater than 1% of traffic</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>BytesIn + BytesOut</code></td>
+<td>Approaching 100 Gbps</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>PacketsIn + PacketsOut</code></td>
+<td>Approaching 7.5 Mpps</td>
+</tr>
+<tr>
+<td rowspan="5" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/TransitGateway" namespace, per Transit Gateway:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>(Packet|Bytes)DropCount(Blackhole|NoRoute)</code></td>
+<td>Greater than 1% of traffic</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>BytesIn + BytesOut</code></td>
+<td>None (alarm on the attachment)</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>PacketsIn + PacketsOut</code></td>
+<td>None (alarm on the attachment)</td>
 </tr>
 <tr>
 <td style="text-align: center;">3</td>
-<td>Consider enabling <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html">Transit Gateway Flow Logs</a>.</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html">Transit Gateway Flow Logs</a></td>
 </tr>
 </tbody>
 </table>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 2a8 8 0 0 1 8 8c0 2.4-1 4.5-2.7 6-1.4-1.3-3.3-2-5.3-2s-3.8.7-5.3 2C5 16.5 4 14.4 4 12a8 8 0 0 1 8-8m2 1.89c-.38.01-.74.26-.9.65l-1.29 3.23-.1.23c-.71.13-1.3.6-1.57 1.26-.41 1.03.09 2.19 1.12 2.6s2.19-.09 2.6-1.12c.26-.66.14-1.42-.29-1.98l.1-.26 1.29-3.21.01-.03c.2-.51-.05-1.09-.56-1.3-.13-.05-.26-.07-.41-.07M10 6a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1M7 9a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1m10 0a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1"/></svg></span> <strong>Key operational quotas</strong></p>
-<p>Copied from the <a href="https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html">official AWS Transit Gateway quotas</a>.</p>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html">official AWS Transit Gateway quotas.</a></p>
 <table>
 <thead>
 <tr>
@@ -1715,12 +2025,788 @@
 </thead>
 <tbody>
 <tr>
-<td><abbr title="Virtual Private Cloud">VPC</abbr>, Direct Connect, and Peering attachments, per <abbr title="Availability Zone">AZ</abbr></td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr>, Direct Connect, and Peering Attachments, per <abbr title="Availability Zone">AZ</abbr></td>
 <td>100 Gbps, 7.5 Mpps</td>
 <td><span class="twemoji" title="Medium quota - Contact AWS to discuss these and possible alternative architectures."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M32 32C14.3 32 0 46.3 0 64v384c0 17.7 14.3 32 32 32s32-14.3 32-32V266.3L149.2 96H64V64c0-17.7-14.3-32-32-32m373.2 64h-74.3l-5.4 10.7L234.8 288h74.3l5.4-10.7zm-42.4 192h74.3l5.4-10.7L533.2 96h-74.3l-5.4 10.7zm-160-192-5.4 10.7L106.8 288h74.3l5.4-10.7L277.2 96h-74.3zm288 192H576v160c0 17.7 14.3 32 32 32s32-14.3 32-32V64c0-17.7-14.3-32-32-32s-32 14.3-32 32v53.7z"/></svg></span></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+</div>
+<h2 id="network-load-balancer">Network Load Balancer<a class="headerlink" href="#network-load-balancer" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="Network Load Balancer" src="../../assets/monitoring-observability/Service-NLB.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:2"><input checked="checked" id="__tabbed_5_1" name="__tabbed_5" type="radio" /><input id="__tabbed_5_2" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="__tabbed_5_1">Metrics</label><label for="__tabbed_5_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="8" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/NetworkELB" namespace, per <abbr title="Network Load Balancer">NLB</abbr>:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>RejectedFlowCount</code></td>
+<td>Greater than 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>PortAllocationErrorCount</code></td>
+<td>Greater than 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnHealthyHostCount</code></td>
+<td>Higher than 0 for longer than expected for scaling.</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnhealthyRoutingFlowCount</code></td>
+<td>Greater than 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>TCP_(Client|ELB|Target)_Reset_Count</code></td>
+<td>Outside of band, or a large percentage of NewFlowCount</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ActiveFlowCount, NewFlowCount, PeakPacketsPerSecond, ProcessedByte, ProcessedPacket</code></td>
+<td>Outside of band</td>
+</tr>
+<tr>
+<td rowspan="4" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/NetworkELB" namespace, per target group:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>PortAllocationErrorCount</code></td>
+<td>Greater than 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnhealthyRoutingRequestCount, UnhealthyStateDNS, UnhealthyStateRouting</code></td>
+<td>Greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td colspan="3" style="text-align:left;">Appropriate per-target monitoring.</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html">access logs</a> if you are using <abbr title="Transport Layer Security">TLS</abbr> listeners.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-limits.html">official Network Load Balancer quotas.</a></p>
+<p>No key operational quotas.</p>
+</div>
+</div>
+</div>
+<h2 id="gateway-load-balancer">Gateway Load Balancer<a class="headerlink" href="#gateway-load-balancer" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="Gateway Load Balancer" src="../../assets/monitoring-observability/Service-GWLB.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:2"><input checked="checked" id="__tabbed_6_1" name="__tabbed_6" type="radio" /><input id="__tabbed_6_2" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="__tabbed_6_1">Metrics</label><label for="__tabbed_6_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="7" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/PrivateLinkEndpoints" namespace:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>PacketsDropped</code></td>
+<td>Greater than 0.5%</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>RstPacketsReceived</code></td>
+<td>Greater than 10 pps</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ActiveConnections</code></td>
+<td>Going anomalously high</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>BytesProcessed</code></td>
+<td>Approaching 100 Gbps</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>NewConnections</code></td>
+<td>Going anomalously high</td>
+</tr>
+<tr>
+<td rowspan="8" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/GatewayELB" namespace:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>RejectedFlowCount</code></td>
+<td>Greater than 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnhealthyHostCount</code></td>
+<td>Staying over 0</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ConsumedLCUs</code></td>
+<td>Unexpected increases</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ActiveFlowCount</code></td>
+<td>Going anomalously high</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>NewFlowCount</code></td>
+<td>Going anomalously high</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ProcessedBytes</code></td>
+<td>Approaching 100 Gbps</td>
+</tr>
+<tr>
+<td rowspan="3" style="text-align: center;vertical-align:top;">3</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/GatewayELB" namespace, per target group:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>UnhealthyHostCount</code></td>
+<td>Staying over 0</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td colspan="3" style="text-align:left;">Per target monitoring.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/quotas-limits.html">official Gateway Load Balancer quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network traffic (per <abbr title="Gateway Load Balancer">GWLB</abbr>)</td>
+<td>100 Gbps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+<tr>
+<td>Network traffic (per GWLBe)</td>
+<td>100 Gbps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="route53-endpoints-resolver-and-resolver-dns-firewall">Route53 Endpoints, Resolver, and Resolver <abbr title="Domain Name System">DNS</abbr> Firewall<a class="headerlink" href="#route53-endpoints-resolver-and-resolver-dns-firewall" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="Route53 Endpoints, Resolver, and Resolver DNS Firewall" src="../../assets/monitoring-observability/Service-R53.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="7:2"><input checked="checked" id="__tabbed_7_1" name="__tabbed_7" type="radio" /><input id="__tabbed_7_2" name="__tabbed_7" type="radio" /><div class="tabbed-labels"><label for="__tabbed_7_1">Metrics</label><label for="__tabbed_7_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="4" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/Route53Resolver" namespace:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>InboundQueryVolume or OutboundQueryAggregateVolume</code></td>
+<td>Greater than 8,000 per second</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>EndpointUnHealthyENICount</code></td>
+<td>Greater than 0 for more than 10 minute</td>
+</tr>
+<tr>
+<td rowspan="3" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "Instances" namespace, per instance:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>linklocal_allowance_exceeded</code></td>
+<td>Greater than 20 per minute</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td colspan="3" style="text-align:left;">Consider utilizing the <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-overview.html">Resolver <abbr title="Domain Name System">DNS</abbr> firewall</a></td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html">query logging</a> from the <abbr title="Virtual Private Cloud">VPC</abbr>+2 resolver, endpoints, and the <abbr title="Domain Name System">DNS</abbr> Firewall</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html">official Route53 Endpoints, Resolver, and Resolver <abbr title="Domain Name System">DNS</abbr> Firewall quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Packets per second from an instance to link-local/<abbr title="Virtual Private Cloud">VPC</abbr>+2, per interface</td>
+<td>1,024 pps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+<tr>
+<td>Queries per second per IP address in an endpoint</td>
+<td>10,000 qps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="nat-gateway"><abbr title="Network Address Translation">NAT</abbr> Gateway<a class="headerlink" href="#nat-gateway" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="NAT Gateway" src="../../assets/monitoring-observability/Service-NAT.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="8:2"><input checked="checked" id="__tabbed_8_1" name="__tabbed_8" type="radio" /><input id="__tabbed_8_2" name="__tabbed_8" type="radio" /><div class="tabbed-labels"><label for="__tabbed_8_1">Metrics</label><label for="__tabbed_8_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="6" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/NATGateway" namespace:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>PacketsDropCount</code></td>
+<td>More than 0.1% per second</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>ErrorPortAllocation</code></td>
+<td>More than 2 per second</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>BytesInFromSource + BytesInFromDestination</code></td>
+<td>Approaching 100 Gbps</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>PacketsInFromSource + PacketsInFromDestination</code></td>
+<td>Approaching 10 Mpps</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td colspan="3" style="text-align:left;">See <a href="#internet-gateway">Internet Gateway</a> section.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html">official <abbr title="Network Address Translation">NAT</abbr> Gateway quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bits per seconds</td>
+<td>5 Gbps cold, able to scale up to 100 Gbps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+<tr>
+<td>Packets per second</td>
+<td>1 Mpps cold, able to scale up to 10 Mpps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+<tr>
+<td>Simultaneous connections from a source IP to each unique destination (can be mitigated by adding additional public IPs to the <abbr title="Network Address Translation">NAT</abbr> gateway)</td>
+<td>55,000</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+<tr>
+<td>Number of public IPs per <abbr title="Network Address Translation">NAT</abbr> gateway</td>
+<td>8 (2 by default)</td>
+<td><span class="twemoji" title="Soft quota - Adjustable by customer."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 10v9H5V5h9V3H5c-1.08 0-2 .9-2 2v14c0 1.1.92 2 2 2h14c1.12 0 2-.9 2-2v-9zm-2 0 .94-2.06L20 7l-2.06-.94L17 4l-.94 2.06L14 7l2.06.94zm-3.75.75L12 8l-1.25 2.75L8 12l2.75 1.25L12 16l1.25-2.75L16 12z"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="internet-gateway">Internet Gateway<a class="headerlink" href="#internet-gateway" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="Internet Gateway" src="../../assets/monitoring-observability/Service-IGW.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="9:2"><input checked="checked" id="__tabbed_9_1" name="__tabbed_9" type="radio" /><input id="__tabbed_9_2" name="__tabbed_9" type="radio" /><div class="tabbed-labels"><label for="__tabbed_9_1">Metrics</label><label for="__tabbed_9_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td colspan="3" style="text-align:left;">Monitor <a href="#instances">instances</a> for network traffic exceeded.</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-InternetMonitor.html">CloudWatch Internet Monitor</a></td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td colspan="3" style="text-align:left;">Consider using <a href="https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html">Network Access Analyzer</a></td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a></td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td colspan="3" style="text-align:left;">See <a href="#nat-gateway"><abbr title="Network Address Translation">NAT</abbr> Gateway</a> section.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html">official Internet Gateway quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Traffic to the internet, per instance</td>
+<td>5 Gbps or 50% of network bandwidth for instances with more than 32 vCPUs</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="aws-privatelink">AWS PrivateLink<a class="headerlink" href="#aws-privatelink" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="AWS PrivateLink" src="../../assets/monitoring-observability/Service-PL.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="10:2"><input checked="checked" id="__tabbed_10_1" name="__tabbed_10" type="radio" /><input id="__tabbed_10_2" name="__tabbed_10" type="radio" /><div class="tabbed-labels"><label for="__tabbed_10_1">Metrics</label><label for="__tabbed_10_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td colspan="3" style="text-align:left;">Monitor the attached load balancer (see their entries)</td>
+</tr>
+<tr>
+<td rowspan="6" style="text-align: center;vertical-align:top;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/PrivateLinkServices" namespace, per service:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>RstPacketsSent</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>BytesProcessed</code></td>
+<td>Approaching 100 Gbps</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ActiveConnections</code></td>
+<td>Unexpectedly increasing</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>NewConnections</code></td>
+<td>Unexpectedly increasing</td>
+</tr>
+<tr>
+<td rowspan="7" style="text-align: center;vertical-align:top;">3</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/PrivateLinkEndpoints" namespace, per endpoint:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>PacketsDropped</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>RstPacketsReceived</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>BytesProcessed</code></td>
+<td>Approaching 100 Gbps</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>ActiveConnections</code></td>
+<td>Unexpectedly increasing</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>NewConnections</code></td>
+<td>Unexpectedly increasing</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#privatelink-contributor-insights">Contributor Insights</a> to see which endpoints are the largest contributors to traffic.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-limits-endpoints.html">official AWS PrivateLink quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bits per second</td>
+<td>10 Gbps cold, able to scale to 100 Gbps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="instances">Instances<a class="headerlink" href="#instances" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="Instances" src="../../assets/monitoring-observability/Service-Inst.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="11:2"><input checked="checked" id="__tabbed_11_1" name="__tabbed_11" type="radio" /><input id="__tabbed_11_2" name="__tabbed_11" type="radio" /><div class="tabbed-labels"><label for="__tabbed_11_1">Metrics</label><label for="__tabbed_11_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="10" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "agent" namespace, per network interface:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>conntrack_allowance_exceeded</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>conntrack_allowance_available</code></td>
+<td>Approaching zero</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>bw_(in|out)_allowance_exceeded</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>Per interface RX dropped count</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>queue_&lt;X&gt;_tx_queue_stop</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>pps_allowance_exceeded</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>linklocal_allowance_exceeded</code></td>
+<td>Increasing quickly</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>Output from “tc –s qdisc show &lt;interface&gt;”</code></td>
+<td>Shows drops increasing quickly</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch “AWS/<abbr title="Elastic Compute Cloud">EC2</abbr>” namespace contains many metrics to monitor, the exact ones depend on the details of the workload – CPUUtilization is a common one. See <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html">the <abbr title="Elastic Compute Cloud">EC2</abbr> metrics page</a> for more.</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td colspan="3" style="text-align:left;">Consider enabling <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a>.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html">official Instances quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bits per second</td>
+<td>Varies by <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html">instance type</a></td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+<tr>
+<td>Packets per second from an instance to link-local/<abbr title="Virtual Private Cloud">VPC</abbr>+2, per interface</td>
+<td>1,024 pps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="aws-network-firewall">AWS Network Firewall<a class="headerlink" href="#aws-network-firewall" title="Permanent link">&para;</a></h2>
+<figure>
+<p><img alt="AWS Network Firewall" src="../../assets/monitoring-observability/Service-ANFW.png" /></p>
+<figcaption>
+<p><a href="../../assets/monitoring-observability/Services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<div class="tabbed-set tabbed-alternate" data-tabs="12:2"><input checked="checked" id="__tabbed_12_1" name="__tabbed_12" type="radio" /><input id="__tabbed_12_2" name="__tabbed_12" type="radio" /><div class="tabbed-labels"><label for="__tabbed_12_1">Metrics</label><label for="__tabbed_12_2">Quotas</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Number</th>
+<th>Notes</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td rowspan="4" style="text-align: center;vertical-align:top;">1</td>
+<td colspan="3" style="text-align:left;">AWS CloudWatch "AWS/NetworkFirewall" namespace:</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>Metric</strong></td>
+<td><strong>Alarm if</strong></td>
+</tr>
+<tr>
+<td><span class="twemoji" title="Alarm any time the condition exists."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 6.9 3.87 4.78l1.41-1.41L7.4 5.5zM13 1v3h-2V1zm7.13 3.78L18 6.9l-1.4-1.4 2.12-2.13zM4.5 10.5v2h-3v-2zm15 0h3v2h-3zM6 20h12a2 2 0 0 1 2 2H4a2 2 0 0 1 2-2m6-15a6 6 0 0 1 6 6v8H6v-8a6 6 0 0 1 6-6"/></svg></span></td>
+<td><code>InvalidDroppedPackets, OtherDroppedPackets</code></td>
+<td>Greater than 20/min</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>DroppedPackets, RejectedPackets, ReceivedPackets</code></td>
+<td>Unexpected changes</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td colspan="3" style="text-align:left;">A Firewall Endpoint is a <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint – see <a href="#gateway-load-balancer"><abbr title="Gateway Load Balancer">GWLB</abbr></a> for monitoring details.</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td colspan="3" style="text-align:left;">Consider <a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-logging.html">exporting flow, alert, and/or <abbr title="Transport Layer Security">TLS</abbr> logs</a> from AWS Network Firewall’s stateful rules engine.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<p>Always check these against the <a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/quotas.html">official AWS Network Firewall quotas.</a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Quota</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bits per second, per endpoint</td>
+<td>100 Gbps</td>
+<td><span class="twemoji" title="Hard quota – Cannot be adjusted."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M4.47.22A.75.75 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 0 1-.22.53l-4.25 4.25A.75.75 0 0 1 11 16H5a.75.75 0 0 1-.53-.22L.22 11.53A.75.75 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4m0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/></svg></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
 
 
 
@@ -1743,7 +2829,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 17, 2025 14:43:52 UTC">July 17, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 22, 2025 19:23:05 UTC">July 22, 2025</span>
   </span>
 
     
