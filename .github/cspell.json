@@ -1,6 +1,9 @@
 {
   "version": "0.2",
   "language": "en",
+  "ignoreRegExpList": [
+    "`[^`]*`"  // Ignore text within backticks
+  ],
   "words": [
     "acl",
     "acls",
