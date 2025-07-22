@@ -37,7 +37,7 @@ def metric_item_str(item: dict) -> str:
             if datum[0] not in metric_types:
                 error_msg(f'Metric datum {datum} has an invalid metric type.')
                 return ''
-            ret += f'    |{"__" if index == len(item["data"]) - 1 else "  "}| {metric_types[datum[0]]["icon"]}{{ {metric_types[datum[0]]["title"]} }} | {datum[1].replace("|", "&#129;")} | {datum[2]} |\n'
+            ret += f'    |{"_ _" if index == len(item["data"]) - 1 else "  "}| {metric_types[datum[0]]["icon"]}{{ {metric_types[datum[0]]["title"]} }} | {datum[1].replace("|", "&#129;")} | {datum[2]} |\n'
 
         return ret
     elif item['type'] == 'text':
