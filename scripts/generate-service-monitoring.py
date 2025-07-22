@@ -79,10 +79,10 @@ if __name__ == '__main__':
             'Guidance about the important metrics to monitor and alarm on, listed by service.\n\n'
             'For the metrics, the following symbols are used:\n\n| Symbol | Meaning |\n| :-: | --- |\n')
     for key, data in metric_types.items():
-        text += f'| {data["icon"]}{{ title={data["title"]} }} | {data["title"]} |\n'
+        text += f'| {data["icon"]}{{ title="{data["title"]}" }} | {data["title"]} |\n'
     text += '\nFor quotas:\n\n| Symbol | Meaning |\n| :-: | --- |\n'
     for key, data in quota_types.items():
-        text += f'| {data["icon"]}{{ title={data["title"]} }} | {data["title"]} |\n'
+        text += f'| {data["icon"]}{{ title="{data["title"]}" }} | {data["title"]} |\n'
 
     text += ('\n!!! info "Remember"\n'
              '    Always validate the quotas below against the official AWS documentation - in case of differences, the official quotas should be used. Not all quotas are repeated here - only the most critical ones to keep an eye on.\n\n')
