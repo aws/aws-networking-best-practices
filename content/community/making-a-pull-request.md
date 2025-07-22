@@ -150,7 +150,8 @@ Then, install all Python dependencies:
                 mkdocs-git-revision-date-localized-plugin \
                 mkdocs-git-committers-plugin-2 \
                 "mkdocs-material[imaging]" \
-                yamllint
+                yamllint \
+                mdx-spanner
     ```
 
 ### Live Preview
