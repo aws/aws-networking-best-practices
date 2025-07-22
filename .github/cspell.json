@@ -1,6 +1,9 @@
 {
   "version": "0.2",
   "language": "en",
+  "ignoreRegExpList": [
+    "`[^`]*`"  // Ignore text within backticks
+  ],
   "words": [
     "acl",
     "acls",
@@ -25,6 +28,7 @@
     "cloudtrail",
     "cloudwatch",
     "cname",
+    "conntrack",
     "Datagram",
     "ddos",
     "dhcp",
@@ -69,6 +73,7 @@
     "ospf",
     "peering",
     "privatelink",
+    "qdisc",
     "qos",
     "rds",
     "route53",
