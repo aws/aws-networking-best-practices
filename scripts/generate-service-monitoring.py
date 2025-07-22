@@ -28,21 +28,22 @@ def metric_item_str(item: dict) -> str:
         ret += f'AWS CloudWatch "{item["ns"]}" namespace'
         if item['per'] is not None:
             ret += f', per {item["per"]}'
-        ret += ':<br/><table><thead><tr><th></th><th>Metric</th><th>Alarm if</th></tr></thead><tbody>'
-        for datum in item['data']:
+        ret += ': | ~~ | ~~ |\n'
+        ret += '    |    | | **Metric** | **Alarm if** |\n'
+        for index, datum in enumerate(item['data']):
             if len(datum) != 3:
                 error_msg(f'Metric datum {datum} does not have enough elements.')
                 return ''
             if datum[0] not in metric_types:
                 error_msg(f'Metric datum {datum} has an invalid metric type.')
                 return ''
-            ret += f'<tr><td>{metric_types[datum[0]]["icon"]}{{ {metric_types[datum[0]]["title"]} }}</td><td>{datum[1].replace("|", "&#129;")}</td><td>{datum[2]}</td></tr>'
-        ret += '</tbody></table>'
+            ret += f'    |{"__" if index == len(item["data"]) - 1 else "  "}| {metric_types[datum[0]]["icon"]}{{ {metric_types[datum[0]]["title"]} }} | {datum[1].replace("|", "&#129;")} | {datum[2]} |\n'
+
         return ret
     elif item['type'] == 'text':
-        return item["v"]
+        return f'{item["v"]} | ~~ | ~~ |\n'
     else:
-        error_msg(f'Metric item {item} has an unknown type {item['type']}')
+        error_msg(f'Metric item {item} has an unknown type {item["type"]}')
         return ''
 
 
@@ -51,9 +52,10 @@ def gen_service(name:str, abbrev:str, items:List[Dict[str, Any]], quotas:Optiona
           f'/// caption\n'\
           f'[Drawio Source](../assets/monitoring-observability/Services.drawio)\n'\
           f'///\n\n=== "Metrics"\n'
-    ret += '    | Number | Notes |\n    | :--: | --- |\n'
+    ret += '    | Number | Notes |  |  |\n    | :--: | --- | -- | -- |\n'
+    #ret += '    |  |  |  |  |\n    | :--: | --- | -- | -- |\n    | **Number** | **Notes** | ~~ | ~~ |\n'
     for idx, item in enumerate(items):
-        ret += f'    | {idx+1} | {metric_item_str(item)} |\n'
+        ret += f'    | {idx+1} | {metric_item_str(item)}'
 
     ret += f'\n=== "Quotas"\n'
     ret += f'    Always check these against the [official {name} quotas.]({quotas_url})\n\n'
