@@ -57,7 +57,7 @@
     "ipv6",
     "kms",
     "lambda",
-    "linklocal",
+    "linklocal_allowance_exceeded",
     "Mbps",
     "Mpps",
     "mkdocs",
