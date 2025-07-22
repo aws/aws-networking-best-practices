@@ -3,8 +3,7 @@ config:
   MD033: false  # HTML tags allowed for MkDocs
   MD041: false  # First line doesn't need to be H1
   MD046: false  # Code block style flexibility
-  MD050:
-    style: "asterisk"  # Enforce ** for bold
+  MD050: false  # strong-style gets confused with the __ of mdx-spanner's rowspan capability
   MD055:
     style: "leading_and_trailing"  # Require pipes at start and end of table rows
   MD040: false  # Fenced code language - not always needed
