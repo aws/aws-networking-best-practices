@@ -2,118 +2,118 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/basics/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/basics/aws-prerequisites/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/basics/first-vpc/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/contribute/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/conventions/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/making-a-pull-request/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/new-best-practice/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/philosophy/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/community/report-a-correction/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/hybrid-connectivity/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/hybrid-connectivity/clients-to-apps/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/hybrid-connectivity/clients-to-network/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/hybrid-connectivity/network-to-network/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internal-connectivity/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internal-connectivity/vpc-other-region/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internal-connectivity/vpc-same-region/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internet-connectivity/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internet-connectivity/egress/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/internet-connectivity/ingress/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/external-traffic/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/internal-traffic/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/notifications/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/monitoring-observability/service-monitoring/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/security/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/security/outbound/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/security/perimeter-inbound/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
     <url>
          <loc>https://aws.github.io/aws/aws-networking-best-practices/security/segmentation/</loc>
-         <lastmod>2025-07-22</lastmod>
+         <lastmod>2025-07-23</lastmod>
     </url>
 </urlset>

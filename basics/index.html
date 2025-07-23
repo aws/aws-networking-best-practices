@@ -1413,6 +1413,84 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="12. VPC DNS Resolution, DHCP Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configure-vpc-dns-using-default-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configure VPC DNS using default settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-dhcp-option-sets-for-your-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understand DHCP option sets for your VPC
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-private-hosted-zones-for-service-discovery-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Private Hosted Zones for Service Discovery Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-dns-query-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize DNS query performance
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-dns-monitoring-and-logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use DNS monitoring and logging
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-dns64-for-ipv6-only-vpc-subnets" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use DNS64 for IPv6-only VPC Subnets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relevant Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1480,7 +1558,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources" class="md-nav__link">
+  <a href="#relevant-resources_1" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1579,7 +1657,71 @@ that form the building blocks for all AWS network architectures.</p>
 <h2 id="11-accessing-aws-services">11. Accessing AWS services<a class="headerlink" href="#11-accessing-aws-services" title="Permanent link">&para;</a></h2>
 <p>When to use IGW/<abbr title="Network Address Translation">NAT</abbr> gateway vs gateway/interface endpoints to access AWS services</p>
 <h2 id="12-vpc-dns-resolution-dhcp-options">12. <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> Resolution, <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> Options<a class="headerlink" href="#12-vpc-dns-resolution-dhcp-options" title="Permanent link">&para;</a></h2>
-<p>Name resolution within <abbr title="Virtual Private Cloud">VPC</abbr></p>
+<p>The <a href="https://en.wikipedia.org/wiki/Domain_Name_System">Domain Name System (<abbr title="Domain Name System">DNS</abbr>)</a> is a standard protocol that resolves internet names to their corresponding IP addresses. A <abbr title="Domain Name System">DNS</abbr> hostname is a unique and absolute name for a computer, consisting of a hostname and a domain name. <abbr title="Domain Name System">DNS</abbr> servers translate these <abbr title="Domain Name System">DNS</abbr> hostnames into their corresponding IP addresses. Workloads consistently require reliable, high-performing internal name resolution (<abbr title="Domain Name System">DNS</abbr>) for service discovery, database connections, and inter-service communication. As an AWS architect or administrator, one of the fundamental networking components you'll work with is the <code>Amazon DNS server</code>, or <code>AmazonProvidedDNS</code> also known as the Route 53 Resolver. This <abbr title="Domain Name System">DNS</abbr> resolver service is natively integrated into each Availability Zone within your AWS Region, providing a reliable and scalable solution for domain name resolution within your Virtual Private Cloud (<abbr title="Virtual Private Cloud">VPC</abbr>).</p>
+<p>The Route 53 Resolver is located at <code>169.254.169.253</code> (<abbr title="Internet Protocol version 4">IPv4</abbr>), <code>fd00:ec2::253</code> (<abbr title="Internet Protocol version 6">IPv6</abbr>), and at the primary private IPV4 <abbr title="Classless Inter-Domain Routing">CIDR</abbr> range provisioned to your <abbr title="Virtual Private Cloud">VPC</abbr> plus two. For example, if you have a <abbr title="Virtual Private Cloud">VPC</abbr> with an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> of <code>10.0.0.0/16</code> and an <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> of <code>2001:db8::/32</code>, you can reach the Route 53 Resolver at <code>169.254.169.253</code> (<abbr title="Internet Protocol version 4">IPv4</abbr>), <code>fd00:ec2::253</code> (<abbr title="Internet Protocol version 6">IPv6</abbr>), or <code>10.0.0.2</code> (<abbr title="Internet Protocol version 4">IPv4</abbr>). Resources within a <abbr title="Virtual Private Cloud">VPC</abbr> use a <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#link-local-addresses">link local address</a> for <abbr title="Domain Name System">DNS</abbr> queries. These queries are transported to the Route 53 Resolver privately and are not visible on the network. In an <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnet, the <abbr title="Internet Protocol version 4">IPv4</abbr> link-local address (169.254.169.253) is still reachable as long as Route 53 Resolver is the name server in the <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set. Note that the base <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> + 2 address is only available in addition to the link-local addresses when <code>enableDnsSupport</code> is true.</p>
+<h3 id="configure-vpc-dns-using-default-settings">Configure <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> using default settings<a class="headerlink" href="#configure-vpc-dns-using-default-settings" title="Permanent link">&para;</a></h3>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/AmazonDNS-concepts.html#vpc-dns-support">Understand</a> and enable both <code>enableDnsHostnames</code> and <code>enableDnsSupport</code> in your <abbr title="Virtual Private Cloud">VPC</abbr> as these attributes determine the <abbr title="Domain Name System">DNS</abbr> support provided for your <abbr title="Virtual Private Cloud">VPC</abbr>. Understand the Rules and considerations</p>
+<ul>
+<li><code>enableDnsHostnames</code>: Determines whether the <abbr title="Virtual Private Cloud">VPC</abbr> supports assigning public <abbr title="Domain Name System">DNS</abbr> hostnames to instances with public IP addresses.. The default for this attribute is false unless the <abbr title="Virtual Private Cloud">VPC</abbr> is a default <abbr title="Virtual Private Cloud">VPC</abbr></li>
+<li><code>enableDnsSupport</code>: Determines whether the <abbr title="Virtual Private Cloud">VPC</abbr> supports <abbr title="Domain Name System">DNS</abbr> resolution through the Amazon provided <abbr title="Domain Name System">DNS</abbr> server. If this attribute is true, queries to the Amazon provided <abbr title="Domain Name System">DNS</abbr> server succeed.</li>
+</ul>
+<p>Note the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/AmazonDNS-concepts.html#vpc-dns-support">Rules and considerations</a> for these above attributes, as they directly impact the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/AmazonDNS-concepts.html#vpc-dns-hostnames"><abbr title="Domain Name System">DNS</abbr> hostnames for <abbr title="Elastic Compute Cloud">EC2</abbr> instances</a> and how they are resolved.</p>
+<h3 id="understand-dhcp-option-sets-for-your-vpc">Understand <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option sets for your <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#understand-dhcp-option-sets-for-your-vpc" title="Permanent link">&para;</a></h3>
+<p>A <a href="https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol">Dynamic Host Configuration Protocol (<abbr title="Dynamic Host Configuration Protocol">DHCP</abbr>)</a> option set is a group of network settings used by resources in your <abbr title="Virtual Private Cloud">VPC</abbr>, such as <abbr title="Elastic Compute Cloud">EC2</abbr> instances, to communicate over your virtual network. It plays a critical role in managing network settings for your <abbr title="Elastic Compute Cloud">EC2</abbr> instances and other resources within your <abbr title="Virtual Private Cloud">VPC</abbr>. <a href="https://docs.aws.amazon.com/vpc/latest/userguide/DHCPOptionSetConcepts.html"><abbr title="Dynamic Host Configuration Protocol">DHCP</abbr></a> options control which <abbr title="Domain Name System">DNS</abbr> servers your <abbr title="Elastic Compute Cloud">EC2</abbr> instances use and what domain suffix they append to unqualified hostnames. Incorrect <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> configuration can cause instances to query external <abbr title="Domain Name System">DNS</abbr> servers for internal resources, create security vulnerabilities, or fail to resolve critical services during network issues.</p>
+<p>Each Region has a default <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set. Each <abbr title="Virtual Private Cloud">VPC</abbr> uses the default <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set for its Region unless you either create and associate a custom <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set with the <abbr title="Virtual Private Cloud">VPC</abbr> or configure the <abbr title="Virtual Private Cloud">VPC</abbr> with no <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set. You can associate a <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set with multiple VPCs, but each <abbr title="Virtual Private Cloud">VPC</abbr> can have only one associated <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set. Note that after you create a <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set, you cannot modify it (immutable). To update the <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> options for your <abbr title="Virtual Private Cloud">VPC</abbr>, you must create a new <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set and then associate it with your <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
+<p>You can use either the Default or Custom <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set, as they allow you to customize network settings like domain names, <abbr title="Domain Name System">DNS</abbr> servers, and more. For the Default <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set, <code>AmazonProvidedDNS</code> is used.</p>
+<p>If your <abbr title="Virtual Private Cloud">VPC</abbr> has no <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set configured:</p>
+<ul>
+<li>For <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#instance-hypervisor-type"><abbr title="Elastic Compute Cloud">EC2</abbr> instances built on the Nitro System</a>, AWS configures <code>169.254.169.253</code> as the default domain name server.</li>
+<li>For <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html#instance-hypervisor-type"><abbr title="Elastic Compute Cloud">EC2</abbr> instances built on Xen</a>, no domain name servers are configured and, because instances in the <abbr title="Virtual Private Cloud">VPC</abbr> have no access to a <abbr title="Domain Name System">DNS</abbr> server, they can't access the internet.</li>
+</ul>
+<p>Key considerations include:</p>
+<ul>
+<li>Consistent Configuration: Ensure <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> settings are consistent with your network architecture.</li>
+<li>Regular Reviews: Periodically review and update your <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> configurations to align with changing network requirements.</li>
+</ul>
+<h3 id="use-private-hosted-zones-for-service-discovery-patterns">Use Private Hosted Zones for Service Discovery Patterns<a class="headerlink" href="#use-private-hosted-zones-for-service-discovery-patterns" title="Permanent link">&para;</a></h3>
+<p>Many teams rely on Elastic Load Balancer (<abbr title="Elastic Load Balancer">ELB</abbr>) <abbr title="Domain Name System">DNS</abbr> names or hardcoded service endpoints instead of implementing proper service discovery through Route 53 private hosted zones. This creates fragile architectures that can break during service migrations or infrastructure changes. Without proper <abbr title="Domain Name System">DNS</abbr>-based service discovery, applications become tightly coupled to specific infrastructure components. When teams need to migrate databases, replace load balancers, or implement blue-green deployments, hardcoded endpoints require application code changes rather than simple <abbr title="Domain Name System">DNS</abbr> updates.</p>
+<p>To access resources in your <abbr title="Virtual Private Cloud">VPC</abbr> using custom <abbr title="Domain Name System">DNS</abbr> domain names (such as <code>example.com</code>) instead of private <abbr title="Internet Protocol version 4">IPv4</abbr> addresses or AWS-provided private <abbr title="Domain Name System">DNS</abbr> hostnames, you can create a private hosted zone (PHZ) in Route 53. Private hosted zones support both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> records – you should configure both A and AAAA records for future-proofing, even if you're not currently using <abbr title="Internet Protocol version 6">IPv6</abbr>. It's recommended to use short <abbr title="Time To Live">TTL</abbr> values (60-300 seconds) for records that might need rapid updates during deployments or failover events.</p>
+<p>To use a private hosted zone, both <code>enableDnsHostnames</code> and <code>enableDnsSupport</code> must be set to true in your <abbr title="Virtual Private Cloud">VPC</abbr> configuration. It's important to understand all <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-considerations.html">considerations</a> when working with private hosted zones. Use <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/profiles.html">Route 53 Profiles</a>, centrally apply and manage <abbr title="Domain Name System">DNS</abbr>-related Route 53 configurations across many VPCs and in different AWS accounts. Note that Private Hosted Zones can be associated with multiple VPCs, but the VPCs must be in the same AWS Region or connected via <abbr title="Virtual Private Cloud">VPC</abbr> peering. Also that there are <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#limits-api-entities-hosted-zones">quotas</a> to the number of private hosted zones per AWS account.</p>
+<h3 id="optimize-dns-query-performance">Optimize <abbr title="Domain Name System">DNS</abbr> query performance<a class="headerlink" href="#optimize-dns-query-performance" title="Permanent link">&para;</a></h3>
+<p>Many teams rarely monitor or optimize <abbr title="Domain Name System">DNS</abbr> query performance, assuming default resolver behavior is sufficient. This oversight often leads to application latency issues that are difficult to diagnose because <abbr title="Domain Name System">DNS</abbr> queries aren't included in typical application performance monitoring. Excessive <abbr title="Domain Name System">DNS</abbr> queries can significantly impact application response times, especially in microservices architectures where services make frequent cross-service calls. Poor <abbr title="Domain Name System">DNS</abbr> caching strategies can amplify this impact, causing cascading performance issues during high-traffic periods.</p>
+<p>Configure appropriate <a href="https://en.wikipedia.org/wiki/Time_to_live">Time to live (<abbr title="Time To Live">TTL</abbr>)</a> values for your <abbr title="Domain Name System">DNS</abbr> records based on change frequency – use <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-values-basic.html#rrsets-values-basic-ttl">longer TTLs</a> (3600+ seconds) for stable infrastructure records and shorter TTLs (60-300 seconds) for records that might change during deployments. Implement <a href="https://repost.aws/knowledge-center/dns-resolution-failures-ec2-linux"><abbr title="Domain Name System">DNS</abbr> caching</a> at the application level for frequently queried hostnames.</p>
+<p>While the <code>Route 53 Resolver</code> resolver caches queries, applications often make repeated queries due to short-lived connections or poor caching implementations. To reduce query volume, implement connection pooling and use <abbr title="Domain Name System">DNS</abbr> caching libraries in your applications. Use Route 53 Resolver endpoints, as they provide <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html">higher <abbr title="Domain Name System">DNS</abbr> queries per second (QPS)</a>.</p>
+<p>Use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContributorInsights-CreateRule.html">Amazon CloudWatch Contributor Insights</a> rules for <abbr title="Domain Name System">DNS</abbr> query analysis. You can use built-in sample rules when you create a rule or you can create your own rule from scratch. Be mindful of the cost implications of query logging, as you incur <a href="https://aws.amazon.com/cloudwatch/pricing/">Amazon CloudWatch charges</a>.</p>
+<h3 id="use-dns-monitoring-and-logging">Use <abbr title="Domain Name System">DNS</abbr> monitoring and logging<a class="headerlink" href="#use-dns-monitoring-and-logging" title="Permanent link">&para;</a></h3>
+<p>There is a <a href="https://docs.aws.amazon.com/vpc/latest/userguide/AmazonDNS-concepts.html#vpc-dns-limits">1024 packet per second (<abbr title="Packets Per Second">PPS</abbr>) limit</a> to services that use <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#link-local-addresses">link-local</a> addresses including <code>Route 53 Resolver</code>. This limit includes the aggregate of Route 53 Resolver <abbr title="Domain Name System">DNS</abbr> queries. If you reach the quota, the Route 53 Resolver <a href="https://repost.aws/knowledge-center/vpc-find-cause-of-failed-dns-queries">rejects traffic</a>.</p>
+<p>Monitor <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html"><code>linklocal_allowance_exceeded</code></a> instance level network performance metric, which is available on both Windows and Linux instances using Elastic Network Adapter (ENA). This metric indicates the number of packets dropped due to <abbr title="Packets Per Second">PPS</abbr> rate allowance exceeded for local services such as Route 53 <abbr title="Domain Name System">DNS</abbr> Resolver, Instance Metadata Service, Amazon Time Sync Service. Dropped packets often indicate suboptimal design choices or misconfiguration. Note that this allowance remains constant across all instance types.</p>
+<p>Enable <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html">Route 53 Resolver query logging</a> for all VPCs and send logs to Amazon CloudWatch or Amazon <abbr title="Simple Storage Service">S3</abbr> for analysis. Implement automated monitoring for unusual <abbr title="Domain Name System">DNS</abbr> query patterns, such as queries to suspicious domains, high-frequency queries to single domains, or queries with unusual characteristics (extremely long domain names, unusual character patterns). Use AWS Security Hub and GuardDuty to detect <abbr title="Domain Name System">DNS</abbr>-based threats automatically.</p>
+<p><abbr title="Domain Name System">DNS</abbr> query logs can generate significant volume – implement lifecycle policies to manage storage costs while retaining data for sufficient time for security analysis. Consider using Amazon Kinesis Data Firehose to stream <abbr title="Domain Name System">DNS</abbr> logs to your SIEM solution for real-time threat detection.</p>
+<p>To monitor <abbr title="Domain Name System">DNS</abbr> activity, enable Route 53 Resolver query logging for all VPCs and direct logs to <a href="https://aws.amazon.com/cloudwatch/">Amazon CloudWatch</a> or <a href="https://aws.amazon.com/s3/">Amazon <abbr title="Simple Storage Service">S3</abbr></a> for analysis. Implement automated monitoring to detect unusual <abbr title="Domain Name System">DNS</abbr> query patterns, including:</p>
+<ul>
+<li>Queries to suspicious domains</li>
+<li>High-frequency queries to single domains</li>
+<li>Queries with unusual characteristics (such as extremely long domain names or unusual character patterns)</li>
+<li>Additionally, use <a href="https://aws.amazon.com/security-hub/">AWS Security Hub</a> and <a href="https://aws.amazon.com/guardduty/">Amazon GuardDuty</a> for automatic detection of <abbr title="Domain Name System">DNS</abbr>-based threats.</li>
+</ul>
+<p>Since <abbr title="Domain Name System">DNS</abbr> query logs can generate significant volume, implement lifecycle policies to manage storage costs while retaining data long enough for security analysis. Consider using <a href="https://aws.amazon.com/firehose/">Amazon Data Firehose</a> to stream <abbr title="Domain Name System">DNS</abbr> logs to your <a href="https://en.wikipedia.org/wiki/Security_information_and_event_management">Security Information and Event Management (SIEM)</a> solution for real-time threat detection.</p>
+<h3 id="use-dns64-for-ipv6-only-vpc-subnets">Use DNS64 for <abbr title="Internet Protocol version 6">IPv6</abbr>-only <abbr title="Virtual Private Cloud">VPC</abbr> Subnets<a class="headerlink" href="#use-dns64-for-ipv6-only-vpc-subnets" title="Permanent link">&para;</a></h3>
+<p>DNS64, paired with NAT64, allow <abbr title="Internet Protocol version 6">IPv6</abbr>-only workloads in the <abbr title="Virtual Private Cloud">VPC</abbr> communicate with <abbr title="Internet Protocol version 4">IPv4</abbr>-only services outside your subnet. This is particularly useful during the transition from <abbr title="Internet Protocol version 4">IPv4</abbr> to <abbr title="Internet Protocol version 6">IPv6</abbr>, as it allows your <abbr title="Internet Protocol version 6">IPv6</abbr> services to access <abbr title="Internet Protocol version 4">IPv4</abbr> resources. <a href="https://en.wikipedia.org/wiki/IPv6_transition_mechanism">DNS64</a> is a mechanism that synthesizes <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html#AAAAFormat">AAAA records</a> from <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html#AFormat">A records</a> to enable communication between <abbr title="Internet Protocol version 6">IPv6</abbr>-only clients and <abbr title="Internet Protocol version 4">IPv4</abbr>-only servers.</p>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr>-only workloads running in VPCs can only send and receive <abbr title="Internet Protocol version 6">IPv6</abbr> network packets. Without DNS64, a <abbr title="Domain Name System">DNS</abbr> query for an <abbr title="Internet Protocol version 4">IPv4</abbr>-only service will return an <abbr title="Internet Protocol version 4">IPv4</abbr> destination address in response, making it impossible for your <abbr title="Internet Protocol version 6">IPv6</abbr>-only service to communicate with it. To bridge this communication gap, <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-nat64-dns64.html#nat-gateway-nat64-dns64-walkthrough">enable DNS64</a> for <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets, and it will apply to all AWS resources within that subnet. You will need to use <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-nat64-dns64.html#nat-gateway-nat64-what-is">NAT64</a> in your <abbr title="Virtual Private Cloud">VPC</abbr> with DNS64 either through Amazon Route 53 Resolver or by implementing your own DNS64 server. Regular <abbr title="Network Address Translation">NAT</abbr> Gateway <a href="https://aws.amazon.com/vpc/pricing/">charges</a> may apply.</p>
+<p>A few caveats to keep in mind:</p>
+<ul>
+<li>The source <abbr title="Internet Protocol version 6">IPv6</abbr> address isn’t preserved when using NAT64, which means no source-IP filtering.</li>
+<li>DNS64 is inherently asymmetric. It provides <abbr title="Internet Protocol version 6">IPv6</abbr>-only clients with synthetic AAAA records to reach <abbr title="Internet Protocol version 4">IPv4</abbr>-only destinations, but it cannot help <abbr title="Internet Protocol version 4">IPv4</abbr>-only clients reach <abbr title="Internet Protocol version 6">IPv6</abbr>-only services. If a domain operates in an <abbr title="Internet Protocol version 6">IPv6</abbr>-only environment without associated A records, <abbr title="Internet Protocol version 4">IPv4</abbr>-only and dual-stack clients cannot connect.</li>
+<li><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring-dnssec.html">Domain Name System Security Extensions (<code>DNSSEC</code>)</a> doesn’t work with DNS64. Since <code>DNSSEC</code> relies on cryptographic signatures of <abbr title="Domain Name System">DNS</abbr> records, the dynamic synthesis of AAAA records by DNS64 resolvers can cause validation failures. To address this, admins must understand and potentially deploy DNS64-aware <code>DNSSEC</code> validation, such as using the <a href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions">CD (Checking Disabled)</a>.</li>
+<li>DNS64 and NAT64 introduce additional steps in the resolution and transport process. The DNS64 resolver must perform two lookups—first for an AAAA record and then an A record if the AAAA does not exist.</li>
+</ul>
+<h3 id="operational-considerations">Operational Considerations<a class="headerlink" href="#operational-considerations" title="Permanent link">&para;</a></h3>
+<p><abbr title="Domain Name System">DNS</abbr> operations in production require proactive monitoring and troubleshooting capabilities that extend beyond basic connectivity testing. Implement comprehensive logging to capture <abbr title="Domain Name System">DNS</abbr> query volumes, response times, and failure rates across your entire <abbr title="Domain Name System">DNS</abbr> infrastructure. Use Amazon CloudWatch metrics to monitor Route 53 Resolver query volumes and establish alarms for unusual patterns that might indicate service issues or security threats. Create runbooks for common <abbr title="Domain Name System">DNS</abbr> troubleshooting scenarios, including tools and techniques for diagnosing resolution failures at different layers of your <abbr title="Domain Name System">DNS</abbr> hierarchy. Consider the operational impact of <abbr title="Domain Name System">DNS</abbr> changes—even simple updates to <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option sets require instance reboots or network interface refreshes to take effect—and plan changes during maintenance windows.</p>
+<p>Monitor your query patterns and optimize application-level <abbr title="Domain Name System">DNS</abbr> caching to reduce unnecessary queries. When integrating with other AWS services, remember that services like <a href="https://aws.amazon.com/eks/">Amazon EKS</a> and <a href="https://aws.amazon.com/ecs/">Amazon ECS</a> have their own <abbr title="Domain Name System">DNS</abbr> requirements and integration patterns that can affect your overall <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> design. Plan for service discovery patterns that align with your chosen container orchestration platform, and ensure your <abbr title="Domain Name System">DNS</abbr> architecture supports the dynamic nature of containerized workloads without creating performance bottlenecks or security vulnerabilities.</p>
+<h3 id="relevant-resources">Relevant Resources<a class="headerlink" href="#relevant-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/dns-best-practices-for-amazon-route-53/"><abbr title="Domain Name System">DNS</abbr> best practices for Amazon Route 53</a></li>
+<li><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/how-to-optimize-dns-for-dual-stack-networks/">How to optimize <abbr title="Domain Name System">DNS</abbr> for dual-stack networks</a></li>
+<li><a href="https://repost.aws/knowledge-center/vpc-find-cause-of-failed-dns-queries">How do I determine whether my <abbr title="Domain Name System">DNS</abbr> queries to the Amazon <abbr title="Domain Name System">DNS</abbr> server fail because of <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> throttling?</a></li>
+<li><a href="https://repost.aws/knowledge-center/partial-dns-failures">How does <abbr title="Domain Name System">DNS</abbr> work, and how do I troubleshoot partial or intermittent <abbr title="Domain Name System">DNS</abbr> failures?</a></li>
+</ul>
 <h2 id="13-security-groups-vs-network-acls">13. Security Groups vs. Network ACLs<a class="headerlink" href="#13-security-groups-vs-network-acls" title="Permanent link">&para;</a></h2>
 <p>Difference between these and when to use each approach.</p>
 <h2 id="14-network-performance-and-sizing">14. Network Performance and Sizing<a class="headerlink" href="#14-network-performance-and-sizing" title="Permanent link">&para;</a></h2>
@@ -1609,7 +1751,7 @@ that form the building blocks for all AWS network architectures.</p>
 <h3 id="implement-network-performance-monitoring-and-alerting">Implement Network Performance Monitoring and alerting<a class="headerlink" href="#implement-network-performance-monitoring-and-alerting" title="Permanent link">&para;</a></h3>
 <p>Network performance issues are often discovered reactively through user complaints or application timeouts rather than proactive monitoring. Many monitoring setups focus on CPU and memory utilization while overlooking network metrics that can predict performance bottlenecks. Network performance degradation often appears gradually and can be masked by application-level retries or gray failures. By the time users notice problems, the issue may have been developing for days or weeks, making root cause analysis more difficult. Set up Amazon CloudWatch <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html">network performance monitoring alerts</a>.</p>
 <p>Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs with <a href="https://repost.aws/knowledge-center/vpc-flow-logs-and-cloudwatch-logs-insights">Amazon CloudWatch Insights</a> to analyze traffic patterns and identify optimization opportunities. Network performance issues often correlate with other infrastructure changes, so maintain good change management practices and baseline your network performance before and after deployments. Consider using AWS X-Ray for distributed tracing to identify network bottlenecks in microservices architectures.</p>
-<h3 id="relevant-resources">Relevant Resources<a class="headerlink" href="#relevant-resources" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_1">Relevant Resources<a class="headerlink" href="#relevant-resources_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li><a href="https://aws.amazon.com/ec2/instance-types/">Amazon <abbr title="Elastic Compute Cloud">EC2</abbr> Instance Types Guide</a></li>
 <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html">Placement Groups Best Practices</a></li>
@@ -1663,7 +1805,7 @@ past AWS re:Invent events. Here are a couple of examples:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 15, 2025 20:09:22 UTC">July 15, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 22, 2025 22:09:41 UTC">July 22, 2025</span>
   </span>
 
     
