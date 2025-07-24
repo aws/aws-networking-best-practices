@@ -1,7 +1,7 @@
 # Network to Network
 
 * DX
-
+Direct Connect 
 * VPN
 
 * SD-WAN
