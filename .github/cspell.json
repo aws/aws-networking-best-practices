@@ -147,6 +147,7 @@
     "ttl",
     "udp",
     "unicast",
+    "unscalable",
     "venv",
     "verp",
     "vgw",
