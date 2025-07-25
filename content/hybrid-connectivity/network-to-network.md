@@ -2,8 +2,6 @@
 
 * DX
 
-AWS Direct Connect alscurtu@
-
 * VPN
 
 * SD-WAN
