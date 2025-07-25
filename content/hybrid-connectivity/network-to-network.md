@@ -19,7 +19,6 @@ Common Use Cases:
 * Media content distribution
 * High-performance computing and big data analytics
 
-
 * AWS Site-to-Site VPN
 
 AWS Site-to-Site VPN provides a secure and accessible way to extend your on-premises network to AWS cloud, making it an essential service for organizations implementing hybrid cloud architectures. It allows customers to create an encrypted connection between your on-premises networks and your AWS Virtual Private Cloud (VPC), allowing secure communication over the internet.
@@ -39,7 +38,6 @@ Common Use Cases:
 * Creating backup connectivity for AWS Direct Connect
 * Building hybrid cloud environments
 * Enabling secure remote access for employees from Head or Branch offices and remote sites
-
 
 * SD-WAN
 
