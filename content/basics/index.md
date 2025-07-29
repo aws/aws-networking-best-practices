@@ -224,6 +224,10 @@ Use VPC Flow Logs with [Amazon CloudWatch Insights](https://repost.aws/knowledge
 3. [Enhanced Networking on Linux](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html)
 4. [EC2 Nitro networking under the hood](https://youtu.be/_hiNXKQZc0M)
 
+## IPAM Basics: 
+
+IP allocation strategies and avoiding address exhaustion
+
 ## Additional resources to get started?
 
 [skills builder]: https://aws.amazon.com/training/learn-about/advanced-networking/
