@@ -290,9 +290,81 @@ Use VPC Flow Logs with [Amazon CloudWatch Insights](https://repost.aws/knowledge
 3. [Enhanced Networking on Linux](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html)
 4. [EC2 Nitro networking under the hood](https://youtu.be/_hiNXKQZc0M)
 
-## IPAM Basics
+## 15. IP Address Management (IPAM) Basics
 
-IP allocation strategies and avoiding address exhaustion
+IP Address Management (IPAM) has evolved from a simple spreadsheet exercise to a critical foundation of modern AWS architectures. As customers embrace multi-account strategies, hybrid connectivity, and global expansion, the complexity of managing IP address space has grown exponentially. What once seemed like an infinite pool of [RFC 1918](https://www.rfc-editor.org/rfc/rfc1918.html) addresses quickly becomes a constraint when connecting dozens of VPCs across regions, establishing site-to-site VPN connections, and planning for future acquisitions.
+
+The most common anti-pattern is treating IP planning as an afterthought—something to figure out "when we get there." By doing so, customers run the risk of painting themselves into corners with overlapping CIDR blocks, requiring complex re-architecting efforts that could have been avoided with proper planning. The shift toward IPv6 and dual-stack configurations adds another layer of complexity that many teams underestimate.
+
+### Plan Your IP Address Hierarchy Before Your First VPC
+
+Most customers typically start with a single VPC using a typical [RFC 1918](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html#vpc-sizing-ipv4) address space of `172.16.0.0/16` and gradually expand without an overall addressing plan. By the time they have more than 20 VPCs across multiple accounts and regions, they find themselves dealing with overlapping IP ranges and costly re-architecting.
+
+Address conflicts prevent [VPC peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html), [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/) attachments, and hybrid connectivity. Customers often spend months re-subnetting production workloads because they cannot connect to an acquired company's network due to overlapping usage of the `10.0.0.0/8` address space.
+
+To prevent these issues, establish a hierarchical IP plan that allocates address space by region, account type, and environment. For example, use the `10.0.0.0/16` range with the second octet designating the region (`10.1.0.0/16` for `us-east-1`, `10.2.0.0/16` for `us-west-2`), the third octet for account type (production, development, shared services), and the fourth octet for availability zones. Reserve large blocks for future expansion—if you think you need a `/20` (which provides 4,096 IP addresses), allocate a `/16` instead.
+
+Consider using [Amazon VPC IP Address Manager (IPAM)](https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html) to automatically enforce your hierarchy. Always try to reserve 25-50% of your allocated space for unexpected growth patterns. However, be mindful of the associated [IPAM costs](https://docs.aws.amazon.com/vpc/latest/ipam/pricing-ipam.html).
+
+### Implement Predictable VPC Sizing Based on Workload Patterns
+
+Customers often default to `/16` VPCs because that's what the default VPCs provide, without considering their actual requirements. This approach leads to either wasted address space in small environments or insufficient space for large-scale deployments.
+
+The proper sizing of VPC CIDRs impacts your ability to scale, influences subnet design, and affects cross-VPC connectivity options. Oversized VPCs waste address space that might be needed elsewhere, while undersized VPCs force complex subnet restructuring exercises later.
+
+It's important to develop VPC sizing templates based on workload types. For microservices platforms expecting hundreds of services, start with a `/16` CIDR block. For simple web applications, a `/20` CIDR block often suffices. Consider subnet design requirements—you'll need at least one subnet per Availability Zone, plus separate subnets for different tiers (web, application, and data).
+
+Use [VPC IPAM's](https://docs.aws.amazon.com/vpc/latest/ipam/create-top-ipam.html) allocation minimum and maximum settings to enforce consistent sizing and monitor actual IP usage with IPAM history. Remember that you can add secondary CIDR blocks to existing VPCs if you plan for it in your addressing hierarchy.
+
+### Design Subnet Architecture for Growth and Operational Requirements
+
+Many customers create subnets on an as-needed basis, resulting in inconsistent sizing and inefficient address utilization. These environments often contain a mixture of `/24`, `/25`, and various other subnet sizes, making troubleshooting and automation challenging.
+
+Inconsistent subnet design complicates network automation, hinders capacity planning, and can cause premature address exhaustion in specific Availability Zones (AZs). It also impairs the implementation of consistent security group and Network Access Control List (NACL) strategies.
+
+To address these issues, establish subnet sizing standards based on function and expected capacity. Use consistent bit boundaries—if your largest subnet requires a `/22`, designate all subnets in that tier as `/22`, even if they currently require less space. Reserve the initial subnets in each VPC for infrastructure components (such as load balancers and NAT gateways), followed by application tiers and databases. Always maintain at least one subnet per AZ for future expansion.
+
+Utilize [AWS Subnet Calculator](https://v2.awssubnetcalculator.com/) tools and plan subnets on bit boundaries that align with your monitoring and automation tools. Consider implementing separate subnets for different workload types, even within the same tier, as this enables more granular network policies and simplifies troubleshooting.
+
+### Establish IPv6 Strategy Early in Your Architecture
+
+Most customers ignore [IPv6](https://aws.amazon.com/vpc/ipv6) until they encounter IPv4 exhaustion or face specific compliance requirements. When they finally need IPv6, they discover that implementing dual-stack configurations requires significant architectural changes. Note that there is no migration path from IPv4-only subnets to IPv6-only subnets. Additionally, Amazon provides a [fixed IPv6 CIDR block size of /56](https://docs.aws.amazon.com/vpc/latest/userguide/create-vpc.html).
+
+IPv6 provides virtually unlimited address space and eliminates the need for Network Address Translation (NAT) in internet-bound traffic, thereby reducing costs and complexity. Delaying IPv6 implementation until it becomes necessary often results in having to re-architect existing applications and infrastructure.
+
+Customers should enable IPv6 in all new VPCs and establish dual-stack configurations as their standard practice. For simplicity, use AWS-provided IPv6 blocks unless specific addressing requirements exist. From the outset, plan your application architecture to be IP version-agnostic by using DNS names instead of IP addresses in configurations.
+
+Take advantage of [IPv6-only subnets](https://aws.amazon.com/blogs/networking-and-content-delivery/introducing-ipv6-only-subnets-and-ec2-instances/) for workloads that don't require IPv4, such as internal microservices or batch processing jobs. This approach can significantly reduce NAT Gateway costs. However, be aware that some AWS services and third-party tools may have [limited IPv6 support](https://docs.aws.amazon.com/vpc/latest/userguide/aws-ipv6-support.html), so maintaining an IPv4 path for compatibility is advisable.
+
+### Implement Automated IP Address Allocation and Tracking
+
+Tracking IP allocations in spreadsheets or basic documentation quickly becomes outdated. This leads to duplicate allocations, unknown address usage, and difficult troubleshooting.
+
+Manual IP tracking doesn't scale and creates operational risks. Without proper visibility into address utilization, you cannot make informed decisions about capacity planning or identify security incidents involving specific IP ranges.
+Use VPC IPAM across all accounts and regions to centralize IP address management. Configure [IPAM pools](https://docs.aws.amazon.com/vpc/latest/ipam/planning-examples-ipam.html) that align with your addressing hierarchy and set appropriate allocation rules. Integrate IPAM with your [Infrastructure as Code](https://docs.aws.amazon.com/whitepapers/latest/introduction-devops-aws/infrastructure-as-code.html) pipelines to automate address allocation for new VPCs and subnets.
+
+Monitor CIDR usage by resource along with [IPAM history](https://docs.aws.amazon.com/vpc/latest/ipam/view-history-cidr-ipam.html) to track your CIDR compliance and detect unauthorized address allocations. Set up CloudWatch alarms for address pool utilization thresholds (typically `70%` - `85%`). [Enforce IPAM use](https://docs.aws.amazon.com/vpc/latest/ipam/scp-ipam.html) for VPC creation with [IAM Service Control Policies (SCP)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html).
+
+### Plan Cross-VPC Connectivity Before Address Allocation
+
+Many customers often design VPCs in isolation and discover later that they can't connect them due to overlapping address spaces. This is particularly common when connecting to on-premises networks or acquired company infrastructure.
+
+Address conflicts prevent the use of VPC Peering, AWS Transit Gateway, and hybrid connectivity options. Resolving these conflicts often requires expensive re-subnetting or complex NAT configurations that add latency and operational complexity.
+
+Before allocating address space, map out all potential connectivity requirements. This includes current cross-VPC needs, planned hybrid connections, potential acquisition targets, and customer network requirements. Reserve non-overlapping address blocks for each connectivity domain. Consider using [AWS PrivateLink](https://aws.amazon.com/privatelink/) endpoints to avoid IP connectivity overlap requirements for AWS services.
+
+### Operational Considerations
+
+Managing IP addresses effectively requires ongoing operational attention beyond initial planning. Implement regular audits of your address space utilization using [Custom AWS Config rules](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html) with [AWS Lambda](https://aws.amazon.com/lambda/) or VPC IPAM. Monitor not only current usage but also growth trends to predict future needs. Elastic IP addresses (EIPs) continue to incur charges when they are allocated but not associated with resources. To optimize costs and maintain good resource management, customers should implement automated processes to identify and release unused Elastic IPs. This can be accomplished through AWS Lambda functions or scripts that periodically scan for unattached EIPs and either release them or notify administrators. Such automation helps prevent unnecessary expenses and ensures efficient resource management by removing EIPs that no longer serve any purpose in your infrastructure. Additionally, IPv6-only subnets can eliminate NAT Gateway costs for workloads that don't require IPv4 connectivity. Beware of [AWS Config](https://aws.amazon.com/config/pricing/) and [AWS Lambda](https://aws.amazon.com/lambda/pricing/) costs.
+
+Integration with other AWS services significantly impacts your IP strategy. VPC Endpoints reduce the need for NAT Gateway capacity, while AWS Global Accelerator can optimize traffic routing without requiring additional IP space. When implementing container platforms like Amazon EKS, factor in the IP requirements for pod networking, as each pod consumes an IP address from your subnet space. The [AWS VPC CNI](https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html) also offers efficient IP address management. This feature helps reduce the number of secondary IP addresses needed per elastic network interface. Consider using AWS VPC CNI prefix delegation to optimize IP utilization in container environments and integrate your IPAM strategy with AWS Organizations SCPs to enforce governance across accounts automatically.
+
+### Relevant Resources
+
+* [Manage your IP addresses at scale on AWS](https://youtu.be/xtLJgJfhPLg)
+* [AWS Prescriptive Guidance - IPAM](https://docs.aws.amazon.com/prescriptive-guidance/latest/robust-network-design-control-tower/ipam.html)
+* [VPC IPAM Best Practices](https://aws.amazon.com/blogs/networking-and-content-delivery/amazon-vpc-ip-address-manager-best-practices/)
+* [Connecting Networks with Overlapping IP Ranges](https://aws.amazon.com/blogs/networking-and-content-delivery/connecting-networks-with-overlapping-ip-ranges/)
 
 ## Additional resources to get started?
 
