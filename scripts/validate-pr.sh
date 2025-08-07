@@ -18,7 +18,8 @@ echo "📝 Checking markdown lint..."
 if command -v markdownlint-cli2 &> /dev/null; then
     markdownlint-cli2 --config .github/.markdownlint-cli2.yaml "content/**/*.md" || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  markdownlint-cli2 not installed. Install with: npm install -g markdownlint-cli2"
+    echo "❌ markdownlint-cli2 not installed. Install with: npm install -g markdownlint-cli2"
+    exit 1
 fi
 
 # MkDocs build
@@ -26,7 +27,8 @@ echo "🏗️  Testing MkDocs build..."
 if command -v mkdocs &> /dev/null; then
     mkdocs build --quiet || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  mkdocs not installed. Install with: pip install mkdocs-material"
+    echo "❌ mkdocs not installed. Install with: pip install mkdocs-material"
+    exit 1
 fi
 
 # Link check
@@ -39,7 +41,8 @@ if command -v markdown-link-check &> /dev/null; then
         ERRORS=$((ERRORS+1))
     fi
 else
-    echo "⚠️  markdown-link-check not installed. Install with: npm install -g markdown-link-check"
+    echo "❌ markdown-link-check not installed. Install with: npm install -g markdown-link-check"
+    exit 1
 fi
 
 # Spell check
@@ -47,7 +50,8 @@ echo "📖 Checking spelling..."
 if command -v cspell &> /dev/null; then
     cspell --config .github/cspell.json "content/**/*.md" || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  cspell not installed. Install with: npm install -g cspell"
+    echo "❌ cspell not installed. Install with: npm install -g cspell"
+    exit 1
 fi
 
 # YAML lint
@@ -55,7 +59,8 @@ echo "📄 Checking YAML..."
 if command -v yamllint &> /dev/null; then
     yamllint -c .github/yamllint.yml mkdocs.yml || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  yamllint not installed. Install with: pip install yamllint"
+    echo "❌ yamllint not installed. Install with: pip install yamllint"
+    exit 1
 fi
 
 # File naming
