@@ -18,7 +18,8 @@ echo "📝 Checking markdown lint..."
 if command -v markdownlint-cli2 &> /dev/null; then
     markdownlint-cli2 --config .github/.markdownlint-cli2.yaml "content/**/*.md" || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  markdownlint-cli2 not installed. Install with: npm install -g markdownlint-cli2"
+    echo "❌ markdownlint-cli2 not installed. Install with: npm install -g markdownlint-cli2"
+    exit 1
 fi
 
 # MkDocs build
@@ -26,7 +27,8 @@ echo "🏗️  Testing MkDocs build..."
 if command -v mkdocs &> /dev/null; then
     mkdocs build --quiet || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  mkdocs not installed. Install with: pip install mkdocs-material"
+    echo "❌ mkdocs not installed. Install with: pip install mkdocs-material"
+    exit 1
 fi
 
 # Link check
@@ -39,7 +41,8 @@ if command -v markdown-link-check &> /dev/null; then
         ERRORS=$((ERRORS+1))
     fi
 else
-    echo "⚠️  markdown-link-check not installed. Install with: npm install -g markdown-link-check"
+    echo "❌ markdown-link-check not installed. Install with: npm install -g markdown-link-check"
+    exit 1
 fi
 
 # Spell check
@@ -47,7 +50,8 @@ echo "📖 Checking spelling..."
 if command -v cspell &> /dev/null; then
     cspell --config .github/cspell.json "content/**/*.md" || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  cspell not installed. Install with: npm install -g cspell"
+    echo "❌ cspell not installed. Install with: npm install -g cspell"
+    exit 1
 fi
 
 # YAML lint
@@ -55,7 +59,8 @@ echo "📄 Checking YAML..."
 if command -v yamllint &> /dev/null; then
     yamllint -c .github/yamllint.yml mkdocs.yml || ERRORS=$((ERRORS+1))
 else
-    echo "⚠️  yamllint not installed. Install with: pip install yamllint"
+    echo "❌ yamllint not installed. Install with: pip install yamllint"
+    exit 1
 fi
 
 # File naming
@@ -149,6 +154,9 @@ doc_ranges = [
 ]
 doc_networks = [ipaddress.ip_network(r) for r in doc_ranges]
 
+# Special approved CIDR notations that don't fit standard doc ranges
+approved_cidrs = ['0.0.0.0/0']
+
 def validate_ipv4(ip):
     try:
         addr = ipaddress.IPv4Address(ip)
@@ -163,8 +171,13 @@ def validate_ipv6(ip):
     except:
         return False
 
-def is_doc_ip(ip):
+def is_doc_ip(ip_cidr):
+    # Check if it's an approved CIDR notation
+    if ip_cidr in approved_cidrs:
+        return True
+    
     try:
+        ip = ip_cidr.split('/')[0]
         addr = ipaddress.ip_address(ip)
         return any(addr in net for net in doc_networks)
     except:
@@ -186,7 +199,7 @@ for file in glob.glob('content/**/*.md', recursive=True):
         ip = ip_cidr.split('/')[0]
         if not validate_ipv4(ip):
             errors.append(f"{file}: Invalid IPv4 '{ip}'")
-        elif not is_doc_ip(ip):
+        elif not is_doc_ip(ip_cidr):
             errors.append(f"{file}: Non-documentation IPv4 '{ip_cidr}' - use approved ranges")
     
     for match in re.finditer(ipv6_pattern, content):
@@ -194,7 +207,7 @@ for file in glob.glob('content/**/*.md', recursive=True):
         ip = ip_cidr.split('/')[0]
         if ':' in ip and not validate_ipv6(ip):
             errors.append(f"{file}: Invalid IPv6 '{ip}' (use lowercase, compressed format)")
-        elif ':' in ip and not is_doc_ip(ip):
+        elif ':' in ip and not is_doc_ip(ip_cidr):
             errors.append(f"{file}: Non-documentation IPv6 '{ip_cidr}' - use approved ranges")
 
 if errors:
