@@ -301,7 +301,7 @@ Unclear security boundaries lead to gaps in coverage, conflicts between rules, a
 
 For example, use NACLs to block entire countries or IP ranges for compliance, deny traffic between development and production subnets, or implement broad protocol restrictions. Use Security Groups for application-specific rules like allowing web servers to access specific database ports or enabling communication between microservices.
 
-Document your security model clearly and train your team on when to use each layer. Create standard templates for common scenarios. Also, consider using AWS Config rules to monitor for configuration drift and ensure your security policies remain consistent over time. Beware of AWS Config [cost](https://aws.amazon.com/config/pricing/). 
+Document your security model clearly and train your team on when to use each layer. Create standard templates for common scenarios. Also, consider using AWS Config rules to monitor for configuration drift and ensure your security policies remain consistent over time. Beware of AWS Config [cost](https://aws.amazon.com/config/pricing/).
 
 ### Plan for Multi-Account and Cross-VPC Communication Patterns
 
