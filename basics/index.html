@@ -1572,11 +1572,107 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#13-security-groups-vs-network-acls" class="md-nav__link">
+  <a href="#13-security-groups-vs-network-access-control-lists-nacls" class="md-nav__link">
     <span class="md-ellipsis">
-      13. Security Groups vs. Network ACLs
+      13. Security Groups vs. Network Access Control Lists (NACLs)
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="13. Security Groups vs. Network Access Control Lists (NACLs)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#start-with-security-groups-use-nacls-for-specific-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Start with Security Groups, use NACLs for Specific Use Cases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-security-group-referencing-for-dynamic-architectures" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Security Group Referencing for Dynamic Architectures
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-stateful-vs-stateless-implications-for-application-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understand the Stateful vs. Stateless Implications for Application Architecture
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-for-ipv6-and-dual-stack-from-the-beginning" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design for IPv6 and Dual-Stack from the Beginning
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implement-layered-security-with-clear-boundaries-and-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implement Layered Security with Clear Boundaries and Responsibilities
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-for-multi-account-and-cross-vpc-communication-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plan for Multi-Account and Cross-VPC Communication Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-for-scale-and-performance-characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize for Scale and Performance Characteristics
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-considerations_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-resources_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relevant Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1636,7 +1732,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources_1" class="md-nav__link">
+  <a href="#relevant-resources_2" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1714,7 +1810,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-considerations_2" class="md-nav__link">
+  <a href="#operational-considerations_3" class="md-nav__link">
     <span class="md-ellipsis">
       Operational Considerations
     </span>
@@ -1723,7 +1819,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources_2" class="md-nav__link">
+  <a href="#relevant-resources_3" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1927,8 +2023,76 @@ that form the building blocks for all AWS network architectures.</p>
 <li><a href="https://repost.aws/knowledge-center/vpc-find-cause-of-failed-dns-queries">How do I determine whether my <abbr title="Domain Name System">DNS</abbr> queries to the Amazon <abbr title="Domain Name System">DNS</abbr> server fail because of <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> throttling?</a></li>
 <li><a href="https://repost.aws/knowledge-center/partial-dns-failures">How does <abbr title="Domain Name System">DNS</abbr> work, and how do I troubleshoot partial or intermittent <abbr title="Domain Name System">DNS</abbr> failures?</a></li>
 </ul>
-<h2 id="13-security-groups-vs-network-acls">13. Security Groups vs. Network ACLs<a class="headerlink" href="#13-security-groups-vs-network-acls" title="Permanent link">&para;</a></h2>
-<p>Difference between these and when to use each approach.</p>
+<h2 id="13-security-groups-vs-network-access-control-lists-nacls">13. Security Groups vs. Network Access Control Lists (NACLs)<a class="headerlink" href="#13-security-groups-vs-network-access-control-lists-nacls" title="Permanent link">&para;</a></h2>
+<p>The choice between the two security layers, <abbr title="Virtual Private Cloud">VPC</abbr> <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html">Security Groups</a> and <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html">Network Access Control Lists (NACLs)</a>, often determines whether you'll have a maintainable, scalable network architecture or a complex set of rules that becomes increasingly difficult to manage as your infrastructure grows. The most common misconception is treating Security Groups and NACLs as interchangeable tools. Customers often default to what they know from traditional networking—implementing subnet-level controls with NACLs because "that's how we've always done firewalls." This approach frequently leads to over-engineered solutions that are difficult to troubleshoot and maintain. Conversely, some customers rely solely on Security Groups without understanding when network-level controls provide superior security or operational benefits.</p>
+<h3 id="start-with-security-groups-use-nacls-for-specific-use-cases">Start with Security Groups, use NACLs for Specific Use Cases<a class="headerlink" href="#start-with-security-groups-use-nacls-for-specific-use-cases" title="Permanent link">&para;</a></h3>
+<p>Most customers jump straight to implementing both Security Groups and NACLs simultaneously, creating unnecessary complexity from day one. In an Amazon <abbr title="Virtual Private Cloud">VPC</abbr>, Network ACLs are optional for subnet-level traffic filtering, while Security Groups are mandatory for instance-level protection.</p>
+<p>Security Groups provide 90% of what most applications need for network security. Adding NACLs without a clear use case creates operational overhead, increases troubleshooting complexity, and often introduces subtle connectivity issues that are difficult to diagnose. Customers may spend considerable time debugging connectivity problems that stem from conflicting <abbr title="Network Access Control List">NACL</abbr> rules they forgot they implemented.</p>
+<p>Begin every <abbr title="Virtual Private Cloud">VPC</abbr> design with Security Groups as your primary security control. Only implement NACLs when you have specific requirements such as:</p>
+<ul>
+<li>Compliance mandates requiring  subnet-level controls</li>
+<li>Defense-in-depth requirements for  highly sensitive workloads</li>
+<li>Network-level logging for  forensics or compliance</li>
+<li>Blocking traffic between subnets  in the same <abbr title="Virtual Private Cloud">VPC</abbr></li>
+<li>Implementing coarse-grained deny  rules for entire subnet ranges</li>
+</ul>
+<p>Document your <abbr title="Network Access Control List">NACL</abbr> implementation rationale clearly. Create a decision matrix that explains why NACLs are necessary for each subnet. This prevents future team members from removing "seemingly redundant" rules that serve critical security functions. Also, remember that NACLs evaluate rules in order—always place your most specific deny rules at the top, followed by broader allow rules.</p>
+<h3 id="use-security-group-referencing-for-dynamic-architectures">Use Security Group Referencing for Dynamic Architectures<a class="headerlink" href="#use-security-group-referencing-for-dynamic-architectures" title="Permanent link">&para;</a></h3>
+<p>Customers often hard-code IP addresses or <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks in Security Group rules, creating configurations that break when infrastructure scales or changes.</p>
+<p><a href="https://repost.aws/articles/ARY9viGjzLTSS_4UYNudZl9Q/how-to-check-security-group-references-within-and-across-vpcs">Security Group referencing</a> allows you to create dynamic, self-maintaining security policies that automatically adapt as your infrastructure scales. Without this approach, you'll spend significant operational time updating security rules every time you add new instances, change IP ranges, or implement auto-scaling.</p>
+<p>Design Security Groups to reference other Security Groups rather than IP addresses wherever possible. Create logical groupings like "web-tier-sg," "app-tier-sg," and "database-tier-sg," then allow traffic between these groups by referencing the source Security Group ID. This creates a logical security model that remains valid regardless of the actual IP addresses assigned to instances.</p>
+<p>For multi-<abbr title="Virtual Private Cloud">VPC</abbr> architectures, you can reference Security Groups across VPCs that are connected via <abbr title="Virtual Private Cloud">VPC</abbr> peering, AWS Transit Gateway, or <abbr title="Virtual Private Cloud">VPC</abbr> sharing. This enables consistent security policies across your entire AWS infrastructure without maintaining separate rule sets.</p>
+<p>Use descriptive Security Group names and descriptions that clearly indicate their purpose. Customers often use generic names like "sg-12345" that become challenging to manage at scale. Also, consider creating "service" Security Groups that define what ports and protocols a service needs, separate from "client" Security Groups that define what can access those services.</p>
+<h3 id="understand-the-stateful-vs-stateless-implications-for-application-architecture">Understand the Stateful vs. Stateless Implications for Application Architecture<a class="headerlink" href="#understand-the-stateful-vs-stateless-implications-for-application-architecture" title="Permanent link">&para;</a></h3>
+<p>Customer often don't understand how the stateful nature of Security Groups vs the stateless nature of NACLs affects their application design, leading to connectivity issues that are difficult to troubleshoot.</p>
+<p>The stateful nature of Security Groups means return traffic is automatically allowed, while NACLs require explicit rules for both inbound and outbound traffic. This fundamental difference affects how you design applications, especially those that use <a href="https://en.wikipedia.org/wiki/Ephemeral_port">ephemeral ports</a>, establish database connections, or implement health checks.</p>
+<p>For Security Groups, you typically only need to define inbound rules for services—the outbound return traffic is automatically allowed. However, you should still implement explicit outbound rules following the principle of least privilege. For example, allow your web servers to reach only specific database ports rather than leaving outbound rules completely open.</p>
+<p>With NACLs, you must account for both directions of traffic flow. This includes ephemeral port ranges (typically <code>32768-65535</code> for Linux, <code>49152-65535</code> for Windows Server 2008+) for return traffic. Consider the operational complexity this creates—every new service or application may require updates to both inbound and outbound <abbr title="Network Access Control List">NACL</abbr> rules.</p>
+<p>When using NACLs with load balancers, remember that health checks originate from the load balancer's IP range and require explicit rules. For Application Load Balancers (<abbr title="Application Load Balancer">ALB</abbr>), the source IP will be the <abbr title="Application Load Balancer">ALB</abbr>'s private IP addresses. For Network Load Balancers (<abbr title="Network Load Balancer">NLB</abbr>), the source IP could be the client's IP (in IP target mode) or the <abbr title="Network Load Balancer">NLB</abbr>'s IP (in instance target mode).</p>
+<h3 id="design-for-ipv6-and-dual-stack-from-the-beginning">Design for <abbr title="Internet Protocol version 6">IPv6</abbr> and Dual-Stack from the Beginning<a class="headerlink" href="#design-for-ipv6-and-dual-stack-from-the-beginning" title="Permanent link">&para;</a></h3>
+<p>Many customers implement <abbr title="Internet Protocol version 4">IPv4</abbr>-only security rules initially, then struggle to retrofit <abbr title="Internet Protocol version 6">IPv6</abbr> support when business requirements or compliance mandates drive adoption.</p>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr> adoption is accelerating due to IoT growth, mobile applications, and compliance requirements. Retrofitting <abbr title="Internet Protocol version 6">IPv6</abbr> support into existing Security Group and <abbr title="Network Access Control List">NACL</abbr> configurations is error-prone and often requires significant architectural changes. Customer may spend months reworking their security policies when they could have designed for dual-stack from the beginning.</p>
+<p>When creating Security Groups and NACLs, consider whether you need <abbr title="Internet Protocol version 6">IPv6</abbr> support now or in the future. If there's any possibility of <abbr title="Internet Protocol version 6">IPv6</abbr> adoption, implement dual-stack rules from the beginning. This means creating parallel rule sets for both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> address families.</p>
+<p>For Security Groups, create separate rules for <abbr title="Internet Protocol version 4">IPv4</abbr> (using <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks such as <code>10.0.0.0/8</code>) and <abbr title="Internet Protocol version 6">IPv6</abbr> (using <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks such as <code>2001:db8::/32</code>). For NACLs, you'll need separate rule numbers for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic, as they're evaluated independently.</p>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr> security considerations differ from <abbr title="Internet Protocol version 4">IPv4</abbr>. <abbr title="Internet Protocol version 6">IPv6</abbr> addresses are globally routable by default, though you still need an <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">IGW</a> or <a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">EIGW</a> in your <abbr title="Virtual Private Cloud">VPC</abbr>, so your security policies must account for this. Also, <abbr title="Internet Protocol version 6">IPv6</abbr> doesn't use <abbr title="Network Address Translation">NAT</abbr> in the traditional sense, which changes how you think about outbound internet access. Consider using egress-only internet gateways for <abbr title="Internet Protocol version 6">IPv6</abbr> outbound traffic that shouldn't accept inbound connections from the internet.</p>
+<h3 id="implement-layered-security-with-clear-boundaries-and-responsibilities">Implement Layered Security with Clear Boundaries and Responsibilities<a class="headerlink" href="#implement-layered-security-with-clear-boundaries-and-responsibilities" title="Permanent link">&para;</a></h3>
+<p>Customers often implement overlapping security controls without clear boundaries, creating confusion about which layer handles which security concerns.</p>
+<p>Unclear security boundaries lead to gaps in coverage, conflicts between rules, and operational confusion during incident response. When security layers overlap without clear ownership, critical updates might be missed, or conflicting changes might be made simultaneously. Define clear responsibilities for each security layer. A common pattern is:</p>
+<ul>
+<li>NACLs: Coarse-grained network controls, compliance requirements, and subnet-level isolation</li>
+<li>Security Groups: Fine-grained application controls, service-to-service communication, and dynamic scaling scenarios</li>
+</ul>
+<p>For example, use NACLs to block entire countries or IP ranges for compliance, deny traffic between development and production subnets, or implement broad protocol restrictions. Use Security Groups for application-specific rules like allowing web servers to access specific database ports or enabling communication between microservices.</p>
+<p>Document your security model clearly and train your team on when to use each layer. Create standard templates for common scenarios. Also, consider using AWS Config rules to monitor for configuration drift and ensure your security policies remain consistent over time. Beware of AWS Config <a href="https://aws.amazon.com/config/pricing/">cost</a>.</p>
+<h3 id="plan-for-multi-account-and-cross-vpc-communication-patterns">Plan for Multi-Account and Cross-<abbr title="Virtual Private Cloud">VPC</abbr> Communication Patterns<a class="headerlink" href="#plan-for-multi-account-and-cross-vpc-communication-patterns" title="Permanent link">&para;</a></h3>
+<p>Many customers start with single-<abbr title="Virtual Private Cloud">VPC</abbr> designs but eventually need to support multi-<abbr title="Virtual Private Cloud">VPC</abbr> or multi-account architectures, often requiring significant security policy rework.</p>
+<p>Cross-<abbr title="Virtual Private Cloud">VPC</abbr> communication through AWS Transit Gateway, <abbr title="Virtual Private Cloud">VPC</abbr> peering, or inter-region connectivity requires careful planning of Security Group and <abbr title="Network Access Control List">NACL</abbr> strategies. Poorly planned cross-<abbr title="Virtual Private Cloud">VPC</abbr> security can create bottlenecks, security gaps, or overly permissive rules that violate compliance requirements.</p>
+<p>When designing security policies, consider your future multi-<abbr title="Virtual Private Cloud">VPC</abbr> needs. Security Groups can reference other Security Groups across <abbr title="Virtual Private Cloud">VPC</abbr> peers and AWS Transit Gateway attachments, enabling consistent security policies across your infrastructure. NACLs, however, work only at the subnet level within individual VPCs.</p>
+<p>For <a href="https://aws.amazon.com/transit-gateway/">AWS Transit Gateway</a> environments, consider creating centralized Security Groups that can be referenced across multiple VPCs. This enables consistent security policies while maintaining the flexibility to customize rules for specific environments or applications.</p>
+<p>Use <a href="https://aws.amazon.com/ram/">AWS Resource Access Manager (RAM)</a> to share AWS Transit Gateways and other networking resources across accounts while maintaining security boundaries. Also, consider using <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for AWS services to avoid routing traffic through your security layers unnecessarily, which can simplify your rule sets and improve performance.</p>
+<h3 id="optimize-for-scale-and-performance-characteristics">Optimize for Scale and Performance Characteristics<a class="headerlink" href="#optimize-for-scale-and-performance-characteristics" title="Permanent link">&para;</a></h3>
+<p>Customers often don't consider the scale and performance implications of their Security Group and <abbr title="Network Access Control List">NACL</abbr> designs until they encounter limits or performance issues in production.</p>
+<p>Security Groups and NACLs have different scale characteristics and performance implications. Understand the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html">service quotas</a> for both Security Groups and NACLs. Each Security Group can have up to <code>60</code> inbound and <code>60</code> outbound rules, and each network interface can be associated with up to <code>5</code> Security Groups (giving you effectively <code>300</code> inbound and <code>300</code> outbound rules per interface). NACLs can have up to <code>20</code> rules each for inbound and outbound traffic per <abbr title="Network Access Control List">NACL</abbr>.</p>
+<p>Plan your rule consolidation strategy early. Instead of creating many specific rules, use <abbr title="Classless Inter-Domain Routing">CIDR</abbr> aggregation where possible. For example, instead of creating separate rules for <code>10.0.1.0/24</code>, <code>10.0.2.0/24</code>, and <code>10.0.3.0/24</code>, use a single rule for <code>10.0.0.0/22</code> if the security requirements are identical.</p>
+<p>Monitor your Security Group and <abbr title="Network Access Control List">NACL</abbr> rule counts using <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">AWS Config</a>. Beware of the AWS Config <a href="https://aws.amazon.com/config/pricing/">cost</a>.</p>
+<h3 id="key-considerations">Key Considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h3>
+<p><strong>Treating NACLs Like Traditional Firewalls</strong>: Customers may implement complex <abbr title="Network Access Control List">NACL</abbr> rule sets trying to replicate their on-premises firewall configurations. They create dozens of specific rules for individual applications, protocols, and port ranges, often resulting in NACLs with many rules that are difficult to understand and maintain.</p>
+<p>Look for NACLs with many specific rules, especially those that seem to duplicate functionality available in Security Groups. Another sign is when teams modify NACLs frequently as part of application deployments—this suggests they're using NACLs for dynamic, application-level controls that would be better handled by Security Groups.</p>
+<p>Audit your existing <abbr title="Network Access Control List">NACL</abbr> rules and categorize them into network-level controls (keep in NACLs) vs application-level controls (migrate to Security Groups). Start by removing <abbr title="Network Access Control List">NACL</abbr> rules that duplicate Security Group functionality. For complex rule sets, create a migration plan that moves rules to Security Groups in phases, testing connectivity after each phase. Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs during the migration to verify that legitimate traffic isn't being blocked.</p>
+<p><strong>Creating Overly Permissive Security Groups to Avoid <abbr title="Network Access Control List">NACL</abbr> Complexity</strong>: Customers implementing both Security Groups and NACLs sometimes create overly broad Security Group rules (like allowing all traffic on all ports) because they assume the NACLs will provide the necessary restrictions. This creates a false sense of security while actually reducing your overall security posture.</p>
+<p>Look for Security Groups with rules like <code>0.0.0.0/0</code> on all ports, or Security Groups that allow broad port ranges without clear justification. Another indicator is when Security Group rules haven't been updated in months while <abbr title="Network Access Control List">NACL</abbr> rules are frequently modified—this suggests the Security Groups aren't being used as intended.</p>
+<p>Implement proper Security Group rules first, then evaluate whether your NACLs are actually necessary. Use AWS Config rules to identify overly permissive Security Groups and create remediation plans. The key is to make each layer do what it does best rather than relying on one to compensate for weaknesses in the other.</p>
+<p><strong>Ignoring Ephemeral Port Requirements in <abbr title="Network Access Control List">NACL</abbr> Design</strong>: Customers implement restrictive outbound <abbr title="Network Access Control List">NACL</abbr> rules without accounting for ephemeral ports used by return traffic, causing intermittent connectivity issues that are difficult to troubleshoot. Applications work sometimes but fail others, especially during high-traffic periods when different ephemeral ports are used.</p>
+<p>Look for applications that experience intermittent connectivity issues, especially for outbound connections to databases, APIs, or external services. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs showing <code>REJECT</code> entries for high port numbers (typically above <code>32768</code>) often indicate this problem. Another sign is when applications work from some subnets but not others, despite having identical Security Group rules.</p>
+<p>Review all outbound <abbr title="Network Access Control List">NACL</abbr> rules and ensure they account for return traffic on ephemeral ports. This typically means allowing outbound traffic on ports <code>32768-65535</code> for Linux instances or <code>49152-65535</code> for Windows instances. If security requirements prevent opening these ranges broadly, consider redesigning your application architecture to use specific port ranges that you can control, or evaluate whether the <abbr title="Network Access Control List">NACL</abbr> restrictions are truly necessary for your security model.</p>
+<h3 id="operational-considerations_2">Operational Considerations<a class="headerlink" href="#operational-considerations_2" title="Permanent link">&para;</a></h3>
+<p>Managing Security Groups and NACLs effectively requires ongoing attention to monitoring, troubleshooting, and optimization. <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a> is the primary tool for understanding traffic patterns and diagnosing connectivity issues. Enable Flow Logs at the <abbr title="Virtual Private Cloud">VPC</abbr> level and configure them to capture both accepted and rejected traffic. Use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html">Amazon CloudWatch Insights</a> or <a href="https://aws.amazon.com/athena/">Amazon Athena</a> to query Flow Logs efficiently—Create saved queries for common troubleshooting scenarios like identifying blocked traffic or analyzing traffic patterns between security groups. Beware of <a href="https://aws.amazon.com/cloudwatch/pricing/">Amazon CloudWatch</a> and <a href="https://aws.amazon.com/athena/pricing/">Amazon Athena</a> costs.</p>
+<p>For cost optimization, remember that <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs incur storage and analysis costs that can become significant at scale. Consider using sampling or filtering to reduce costs while maintaining visibility into your traffic patterns. AWS Config provides continuous monitoring of Security Group and <abbr title="Network Access Control List">NACL</abbr> configurations, helping you identify configuration drift and ensure compliance with your security standards. Set up Config rules to alert on overly permissive rules, unused Security Groups, or changes to critical <abbr title="Network Access Control List">NACL</abbr> configurations.</p>
+<p>Integration with other AWS services requires careful consideration of how Security Groups and NACLs affect service functionality. AWS services like Application Load Balancers, <abbr title="Relational Database Service">RDS</abbr>, and Lambda have specific networking requirements that must be accounted for in your security policies. For example, <abbr title="Relational Database Service">RDS</abbr> instances in private subnets require appropriate Security Group rules for database access, while Lambda functions need outbound internet access for API calls unless you're using <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Understanding these service-specific requirements helps you design security policies that enhance rather than hinder your application architecture. AWS provides extensive documentation on networking requirements for each service, and the <a href="https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/protecting-networks.html">AWS Well-Architected Framework - Security Pillar</a> includes guidance on implementing defense-in-depth networking strategies that leverage both Security Groups and NACLs effectively.</p>
+<h3 id="relevant-resources_1">Relevant Resources<a class="headerlink" href="#relevant-resources_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html"><abbr title="Virtual Private Cloud">VPC</abbr> Security best practices</a></li>
+</ul>
 <h2 id="14-network-performance-and-sizing">14. Network Performance and Sizing<a class="headerlink" href="#14-network-performance-and-sizing" title="Permanent link">&para;</a></h2>
 <p><abbr title="Elastic Compute Cloud">EC2</abbr> instance networking capabilities can vary based on instance family, size, and placement decisions. A common myth may that "bigger instances always mean better network performance" or that placement groups are only relevant for <a href="https://aws.amazon.com/hpc">High Performance Computing (HPC)</a>. In reality, network performance scaling is nuanced, with considerations around burst vs. sustained performance, cross-<abbr title="Availability Zone">AZ</abbr> traffic patterns, and the interplay between compute, storage, and network resources.</p>
 <h3 id="understanding-burst-vs-sustained-performance">Understanding Burst vs. Sustained Performance**<a class="headerlink" href="#understanding-burst-vs-sustained-performance" title="Permanent link">&para;</a></h3>
@@ -1956,7 +2120,7 @@ that form the building blocks for all AWS network architectures.</p>
 <h3 id="implement-network-performance-monitoring-and-alerting">Implement Network Performance Monitoring and alerting<a class="headerlink" href="#implement-network-performance-monitoring-and-alerting" title="Permanent link">&para;</a></h3>
 <p>Network performance issues are often discovered reactively through user complaints or application timeouts rather than proactive monitoring. Many monitoring setups focus on CPU and memory utilization while overlooking network metrics that can predict performance bottlenecks. Network performance degradation often appears gradually and can be masked by application-level retries or gray failures. By the time users notice problems, the issue may have been developing for days or weeks, making root cause analysis more difficult. Set up Amazon CloudWatch <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html">network performance monitoring alerts</a>.</p>
 <p>Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs with <a href="https://repost.aws/knowledge-center/vpc-flow-logs-and-cloudwatch-logs-insights">Amazon CloudWatch Insights</a> to analyze traffic patterns and identify optimization opportunities. Network performance issues often correlate with other infrastructure changes, so maintain good change management practices and baseline your network performance before and after deployments. Consider using AWS X-Ray for distributed tracing to identify network bottlenecks in microservices architectures.</p>
-<h3 id="relevant-resources_1">Relevant Resources<a class="headerlink" href="#relevant-resources_1" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_2">Relevant Resources<a class="headerlink" href="#relevant-resources_2" title="Permanent link">&para;</a></h3>
 <ol>
 <li><a href="https://aws.amazon.com/ec2/instance-types/">Amazon <abbr title="Elastic Compute Cloud">EC2</abbr> Instance Types Guide</a></li>
 <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html">Placement Groups Best Practices</a></li>
@@ -1995,10 +2159,10 @@ Use <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="IP Address Manag
 <p>Many customers often design VPCs in isolation and discover later that they can't connect them due to overlapping address spaces. This is particularly common when connecting to on-premises networks or acquired company infrastructure.</p>
 <p>Address conflicts prevent the use of <abbr title="Virtual Private Cloud">VPC</abbr> Peering, AWS Transit Gateway, and hybrid connectivity options. Resolving these conflicts often requires expensive re-subnetting or complex <abbr title="Network Address Translation">NAT</abbr> configurations that add latency and operational complexity.</p>
 <p>Before allocating address space, map out all potential connectivity requirements. This includes current cross-<abbr title="Virtual Private Cloud">VPC</abbr> needs, planned hybrid connections, potential acquisition targets, and customer network requirements. Reserve non-overlapping address blocks for each connectivity domain. Consider using <a href="https://aws.amazon.com/privatelink/">AWS PrivateLink</a> endpoints to avoid IP connectivity overlap requirements for AWS services.</p>
-<h3 id="operational-considerations_2">Operational Considerations<a class="headerlink" href="#operational-considerations_2" title="Permanent link">&para;</a></h3>
+<h3 id="operational-considerations_3">Operational Considerations<a class="headerlink" href="#operational-considerations_3" title="Permanent link">&para;</a></h3>
 <p>Managing IP addresses effectively requires ongoing operational attention beyond initial planning. Implement regular audits of your address space utilization using <a href="https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html">Custom AWS Config rules</a> with <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> or <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="IP Address Manager">IPAM</abbr>. Monitor not only current usage but also growth trends to predict future needs. Elastic IP addresses (EIPs) continue to incur charges when they are allocated but not associated with resources. To optimize costs and maintain good resource management, customers should implement automated processes to identify and release unused Elastic IPs. This can be accomplished through AWS Lambda functions or scripts that periodically scan for unattached EIPs and either release them or notify administrators. Such automation helps prevent unnecessary expenses and ensures efficient resource management by removing EIPs that no longer serve any purpose in your infrastructure. Additionally, <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets can eliminate <abbr title="Network Address Translation">NAT</abbr> Gateway costs for workloads that don't require <abbr title="Internet Protocol version 4">IPv4</abbr> connectivity. Beware of <a href="https://aws.amazon.com/config/pricing/">AWS Config</a> and <a href="https://aws.amazon.com/lambda/pricing/">AWS Lambda</a> costs.</p>
 <p>Integration with other AWS services significantly impacts your IP strategy. <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints reduce the need for <abbr title="Network Address Translation">NAT</abbr> Gateway capacity, while AWS Global Accelerator can optimize traffic routing without requiring additional IP space. When implementing container platforms like Amazon EKS, factor in the IP requirements for pod networking, as each pod consumes an IP address from your subnet space. The <a href="https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html">AWS <abbr title="Virtual Private Cloud">VPC</abbr> CNI</a> also offers efficient IP address management. This feature helps reduce the number of secondary IP addresses needed per elastic network interface. Consider using AWS <abbr title="Virtual Private Cloud">VPC</abbr> CNI prefix delegation to optimize IP utilization in container environments and integrate your <abbr title="IP Address Manager">IPAM</abbr> strategy with AWS Organizations SCPs to enforce governance across accounts automatically.</p>
-<h3 id="relevant-resources_2">Relevant Resources<a class="headerlink" href="#relevant-resources_2" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_3">Relevant Resources<a class="headerlink" href="#relevant-resources_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://youtu.be/xtLJgJfhPLg">Manage your IP addresses at scale on AWS</a></li>
 <li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/robust-network-design-control-tower/ipam.html">AWS Prescriptive Guidance - <abbr title="IP Address Manager">IPAM</abbr></a></li>
@@ -2052,7 +2216,7 @@ past AWS re:Invent events. Here are a couple of examples:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 1, 2025 13:28:34 UTC">August 1, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 00:27:47 UTC">August 7, 2025</span>
   </span>
 
     
