@@ -17,7 +17,7 @@ With VPC Flow Logs, by default, only [version 2](https://docs.aws.amazon.com/vpc
 * `pkt-srcaddr` and `pkt-dstaddr` especially for EKS pods
 * `az-id` is helpful in cases when you want to determine what traffic is going cross-AZ
 * `pkt-src-aws-service` and `pkt-dst-aws-service` to get AWS to provide an indication this is to or from AWS. However, keep in mind, many AWS services overlap each other, so only one will show. This field is generally most useful to identify if traffic is going to *any* AWS service.
-* `traffic-path` to give an easy filter to filter on for traffic leaving the VPC and by what method. A common use case is to verify if traffic going to S3 (filtering on `pkt-dst-aws-service` equal to "S3") is going via a local gateway endpoint (resulting in a value of 2 or 7 here), or is using a NAT gateway (a value of 1) which is more expensive. 
+* `traffic-path` to give an easy filter to filter on for traffic leaving the VPC and by what method. A common use case is to verify if traffic going to S3 (filtering on `pkt-dst-aws-service` equal to "S3") is going via a local gateway endpoint (resulting in a value of 2 or 7 here), or is using a NAT gateway (a value of 1 for either AWS NAT Gateway or your own instance acting as a NAT or a proxy) which is more expensive.
 * `reject-reason` is very useful with the [VPC Block Public Access](https://docs.aws.amazon.com/vpc/latest/userguide/security-vpc-bpa.html) feature to see what traffic is getting blocked by it.
 
 Overall, if you are starting fresh, it is recommended to use Custom Fields and get the specific data you want, instead of just accepting the default fields.
