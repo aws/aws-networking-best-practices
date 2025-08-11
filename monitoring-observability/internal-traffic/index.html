@@ -1244,6 +1244,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Internal Traffic
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1255,6 +1268,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow Logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flow Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tools-for-analyzing-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools for analyzing flow logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools for analyzing flow logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloudwatch-contributor-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      CloudWatch Contributor Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#athena-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Athena Queries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-synthetic-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Synthetic Monitors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-flow-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Flow Monitors
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1311,6 +1409,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flow Logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Flow Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tools-for-analyzing-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools for analyzing flow logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools for analyzing flow logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloudwatch-contributor-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      CloudWatch Contributor Insights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#athena-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      Athena Queries
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-synthetic-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Synthetic Monitors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-flow-monitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Network Flow Monitors
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1343,6 +1515,34 @@
 
 <h1 id="internal-traffic-monitoring">Internal Traffic Monitoring<a class="headerlink" href="#internal-traffic-monitoring" title="Permanent link">&para;</a></h1>
 <p>See <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs, Athena analysis, CloudWatch, and other tools to understand what network activity inside AWS is going on.</p>
+<p>There are several ways to monitor traffic inside AWS.</p>
+<h2 id="flow-logs">Flow Logs<a class="headerlink" href="#flow-logs" title="Permanent link">&para;</a></h2>
+<p>Flow Logs are comma-separated files that provide a record of traffic that goes through whatever is producing the flow logs. Today, there are two sources: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a> and <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html">AWS Transit Gateway Flow Logs</a>. Both produce the same format file, although with different fields. You can also create flow logs <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-basics.html">for network interfaces AWS services create for you</a>, such as <abbr title="Network Address Translation">NAT</abbr> gateways and Transit Gateways.</p>
+<p>Flow Logs can be expensive to leave running full-time for everything, so it is recommended to either select only certain resources to monitor, or create automation that only collects them at certain times or events. A good practice is to enable <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs everywhere with a filter to only log REJECT actions. Any entries that show up in the resulting log is traffic that is blocked for some reason (<a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html">security groups</a>, <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html">NACLs</a>, or <a href="https://docs.aws.amazon.com/vpc/latest/userguide/security-vpc-bpa.html"><abbr title="Virtual Private Cloud">VPC</abbr> Block Public Access</a>. These entries could be indicators of unauthorized activity.</p>
+<p>With <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs, by default, only <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html#flow-logs-fields">version 2</a> fields are recorded. While needed for consistency, AWS is currently up to version 8, with many additional fields now available. The most helpful will depend on your specific use case, but frequently are:</p>
+<ul>
+<li><code>vpc-id</code>, <code>subnet-id</code>, especially when storing the flow logs in a unified location, like a common <abbr title="Simple Storage Service">S3</abbr> bucket. Storing all your flow logs in a common place enable consolidated querying. Having these fields present as fields to query, sort, and filter against make working in a consolidated deployment easier.</li>
+<li><code>instance-id</code> to more easily identify the instance in question - AWS tools such as <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html">AWS Systems Manager</a>, <a href="https://aws.amazon.com/config/">AWS Config</a>, and <a href="https://aws.amazon.com/backup/">AWS Backup</a> focus on instance ID. <abbr title="Elastic Compute Cloud">EC2</abbr> instances can be <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/hostname-types.html">configured</a> (and default to, for <abbr title="Internet Protocol version 6">IPv6</abbr>) to have a hostname of their resource ID (i.e. <code>i-0123456789abcdef.us-west-2.compute.internal</code>), and thus their logs may use that identifier as well.</li>
+<li><code>pkt-srcaddr</code> and <code>pkt-dstaddr</code> especially for EKS pods</li>
+<li><code>az-id</code> is helpful in cases when you want to determine what traffic is going cross-<abbr title="Availability Zone">AZ</abbr></li>
+<li><code>pkt-src-aws-service</code> and <code>pkt-dst-aws-service</code> to get AWS to provide an indication this is to or from AWS. However, keep in mind, many AWS services overlap each other, so only one will show. This field is generally most useful to identify if traffic is going to <em>any</em> AWS service.</li>
+<li><code>traffic-path</code> to give an easy filter to filter on for traffic leaving the <abbr title="Virtual Private Cloud">VPC</abbr> and by what method. A common use case is to verify if traffic going to <abbr title="Simple Storage Service">S3</abbr> (filtering on <code>pkt-dst-aws-service</code> equal to "<abbr title="Simple Storage Service">S3</abbr>") is going via a local gateway endpoint (resulting in a value of 2 or 7 here), or is using a <abbr title="Network Address Translation">NAT</abbr> gateway (a value of 1 for either AWS <abbr title="Network Address Translation">NAT</abbr> Gateway or your own instance acting as a <abbr title="Network Address Translation">NAT</abbr> or a proxy) which is more expensive.</li>
+<li><code>reject-reason</code> is very useful with the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/security-vpc-bpa.html"><abbr title="Virtual Private Cloud">VPC</abbr> Block Public Access</a> feature to see what traffic is getting blocked by it.</li>
+</ul>
+<p>Overall, if you are starting fresh, it is recommended to use Custom Fields and get the specific data you want, instead of just accepting the default fields.</p>
+<h3 id="tools-for-analyzing-flow-logs">Tools for analyzing flow logs<a class="headerlink" href="#tools-for-analyzing-flow-logs" title="Permanent link">&para;</a></h3>
+<p>Flow Logs can produce a lot of data. AWS provides several tools to help analyze these.</p>
+<h4 id="cloudwatch-contributor-insights">CloudWatch Contributor Insights<a class="headerlink" href="#cloudwatch-contributor-insights" title="Permanent link">&para;</a></h4>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContributorInsights.html">CloudWatch Contributor Insights</a> can provide quick reports for the most commonly asked for questions from <abbr title="Virtual Private Cloud">VPC</abbr> flow logs - top talks, traffic by source, and so on. One often-missed piece of information is that Contributor Insights <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#privatelink-contributor-insights">integrates with PrivateLink</a> and provides you reporting which endpoints are the heaviest users of your <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-share-your-services.html">PrivateLink Endpoint Service</a>.</p>
+<h4 id="athena-queries">Athena Queries<a class="headerlink" href="#athena-queries" title="Permanent link">&para;</a></h4>
+<p>One frequently-missed tool is under the Actions dropdown in Flow Logs.
+<img alt="Generate Athena Integration dropdown" src="../../assets/monitoring-observability/athena-generate.png" /></p>
+<p>There is an option Generate Athena Integration. This will provide you with a CloudFormation template that you can then deploy that sets up Athena to query your <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs using SQL syntax or with the pre-built reports:</p>
+<p><img alt="Example Athena Reports" src="../../assets/monitoring-observability/athena-reports.png" /></p>
+<h2 id="network-synthetic-monitors">Network Synthetic Monitors<a class="headerlink" href="#network-synthetic-monitors" title="Permanent link">&para;</a></h2>
+<p>Available in CloudWatch, under Network Monitoring, <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/what-is-network-monitor.html">Synthetic Monitors</a> deploy AWS-managed <abbr title="Internet Control Message Protocol">ICMP</abbr> or <abbr title="Transmission Control Protocol">TCP</abbr> probes in your <abbr title="Virtual Private Cloud">VPC</abbr>, with a list of target IP addresses you provide. These then report on observed packet loss and round trip time. These can be outside of your <abbr title="Virtual Private Cloud">VPC</abbr>, or outside of AWS - you can use these to measure the time between your <abbr title="Virtual Private Cloud">VPC</abbr> and something on-premises for example. It works by deploying a network interface inside your <abbr title="Virtual Private Cloud">VPC</abbr>, sending out the test traffic, and reporting it back to CloudWatch. If your <abbr title="Virtual Private Cloud">VPC</abbr> is isolated (no direct Internet access), you can use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch-and-interface-VPC.html#cloudwatch-network-monitoring-interface-VPC-availability">PrivateLink Endpoints</a> to establish the connectivity needed for Synthetic Monitors to report back to CloudWatch.</p>
+<h2 id="network-flow-monitors">Network Flow Monitors<a class="headerlink" href="#network-flow-monitors" title="Permanent link">&para;</a></h2>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-NetworkFlowMonitor.html">Network Flow Monitor</a> involve installing agents onto your workloads. These agents monitor statistics from <abbr title="Transmission Control Protocol">TCP</abbr> connections (not the payloads), and sends it to a backend service for reporting. These reports can be combined to see information about cross-<abbr title="Availability Zone">AZ</abbr>, cross-<abbr title="Virtual Private Cloud">VPC</abbr>, or for specific flows. There is a good <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/visualizing-network-performance-of-your-aws-cloud-workloads-with-network-flow-monitor/">AWS Blog Post</a> that goes through setting it up and use cases for it. As with Synthetic Monitors, if your <abbr title="Virtual Private Cloud">VPC</abbr> is isolated (no direct Internet access), you can use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch-and-interface-VPC.html#cloudwatch-network-monitoring-interface-VPC-availability">PrivateLink Endpoints</a> to establish the connectivity needed for Network Flow Monitors to report back to CloudWatch.</p>
 
 
 
@@ -1365,7 +1565,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 16, 2025 22:48:10 UTC">July 16, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 11, 2025 18:49:11 UTC">August 11, 2025</span>
   </span>
 
     
