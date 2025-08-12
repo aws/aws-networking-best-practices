@@ -111,6 +111,18 @@ Adhere to [RFC5952](https://datatracker.ietf.org/doc/html/rfc5952) when represen
 | :material-close:{ style="color: #EF5350" } **Wrong** | ```2001:DB8:0:1234::``` |
 | :material-close:{ style="color: #EF5350" } **Wrong** | ```2001:0DB8:0000:1234::``` |
 
+## Console Screenshots
+
+The AWS console goes through frequent changes, and those images can be hard to update while keeping a consistent look between multiple screenshots in a section. Furthermore, customers should be investing in automating AWS deployments, and using the console only for review, monitoring, or tinkering. Thus, the use of screenshots should be avoided for most cases, including:
+
+* How to configure a service
+* Basic AWS operations
+
+Consider carefully before using them for:
+
+* Showing graphical output in the console (maps, charts, and the like)
+* Highlighting a single function or item in the console, especially if explaining where it is would be complex.
+
 ## Quick Checklist
 
 Before submitting diagrams:
