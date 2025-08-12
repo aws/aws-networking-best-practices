@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # Because we want the service-monitoring.md file to be very consistent, and the formatting can be quite complex,
-# this script exists to build that file for us.
+# this script exists to build that file for us. Run this script while in the directory with the service-monitoring.md file.
 import sys
 from typing import Optional, List, Dict, Any
 
@@ -25,7 +25,17 @@ def metric_item_str(item: dict) -> str:
     ret = ''
 
     if item['type'] == 'metrics':
-        ret += f'AWS CloudWatch "{item["ns"]}" namespace'
+        if item['ns'] == 'agent':
+            if item['url'] is None:
+                ret += f'Metrics exported via [CloudWatch agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html)'
+            else:
+                ret += f'[Metrics]({item["url"]}) exported via [CloudWatch agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html)'
+        else:
+            title = f'AWS CloudWatch "{item["ns"]}" namespace'
+            if item['url'] is None:
+                ret += title
+            else:
+                ret += f'[{title}]({item["url"]})'
         if item['per'] is not None:
             ret += f', per {item["per"]}'
         ret += ': | ~~ | ~~ |\n'
@@ -88,15 +98,15 @@ if __name__ == '__main__':
              '    Always validate the quotas below against the official AWS documentation - in case of differences, the official quotas should be used. Not all quotas are repeated here - only the most critical ones to keep an eye on.\n\n')
 
     text += gen_service('Application Load Balancer', 'ALB',
-                        items=[{'type': 'metrics', 'ns': 'AWS/ApplicationELB', 'per': None, 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/ApplicationELB', 'per': None, 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html', 'data':
                             [['crit', 'RejectedConnectionCount', 'Going up more than 2/min'],
                              ['warn', 'UnhealthyHostCount', 'Higher than 0 for longer than expected for scaling.'],
                              ['warn', 'ELBAuthError, ELBAuthLatency', 'Going usually high, if user authentication is in use.'],
                              ['info', 'ConsumedLCUs', 'None - monitor for cost'],
                              ['info', 'ActiveConnectionCount, NewConnectionCount, ProcessedBytes, ProcessedPackets', 'Outside of band.']]},
-                               {'type': 'metrics', 'ns': 'AWS/ApplicationELB', 'per': 'target group', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/ApplicationELB', 'per': 'target group', 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html', 'data':
                                    [['warn', 'UnhealthyRequestCount, UnhealthyStateDNS, UnhealthyStateRouting', 'Higher than 0 for longer than expected for scaling.']]},
-                               {'type': 'metrics', 'ns': 'AWS/ApplicationELB', 'per': 'target group', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/ApplicationELB', 'per': 'target group', 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html', 'data':
                                    [['warn', 'TargetConnectionErrorCount', 'Increasing'],
                                     ['info', 'TargetResponseTime', 'Going unusually high']]},
                                {'type': 'text', 'v': 'Consider enabling access and/or connection logs.'}],
@@ -105,7 +115,7 @@ if __name__ == '__main__':
 
     text += gen_service('AWS Direct Connect', 'DX',
                         items=[{'type': 'text', 'v': 'Monitor your router’s incoming and outgoing BPS and PPS, along with number of routes advertised and received against quotas.'},
-                               {'type': 'metrics', 'ns': 'AWS/DX', 'per': 'connection', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/DX', 'per': 'connection', 'url': 'https://docs.aws.amazon.com/directconnect/latest/UserGuide/monitoring-cloudwatch.html', 'data':
                                    [['crit', 'ConnectionState', 'Equals 0'],
                                     ['crit', 'ConnectionEncryptionState', 'Equals 0 if MACsec is enabled'],
                                     ['warn', 'ConnectionErrorCount', 'Going up more than 1/min'],
@@ -127,7 +137,7 @@ if __name__ == '__main__':
     text += gen_service('AWS Site-to-Site VPN', 'S2SVPN',
                         items=[{'type': 'text', 'v': 'Monitor your router’s incoming and outgoing BPS and PPS, and alarm on tunnel down or errors.'},
                                {'type': 'text', 'v': 'See [Direct Connect](#aws-direct-connect)'},
-                               {'type': 'metrics', 'ns': 'AWS/VPN', 'per': 'tunnel', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/VPN', 'per': 'tunnel', 'url': 'https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-cloudwatch-vpn.html', 'data':
                                    [['crit', 'TunnelState', 'Equals 0 (down)'],
                                     ['info', 'TunnelDataIn, TunnelDataOut', 'Exceeding 1.0 Gbps']]},
                                {'type': 'text', 'v': 'See [AWS Transit Gateway](#aws-transit-gateway)'},
@@ -137,11 +147,11 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html')
 
     text += gen_service('AWS Transit Gateway', 'TGW',
-                        items=[{'type': 'metrics', 'ns': 'AWS/TransitGateway', 'per': 'attachment', 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/TransitGateway', 'per': 'attachment', 'url': 'https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-cloudwatch-metrics.html', 'data':
                             [['info', '(Packet|Bytes)DropCount(Blackhole|NoRoute)', 'Greater than 1% of traffic'],
                              ['info', 'BytesIn + BytesOut', 'Approaching 100 Gbps'],
                              ['info', 'PacketsIn + PacketsOut', 'Approaching 7.5 Mpps']]},
-                               {'type': 'metrics', 'ns': 'AWS/TransitGateway', 'per': 'Transit Gateway', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/TransitGateway', 'per': 'Transit Gateway', 'url': 'https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-cloudwatch-metrics.html', 'data':
                                    [['info', '(Packet|Bytes)DropCount(Blackhole|NoRoute)', 'Greater than 1% of traffic'],
                                     ['info', 'BytesIn + BytesOut', 'None (alarm on the attachment)'],
                                     ['info', 'PacketsIn + PacketsOut', 'None (alarm on the attachment)']]},
@@ -150,14 +160,14 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html')
 
     text += gen_service('Network Load Balancer', 'NLB',
-                        items=[{'type': 'metrics', 'ns': 'AWS/NetworkELB', 'per': 'NLB', 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/NetworkELB', 'per': 'NLB', 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-cloudwatch-metrics.html', 'data':
                             [['crit', 'RejectedFlowCount', 'Greater than 0'],
                              ['crit', 'PortAllocationErrorCount', 'Greater than 0'],
                              ['warn', 'UnHealthyHostCount', 'Higher than 0 for longer than expected for scaling.'],
                              ['warn', 'UnhealthyRoutingFlowCount', 'Greater than 0'],
                              ['warn', 'TCP_(Client|ELB|Target)_Reset_Count', 'Outside of band, or a large percentage of NewFlowCount'],
                              ['info', 'ActiveFlowCount, NewFlowCount, PeakPacketsPerSecond, ProcessedByte, ProcessedPacket', 'Outside of band']]},
-                               {'type': 'metrics', 'ns': 'AWS/NetworkELB', 'per': 'target group', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/NetworkELB', 'per': 'target group', 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-cloudwatch-metrics.html', 'data':
                                    [['crit', 'PortAllocationErrorCount', 'Greater than 0'],
                                     ['warn', 'UnhealthyRoutingRequestCount, UnhealthyStateDNS, UnhealthyStateRouting', 'Greater than 0']]},
                                {'type': 'text', 'v': 'Appropriate per-target monitoring.'},
@@ -166,30 +176,30 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-limits.html')
 
     text += gen_service('Gateway Load Balancer', 'GWLB',
-                        items=[{'type': 'metrics', 'ns': 'AWS/PrivateLinkEndpoints', 'per': None, 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/PrivateLinkEndpoints', 'per': None, 'url': 'https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#endpoint-metrics-dimensions', 'data':
                             [['warn', 'PacketsDropped', 'Greater than 0.5%'],
                              ['warn', 'RstPacketsReceived', 'Greater than 10 pps'],
                              ['info', 'ActiveConnections', 'Going anomalously high'],
                              ['info', 'BytesProcessed', 'Approaching 100 Gbps'],
                              ['info', 'NewConnections', 'Going anomalously high']]},
-                               {'type': 'metrics', 'ns': 'AWS/GatewayELB', 'per': None, 'data':
+                               {'type': 'metrics', 'ns': 'AWS/GatewayELB', 'per': None, 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/cloudwatch-metrics.html', 'data':
                                    [['crit', 'RejectedFlowCount', 'Greater than 0'],
                                     ['warn', 'UnhealthyHostCount', 'Staying over 0'],
                                     ['info', 'ConsumedLCUs', 'Unexpected increases'],
                                     ['info', 'ActiveFlowCount', 'Going anomalously high'],
                                     ['info', 'NewFlowCount', 'Going anomalously high'],
                                     ['info', 'ProcessedBytes', 'Approaching 100 Gbps']]},
-                               {'type': 'metrics', 'ns': 'AWS/GatewayELB', 'per': 'target group', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/GatewayELB', 'per': 'target group', 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/cloudwatch-metrics.html', 'data':
                                    [['warn', 'UnhealthyHostCount', 'Staying over 0']]},
                                {'type': 'text', 'v': 'Per target monitoring.'}],
                         quotas=[['Network traffic (per GWLB)', '100 Gbps', 'hard'], ['Network traffic (per GWLBe)', '100 Gbps', 'hard']],
                         quotas_url='https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/quotas-limits.html')
 
     text += gen_service('Route53 Endpoints, Resolver, and Resolver DNS Firewall', 'R53',
-                        items=[{'type': 'metrics', 'ns': 'AWS/Route53Resolver', 'per': None, 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/Route53Resolver', 'per': None, 'url': 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html', 'data':
                             [['warn', 'InboundQueryVolume or OutboundQueryAggregateVolume', 'Greater than 8,000 per second'],
                              ['info', 'EndpointUnHealthyENICount', 'Greater than 0 for more than 10 minute']]},
-                               {'type': 'metrics', 'ns': 'Instances', 'per': 'instance', 'data':
+                               {'type': 'metrics', 'ns': 'Instances', 'per': 'instance', 'url': None, 'data':
                                    [['warn', 'linklocal_allowance_exceeded', 'Greater than 20 per minute']]},
                                {'type': 'text', 'v': 'Consider utilizing the [Resolver DNS firewall](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-overview.html)'},
                                {'type': 'text', 'v': 'Consider enabling [query logging](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html) from the VPC+2 resolver, endpoints, and the DNS Firewall'}],
@@ -198,7 +208,7 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html')
 
     text += gen_service('NAT Gateway', 'NAT',
-                        items=[{'type': 'metrics', 'ns': 'AWS/NATGateway', 'per': None, 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/NATGateway', 'per': None, 'url': 'https://docs.aws.amazon.com/vpc/latest/userguide/metrics-dimensions-nat-gateway.html', 'data':
                             [['crit', 'PacketsDropCount', 'More than 0.1% per second'],
                              ['warn', 'ErrorPortAllocation', 'More than 2 per second'],
                              ['warn', 'BytesInFromSource + BytesInFromDestination', 'Approaching 100 Gbps'],
@@ -221,12 +231,12 @@ if __name__ == '__main__':
 
     text += gen_service('AWS PrivateLink', 'PL',
                         items=[{'type': 'text', 'v': 'Monitor the attached load balancer (see their entries)'},
-                               {'type': 'metrics', 'ns': 'AWS/PrivateLinkServices', 'per': 'service', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/PrivateLinkServices', 'per': 'service', 'url': 'https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#endpoint-service-metrics-dimensions', 'data':
                                    [['warn', 'RstPacketsSent', 'Increasing quickly'],
                                     ['warn', 'BytesProcessed', 'Approaching 100 Gbps'],
                                     ['info', 'ActiveConnections', 'Unexpectedly increasing'],
                                     ['info', 'NewConnections', 'Unexpectedly increasing']]},
-                               {'type': 'metrics', 'ns': 'AWS/PrivateLinkEndpoints', 'per': 'endpoint', 'data':
+                               {'type': 'metrics', 'ns': 'AWS/PrivateLinkEndpoints', 'per': 'endpoint', 'url': 'https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#endpoint-metrics-dimensions', 'data':
                                    [['warn', 'PacketsDropped', 'Increasing quickly'],
                                     ['warn', 'RstPacketsReceived', 'Increasing quickly'],
                                     ['warn', 'BytesProcessed', 'Approaching 100 Gbps'],
@@ -237,7 +247,7 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-limits-endpoints.html')
 
     text += gen_service('Instances', 'Inst',
-                        items=[{'type': 'metrics', 'ns': 'agent', 'per': 'network interface', 'data':
+                        items=[{'type': 'metrics', 'ns': 'agent', 'per': 'network interface', 'url': 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html', 'data':
                             [['crit', 'conntrack_allowance_exceeded', 'Increasing quickly'],
                              ['warn', 'conntrack_allowance_available', 'Approaching zero'],
                              ['warn', 'bw_(in|out)_allowance_exceeded', 'Increasing quickly'],
@@ -253,7 +263,7 @@ if __name__ == '__main__':
                         quotas_url='https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/viewing_metrics_with_cloudwatch.html')
 
     text += gen_service('AWS Network Firewall', 'ANFW',
-                        items=[{'type': 'metrics', 'ns': 'AWS/NetworkFirewall', 'per': None, 'data':
+                        items=[{'type': 'metrics', 'ns': 'AWS/NetworkFirewall', 'per': None, 'url': 'https://docs.aws.amazon.com/network-firewall/latest/developerguide/monitoring-cloudwatch.html', 'data':
                             [['crit', 'InvalidDroppedPackets, OtherDroppedPackets', 'Greater than 20/min'],
                              ['info', 'DroppedPackets, RejectedPackets, ReceivedPackets', 'Unexpected changes']]},
                                {'type': 'text', 'v': 'A Firewall Endpoint is a GWLB endpoint – see [GWLB](#gateway-load-balancer) for monitoring details.'},
