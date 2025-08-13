@@ -140,7 +140,7 @@ How users and resources access AWS services impacts network design, costs, and s
 
 ### Use VPC Gateway Endpoints for Amazon S3 and Amazon DynamoDB Access
 
-Many customers default to using NAT gateways for private resource access to [Amazon S3](https://aws.amazon.com/s3/) or [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), unaware that VPC gateway endpoints offer a more cost-effective solution. [NAT gateway pricing](https://aws.amazon.com/vpc/pricing/) includes hourly charges plus data processing fees per gigabyte, regardless of traffic direction. [VPC gateway endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html), however, are free. This can lead to substantial cost savings, especially for workloads with high S3 or DynamoDB traffic volumes. Note that VPC gateway endpoints do not use AWS PrivateLink, unlike other types of VPC endpoints. 
+Many customers default to using NAT gateways for private resource access to [Amazon S3](https://aws.amazon.com/s3/) or [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), unaware that VPC gateway endpoints offer a more cost-effective solution. [NAT gateway pricing](https://aws.amazon.com/vpc/pricing/) includes hourly charges plus data processing fees per gigabyte, regardless of traffic direction. [VPC gateway endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html), however, are free. This can lead to substantial cost savings, especially for workloads with high S3 or DynamoDB traffic volumes. Note that VPC gateway endpoints do not use AWS PrivateLink, unlike other types of VPC endpoints.
 
 To implement VPC gateway endpoints, associate them with your private subnet route tables. These endpoints leverage [AWS-managed prefix lists](https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html) that update automatically. For S3 access, consider implementing [endpoint policies](https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html) to restrict access to specific buckets, enhancing security. While S3 and DynamoDB also support interface endpoints, these are primarily recommended for access from out side the VPC, for e.g., hybrid architectures. The following comparison summarize the differences. Regardless of the type used, the network traffic remains on the AWS network.
 
@@ -227,7 +227,7 @@ Use [Predefined Amazon CloudWatch queries](https://docs.aws.amazon.com/vpc/lates
 * [How do I find the top contributors to NAT gateway traffic in my Amazon VPC?](https://repost.aws/knowledge-center/vpc-find-traffic-sources-nat-gateway)
 * [How do I reduce data transfer charges for my NAT gateway in Amazon VPC?](https://repost.aws/knowledge-center/vpc-reduce-nat-gateway-transfer-costs)
 * [Reduce Cost and Increase Security with Amazon VPC Endpoints](https://aws.amazon.com/blogs/architecture/reduce-cost-and-increase-security-with-amazon-vpc-endpoints/)
-* [Securely Access Services Over AWS PrivateLink](https://docs.aws.amazon.com/whitepapers/latest/aws-privatelink/aws-privatelink.html)* 
+* [Securely Access Services Over AWS PrivateLink](https://docs.aws.amazon.com/whitepapers/latest/aws-privatelink/aws-privatelink.html)
 
 ## 12. VPC DNS Resolution, DHCP Options
 
