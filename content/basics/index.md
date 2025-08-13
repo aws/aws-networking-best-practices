@@ -171,7 +171,7 @@ Additionally, you can also [share your own services](https://docs.aws.amazon.com
 
 Many architectures include NAT gateways "just in case," without documenting what actually needs internet access. These become expensive legacy components that customer may be afraid to remove.
 
-Audit your internet-bound traffic using ]VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) to identify what services your resources actually access. Most internal applications only need access to AWS services, which can be provided through VPC endpoints. Create a matrix mapping each private resource to its external dependencies, then systematically replace NAT gateway usage with appropriate endpoints. Beware of the VPC Flow logs [costs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html#flow-logs-pricing).
+Audit your internet-bound traffic using [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) to identify what services your resources actually access. Most internal applications only need access to AWS services, which can be provided through VPC endpoints. Create a matrix mapping each private resource to its external dependencies, then systematically replace NAT gateway usage with appropriate endpoints. Beware of the VPC Flow logs [costs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html#flow-logs-pricing).
 
 If your [AWS Lambda](https://aws.amazon.com/lambda/) only accesses AWS services, VPC endpoints eliminate the need for NAT gateways entirely. For container workloads, consider using VPC endpoints for [Amazon Elastic Container Registry (ECR)](https://aws.amazon.com/ecr/) to avoid pulling images through NAT gateways—this alone can save significant costs for image-heavy deployments.
 
