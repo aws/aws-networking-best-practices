@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
     
     
       
@@ -1482,6 +1482,102 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="11. Accessing AWS services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-vpc-gateway-endpoints-for-amazon-s3-and-amazon-dynamodb-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use VPC Gateway Endpoints for Amazon S3 and Amazon DynamoDB Access
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-interface-endpoints-efficiently-based-on-traffic-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Interface Endpoints Efficiently Based on Traffic Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimize-nat-gateways-where-possible-through-service-specific-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimize NAT Gateways Where Possible Through Service-Specific Analysis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-endpoint-subnet-architecture-for-scalability-and-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      Design Endpoint Subnet Architecture for Scalability and Security
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implement-conditional-routing-based-on-workload-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Implement Conditional Routing Based on Workload Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-for-ipv6-and-dual-stack-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plan for IPv6 and Dual-Stack Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optimize-cross-region-access-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      Optimize Cross-Region Access Patterns
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-considerations_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Considerations
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relevant-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relevant Resources
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1549,7 +1645,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-considerations_1" class="md-nav__link">
+  <a href="#operational-considerations_2" class="md-nav__link">
     <span class="md-ellipsis">
       Operational Considerations
     </span>
@@ -1558,7 +1654,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources" class="md-nav__link">
+  <a href="#relevant-resources_1" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1645,7 +1741,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#key-considerations" class="md-nav__link">
+  <a href="#key-considerations_1" class="md-nav__link">
     <span class="md-ellipsis">
       Key Considerations
     </span>
@@ -1654,7 +1750,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-considerations_2" class="md-nav__link">
+  <a href="#operational-considerations_3" class="md-nav__link">
     <span class="md-ellipsis">
       Operational Considerations
     </span>
@@ -1663,7 +1759,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources_1" class="md-nav__link">
+  <a href="#relevant-resources_2" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1732,7 +1828,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources_2" class="md-nav__link">
+  <a href="#relevant-resources_3" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1810,7 +1906,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-considerations_3" class="md-nav__link">
+  <a href="#operational-considerations_4" class="md-nav__link">
     <span class="md-ellipsis">
       Operational Considerations
     </span>
@@ -1819,7 +1915,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relevant-resources_3" class="md-nav__link">
+  <a href="#relevant-resources_4" class="md-nav__link">
     <span class="md-ellipsis">
       Relevant Resources
     </span>
@@ -1956,7 +2052,72 @@ that form the building blocks for all AWS network architectures.</p>
 <h2 id="10-internet-connectivity-patterns">10. Internet connectivity patterns<a class="headerlink" href="#10-internet-connectivity-patterns" title="Permanent link">&para;</a></h2>
 <p>Basic internet connectivity patterns and the decision between Centralized vs distributed <abbr title="Network Address Translation">NAT</abbr> patterns, high availability.</p>
 <h2 id="11-accessing-aws-services">11. Accessing AWS services<a class="headerlink" href="#11-accessing-aws-services" title="Permanent link">&para;</a></h2>
-<p>When to use IGW/<abbr title="Network Address Translation">NAT</abbr> gateway vs gateway/interface endpoints to access AWS services</p>
+<p>How users and resources access AWS services impacts network design, costs, and security. Rushed deployment decisions often result in unnecessary complexity and expenses. Many overspend on <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html"><abbr title="Network Address Translation">NAT</abbr> gateways</a> or face connectivity issues due to confusion between <abbr title="Virtual Private Cloud">VPC</abbr> interface/gateway endpoints and <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html">Internet Gateway (IGW)</a> or <a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">Egress-only Internet Gateway (EIGW)</a> options. A key misconception is assuming private resources always need <abbr title="Network Address Translation">NAT</abbr> gateways for AWS services. Customers often choose <abbr title="Network Address Translation">NAT</abbr> gateways by default or implement <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/create-interface-endpoint.html"><abbr title="Virtual Private Cloud">VPC</abbr> endpoints</a> (<a href="https://aws.amazon.com/privatelink/">powered by AWS PrivateLink</a>) incorrectly, without considering long-term scalability and operational costs.</p>
+<h3 id="use-vpc-gateway-endpoints-for-amazon-s3-and-amazon-dynamodb-access">Use <abbr title="Virtual Private Cloud">VPC</abbr> Gateway Endpoints for Amazon <abbr title="Simple Storage Service">S3</abbr> and Amazon DynamoDB Access<a class="headerlink" href="#use-vpc-gateway-endpoints-for-amazon-s3-and-amazon-dynamodb-access" title="Permanent link">&para;</a></h3>
+<p>Many customers default to using <abbr title="Network Address Translation">NAT</abbr> gateways for private resource access to <a href="https://aws.amazon.com/s3/">Amazon <abbr title="Simple Storage Service">S3</abbr></a> or <a href="https://aws.amazon.com/dynamodb/">Amazon DynamoDB</a>, unaware that <abbr title="Virtual Private Cloud">VPC</abbr> gateway endpoints offer a more cost-effective solution. <a href="https://aws.amazon.com/vpc/pricing/"><abbr title="Network Address Translation">NAT</abbr> gateway pricing</a> includes hourly charges plus data processing fees per gigabyte, regardless of traffic direction. <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html"><abbr title="Virtual Private Cloud">VPC</abbr> gateway endpoints</a>, however, are free. This can lead to substantial cost savings, especially for workloads with high <abbr title="Simple Storage Service">S3</abbr> or DynamoDB traffic volumes. Note that <abbr title="Virtual Private Cloud">VPC</abbr> gateway endpoints do not use AWS PrivateLink, unlike other types of <abbr title="Virtual Private Cloud">VPC</abbr> endpoints.</p>
+<p>To implement <abbr title="Virtual Private Cloud">VPC</abbr> gateway endpoints, associate them with your private subnet route tables. These endpoints leverage <a href="https://docs.aws.amazon.com/vpc/latest/userguide/working-with-aws-managed-prefix-lists.html">AWS-managed prefix lists</a> that update automatically. For <abbr title="Simple Storage Service">S3</abbr> access, consider implementing <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-access.html">endpoint policies</a> to restrict access to specific buckets, enhancing security. While <abbr title="Simple Storage Service">S3</abbr> and DynamoDB also support interface endpoints, these are primarily recommended for access from out side the <abbr title="Virtual Private Cloud">VPC</abbr>, for e.g., <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html#updating-on-premises-dns-config">hybrid architectures</a>. The following comparison summarize the differences. Regardless of the type used, the network traffic remains on the AWS network.</p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/privatelink-interface-endpoints.html#types-of-vpc-endpoints-for-s3">Types of <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for Amazon <abbr title="Simple Storage Service">S3</abbr></a></li>
+<li><a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/privatelink-interface-endpoints.html#types-of-vpc-endpoints-for-ddb">Types of Amazon <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for Amazon DynamoDB</a></li>
+</ul>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> gateway endpoints operate at the route table level - resources in subnets without the endpoint route will continue using internet routes, enabling segmented access patterns. Note that <abbr title="Virtual Private Cloud">VPC</abbr> gateway endpoints don't support transitive routing through <a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html"><abbr title="Virtual Private Cloud">VPC</abbr> peering</a>, <a href="https://aws.amazon.com/transit-gateway/">AWS Transit Gateway</a>, <a href="https://aws.amazon.com/cloud-wan/">AWS Cloud WAN</a>, <a href="https://aws.amazon.com/vpn/">AWS <abbr title="Virtual Private Network">VPN</abbr></a>, or <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a>.</p>
+<h3 id="use-interface-endpoints-efficiently-based-on-traffic-patterns">Use Interface Endpoints Efficiently Based on Traffic Patterns<a class="headerlink" href="#use-interface-endpoints-efficiently-based-on-traffic-patterns" title="Permanent link">&para;</a></h3>
+<p>Use <abbr title="Virtual Private Cloud">VPC</abbr> Interface endpoints when your applications need private access to <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/aws-services-privatelink-support.html">AWS services</a>. While it's common to deploy endpoints for all AWS services, this practice can lead to unnecessary costs and complexity. Remember that <a href="https://aws.amazon.com/privatelink/pricing/"><abbr title="Virtual Private Cloud">VPC</abbr> interface endpoints incur</a> both hourly charges per Availability Zone (<abbr title="Availability Zone">AZ</abbr>) and data processing charge.</p>
+<ul>
+<li>Deploy them in dedicated <code>/28</code> "endpoint subnets" separate from application subnets for better security and management</li>
+<li>Enable private <abbr title="Domain Name System">DNS</abbr> to allow applications to use the endpoint without code modifications</li>
+<li>Deploy across multiple AZs for <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-aws-services.html#aws-service-subnets-zones">high availability</a>. Note that <a href="https://aws.amazon.com/about-aws/whats-new/2022/04/aws-data-transfer-price-reduction-privatelink-transit-gateway-client-vpn-services/">beginning April 1, 2022</a>, the inter-Availability Zone (<abbr title="Availability Zone">AZ</abbr>) data transfer within the same AWS Region for <em>AWS PrivateLink</em> (along with AWS Transit Gateway, and AWS Client <abbr title="Virtual Private Network">VPN</abbr>) is free of charge.</li>
+<li>Consider centralizing endpoints in shared services architectures using AWS Transit Gateway or AWS CloudWAN  for optimized costs</li>
+<li>Know the <abbr title="Virtual Private Cloud">VPC</abbr> endpoint <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-limits-endpoints.html">quotas</a> including bandwidth scaling</li>
+<li>Enable <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-aws-services.html#interface-endpoint-private-dns">Private <abbr title="Domain Name System">DNS</abbr></a>, and know the <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-aws-services.html#interface-endpoint-dns-hostnames"><abbr title="Domain Name System">DNS</abbr> hostnames</a> and <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-aws-services.html#interface-endpoint-dns-resolution"><abbr title="Domain Name System">DNS</abbr> Resolution</a>. Use Regional endpoint <abbr title="Domain Name System">DNS</abbr> name that round robin between the endpoint IP addresses. But if you need to keep the latency low, use Zonal endpoint <abbr title="Domain Name System">DNS</abbr> name</li>
+</ul>
+<p>Use interface endpoints for AWS services that require access from:</p>
+<ul>
+<li>Across the VPCs connected via <abbr title="Virtual Private Cloud">VPC</abbr> peering, AWS Transit Gateway, AWS CloudWAN, AWS <abbr title="Virtual Private Network">VPN</abbr> or AWS Direct Connect)</li>
+<li>Hybrid environments (AWS Transit Gateway, AWS CloudWAN, AWS <abbr title="Virtual Private Network">VPN</abbr> or AWS Direct Connect)</li>
+</ul>
+<p>Additionally, you can also <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-share-your-services.html">share your own services</a> through <abbr title="Virtual Private Cloud">VPC</abbr> interface endpoints using AWS PrivateLink, which supports overlapping IP CIDRs.</p>
+<h3 id="minimize-nat-gateways-where-possible-through-service-specific-analysis">Minimize <abbr title="Network Address Translation">NAT</abbr> Gateways Where Possible Through Service-Specific Analysis<a class="headerlink" href="#minimize-nat-gateways-where-possible-through-service-specific-analysis" title="Permanent link">&para;</a></h3>
+<p>Many architectures include <abbr title="Network Address Translation">NAT</abbr> gateways "just in case," without documenting what actually needs internet access. These become expensive legacy components that customer may be afraid to remove.</p>
+<p>Audit your internet-bound traffic using <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a> to identify what services your resources actually access. Most internal applications only need access to AWS services, which can be provided through <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Create a matrix mapping each private resource to its external dependencies, then systematically replace <abbr title="Network Address Translation">NAT</abbr> gateway usage with appropriate endpoints. Beware of the <abbr title="Virtual Private Cloud">VPC</abbr> Flow logs <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html#flow-logs-pricing">costs</a>.</p>
+<p>If your <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> only accesses AWS services, <abbr title="Virtual Private Cloud">VPC</abbr> endpoints eliminate the need for <abbr title="Network Address Translation">NAT</abbr> gateways entirely. For container workloads, consider using <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for <a href="https://aws.amazon.com/ecr/">Amazon Elastic Container Registry (ECR)</a> to avoid pulling images through <abbr title="Network Address Translation">NAT</abbr> gateways—this alone can save significant costs for image-heavy deployments.</p>
+<h3 id="design-endpoint-subnet-architecture-for-scalability-and-security">Design Endpoint Subnet Architecture for Scalability and Security<a class="headerlink" href="#design-endpoint-subnet-architecture-for-scalability-and-security" title="Permanent link">&para;</a></h3>
+<p>Customers often place interface endpoints in their application subnets or create endpoints in every subnet, leading to management complexity and unexpected network behavior. Poor endpoint placement makes network troubleshooting difficult and can impact application performance. It also makes it harder to implement consistent security policies and complicates subnet <abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning.</p>
+<p>Create dedicated endpoint subnets (<code>/28</code>) in each <abbr title="Availability Zone">AZ</abbr> where you need interface endpoints. Size these subnets appropriately—each interface endpoint consumes one IP address per <abbr title="Availability Zone">AZ</abbr>, so keep room for growth. Associate these subnets with route tables that don't have <abbr title="Network Address Translation">NAT</abbr> gateway routes, forcing traffic through endpoints. Apply security groups that allow inbound access from your application subnets on the required ports (typically <code>443</code> for HTTPS).</p>
+<p>Use separate endpoint subnets for different security zones or compliance requirements. For example, create separate endpoint subnets for production vs development environments, even within the same <abbr title="Virtual Private Cloud">VPC</abbr>. This pattern also simplifies <abbr title="Domain Name System">DNS</abbr> resolution troubleshooting—you can easily identify whether traffic is using endpoints or internet routes based on the destination IP address range.</p>
+<h3 id="implement-conditional-routing-based-on-workload-requirements">Implement Conditional Routing Based on Workload Requirements<a class="headerlink" href="#implement-conditional-routing-based-on-workload-requirements" title="Permanent link">&para;</a></h3>
+<p>Many implementations use a one-size-fits-all approach to service access, either routing everything through <abbr title="Network Address Translation">NAT</abbr> gateways or trying to endpoint everything, rather than optimizing based on specific workload needs. Different workloads have different access patterns, security requirements, and cost sensitivities. A data processing job that occasionally uploads to <abbr title="Simple Storage Service">S3</abbr> has different needs than a real-time application making constant API calls to multiple AWS services.</p>
+<p>Create different subnet categories with different routing strategies. For example, use "compute subnets" with gateway endpoints only for <abbr title="Simple Storage Service">S3</abbr>/DynamoDB access, "integration subnets" with interface endpoints for frequently used services, and "egress subnets" with <abbr title="Network Address Translation">NAT</abbr> gateways for workloads that genuinely need internet access. Move workloads between subnet types as their requirements evolve.</p>
+<h3 id="plan-for-ipv6-and-dual-stack-considerations">Plan for <abbr title="Internet Protocol version 6">IPv6</abbr> and Dual-Stack Considerations<a class="headerlink" href="#plan-for-ipv6-and-dual-stack-considerations" title="Permanent link">&para;</a></h3>
+<p>Many customers ignore <abbr title="Internet Protocol version 6">IPv6</abbr> when designing service access patterns, but AWS is moving toward <abbr title="Internet Protocol version 6">IPv6</abbr>-first for many services, and some customers require <abbr title="Internet Protocol version 6">IPv6</abbr> for compliance or architectural reasons. For <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets, use <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-nat64-dns64.html#nat-gateway-dns64-what-is">DNS64</a> with <a href="https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-nat64-dns64.html#nat-gateway-nat64-what-is">NAT64</a> that help translate <abbr title="Internet Protocol version 6">IPv6</abbr>-only resources to communicate with IP4 and vice versa. <abbr title="Network Address Translation">NAT</abbr> Gateway, natively support NAT64 without the need for any extra configuration setup. Enable DNS64 for <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnet along with NAT64 to allow this communication. Understand the <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-aws-services.html#aws-service-ip-address-type">requirements to enable <abbr title="Internet Protocol version 6">IPv6</abbr> for an interface endpoint</a>.</p>
+<p>Use egress-only internet gateways for outbound <abbr title="Internet Protocol version 6">IPv6</abbr> internet access. Interface endpoints support both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>, but you need to plan your security group rules for both protocols. Consider using dual-stack subnets where you need both protocols during transition periods.</p>
+<p>While <abbr title="Internet Protocol version 6">IPv6</abbr> addresses are publicly routable by default, within <abbr title="Virtual Private Cloud">VPC</abbr> they cannot communicate without IGW or EIGW, so be extra careful with security group configurations. Many customers assume <abbr title="Internet Protocol version 6">IPv6</abbr> works like <abbr title="Internet Protocol version 4">IPv4</abbr> with private addresses, leading to security exposures. Test your endpoint configurations with both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic to ensure consistent behavior.</p>
+<h3 id="optimize-cross-region-access-patterns">Optimize Cross-Region Access Patterns<a class="headerlink" href="#optimize-cross-region-access-patterns" title="Permanent link">&para;</a></h3>
+<p>Interface endpoints support native <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-share-your-services.html#endpoint-service-cross-region">cross-region connectivity</a> but only for services that are shared via AWS PrivateLink using Network Load Balancers. As a service consumer, you can privately connect to <abbr title="Virtual Private Cloud">VPC</abbr> endpoint services in other AWS Regions without the need to setup cross-region peering or exposing your data over the public internet. Cross-region enabled <abbr title="Virtual Private Cloud">VPC</abbr> endpoint services can be accessed through Interface endpoints using private IP address in your <abbr title="Virtual Private Cloud">VPC</abbr>, enabling simpler and more secure inter-region connectivity. Note that access to AWS services via interface endpoints are still regional. Even though you can use cross-region connectivity patterns such as <abbr title="Virtual Private Cloud">VPC</abbr> peering, AWS Transit Gateway or AWS Cloud WAN, beware of the associated charges that can add up, and this also creates a region dependency, which is an anti-pattern.</p>
+<h3 id="key-considerations">Key Considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The "<abbr title="Network Address Translation">NAT</abbr> Gateway for Everything" Architecture</strong>: Look for <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs showing traffic to AWS service IP ranges going through <abbr title="Network Address Translation">NAT</abbr> gateway instances, or Amazon CloudWatch metrics showing consistent outbound traffic to AWS API endpoints. Review your route tables—if every private subnet has a default route to a <abbr title="Network Address Translation">NAT</abbr> gateway, you likely may have this anti-pattern.</li>
+</ul>
+<p>Start by implementing Amazon <abbr title="Simple Storage Service">S3</abbr> and Amazon DynamoDB gateway endpoints, which are free. Then analyze your remaining internet-bound traffic using <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs to identify which services you're actually accessing. Replace <abbr title="Network Address Translation">NAT</abbr> gateway usage service-by-service with appropriate interface endpoints. Finally, remove <abbr title="Network Address Translation">NAT</abbr> gateways from subnets that no longer need internet access, keeping them only where genuine internet connectivity is required.</p>
+<ul>
+<li><strong>Interface Endpoint Sprawl Without Governance</strong>: The opposite extreme is deploying interface endpoints for every possible AWS service without considering usage patterns or costs. Check your monthly bill for <abbr title="Virtual Private Cloud">VPC</abbr> endpoint charges that seem disproportionate to your usage, or count the number of interface endpoints in your <abbr title="Virtual Private Cloud">VPC</abbr>. If you have more endpoints than you have applications, you likely have this problem.</li>
+</ul>
+<p>Audit your actual service usage through <a href="https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html">AWS CloudTrail</a> and application logs to identify which endpoints are actually used. Remove unused endpoints —you can always recreate them later if needed. For lightly-used services, consider whether occasional internet access through a shared <abbr title="Network Address Translation">NAT</abbr> gateway might be more cost-effective than dedicated endpoints. Evaluate if <a href="https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/centralized-access-to-vpc-private-endpoints.html">centralizing the interface endpoints</a> may be more applicable to your architecture instead of dedicated endpoints in every <abbr title="Virtual Private Cloud">VPC</abbr>, subnet.</p>
+<ul>
+<li><strong>Inconsistent Endpoint Policies and Security Groups</strong>: Many customers deploy <abbr title="Virtual Private Cloud">VPC</abbr> endpoints with overly permissive policies or inconsistent security group configurations, creating security vulnerabilities and operational complexity.</li>
+</ul>
+<p>Review your <abbr title="Virtual Private Cloud">VPC</abbr> endpoint policies—if they allow <code>*</code> for resources or principals, or if your endpoint security groups allow <code>0.0.0.0/0</code> access, you may have this anti-pattern. Also check if different endpoints have wildly different policy configurations without clear reasoning. Implement least-privilege endpoint policies that restrict access to specific resources and principals. Standardize your security group configurations across endpoints, using consistent naming and documentation. Consider using AWS Config rules to detect and alert on overly permissive endpoint configurations. Beware of the AWS Config <a href="https://aws.amazon.com/config/pricing/">cost</a>.</p>
+<h3 id="operational-considerations_1">Operational Considerations<a class="headerlink" href="#operational-considerations_1" title="Permanent link">&para;</a></h3>
+<p>Monitoring your service access patterns should be part of your regular cost optimization reviews. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs provide excellent visibility into your traffic patterns, but they require analysis tools to be useful. Know the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-billing-usage-reports.html#vpce-billing-usage-reports">billing codes</a> for <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Beware of <abbr title="Virtual Private Cloud">VPC</abbr> Flow logs <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html#flow-logs-pricing">cost</a>.</p>
+<p>Use <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-run-athena-query.html">Predefined Amazon CloudWatch queries</a> using Amazon Athena to get the common usage patterns, though beware of Athena <a href="https://aws.amazon.com/athena/pricing/">cost</a>. <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html">CloudWatch metrics</a> for <abbr title="Virtual Private Cloud">VPC</abbr> endpoints show utilization patterns that can guide your scaling and optimization decisions. Set up <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/monitor_estimated_charges_with_cloudwatch.html">billing alerts</a> for your networking components and review them monthly. Many customers save on networking costs by systematically replacing <abbr title="Network Address Translation">NAT</abbr> gateways with appropriate endpoints. Use <a href="https://aws.amazon.com/aws-cost-management/aws-cost-explorer/">AWS Cost Explorer</a> to track networking cost trends and identify optimization opportunities as your usage patterns evolve.</p>
+<h3 id="relevant-resources">Relevant Resources<a class="headerlink" href="#relevant-resources" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://youtu.be/LNf8jjBt72Y">AWS re:Invent: <abbr title="Virtual Private Cloud">VPC</abbr> endpoints &amp; PrivateLink: Optimize for security, cost &amp; operations</a></li>
+<li><a href="https://repost.aws/knowledge-center/vpc-find-traffic-sources-nat-gateway">How do I find the top contributors to <abbr title="Network Address Translation">NAT</abbr> gateway traffic in my Amazon <abbr title="Virtual Private Cloud">VPC</abbr>?</a></li>
+<li><a href="https://repost.aws/knowledge-center/vpc-reduce-nat-gateway-transfer-costs">How do I reduce data transfer charges for my <abbr title="Network Address Translation">NAT</abbr> gateway in Amazon <abbr title="Virtual Private Cloud">VPC</abbr>?</a></li>
+<li><a href="https://aws.amazon.com/blogs/architecture/reduce-cost-and-increase-security-with-amazon-vpc-endpoints/">Reduce Cost and Increase Security with Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints</a></li>
+<li><a href="https://docs.aws.amazon.com/whitepapers/latest/aws-privatelink/aws-privatelink.html">Securely Access Services Over AWS PrivateLink</a></li>
+</ul>
 <h2 id="12-vpc-dns-resolution-dhcp-options">12. <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> Resolution, <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> Options<a class="headerlink" href="#12-vpc-dns-resolution-dhcp-options" title="Permanent link">&para;</a></h2>
 <p>The <a href="https://en.wikipedia.org/wiki/Domain_Name_System">Domain Name System (<abbr title="Domain Name System">DNS</abbr>)</a> is a standard protocol that resolves internet names to their corresponding IP addresses. A <abbr title="Domain Name System">DNS</abbr> hostname is a unique and absolute name for a computer, consisting of a hostname and a domain name. <abbr title="Domain Name System">DNS</abbr> servers translate these <abbr title="Domain Name System">DNS</abbr> hostnames into their corresponding IP addresses. Workloads consistently require reliable, high-performing internal name resolution (<abbr title="Domain Name System">DNS</abbr>) for service discovery, database connections, and inter-service communication. As an AWS architect or administrator, one of the fundamental networking components you'll work with is the <code>Amazon DNS server</code>, or <code>AmazonProvidedDNS</code> also known as the Route 53 Resolver. This <abbr title="Domain Name System">DNS</abbr> resolver service is natively integrated into each Availability Zone within your AWS Region, providing a reliable and scalable solution for domain name resolution within your Virtual Private Cloud (<abbr title="Virtual Private Cloud">VPC</abbr>).</p>
 <p>The Route 53 Resolver is located at <code>169.254.169.253</code> (<abbr title="Internet Protocol version 4">IPv4</abbr>), <code>fd00:ec2::253</code> (<abbr title="Internet Protocol version 6">IPv6</abbr>), and at the primary private IPV4 <abbr title="Classless Inter-Domain Routing">CIDR</abbr> range provisioned to your <abbr title="Virtual Private Cloud">VPC</abbr> plus two. For example, if you have a <abbr title="Virtual Private Cloud">VPC</abbr> with an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> of <code>10.0.0.0/16</code> and an <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> of <code>2001:db8::/32</code>, you can reach the Route 53 Resolver at <code>169.254.169.253</code> (<abbr title="Internet Protocol version 4">IPv4</abbr>), <code>fd00:ec2::253</code> (<abbr title="Internet Protocol version 6">IPv6</abbr>), or <code>10.0.0.2</code> (<abbr title="Internet Protocol version 4">IPv4</abbr>). Resources within a <abbr title="Virtual Private Cloud">VPC</abbr> use a <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#link-local-addresses">link local address</a> for <abbr title="Domain Name System">DNS</abbr> queries. These queries are transported to the Route 53 Resolver privately and are not visible on the network. In an <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnet, the <abbr title="Internet Protocol version 4">IPv4</abbr> link-local address (169.254.169.253) is still reachable as long as Route 53 Resolver is the name server in the <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option set. Note that the base <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> + 2 address is only available in addition to the link-local addresses when <code>enableDnsSupport</code> is true.</p>
@@ -2013,10 +2174,10 @@ that form the building blocks for all AWS network architectures.</p>
 <li><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring-dnssec.html">Domain Name System Security Extensions (<code>DNSSEC</code>)</a> doesn’t work with DNS64. Since <code>DNSSEC</code> relies on cryptographic signatures of <abbr title="Domain Name System">DNS</abbr> records, the dynamic synthesis of AAAA records by DNS64 resolvers can cause validation failures. To address this, admins must understand and potentially deploy DNS64-aware <code>DNSSEC</code> validation, such as using the <a href="https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions">CD (Checking Disabled)</a>.</li>
 <li>DNS64 and NAT64 introduce additional steps in the resolution and transport process. The DNS64 resolver must perform two lookups—first for an AAAA record and then an A record if the AAAA does not exist.</li>
 </ul>
-<h3 id="operational-considerations_1">Operational Considerations<a class="headerlink" href="#operational-considerations_1" title="Permanent link">&para;</a></h3>
+<h3 id="operational-considerations_2">Operational Considerations<a class="headerlink" href="#operational-considerations_2" title="Permanent link">&para;</a></h3>
 <p><abbr title="Domain Name System">DNS</abbr> operations in production require proactive monitoring and troubleshooting capabilities that extend beyond basic connectivity testing. Implement comprehensive logging to capture <abbr title="Domain Name System">DNS</abbr> query volumes, response times, and failure rates across your entire <abbr title="Domain Name System">DNS</abbr> infrastructure. Use Amazon CloudWatch metrics to monitor Route 53 Resolver query volumes and establish alarms for unusual patterns that might indicate service issues or security threats. Create runbooks for common <abbr title="Domain Name System">DNS</abbr> troubleshooting scenarios, including tools and techniques for diagnosing resolution failures at different layers of your <abbr title="Domain Name System">DNS</abbr> hierarchy. Consider the operational impact of <abbr title="Domain Name System">DNS</abbr> changes—even simple updates to <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> option sets require instance reboots or network interface refreshes to take effect—and plan changes during maintenance windows.</p>
 <p>Monitor your query patterns and optimize application-level <abbr title="Domain Name System">DNS</abbr> caching to reduce unnecessary queries. When integrating with other AWS services, remember that services like <a href="https://aws.amazon.com/eks/">Amazon EKS</a> and <a href="https://aws.amazon.com/ecs/">Amazon ECS</a> have their own <abbr title="Domain Name System">DNS</abbr> requirements and integration patterns that can affect your overall <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Domain Name System">DNS</abbr> design. Plan for service discovery patterns that align with your chosen container orchestration platform, and ensure your <abbr title="Domain Name System">DNS</abbr> architecture supports the dynamic nature of containerized workloads without creating performance bottlenecks or security vulnerabilities.</p>
-<h3 id="relevant-resources">Relevant Resources<a class="headerlink" href="#relevant-resources" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_1">Relevant Resources<a class="headerlink" href="#relevant-resources_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/dns-best-practices-for-amazon-route-53/"><abbr title="Domain Name System">DNS</abbr> best practices for Amazon Route 53</a></li>
 <li><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/how-to-optimize-dns-for-dual-stack-networks/">How to optimize <abbr title="Domain Name System">DNS</abbr> for dual-stack networks</a></li>
@@ -2075,7 +2236,7 @@ that form the building blocks for all AWS network architectures.</p>
 <p>Security Groups and NACLs have different scale characteristics and performance implications. Understand the <a href="https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html">service quotas</a> for both Security Groups and NACLs. Each Security Group can have up to <code>60</code> inbound and <code>60</code> outbound rules, and each network interface can be associated with up to <code>5</code> Security Groups (giving you effectively <code>300</code> inbound and <code>300</code> outbound rules per interface). NACLs can have up to <code>20</code> rules each for inbound and outbound traffic per <abbr title="Network Access Control List">NACL</abbr>.</p>
 <p>Plan your rule consolidation strategy early. Instead of creating many specific rules, use <abbr title="Classless Inter-Domain Routing">CIDR</abbr> aggregation where possible. For example, instead of creating separate rules for <code>10.0.1.0/24</code>, <code>10.0.2.0/24</code>, and <code>10.0.3.0/24</code>, use a single rule for <code>10.0.0.0/22</code> if the security requirements are identical.</p>
 <p>Monitor your Security Group and <abbr title="Network Access Control List">NACL</abbr> rule counts using <a href="https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html">AWS Config</a>. Beware of the AWS Config <a href="https://aws.amazon.com/config/pricing/">cost</a>.</p>
-<h3 id="key-considerations">Key Considerations<a class="headerlink" href="#key-considerations" title="Permanent link">&para;</a></h3>
+<h3 id="key-considerations_1">Key Considerations<a class="headerlink" href="#key-considerations_1" title="Permanent link">&para;</a></h3>
 <p><strong>Treating NACLs Like Traditional Firewalls</strong>: Customers may implement complex <abbr title="Network Access Control List">NACL</abbr> rule sets trying to replicate their on-premises firewall configurations. They create dozens of specific rules for individual applications, protocols, and port ranges, often resulting in NACLs with many rules that are difficult to understand and maintain.</p>
 <p>Look for NACLs with many specific rules, especially those that seem to duplicate functionality available in Security Groups. Another sign is when teams modify NACLs frequently as part of application deployments—this suggests they're using NACLs for dynamic, application-level controls that would be better handled by Security Groups.</p>
 <p>Audit your existing <abbr title="Network Access Control List">NACL</abbr> rules and categorize them into network-level controls (keep in NACLs) vs application-level controls (migrate to Security Groups). Start by removing <abbr title="Network Access Control List">NACL</abbr> rules that duplicate Security Group functionality. For complex rule sets, create a migration plan that moves rules to Security Groups in phases, testing connectivity after each phase. Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs during the migration to verify that legitimate traffic isn't being blocked.</p>
@@ -2085,11 +2246,11 @@ that form the building blocks for all AWS network architectures.</p>
 <p><strong>Ignoring Ephemeral Port Requirements in <abbr title="Network Access Control List">NACL</abbr> Design</strong>: Customers implement restrictive outbound <abbr title="Network Access Control List">NACL</abbr> rules without accounting for ephemeral ports used by return traffic, causing intermittent connectivity issues that are difficult to troubleshoot. Applications work sometimes but fail others, especially during high-traffic periods when different ephemeral ports are used.</p>
 <p>Look for applications that experience intermittent connectivity issues, especially for outbound connections to databases, APIs, or external services. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs showing <code>REJECT</code> entries for high port numbers (typically above <code>32768</code>) often indicate this problem. Another sign is when applications work from some subnets but not others, despite having identical Security Group rules.</p>
 <p>Review all outbound <abbr title="Network Access Control List">NACL</abbr> rules and ensure they account for return traffic on ephemeral ports. This typically means allowing outbound traffic on ports <code>32768-65535</code> for Linux instances or <code>49152-65535</code> for Windows instances. If security requirements prevent opening these ranges broadly, consider redesigning your application architecture to use specific port ranges that you can control, or evaluate whether the <abbr title="Network Access Control List">NACL</abbr> restrictions are truly necessary for your security model.</p>
-<h3 id="operational-considerations_2">Operational Considerations<a class="headerlink" href="#operational-considerations_2" title="Permanent link">&para;</a></h3>
+<h3 id="operational-considerations_3">Operational Considerations<a class="headerlink" href="#operational-considerations_3" title="Permanent link">&para;</a></h3>
 <p>Managing Security Groups and NACLs effectively requires ongoing attention to monitoring, troubleshooting, and optimization. <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a> is the primary tool for understanding traffic patterns and diagnosing connectivity issues. Enable Flow Logs at the <abbr title="Virtual Private Cloud">VPC</abbr> level and configure them to capture both accepted and rejected traffic. Use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html">Amazon CloudWatch Insights</a> or <a href="https://aws.amazon.com/athena/">Amazon Athena</a> to query Flow Logs efficiently—Create saved queries for common troubleshooting scenarios like identifying blocked traffic or analyzing traffic patterns between security groups. Beware of <a href="https://aws.amazon.com/cloudwatch/pricing/">Amazon CloudWatch</a> and <a href="https://aws.amazon.com/athena/pricing/">Amazon Athena</a> costs.</p>
 <p>For cost optimization, remember that <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs incur storage and analysis costs that can become significant at scale. Consider using sampling or filtering to reduce costs while maintaining visibility into your traffic patterns. AWS Config provides continuous monitoring of Security Group and <abbr title="Network Access Control List">NACL</abbr> configurations, helping you identify configuration drift and ensure compliance with your security standards. Set up Config rules to alert on overly permissive rules, unused Security Groups, or changes to critical <abbr title="Network Access Control List">NACL</abbr> configurations.</p>
 <p>Integration with other AWS services requires careful consideration of how Security Groups and NACLs affect service functionality. AWS services like Application Load Balancers, <abbr title="Relational Database Service">RDS</abbr>, and Lambda have specific networking requirements that must be accounted for in your security policies. For example, <abbr title="Relational Database Service">RDS</abbr> instances in private subnets require appropriate Security Group rules for database access, while Lambda functions need outbound internet access for API calls unless you're using <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Understanding these service-specific requirements helps you design security policies that enhance rather than hinder your application architecture. AWS provides extensive documentation on networking requirements for each service, and the <a href="https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/protecting-networks.html">AWS Well-Architected Framework - Security Pillar</a> includes guidance on implementing defense-in-depth networking strategies that leverage both Security Groups and NACLs effectively.</p>
-<h3 id="relevant-resources_1">Relevant Resources<a class="headerlink" href="#relevant-resources_1" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_2">Relevant Resources<a class="headerlink" href="#relevant-resources_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html"><abbr title="Virtual Private Cloud">VPC</abbr> Security best practices</a></li>
 </ul>
@@ -2120,7 +2281,7 @@ that form the building blocks for all AWS network architectures.</p>
 <h3 id="implement-network-performance-monitoring-and-alerting">Implement Network Performance Monitoring and alerting<a class="headerlink" href="#implement-network-performance-monitoring-and-alerting" title="Permanent link">&para;</a></h3>
 <p>Network performance issues are often discovered reactively through user complaints or application timeouts rather than proactive monitoring. Many monitoring setups focus on CPU and memory utilization while overlooking network metrics that can predict performance bottlenecks. Network performance degradation often appears gradually and can be masked by application-level retries or gray failures. By the time users notice problems, the issue may have been developing for days or weeks, making root cause analysis more difficult. Set up Amazon CloudWatch <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html">network performance monitoring alerts</a>.</p>
 <p>Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs with <a href="https://repost.aws/knowledge-center/vpc-flow-logs-and-cloudwatch-logs-insights">Amazon CloudWatch Insights</a> to analyze traffic patterns and identify optimization opportunities. Network performance issues often correlate with other infrastructure changes, so maintain good change management practices and baseline your network performance before and after deployments. Consider using AWS X-Ray for distributed tracing to identify network bottlenecks in microservices architectures.</p>
-<h3 id="relevant-resources_2">Relevant Resources<a class="headerlink" href="#relevant-resources_2" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_3">Relevant Resources<a class="headerlink" href="#relevant-resources_3" title="Permanent link">&para;</a></h3>
 <ol>
 <li><a href="https://aws.amazon.com/ec2/instance-types/">Amazon <abbr title="Elastic Compute Cloud">EC2</abbr> Instance Types Guide</a></li>
 <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html">Placement Groups Best Practices</a></li>
@@ -2159,10 +2320,10 @@ Use <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="IP Address Manag
 <p>Many customers often design VPCs in isolation and discover later that they can't connect them due to overlapping address spaces. This is particularly common when connecting to on-premises networks or acquired company infrastructure.</p>
 <p>Address conflicts prevent the use of <abbr title="Virtual Private Cloud">VPC</abbr> Peering, AWS Transit Gateway, and hybrid connectivity options. Resolving these conflicts often requires expensive re-subnetting or complex <abbr title="Network Address Translation">NAT</abbr> configurations that add latency and operational complexity.</p>
 <p>Before allocating address space, map out all potential connectivity requirements. This includes current cross-<abbr title="Virtual Private Cloud">VPC</abbr> needs, planned hybrid connections, potential acquisition targets, and customer network requirements. Reserve non-overlapping address blocks for each connectivity domain. Consider using <a href="https://aws.amazon.com/privatelink/">AWS PrivateLink</a> endpoints to avoid IP connectivity overlap requirements for AWS services.</p>
-<h3 id="operational-considerations_3">Operational Considerations<a class="headerlink" href="#operational-considerations_3" title="Permanent link">&para;</a></h3>
+<h3 id="operational-considerations_4">Operational Considerations<a class="headerlink" href="#operational-considerations_4" title="Permanent link">&para;</a></h3>
 <p>Managing IP addresses effectively requires ongoing operational attention beyond initial planning. Implement regular audits of your address space utilization using <a href="https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html">Custom AWS Config rules</a> with <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> or <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="IP Address Manager">IPAM</abbr>. Monitor not only current usage but also growth trends to predict future needs. Elastic IP addresses (EIPs) continue to incur charges when they are allocated but not associated with resources. To optimize costs and maintain good resource management, customers should implement automated processes to identify and release unused Elastic IPs. This can be accomplished through AWS Lambda functions or scripts that periodically scan for unattached EIPs and either release them or notify administrators. Such automation helps prevent unnecessary expenses and ensures efficient resource management by removing EIPs that no longer serve any purpose in your infrastructure. Additionally, <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets can eliminate <abbr title="Network Address Translation">NAT</abbr> Gateway costs for workloads that don't require <abbr title="Internet Protocol version 4">IPv4</abbr> connectivity. Beware of <a href="https://aws.amazon.com/config/pricing/">AWS Config</a> and <a href="https://aws.amazon.com/lambda/pricing/">AWS Lambda</a> costs.</p>
 <p>Integration with other AWS services significantly impacts your IP strategy. <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints reduce the need for <abbr title="Network Address Translation">NAT</abbr> Gateway capacity, while AWS Global Accelerator can optimize traffic routing without requiring additional IP space. When implementing container platforms like Amazon EKS, factor in the IP requirements for pod networking, as each pod consumes an IP address from your subnet space. The <a href="https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html">AWS <abbr title="Virtual Private Cloud">VPC</abbr> CNI</a> also offers efficient IP address management. This feature helps reduce the number of secondary IP addresses needed per elastic network interface. Consider using AWS <abbr title="Virtual Private Cloud">VPC</abbr> CNI prefix delegation to optimize IP utilization in container environments and integrate your <abbr title="IP Address Manager">IPAM</abbr> strategy with AWS Organizations SCPs to enforce governance across accounts automatically.</p>
-<h3 id="relevant-resources_3">Relevant Resources<a class="headerlink" href="#relevant-resources_3" title="Permanent link">&para;</a></h3>
+<h3 id="relevant-resources_4">Relevant Resources<a class="headerlink" href="#relevant-resources_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://youtu.be/xtLJgJfhPLg">Manage your IP addresses at scale on AWS</a></li>
 <li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/robust-network-design-control-tower/ipam.html">AWS Prescriptive Guidance - <abbr title="IP Address Manager">IPAM</abbr></a></li>
@@ -2216,7 +2377,7 @@ past AWS re:Invent events. Here are a couple of examples:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 7, 2025 00:27:47 UTC">August 7, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 13, 2025 02:24:41 UTC">August 13, 2025</span>
   </span>
 
     
@@ -2447,10 +2608,10 @@ past AWS re:Invent events. Here are a couple of examples:</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.50899def.min.js"></script>
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
       
     
   </body>
