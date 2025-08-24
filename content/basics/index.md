@@ -170,23 +170,24 @@ Monitoring changes to route tables helps ensure that all VPC traffic flows throu
 * Enable AWS CloudTrail for API Activity:
     * Configure CloudTrail to log all API calls related to VPC and EC2, including `CreateRouteTable`, `DeleteRouteTable`, `AssociateRouteTable`, `DisassociateRouteTable`, `CreateRoute`, `DeleteRoute`, etc.
     * Ensure CloudTrail is configured for multi-region logging and that management events are captured.
-* Centralize Logs for Analysis: Send CloudTrail logs to Amazon CloudWatch Logs or a [Security Information and Event Management (SIEM)](https://en.wikipedia.org/wiki/Security_information_and_event_management) system for centralized storage, analysis, and long-term retention. 
+* Centralize Logs for Analysis: Send CloudTrail logs to Amazon CloudWatch Logs or a [Security Information and Event Management (SIEM)](https://en.wikipedia.org/wiki/Security_information_and_event_management) system for centralized storage, analysis, and long-term retention.
 * Create CloudWatch Alarms for Route Table Changes:
     * Develop CloudWatch metric filters and alarms based on CloudTrail events to detect unauthorized or unexpected modifications to route tables.
-    * Examples include alarms for the creation or deletion of route tables or routes, and changes in route associations with subnets. 
+    * Examples include alarms for the creation or deletion of route tables or routes, and changes in route associations with subnets.
     * Configure SNS topics to notify relevant personnel or systems when these alarms are triggered.
 * Implement AWS Config Rules:
     * Utilize [AWS Config](https://aws.amazon.com/config/) to monitor the configuration of your route tables and ensure they adhere to predefined security and compliance standards.
-    * Create [custom Config rules](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html) to detect non-compliant route table configurations, such as routes pointing to unintended destinations or unauthorized route propagation. 
+    * Create [custom Config rules](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html) to detect non-compliant route table configurations, such as routes pointing to unintended destinations or unauthorized route propagation.
 * Regularly Review and Audit Route Tables:
     * Conduct periodic manual or automated audits of your route table configurations to verify that routes are correctly configured and that there are no unintended access points or routing loops.
     * Review the explicit subnet associations and the main route table to understand traffic flow.
 * Utilize VPC Flow Logs:
-    * Enable [VPC Flow Logs](https://repost.aws/knowledge-center/set-up-vpc-flow-logs) to capture detailed information about IP traffic going to and from network interfaces in your VPC. 
-    * [Analyze Flow Logs](https://aws.amazon.com/blogs/mt/visualize-and-gain-insights-into-your-vpc-flow-logs-with-amazon-managed-grafana/) to identify unusual traffic patterns that might indicate misconfigured routes or security breaches. 
+    * Enable [VPC Flow Logs](https://repost.aws/knowledge-center/set-up-vpc-flow-logs) to capture detailed information about IP traffic going to and from network interfaces in your VPC.
+    * [Analyze Flow Logs](https://aws.amazon.com/blogs/mt/visualize-and-gain-insights-into-your-vpc-flow-logs-with-amazon-managed-grafana/) to identify unusual traffic patterns that might indicate misconfigured routes or security breaches.
 * Version Control and Infrastructure as Code (IaC): Manage route table configurations using IaC tools like [AWS CloudFormation](https://aws.amazon.com/cloudformation/) or [Terraform](https://developer.hashicorp.com/terraform). This enables versioning, change tracking, and automated deployment, reducing the risk of manual errors and facilitating quick rollbacks.
 
 ### Relevant Resources
+
 * [AWS Service Quotas](https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html)
 * [AWS services that support IPv6](https://docs.aws.amazon.com/vpc/latest/userguide/aws-ipv6-support.html)
 * [VPC Flow Logs](https://aws.amazon.com/blogs/networking-and-content-delivery/tag/vpc-flow-logs/)
