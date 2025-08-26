@@ -1,3 +1,27 @@
 # External Traffic Monitoring
 
-AWS provides several mechanisms to understand where your traffic is going, and how external customer traffic is performing.
+AWS provides several mechanisms to understand where your traffic is going, and how external customer traffic is performing. We'll discuss traffic leaving AWS for the Internet (via an Internet Gateway) separately from traffic leaving AWS for another environment (on-prem or another cloud) which leverages Direct Connect, Site-to-Site VPN, or Client VPN.
+
+## Internet-Bound Traffic Monitoring
+
+Traffic inside AWS accesses the Internet via either an Internet Gateway (IGW) or, available for IPv6 only, an egress-only Internet Gateway (EoIGW). As mentioned in the [service monitoring](service-monitoring.md#internet-gateway), there aren't direct metrics available for those two constructs, but there are other options available.
+
+The overall health of AWS's connections to various Internet providers is available through the use of [Internet Monitor](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-InternetMonitor.html). This tool provides information about all Internet connectivity - not just traffic coming to or from you. 
+
+For monitoring what resources on the Internet are being accessed, there are three primary options. The first is to enable [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html), however there is no way to filter log entries to just traffic destined for the internet, and thus may be too much for your particular needs to enable on every ENI. One trick is to enable them just on the ENI(s) of the NAT Gateway(s) in your VPC - this will catch any traffic using the NAT Gateways, but not instances with their own publicly-accessible IP addresses. Another trick is to ensure you have the `traffic-path` field enabled in the flow log format - this field will be 2 or 8 for traffic that is going out to the Internet directly (beware not all 2s are to the Internet - [gateway endpoints](https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html) for S3 and DynamoDB also show up as 2). 
+
+The second option is to enable [Route 53 Resolver query logging](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html) and ensure all your instances are using the Route 53 Resolver (aka VPC+2 resolver). This option can be combined with [Route 53 Resolver Firewall](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html) and security group or NACL settings that don't permit other DNS traffic outbound to restrict DNS queries to only the domains you specify. Keep in mind that these options only manage traffic that leverages DNS - traffic that is addressing literal IP addresses (ex. 203.0.113.15 or 3fff:5678:1234::abcd) will not be managed by these options.
+
+The final option is to implement a firewall with logging capabilities, such as [AWS Network Firewall](https://aws.amazon.com/network-firewall/). This option works with all traffic, at the cost of slightly higher operational costs (you need to configure and maintain the rules, and determine what to do with the logs). Inside AWS Network Firewall, utilize [flow logs](https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-logging.html) to get this information.
+
+Internet-facing load balancers (Application Load Balancer (ALB) or Network Load Balancer (NLB)) should have their logs enabled, but remember they have very different logging capabilities. ALB provides [full access log](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html) capability for all traffic, whereas NLB only provides [access logs for TLS listeners](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html). 
+
+In all cases, you should follow [AWS IAM security best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html), especially towards restricting the ability to make route table changes (bypassing firewalls), changing or deleting logging configurations, and general good practice for reducing your threat exposure. You can leverage [AWS Network Access Analyzer](https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html) to verify only the traffic you are expecting can reach the Internet. Running this as a regular audit can be a great way to automate security reviews and have assurance that you have accounted for different routes traffic can take.
+
+## VPN and Hybrid Connectivity
+
+The three main services for VPN and Hybrid all have statistics you can monitor documented in the services page - [AWS Direct Connect](service-monitoring.md#direct-connect), [Site-to-Site VPN](service-monitoring.md#site-to-site-vpn), and [Client VPN](service-monitoring.md#client-vpn). See those resources for details on monitoring recommendations.
+
+## Security and Compliance Monitoring
+
+[AWS WAF](https://aws.amazon.com/waf/) (Web Application Firewall) has [extensive logging capabilities](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html), but is only present on resources you have explicitly enabled WAF on (which is recommended for anything Internet facing). [AWS Shield](https://aws.amazon.com/shield/) provides [reporting in console](https://docs.aws.amazon.com/waf/latest/developerguide/ddos-standard-event-visibility.html) of the mitigations it has performed both globally, and for your account specifically if you have onboarded it. 
