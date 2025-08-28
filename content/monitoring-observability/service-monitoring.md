@@ -48,6 +48,8 @@ For quotas:
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `TargetConnectionErrorCount` | Increasing |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `TargetResponseTime` | Going unusually high |
     | 4 | Consider enabling access and/or connection logs. | ~~ | ~~ |
+    !!! info "Remember"
+        `HTTPCode_*` metrics exist for ALB and Target. These metrics relate to the (ALB or Target) resource generating them. Consider monitoring both ALB and Target Group perspectives.
 
 === "Quotas"
     Always check these against the [official Application Load Balancer quotas.](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-limits.html)
