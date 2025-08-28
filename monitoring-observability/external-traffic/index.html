@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.18">
     
     
       
@@ -1265,6 +1265,19 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    External Traffic
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1276,6 +1289,52 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#internet-bound-traffic-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internet-Bound Traffic Monitoring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpn-and-hybrid-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      VPN and Hybrid Connectivity
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-and-compliance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security and Compliance Monitoring
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1309,6 +1368,41 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#internet-bound-traffic-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internet-Bound Traffic Monitoring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpn-and-hybrid-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      VPN and Hybrid Connectivity
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-and-compliance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Security and Compliance Monitoring
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1340,7 +1434,19 @@
 
 
 <h1 id="external-traffic-monitoring">External Traffic Monitoring<a class="headerlink" href="#external-traffic-monitoring" title="Permanent link">&para;</a></h1>
-<p>AWS provides several mechanisms to understand where your traffic is going, and how external customer traffic is performing.</p>
+<p>AWS provides several mechanisms to understand where your traffic is going, and how external customer traffic is performing. We'll discuss traffic leaving AWS for the Internet (via an Internet Gateway) separately from traffic leaving AWS for another environment (on-prem or another cloud) which leverages Direct Connect, Site-to-Site <abbr title="Virtual Private Network">VPN</abbr>, or Client <abbr title="Virtual Private Network">VPN</abbr>.</p>
+<h2 id="internet-bound-traffic-monitoring">Internet-Bound Traffic Monitoring<a class="headerlink" href="#internet-bound-traffic-monitoring" title="Permanent link">&para;</a></h2>
+<p>Traffic inside AWS accesses the Internet via either an Internet Gateway (IGW) or, available for <abbr title="Internet Protocol version 6">IPv6</abbr> only, an egress-only Internet Gateway (EoIGW). As mentioned in the <a href="../service-monitoring/#internet-gateway">service monitoring</a>, there aren't direct metrics available for those two constructs, but there are other options available.</p>
+<p>The overall health of AWS's connections to various Internet providers is available through the use of <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-InternetMonitor.html">Internet Monitor</a>. This tool provides information about all Internet connectivity - not just traffic coming to or from you.</p>
+<p>For monitoring what resources on the Internet are being accessed, there are three primary options. The first is to enable <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</a>, however there is no way to filter log entries to just traffic destined for the internet, and thus may be too much for your particular needs to enable on every ENI. One trick is to enable them just on the ENI(s) of the <abbr title="Network Address Translation">NAT</abbr> Gateway(s) in your <abbr title="Virtual Private Cloud">VPC</abbr> - this will catch any traffic using the <abbr title="Network Address Translation">NAT</abbr> Gateways, but not instances with their own publicly-accessible IP addresses. Another trick is to ensure you have the <code>traffic-path</code> field enabled in the flow log format - this field will be 2 or 8 for traffic that is going out to the Internet directly (beware not all 2s are to the Internet - <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html">gateway endpoints</a> for <abbr title="Simple Storage Service">S3</abbr> and DynamoDB also show up as 2).</p>
+<p>The second option is to enable <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs.html">Route 53 Resolver query logging</a> and ensure all your instances are using the Route 53 Resolver (aka <abbr title="Virtual Private Cloud">VPC</abbr>+2 resolver). This option can be combined with <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html">Route 53 Resolver Firewall</a> and security group or <abbr title="Network Access Control List">NACL</abbr> settings that don't permit other <abbr title="Domain Name System">DNS</abbr> traffic outbound to restrict <abbr title="Domain Name System">DNS</abbr> queries to only the domains you specify. Keep in mind that these options only manage traffic that leverages <abbr title="Domain Name System">DNS</abbr> - traffic that is addressing literal IP addresses (ex. 203.0.113.15 or 3fff:678:1234::abcd) will not be managed by these options.</p>
+<p>The final option is to implement a firewall with logging capabilities, such as <a href="https://aws.amazon.com/network-firewall/">AWS Network Firewall</a>. This option works with all traffic, at the cost of slightly higher operational costs (you need to configure and maintain the rules, and determine what to do with the logs). Inside AWS Network Firewall, utilize <a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-logging.html">flow logs</a> to get this information.</p>
+<p>Internet-facing load balancers (Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>) or Network Load Balancer (<abbr title="Network Load Balancer">NLB</abbr>)) should have their logs enabled, but remember they have very different logging capabilities. <abbr title="Application Load Balancer">ALB</abbr> provides <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html">full access log</a> capability for all traffic, whereas <abbr title="Network Load Balancer">NLB</abbr> only provides <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html">access logs for <abbr title="Transport Layer Security">TLS</abbr> listeners</a>.</p>
+<p>In all cases, you should follow <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html">AWS <abbr title="Identity and Access Management">IAM</abbr> security best practices</a>, especially towards restricting the ability to make route table changes (bypassing firewalls), changing or deleting logging configurations, and general good practice for reducing your threat exposure. You can leverage <a href="https://docs.aws.amazon.com/vpc/latest/network-access-analyzer/what-is-network-access-analyzer.html">AWS Network Access Analyzer</a> to verify only the traffic you are expecting can reach the Internet. Running this as a regular audit can be a great way to automate security reviews and have assurance that you have accounted for different routes traffic can take.</p>
+<h2 id="vpn-and-hybrid-connectivity"><abbr title="Virtual Private Network">VPN</abbr> and Hybrid Connectivity<a class="headerlink" href="#vpn-and-hybrid-connectivity" title="Permanent link">&para;</a></h2>
+<p>The three main services for <abbr title="Virtual Private Network">VPN</abbr> and Hybrid all have statistics you can monitor documented in the services page - <a href="../service-monitoring/#direct-connect">AWS Direct Connect</a>, <a href="../service-monitoring/#site-to-site-vpn">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a>, and <a href="../service-monitoring/#client-vpn">Client <abbr title="Virtual Private Network">VPN</abbr></a>. See those resources for details on monitoring recommendations.</p>
+<h2 id="security-and-compliance-monitoring">Security and Compliance Monitoring<a class="headerlink" href="#security-and-compliance-monitoring" title="Permanent link">&para;</a></h2>
+<p><a href="https://aws.amazon.com/waf/">AWS <abbr title="Web Application Firewall">WAF</abbr></a> (Web Application Firewall) has <a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html">extensive logging capabilities</a>, but is only present on resources you have explicitly enabled <abbr title="Web Application Firewall">WAF</abbr> on (which is recommended for anything Internet facing). <a href="https://aws.amazon.com/shield/">AWS Shield</a> provides <a href="https://docs.aws.amazon.com/waf/latest/developerguide/ddos-standard-event-visibility.html">reporting in console</a> of the mitigations it has performed both globally, and for your account specifically if you have onboarded it.</p>
 
 
 
@@ -1363,7 +1469,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 16, 2025 22:48:10 UTC">July 16, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 26, 2025 22:27:31 UTC">August 26, 2025</span>
   </span>
 
     
