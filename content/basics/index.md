@@ -50,7 +50,65 @@ When to use it vs separate VPCs per account. "should we share or separate?
 
 ## 6. Subnet Strategies
 
-"how many subnets do I need?" and common patterns (public/private).
+VPC subnet design is the foundation of every AWS network architecture. Sub-optimal subnet planning can create technical debt that compounds over time, eventually requiring network redesigns and application downtime. While security is important, subnets fundamentally determine your application's scalability, availability, operational complexity.
+
+### Plan Your CIDR Strategy First, Subnets Second
+
+Most customers jump straight to creating subnets without considering their overall IP address strategy. They often use the typical `/16` VPC with `/24` subnets, then hit complexities when they need to peer VPCs, connect with on-premises networks, or scale beyond a few hundred resources. IP address conflicts are among the most common networking problems to fix post-deployment. Changing CIDR blocks typically requires rebuilding infrastructure, coordinating maintenance windows, and potentially redesigning applications.
+
+Start with an [IP address management (IPAM)](https://en.wikipedia.org/wiki/IP_address_management) strategy before creating your first subnet. Reserve specific CIDR ranges for different environments (dev, staging, production etc.), regions, and account types. For most customers, using [RFC 1918](https://datatracker.ietf.org/doc/html/rfc1918) private address space with `/20` or `/21` VPC CIDRs, allowing for `/24` to `/26` subnets depending on your workload density. Consider [AWS's IPAM](https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html) service for centralized management across multiple accounts and regions. Always plan for at least `3x` your initial requirements. Reserve non-overlapping CIDR blocks even for environments you don't plan to connect initially—business requirements change. Document your CIDR allocation strategy in a central location and enforce it through [IPAM SCPs](https://docs.aws.amazon.com/vpc/latest/ipam/scp-ipam.html) or [Infrastructure as Code (IaC)](https://aws.amazon.com/what-is/iac/) templates.
+
+### Follow a "Multi-Tier" Subnet Pattern
+
+The classic "public/private" two-tier model works for simple applications. Real applications need database isolation, management network separation, and often require additional tiers for compliance or operational requirements. Implement a minimum three-tier architecture: public subnets for load balancers and NAT Gateways, private subnets for application servers, and isolated subnets with no internet access. Add specialized subnets as needed: management subnets for bastion hosts and operational tools, transit subnets for VPC endpoints and AWS Transit Gateway attachments, and workload-specific subnets for compliance requirements [(PCI, HIPAA](https://aws.amazon.com/compliance/), etc.). Use consistent naming conventions across all environments and accounts, for e.g. `vpc-prod-web-1a` for clarity. Isolate resources based on their internet exposure. Place public-facing resources (e.g., load balancers, web servers) in public subnets and backend resources (e.g., databases, application servers) in private subnets.
+
+### Distribute Subnets Across All Available Availability Zones
+
+Many customers create subnets in only 1-2 Availability Zones (AZs) to keep things "simple," especially in regions with 3+ AZs. AWS services like Application Load Balancers require subnets in at least two AZs. Having subnets in all AZs provides maximum flexibility for service deployment and reduce the blast radius due to any AZ impacts. Create each subnet tier in every available AZ within your chosen region. This means if your region has three AZs, create three public subnets, three private subnets, and three database subnets. Use automation to discover available AZs dynamically based on [AZ-IDs](https://docs.aws.amazon.com/ram/latest/userguide/working-with-az-ids.html) rather than hard-coding them.
+
+Not all AZs in a region may be available to your account—especially in newer regions or with older accounts. Always query available AZs [programmatically](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-availability-zones.html). Consider AZ placement for services like Amazon EFS and Amazon FSx that charge for cross-AZ access, and co-locate frequently communicating resources in the same AZ when possible.
+
+### Size Subnets Based on Actual Resource Density, Not Arbitrary Standards
+
+Customers often default to `/24` [subnets](https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html) (`251` usable IPs) regardless of actual requirements. This works fine for traditional deployments but can fall short for container workloads, serverless functions with VPC configuration, or services that consume multiple IP addresses per resource. **Note**: The first four IP addresses and the last IP address in each subnet CIDR block are not available for your use, and they cannot be assigned to a resource, Running out of IP addresses in a subnet requires either expanding to additional subnets (adding operational complexity) or recreating the subnet. Container services like Amazon EKS can consume hundreds of IP addresses per node, and AWS Lambda functions in VPCs use IPs from your subnets.
+
+Calculate IP requirements based on your specific workload patterns. For EKS clusters, plan for `30-50+` IPs per worker node depending on your CNI configuration. For Lambda functions, estimate concurrent executions in your VPC. Use `/23` or larger subnets for container workloads, `/25` or `/26` for traditional server deployments, and `/27` or smaller for dedicated-purpose subnets like NAT Gateway placement. Enable [VPC Flow Logs](https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html) to understand actual IP utilization patterns over time. Consider IPv6 for workloads that don't require specific IPv4 addressing—IPv6 subnets provide virtually unlimited address space.
+
+### Consider IPv6-First Design for Future-Proofing
+
+Most customers still deploy IPv4-only networks and treat IPv6 as an afterthought or future consideration. However, AWS services increasingly [support IPv6-first deployments](https://aws.amazon.com/vpc/ipv6/). IPv6 adoption is accelerating, and retrofitting existing architectures is more complex than designing with IPv6 from the start. IPv6 can also provide operational benefits like eliminating NAT Gateway costs for outbound internet access and simplifying network address management.
+
+Design new VPCs with dual-stack (IPv4 and IPv6) configuration from the beginning. Enable IPv6 on your VPC and assign `/64` IPv6 CIDR blocks to each subnet. Configure route tables for IPv6 traffic, and test application compatibility early. For internet-facing workloads, consider IPv6-only deployments where applications support it. IPv6 traffic to the internet gateway is free, unlike IPv4 traffic that requires NAT Gateways and incurs processing charges. However, not all AWS services support IPv6 yet, so maintain IPv4 connectivity for service compatibility. Use AWS's IPv6 prefix delegation for consistent addressing across multiple VPCs.
+
+### Balance NAT Gateway per subnet vs Costs
+
+Customers often place NAT Gateways randomly or create one per subnet "for high availability" without understanding the cost and routing implications. [NAT Gateways cost](https://aws.amazon.com/vpc/pricing/) hourly per gateway plus data processing charges. Poor placement can result in unnecessary cross-AZ data transfer costs. Place one NAT Gateway per AZ in your public subnets, and configure private subnet route tables to use the NAT Gateway in the same AZ to minimize cross-AZ charges.
+
+Consider [NAT Instances](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NAT_Instance.html) for development environments where cost optimization outweighs managed service benefits. Monitor NAT Gateway data processing charges through CloudWatch—they can exceed the hourly charges in data-intensive applications. For IPv6 workloads, internet gateways provide direct outbound access without NAT Gateway costs.
+
+### Plan for Service-Specific Subnet Requirements
+
+Different AWS services have varying subnet requirements. For e.g., Use a [separate subnet for each AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html) VPC attachment. For each subnet, use a small CIDR, for example /28, so that you have more addresses for EC2 resources. When you use a separate subnet, you can configure the following. Keep the inbound and outbound network ACLs associated with the transit gateway subnets open. 
+
+Use VPC endpoints in dedicated subnets to reduce NAT Gateway costs for AWS service access. Document service-specific subnet requirements in your architectural decision records for future reference. Utilize private subnets for your VPC endpoints to enhance security. Plan your subnet CIDR blocks carefully to ensure sufficient IP addresses for the endpoint Elastic Network Interfaces and any other resources within the subnet, allowing for future growth. 
+
+### Design for Multi-Account and Multi-Region Growth
+
+Customers typically start with single-account, single-region deployments but eventually need to expand. Connecting multiple VPCs through peering, AWS Transit Gateway, or other methods requires non-overlapping CIDR blocks and consistent subnet architectures. Inconsistent designs lead to complex routing rules, connectivity limitations, and operational overhead.
+
+Establish consistent subnet naming conventions, CIDR allocation patterns, and architectural standards across all accounts and regions. Use Use [IPAM rules](https://docs.aws.amazon.com/vpc/latest/ipam/planning-ipam.html) to enforce subnet CIDR standards. Plan CIDR blocks centrally to prevent overlaps across your entire AWS footprint.
+
+### Operational Considerations
+
+* VPC Flow Logs: Enable VPC Flow Logs to capture and monitor IP traffic flowing to and from network interfaces within your subnets. Analyze these logs for security, troubleshooting, and compliance.
+
+* Regular Review: Periodically review and update your subnet configurations, security group rules, and network ACLs to align with evolving security best practices and application requirements.
+
+### Relevant Resources
+
+* [Subnets for your VPC](https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html)
+* [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html)
+* [IP addressing for your VPCs and subnets](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-ip-addressing.html)
 
 ## 7. Elastic Network Interfaces (ENIs)
 
