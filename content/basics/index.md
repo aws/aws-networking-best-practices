@@ -88,9 +88,9 @@ Consider [NAT Instances](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_NA
 
 ### Plan for Service-Specific Subnet Requirements
 
-Different AWS services have varying subnet requirements. For e.g., Use a [separate subnet for each AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html) VPC attachment. For each subnet, use a small CIDR, for example /28, so that you have more addresses for EC2 resources. When you use a separate subnet, you can configure the following. Keep the inbound and outbound network ACLs associated with the transit gateway subnets open. 
+Different AWS services have varying subnet requirements. For e.g., Use a [separate subnet for each AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html) VPC attachment. For each subnet, use a small CIDR, for example /28, so that you have more addresses for EC2 resources. When you use a separate subnet, you can configure the following. Keep the inbound and outbound network ACLs associated with the transit gateway subnets open.
 
-Use VPC endpoints in dedicated subnets to reduce NAT Gateway costs for AWS service access. Document service-specific subnet requirements in your architectural decision records for future reference. Utilize private subnets for your VPC endpoints to enhance security. Plan your subnet CIDR blocks carefully to ensure sufficient IP addresses for the endpoint Elastic Network Interfaces and any other resources within the subnet, allowing for future growth. 
+Use VPC endpoints in dedicated subnets to reduce NAT Gateway costs for AWS service access. Document service-specific subnet requirements in your architectural decision records for future reference. Utilize private subnets for your VPC endpoints to enhance security. Plan your subnet CIDR blocks carefully to ensure sufficient IP addresses for the endpoint Elastic Network Interfaces and any other resources within the subnet, allowing for future growth.
 
 ### Design for Multi-Account and Multi-Region Growth
 
