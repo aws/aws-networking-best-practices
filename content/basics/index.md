@@ -136,7 +136,12 @@ Implement consistent naming conventions that indicate both the purpose and expec
 
 Many customers benefit from selectively applying route propagation based on their specific network design goals. When properly understood, route propagation from Virtual Private Gateways and AWS Transit Gateways offers valuable automation that streamlines operations and enhances reliability by reducing manual configuration. Using propagated routes simplifies routine connectivity while maintaining appropriate controls. For optimal network design, consider where automatic propagation delivers efficiency advantages and where explicitly defined static routes provide the precise control needed for critical network paths. The key is leveraging both approaches thoughtfully to achieve the right balance of automation and control.
 
-Enabling route propagation for Transit Gateway attachments works well for hub-and-spoke architectures where spoke VPCs need consistent connectivity to shared services. You should disable propagation when you need to implement custom routing policies, such as forcing traffic through inspection appliances or implementing complex multi-path routing strategies. It's important to understand the routing priority (evaluation order) for the service being used. For example, traffic is directed using the most specific route that matches the destination, known as the longest prefix match. When there are two identical routes, one static and one dynamic, the static route takes priority. It's essential to know the route priority (evaluation order) for [VPC route table](https://docs.aws.amazon.com/vpc/latest/userguide/route-tables-priority.html), [AWS Transit Gateway Route table](https://docs.aws.amazon.com/vpc/latest/tgw/how-transit-gateways-work.html#tgw-routing-overview), [AWS Cloud WAN route table](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-create-attachment.html#cloudwan-route-evaluation).
+Different services apply different routing priorities (evaluation order), which is important to know:
+
+* [VPC route table](https://docs.aws.amazon.com/vpc/latest/userguide/route-tables-priority.html)
+* [AWS Transit Gateway Route table](https://docs.aws.amazon.com/vpc/latest/tgw/how-transit-gateways-work.html#tgw-routing-overview)
+* [AWS Cloud WAN route table](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-create-attachment.html#cloudwan-route-evaluation).
+* [AWS Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-route-priority.html)
 
 ### Understand and Plan for Asymmetric Routing Scenarios
 
