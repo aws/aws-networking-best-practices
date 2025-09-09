@@ -124,7 +124,7 @@ From a cost optimization perspective, regularly audit ENI inventory for orphaned
 
 ## 8. Route Tables and Traffic Flow
 
-Route tables play an important role in AWS network architecture. Sub-optimal routing decisions can significantly impact application performance, security posture, and operational costs. Customers may assume that because AWS handles the underlying networking infrastructure, they don't need to deeply understand routing behavior. While VPC provides flexibility in controlling traffic flow, this flexibility comes with the responsibility to design intentional, well-understood routing patterns.
+Route tables are critical components in AWS network architecture. VPC provides extensive flexibility in controlling traffic flow throughout your cloud infrastructure. However, this flexibility necessitates thoughtful design and implementation of routing patterns. While AWS manages the underlying physical network, the logical routing decisions within your VPC architecture remain your responsibility to configure correctly and efficiently. Effective route table management requires deliberate planning to ensure traffic follows secure, optimized paths across your AWS environment.
 
 ### Design Route Tables with Explicit Traffic Intent, Not Default Convenience
 
