@@ -46,7 +46,74 @@ When to use one large VPC vs multiple smaller VPCs.
 
 ## 5. VPC Sharing
 
-When to use it vs separate VPCs per account. "should we share or separate?
+[VPC sharing](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html) enables multiple AWS accounts to create application resources (EC2, RDS, Lambda) in shared, centrally-managed VPCs. The VPC owner shares subnets with participant accounts from the same AWS organization. Participants can manage their own resources in shared subnets but cannot access other participants' or owner's resources.
+
+This approach leverages implicit VPC routing for interconnected applications within trust boundaries, reduces VPC management overhead while maintaining separate billing and access control, and simplifies network topologies using connectivity features like AWS PrivateLink, transit gateways, and VPC peering.
+
+### Choose VPC Sharing When You Have Centralized Network Operations
+
+VPC sharing implementations tend to work better in organizations with dedicated networking teams that manage infrastructure across multiple application teams. These teams have established processes for subnet allocation, routing, and security group management. However, VPC sharing without proper governance can become challenging. When application teams cannot get network changes implemented quickly, they start building workarounds that can compromise the architecture. Conversely, when done right, centralized network management reduces complexity, improves consistency, and enables better security controls.
+
+Establish clear SLAs for network changes. Create standardized subnet allocation schemes (e.g., `/24` subnets for prod workloads, `/25` for dev). Implement Infrastructure as Code (IaC) templates that application teams can use for common network patterns. Set up dedicated ticketing systems for network requests with defined response times. Use AWS Resource Access Manager (RAM) resource shares with specific organizational units rather than individual accounts. This makes management easier as your organization grows. Also, consider implementing subnet tagging strategies that align with your cost allocation requirements; this becomes critical for chargeback models.
+
+### Use Separate VPCs for Compliance-Heavy Workloads
+
+Financial services, healthcare, and government customers typically choose separate VPCs per account for workloads that handle sensitive data, even when they use VPC sharing for other applications. These isolation boundaries help satisfy auditor requirements and simplify compliance reporting. Shared VPCs create questions during compliance audits regarding data segregation and access controls. While these concerns can be addressed through proper security group configuration and IAM policies, the additional documentation and explanation required often outweigh the operational benefits of sharing.
+
+To address this, identify workloads that handle regulated data (PCI, HIPAA, etc.) and default these to separate VPCs. Implement account-level SCPs that prevent cross-account resource sharing for these sensitive accounts. Use AWS Config rules to monitor compliance with your VPC isolation requirements. Even with separate VPCs, you can still achieve operational efficiency through standardized IaC templates. Consider using AWS Control Tower to standardize VPC creation across accounts while maintaining proper isolation.
+
+### Implement Hybrid Approaches Based on Workload Characteristics
+
+Using VPC sharing is more common for dev and test environments where teams need frequent access to shared services, while maintaining separate VPCs for production workloads that require strict isolation. Different workloads have varying requirements for isolation, change velocity, and operational oversight. A one-size-fits-all approach either over-engineers simple workloads or under-protects critical systems. Create workload classification criteria based on data sensitivity, availability requirements, and regulatory constraints. Develop decision trees that guide teams toward the appropriate VPC strategy. For example: dev workloads with low data sensitivity should use a shared VPC, while production workloads with financial data should use a separate VPC.
+
+Use AWS Organizations to create separate organizational units for different workload types. This enables you to apply different governance policies and sharing strategies based on workload classification. Additionally, plan your CIDR allocation strategy to accommodate both shared and separate VPCs without conflicts.
+
+### Plan Subnet Allocation Strategy Before Implementation
+
+Plan carefully for subnet allocation. Without clear allocation policies, you may end up with fragmented address space, inability to implement consistent routing, and eventual exhaustion of available subnets in high-density environments. Unlike separate VPCs where each account controls its own address space, shared VPCs require coordinated planning. Poor subnet allocation leads to inefficient address space usage and can force expensive re-architecting later.
+
+Design subnet allocation schemes that align with your organizational structure. Reserve specific CIDR ranges for each participating account or team. Create automated allocation systems using IPAM that can assign subnets based on predefined criteria. Consider future IPv6 adoption when planning your allocation strategy. IPv6 subnets are always /64, so your allocation scheme should account for this. Also, reserve management subnets for shared services like NAT gateways, load balancers, and monitoring systems.
+
+### Establish Clear IAM Boundaries for Shared VPC Access
+
+Overly permissive IAM policies that allow accounts to modify shared infrastructure inappropriately can pose a risk. Teams need access to create resources in shared subnets but should not be able to modify routing tables or security groups that affect other accounts. Improper IAM configuration in shared VPCs can lead to service disruptions affecting multiple accounts or security vulnerabilities that compromise the entire shared infrastructure.
+
+To mitigate these risks, implement IAM roles with permissions scoped to specific subnets using resource-level permissions. Use [condition keys](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_condition.html) to restrict access based on subnet tags or account ownership. Implement separate roles for resource creation versus infrastructure modification. Regularly audit shared VPC permissions using [AWS IAM Access Analyzer](https://aws.amazon.com/iam/access-analyzer/). Use AWS IAM conditions to prevent accounts from creating security group rules that reference other accounts' security groups. This prevents unintended dependencies. Also, consider using [AWS Systems Manager Session Manager](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html) instead of SSH for access to resources in shared subnets—this eliminates the need for complex security group rules for administrative access.
+
+### Separate Prod and Non-Prod Even with VPC Sharing
+
+Customers who use VPC sharing typically maintain separate VPCs for prod vs non-prod environments. The change control requirements and availability expectations for prod systems require different operational approaches. Mixing prod and non-prod workloads in shared VPCs creates blast radius concerns and complicates change management processes. Dev activities shouldn't have the potential to impact prod systems through shared infrastructure modifications.
+
+Create separate shared VPCs for prod and non-prod environments. Apply different change control processes to each. Use [AWS Organizations SCPs](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html) to prevent non-prod accounts from accessing prod shared VPCs. Implement different monitoring and alerting configurations for each environment. Consider time-based isolation for dev environments—[automatically shut down dev resources](https://aws.amazon.com/solutions/implementations/instance-scheduler-on-aws/) outside business hours to reduce costs and potential for configuration drift. Also, use different subnet allocation schemes for production (larger, more stable) vs dev (smaller, more flexible) workloads.
+
+### Design for IPv6 from the Beginning
+
+Customers implementing VPC sharing today must consider IPv6 requirements, especially those with global operations or mobile applications. Retrofitting IPv6 into existing shared VPC architectures is more complex than designing for dual-stack from the start. IPv6 adoption is accelerating, driven by mobile applications, IoT devices, and regional internet infrastructure. Shared VPCs that don't support IPv6 will require expensive re-architecting as business requirements evolve.
+
+To address these challenges, enable IPv6 on shared VPCs during initial setup. Configure dual-stack subnets for workloads that need to support both IPv4 and IPv6. Use IPv6-only subnets for workloads that don't require IPv4 connectivity to reduce costs. Update your subnet allocation policies to account for IPv6 address assignment. IPv6 in shared VPCs simplifies address allocation since AWS provides /56 prefixes per VPC, eliminating address space conflicts. However, ensure your security group rules and network ACLs are updated to handle IPv6 traffic patterns appropriately.
+
+### Other Considerations
+
+* VPC Sharing Without Governance Framework: Look for shared VPCs with inconsistent resource tagging, security groups with overlapping or conflicting rules from multiple accounts, and subnet utilization that doesn't follow any logical pattern. Additionally, monitor escalating support tickets related to network connectivity issues that cross account boundaries.
+
+Implement resource tagging requirements using [AWS Config rules](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_use-managed-rules.html) to enforce compliance. Create clear documentation specifying which accounts own which subnets and resources. Establish change management processes for shared infrastructure, and consider using [AWS Resource Groups](https://docs.aws.amazon.com/ARG/latest/userguide/resource-groups.html) to organize shared resources by owning team or application.
+
+* Separate VPCs Everywhere Without Considering Operational Overhead: Identify applications that can benefit from consolidation based on security requirements and operational relationships. Implement shared VPCs for dev environments first to prove the operational benefits. Use AWS Transit Gateway to simplify connectivity between VPCs that must remain separate, and migrate shared services (like DNS, monitoring, and logging) to centralized VPCs that other applications can access.
+
+* Inadequate Planning for Scale in Shared VPCs: Common issues include [shared VPCs approaching limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html#vpc-share-limits), teams requesting additional address space, and complex subnet allocation schemes that waste address space. Pay particular attention to shared VPCs using smaller CIDR blocks (/20 or smaller) that support multiple teams. To address these issues, audit current subnet utilization and project future growth requirements. Consider migrating to larger CIDR blocks (or IPv6) during scheduled maintenance windows. For short-term, implement more efficient subnet allocation by using smaller subnets for applications that don't require large address ranges. Additionally, plan for dual-stack or IPv6-only implementations to eliminate address space constraints entirely.
+
+### Operational Considerations
+
+1. VPC sharing changes network monitoring and troubleshooting approaches. Traditional account-isolated tools don't work well; implement centralized logging aggregating VPC Flow Logs and application logs across accounts. Use CloudWatch Insights to correlate events across boundaries and establish clear escalation procedures.
+
+2. Cost optimization requires different strategies than separate VPCs. While shared infrastructure reduces costs, allocation becomes complex. Implement tagging for chargeback and use Cost Explorer for usage-based allocation. Showback reports drive efficient resource usage. Shared VPCs integrate seamlessly with AWS services but benefit from centralized management.
+
+### Relevant Resources
+
+* [VPC Sharing: A new approach to multiple accounts and VPC management](https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-sharing-a-new-approach-to-multiple-accounts-and-vpc-management/)
+* [VPC sharing: key considerations and best practices](https://aws.amazon.com/blogs/networking-and-content-delivery/vpc-sharing-key-considerations-and-best-practices/)
+* [AWS re:Invent 2020: Shared VPCs, lessons learned, and best practices](https://youtu.be/I-IIbgp0Jco)
+* [Organizing Your AWS Environment Using Multiple Accounts](https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html)
 
 ## 6. Subnet Strategies
 
