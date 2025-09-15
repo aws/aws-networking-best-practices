@@ -54,7 +54,7 @@ This approach leverages implicit VPC routing for interconnected applications wit
 
 VPC sharing implementations tend to work better in organizations with dedicated networking teams that manage infrastructure across multiple application teams. These teams have established processes for subnet allocation, routing, and security group management. However, VPC sharing without proper governance can become challenging. When application teams cannot get network changes implemented quickly, they start building workarounds that can compromise the architecture. Conversely, when done right, centralized network management reduces complexity, improves consistency, and enables better security controls.
 
-Establish clear SLAs for network changes. Create standardized subnet allocation schemes (e.g., `/24` subnets for prod workloads, `/25` for dev). Implement Infrastructure as Code (IaC) templates that application teams can use for common network patterns. Set up dedicated ticketing systems for network requests with defined response times. Use AWS Resource Access Manager (RAM) resource shares with specific organizational units rather than individual accounts. This makes management easier as your organization grows. Also, consider implementing subnet tagging strategies that align with your cost allocation requirements; this becomes critical for chargeback models.
+Establish clear SLAs for network changes. Create standardized subnet allocation schemes (e.g., `/24` subnets for prod workloads, `/25` for dev). Implement Infrastructure as Code (IaC) templates that application teams can use for common network patterns. Set up dedicated ticketing systems for network requests with defined response times. Use AWS Resource Access Manager (RAM) resource shares with specific organizational units rather than individual accounts. This makes management easier as your organization grows. Also, consider implementing subnet tagging strategies that align with your cost allocation requirements; this becomes critical for charge back models.
 
 ### Use Separate VPCs for Compliance-Heavy Workloads
 
@@ -106,7 +106,7 @@ Implement resource tagging requirements using [AWS Config rules](https://docs.aw
 
 1. VPC sharing changes network monitoring and troubleshooting approaches. Traditional account-isolated tools don't work well; implement centralized logging aggregating VPC Flow Logs and application logs across accounts. Use CloudWatch Insights to correlate events across boundaries and establish clear escalation procedures.
 
-2. Cost optimization requires different strategies than separate VPCs. While shared infrastructure reduces costs, allocation becomes complex. Implement tagging for chargeback and use Cost Explorer for usage-based allocation. Showback reports drive efficient resource usage. Shared VPCs integrate seamlessly with AWS services but benefit from centralized management.
+2. Cost optimization requires different strategies than separate VPCs. While shared infrastructure reduces costs, allocation becomes complex. Implement tagging for charge back and use Cost Explorer for usage-based allocation. Show back reports drive efficient resource usage. Shared VPCs integrate seamlessly with AWS services but benefit from centralized management.
 
 ### Relevant Resources
 
