@@ -7,7 +7,7 @@ For the metrics, the following symbols are used:
 
 | Symbol | Meaning |
 | :-: | --- |
-| :material-alarm-light:{ title="Alarm any time the condition exists". } | Alarm any time the condition exists. |
+| :material-alarm-light:{ title="Alarm any time the condition exists." } | Alarm any time the condition exists. |
 | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking. |
 | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | These statistics should always be monitored, and may be alarmed depending on specific use case. |
 
@@ -33,21 +33,23 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/ApplicationELB" namespace: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/ApplicationELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html): | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `RejectedConnectionCount` | Going up more than 2/min |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `UnhealthyHostCount` | Higher than 0 for longer than expected for scaling. |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `ELBAuthError, ELBAuthLatency` | Going usually high, if user authentication is in use. |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ConsumedLCUs` | None - monitor for cost |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ActiveConnectionCount, NewConnectionCount, ProcessedBytes, ProcessedPackets` | Outside of band. |
-    | 2 | AWS CloudWatch "AWS/ApplicationELB" namespace, per target group: | ~~ | ~~ |
+    | 2 | [AWS CloudWatch "AWS/ApplicationELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html), per target group: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |_^_| :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `UnhealthyRequestCount, UnhealthyStateDNS, UnhealthyStateRouting` | Higher than 0 for longer than expected for scaling. |
-    | 3 | AWS CloudWatch "AWS/ApplicationELB" namespace, per target group: | ~~ | ~~ |
+    | 3 | [AWS CloudWatch "AWS/ApplicationELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html), per target group: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `TargetConnectionErrorCount` | Increasing |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `TargetResponseTime` | Going unusually high |
     | 4 | Consider enabling access and/or connection logs. | ~~ | ~~ |
+    !!! info "Remember"
+        `HTTPCode_*` metrics exist for ALB and Target. These metrics relate to the (ALB or Target) resource generating them. Consider monitoring both ALB and Target Group perspectives.
 
 === "Quotas"
     Always check these against the [official Application Load Balancer quotas.](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-limits.html)
@@ -66,7 +68,7 @@ For quotas:
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
     | 1 | Monitor your router’s incoming and outgoing BPS and PPS, along with number of routes advertised and received against quotas. | ~~ | ~~ |
-    | 2 | AWS CloudWatch "AWS/DX" namespace, per connection: | ~~ | ~~ |
+    | 2 | [AWS CloudWatch "AWS/DX" namespace](https://docs.aws.amazon.com/directconnect/latest/UserGuide/monitoring-cloudwatch.html), per connection: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `ConnectionState` | Equals 0 |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `ConnectionEncryptionState` | Equals 0 if MACsec is enabled |
@@ -99,7 +101,7 @@ For quotas:
     | :--: | --- | -- | -- |
     | 1 | Monitor your router’s incoming and outgoing BPS and PPS, and alarm on tunnel down or errors. | ~~ | ~~ |
     | 2 | See [Direct Connect](#aws-direct-connect) | ~~ | ~~ |
-    | 3 | AWS CloudWatch "AWS/VPN" namespace, per tunnel: | ~~ | ~~ |
+    | 3 | [AWS CloudWatch "AWS/VPN" namespace](https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-cloudwatch-vpn.html), per tunnel: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `TunnelState` | Equals 0 (down) |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `TunnelDataIn, TunnelDataOut` | Exceeding 1.0 Gbps |
@@ -125,12 +127,12 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/TransitGateway" namespace, per attachment: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/TransitGateway" namespace](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-cloudwatch-metrics.html), per attachment: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `(Packet|Bytes)DropCount(Blackhole|NoRoute)` | Greater than 1% of traffic |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `BytesIn + BytesOut` | Approaching 100 Gbps |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `PacketsIn + PacketsOut` | Approaching 7.5 Mpps |
-    | 2 | AWS CloudWatch "AWS/TransitGateway" namespace, per Transit Gateway: | ~~ | ~~ |
+    | 2 | [AWS CloudWatch "AWS/TransitGateway" namespace](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-cloudwatch-metrics.html), per Transit Gateway: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `(Packet|Bytes)DropCount(Blackhole|NoRoute)` | Greater than 1% of traffic |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `BytesIn + BytesOut` | None (alarm on the attachment) |
@@ -155,7 +157,7 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/NetworkELB" namespace, per NLB: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/NetworkELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-cloudwatch-metrics.html), per NLB: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `RejectedFlowCount` | Greater than 0 |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `PortAllocationErrorCount` | Greater than 0 |
@@ -163,7 +165,7 @@ For quotas:
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `UnhealthyRoutingFlowCount` | Greater than 0 |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `TCP_(Client|ELB|Target)_Reset_Count` | Outside of band, or a large percentage of NewFlowCount |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ActiveFlowCount, NewFlowCount, PeakPacketsPerSecond, ProcessedByte, ProcessedPacket` | Outside of band |
-    | 2 | AWS CloudWatch "AWS/NetworkELB" namespace, per target group: | ~~ | ~~ |
+    | 2 | [AWS CloudWatch "AWS/NetworkELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-cloudwatch-metrics.html), per target group: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `PortAllocationErrorCount` | Greater than 0 |
     |_^_| :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `UnhealthyRoutingRequestCount, UnhealthyStateDNS, UnhealthyStateRouting` | Greater than 0 |
@@ -186,14 +188,14 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/PrivateLinkEndpoints" namespace: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/PrivateLinkEndpoints" namespace](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#endpoint-metrics-dimensions): | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `PacketsDropped` | Greater than 0.5% |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `RstPacketsReceived` | Greater than 10 pps |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ActiveConnections` | Going anomalously high |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `BytesProcessed` | Approaching 100 Gbps |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `NewConnections` | Going anomalously high |
-    | 2 | AWS CloudWatch "AWS/GatewayELB" namespace: | ~~ | ~~ |
+    | 2 | [AWS CloudWatch "AWS/GatewayELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/cloudwatch-metrics.html): | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `RejectedFlowCount` | Greater than 0 |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `UnhealthyHostCount` | Staying over 0 |
@@ -201,7 +203,7 @@ For quotas:
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ActiveFlowCount` | Going anomalously high |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `NewFlowCount` | Going anomalously high |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ProcessedBytes` | Approaching 100 Gbps |
-    | 3 | AWS CloudWatch "AWS/GatewayELB" namespace, per target group: | ~~ | ~~ |
+    | 3 | [AWS CloudWatch "AWS/GatewayELB" namespace](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/cloudwatch-metrics.html), per target group: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |_^_| :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `UnhealthyHostCount` | Staying over 0 |
     | 4 | Per target monitoring. | ~~ | ~~ |
@@ -225,7 +227,7 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/Route53Resolver" namespace: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/Route53Resolver" namespace](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/monitoring-resolver-with-cloudwatch.html): | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `InboundQueryVolume or OutboundQueryAggregateVolume` | Greater than 8,000 per second |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `EndpointUnHealthyENICount` | Greater than 0 for more than 10 minute |
@@ -254,7 +256,7 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/NATGateway" namespace: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/NATGateway" namespace](https://docs.aws.amazon.com/vpc/latest/userguide/metrics-dimensions-nat-gateway.html): | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `PacketsDropCount` | More than 0.1% per second |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `ErrorPortAllocation` | More than 2 per second |
@@ -308,13 +310,13 @@ For quotas:
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
     | 1 | Monitor the attached load balancer (see their entries) | ~~ | ~~ |
-    | 2 | AWS CloudWatch "AWS/PrivateLinkServices" namespace, per service: | ~~ | ~~ |
+    | 2 | [AWS CloudWatch "AWS/PrivateLinkServices" namespace](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#endpoint-service-metrics-dimensions), per service: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `RstPacketsSent` | Increasing quickly |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `BytesProcessed` | Approaching 100 Gbps |
     |  | :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `ActiveConnections` | Unexpectedly increasing |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `NewConnections` | Unexpectedly increasing |
-    | 3 | AWS CloudWatch "AWS/PrivateLinkEndpoints" namespace, per endpoint: | ~~ | ~~ |
+    | 3 | [AWS CloudWatch "AWS/PrivateLinkEndpoints" namespace](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-cloudwatch-metrics.html#endpoint-metrics-dimensions), per endpoint: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `PacketsDropped` | Increasing quickly |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `RstPacketsReceived` | Increasing quickly |
@@ -341,7 +343,7 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "agent" namespace, per network interface: | ~~ | ~~ |
+    | 1 | [Metrics](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/monitoring-network-performance-ena.html) exported via [CloudWatch agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html), per network interface: | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `conntrack_allowance_exceeded` | Increasing quickly |
     |  | :material-exclamation-thick:{ title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking." } | `conntrack_allowance_available` | Approaching zero |
@@ -373,7 +375,7 @@ For quotas:
 === "Metrics"
     | Number | Notes |  |  |
     | :--: | --- | -- | -- |
-    | 1 | AWS CloudWatch "AWS/NetworkFirewall" namespace: | ~~ | ~~ |
+    | 1 | [AWS CloudWatch "AWS/NetworkFirewall" namespace](https://docs.aws.amazon.com/network-firewall/latest/developerguide/monitoring-cloudwatch.html): | ~~ | ~~ |
     |    | | **Metric** | **Alarm if** |
     |  | :material-alarm-light:{ title="Alarm any time the condition exists." } | `InvalidDroppedPackets, OtherDroppedPackets` | Greater than 20/min |
     |_^_| :material-eye-check:{ title="These statistics should always be monitored, and may be alarmed depending on specific use case." } | `DroppedPackets, RejectedPackets, ReceivedPackets` | Unexpected changes |
