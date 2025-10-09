@@ -45,21 +45,20 @@ SD-WAN connectivity to AWS represents a hybrid connectivity approach that enable
 
 Benefits:
 
-• **Application-Aware Routing**: Intelligently steers traffic based on application requirements and real-time network performance
-• **Dynamic Path Selection**: Automatically chooses optimal connections (broadband, MPLS, LTE) based on cost, performance, and availability
-• **Centralized Policy Management**: Unified control plane for managing security, QoS, and routing policies across hybrid infrastructure
-• **Zero-Touch Provisioning**: Simplified deployment of new sites with automatic configuration and cloud connectivity
-• **Enhanced Security**: Built-in encryption, segmentation, and threat protection across all network connections
-• **Cost Reduction**: Reduces dependency on expensive MPLS circuits by leveraging multiple transport options
+• **Intelligent Routing**: Automatically selects the best path for AWS traffic based on application needs and network conditions
+• **Cost Optimization**: Reduces expensive MPLS dependency by using multiple transport types (broadband, LTE, MPLS)
+• **Centralized Management**: Single console to manage policies and connectivity across all sites and AWS
+• **Enhanced Performance**: Application-aware traffic steering and WAN optimization for cloud applications
+• **Built-in Security**: Encrypted tunnels and integrated security policies across the entire network
+• **Simplified Deployment**: Zero-touch provisioning for new sites with automatic AWS connectivity
 
 Common Use Cases:
 
-• **Branch office modernization** with direct cloud access and reduced backhauling through data centers
-• **Multi-cloud connectivity** enabling seamless access to AWS and other cloud providers from any location
-• **Application migration** with maintained performance and security during cloud transformation
-• **Retail and distributed enterprises** requiring consistent connectivity and policies across hundreds of locations
-• **Remote workforce enablement** with optimized access to cloud applications and resources
-• **Disaster recovery** with intelligent failover between on-premises and cloud-based resources
+• Multi-branch connectivity to AWS with optimized routing and consistent policies
+• Direct cloud access from branch offices without back-hauling through headquarters
+• Hybrid application deployment with seamless connectivity between on-premises and AWS workloads
+• Retail and distributed organizations requiring reliable AWS access from hundreds of locations
+• Backup connectivity for AWS Direct Connect with automatic failover capabilities
 
 ![Image title](../assets/hybrid-connectivity/Example.png){ width="300" }
 /// caption
