@@ -41,6 +41,26 @@ Common Use Cases:
 
 * SD-WAN
 
+SD-WAN connectivity to AWS represents a hybrid connectivity approach that enables organizations to extend their SD-WAN overlay networks from on-premises headquarters and branch offices directly to AWS cloud resources. This solution allows remote sites to leverage the intelligent routing, policy enforcement, and performance optimization capabilities of SD-WAN when accessing AWS workloads and services, providing a consistent network experience across the hybrid infrastructure while maintaining centralized control and visibility over all traffic flows between distributed locations and the cloud.
+
+Benefits:
+
+• **Application-Aware Routing**: Intelligently steers traffic based on application requirements and real-time network performance
+• **Dynamic Path Selection**: Automatically chooses optimal connections (broadband, MPLS, LTE) based on cost, performance, and availability
+• **Centralized Policy Management**: Unified control plane for managing security, QoS, and routing policies across hybrid infrastructure
+• **Zero-Touch Provisioning**: Simplified deployment of new sites with automatic configuration and cloud connectivity
+• **Enhanced Security**: Built-in encryption, segmentation, and threat protection across all network connections
+• **Cost Reduction**: Reduces dependency on expensive MPLS circuits by leveraging multiple transport options
+
+Common Use Cases:
+
+• **Branch office modernization** with direct cloud access and reduced backhauling through data centers
+• **Multi-cloud connectivity** enabling seamless access to AWS and other cloud providers from any location
+• **Application migration** with maintained performance and security during cloud transformation
+• **Retail and distributed enterprises** requiring consistent connectivity and policies across hundreds of locations
+• **Remote workforce enablement** with optimized access to cloud applications and resources
+• **Disaster recovery** with intelligent failover between on-premises and cloud-based resources
+
 ![Image title](../assets/hybrid-connectivity/Example.png){ width="300" }
 /// caption
 Example image caption - [Drawio Source](../assets/hybrid-connectivity/Example.drawio)
