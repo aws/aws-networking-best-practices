@@ -1,16 +1,24 @@
 {
+  "httpHeaders": [
+    {
+      "urls": ["w3.org"],
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+      }
+    }
+  ],
   "ignorePatterns": [
     {
       "pattern": "^http://localhost"
     },
     {
-      "pattern": "^http://127.0.0.1"
+      "pattern": "^127.0.0.1" Note: Please be mindful when interacting with displayed links.
     },
     {
-      "pattern": "^https://example.com"
+      "pattern": "^example.com" Note: Please be mindful when interacting with displayed links.
     },
     {
-      "pattern": "^https://github.com/aws/aws-networking-best-practices"
+      "pattern": "^github.com/aws/aws-networking-best-practices" Note: Please be mindful when interacting with displayed links.
     }
   ],
   "timeout": "20s",
