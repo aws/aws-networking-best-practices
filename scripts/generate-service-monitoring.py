@@ -2,6 +2,7 @@
 # Because we want the service-monitoring.md file to be very consistent, and the formatting can be quite complex,
 # this script exists to build that file for us. Run this script while in the directory with the service-monitoring.md file.
 import sys
+import html
 from typing import Optional, List, Dict, Any
 
 metric_types = {
@@ -47,11 +48,11 @@ def metric_item_str(item: dict) -> str:
             if datum[0] not in metric_types:
                 error_msg(f'Metric datum {datum} has an invalid metric type.')
                 return ''
-            ret += f'    |{"_^_" if index == len(item["data"]) - 1 else "  "}| {metric_types[datum[0]]["icon"]}{{ title="{metric_types[datum[0]]["title"]}" }} | `{datum[1]}` | {datum[2]} |\n'
+            ret += f'    |{"_^_" if index == len(item["data"]) - 1 else "  "}| {metric_types[datum[0]]["icon"]}{{ title="{html.escape(metric_types[datum[0]]["title"])}" }} | `{html.escape(str(datum[1]))}` | {html.escape(str(datum[2]))} |\n'
 
         return ret
     elif item['type'] == 'text':
-        return f'{item["v"]} | ~~ | ~~ |\n'
+        return f'{html.escape(str(item["v"]))} | ~~ | ~~ |\n'
     else:
         error_msg(f'Metric item {item} has an unknown type {item["type"]}')
         return ''
