@@ -12,11 +12,15 @@ if [ ! -f "mkdocs.yml" ]; then
 fi
 
 ERRORS=0
+FAILED_CHECKS=()
 
 # Markdown lint
 echo "📝 Checking markdown lint..."
 if command -v markdownlint-cli2 &> /dev/null; then
-    markdownlint-cli2 --config .github/.markdownlint-cli2.yaml "content/**/*.md" || ERRORS=$((ERRORS+1))
+    if ! markdownlint-cli2 --config .github/.markdownlint-cli2.yaml "content/**/*.md"; then
+        FAILED_CHECKS+=("Markdown lint")
+        ERRORS=$((ERRORS+1))
+    fi
 else
     echo "❌ markdownlint-cli2 not installed. Install with: npm install -g markdownlint-cli2"
     exit 1
@@ -25,7 +29,10 @@ fi
 # MkDocs build
 echo "🏗️  Testing MkDocs build..."
 if command -v mkdocs &> /dev/null; then
-    mkdocs build --quiet || ERRORS=$((ERRORS+1))
+    if ! mkdocs build --quiet; then
+        FAILED_CHECKS+=("MkDocs build")
+        ERRORS=$((ERRORS+1))
+    fi
 else
     echo "❌ mkdocs not installed. Install with: pip install mkdocs-material"
     exit 1
@@ -34,10 +41,10 @@ fi
 # Link check
 echo "🔗 Checking links..."
 if command -v markdown-link-check &> /dev/null; then
-    LINK_ERRORS=0
     find content -name "*.md" -exec markdown-link-check --config .github/mlc_config.json {} \; | tee /tmp/link_check.log
     if grep -q "ERROR:" /tmp/link_check.log; then
         echo "❌ Dead links found"
+        FAILED_CHECKS+=("Link check")
         ERRORS=$((ERRORS+1))
     fi
 else
@@ -48,7 +55,10 @@ fi
 # Spell check
 echo "📖 Checking spelling..."
 if command -v cspell &> /dev/null; then
-    cspell --config .github/cspell.json "content/**/*.md" || ERRORS=$((ERRORS+1))
+    if ! cspell --config .github/cspell.json "content/**/*.md"; then
+        FAILED_CHECKS+=("Spell check")
+        ERRORS=$((ERRORS+1))
+    fi
 else
     echo "❌ cspell not installed. Install with: npm install -g cspell"
     exit 1
@@ -57,7 +67,10 @@ fi
 # YAML lint
 echo "📄 Checking YAML..."
 if command -v yamllint &> /dev/null; then
-    yamllint -c .github/yamllint.yml mkdocs.yml || ERRORS=$((ERRORS+1))
+    if ! yamllint -c .github/yamllint.yml mkdocs.yml; then
+        FAILED_CHECKS+=("YAML lint")
+        ERRORS=$((ERRORS+1))
+    fi
 else
     echo "❌ yamllint not installed. Install with: pip install yamllint"
     exit 1
@@ -68,6 +81,7 @@ echo "📁 Checking file naming..."
 if find content -name "* *" -type f | grep -q .; then
     echo "❌ Files with spaces found:"
     find content -name "* *" -type f
+    FAILED_CHECKS+=("File naming (spaces)")
     ERRORS=$((ERRORS+1))
 fi
 
@@ -87,6 +101,7 @@ fi
 if grep -r "!\[\](" content/ --include="*.md" | grep -q .; then
     echo "❌ Images without alt text found:"
     grep -r "!\[\](" content/ --include="*.md"
+    FAILED_CHECKS+=("Image alt text")
     ERRORS=$((ERRORS+1))
 fi
 
@@ -134,7 +149,10 @@ except Exception as e:
     print(f"❌ Navigation check failed: {e}")
     sys.exit(1)
 EOF
-[ $? -ne 0 ] && ERRORS=$((ERRORS+1))
+if [ $? -ne 0 ]; then
+    FAILED_CHECKS+=("Navigation structure")
+    ERRORS=$((ERRORS+1))
+fi
 
 # IP validation
 echo "🌐 Validating IP addresses..."
@@ -216,12 +234,22 @@ if errors:
     sys.exit(1)
 print("✅ IP address validation passed")
 EOF
-[ $? -ne 0 ] && ERRORS=$((ERRORS+1))
+if [ $? -ne 0 ]; then
+    FAILED_CHECKS+=("IP address validation")
+    ERRORS=$((ERRORS+1))
+fi
 
 echo
 if [ $ERRORS -eq 0 ]; then
     echo "✅ All checks passed! Ready to create PR."
 else
     echo "❌ $ERRORS check(s) failed. Please fix issues before creating PR."
+    echo
+    echo "📋 Failed checks summary:"
+    for check in "${FAILED_CHECKS[@]}"; do
+        echo "  • $check"
+    done
+    echo
+    echo "💡 Scroll up to see detailed error messages for each failed check."
     exit 1
 fi
