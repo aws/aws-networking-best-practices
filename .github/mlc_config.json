@@ -19,6 +19,12 @@
     },
     {
       "pattern": "^github.com/aws/aws-networking-best-practices"
+    },
+    {
+      "pattern": "^https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
+    },
+    {
+      "pattern": "^https://github.com/aws/aws-networking-best-practices"
     }
   ],
   "timeout": "20s",
