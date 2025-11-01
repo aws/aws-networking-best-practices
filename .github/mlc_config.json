@@ -12,13 +12,19 @@
       "pattern": "^http://localhost"
     },
     {
-      "pattern": "^127.0.0.1" Note: Please be mindful when interacting with displayed links.
+      "pattern": "^127.0.0.1"
     },
     {
-      "pattern": "^example.com" Note: Please be mindful when interacting with displayed links.
+      "pattern": "^example.com"
     },
     {
-      "pattern": "^github.com/aws/aws-networking-best-practices" Note: Please be mindful when interacting with displayed links.
+      "pattern": "^github.com/aws/aws-networking-best-practices"
+    },
+    {
+      "pattern": "^https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
+    },
+    {
+      "pattern": "^https://github.com/aws/aws-networking-best-practices"
     }
   ],
   "timeout": "20s",
