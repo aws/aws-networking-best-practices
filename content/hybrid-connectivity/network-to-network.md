@@ -40,7 +40,7 @@ Common Use Cases:
 * Building hybrid cloud environments
 * Enabling secure remote access for employees from Head or Branch offices and remote sites
 
-**SD-WAN**
+## SD-WAN
 
 SD-WAN connectivity to AWS represents a hybrid connectivity approach that enables organizations to extend their SD-WAN overlay networks from on-premises headquarters and branch offices directly to AWS cloud resources. This solution allows remote sites to leverage the intelligent routing, policy enforcement, and performance optimization capabilities of SD-WAN when accessing AWS workloads and services, providing a consistent network experience across the hybrid infrastructure while maintaining centralized control and visibility over all traffic flows between distributed locations and the cloud.
 
