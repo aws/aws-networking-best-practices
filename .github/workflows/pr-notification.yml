@@ -5,6 +5,8 @@ on:
     types: [opened]
     branches: [main, master]
 
+permissions: {}
+
 jobs:
   notify-slack:
     runs-on: ubuntu-latest

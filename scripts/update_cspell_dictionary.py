@@ -26,6 +26,15 @@ def fetch_aws_glossary_terms() -> List[str]:
     try:
         response = requests.get(url, timeout=30)
         response.raise_for_status()
+    except requests.Timeout:
+        print("Error: Request timed out while fetching AWS glossary")
+        sys.exit(1)
+    except requests.ConnectionError:
+        print("Error: Connection failed while fetching AWS glossary")
+        sys.exit(1)
+    except requests.HTTPError as e:
+        print(f"Error: HTTP error {e.response.status_code} while fetching AWS glossary")
+        sys.exit(1)
     except requests.RequestException as e:
         print(f"Error fetching AWS glossary: {e}")
         sys.exit(1)
@@ -81,7 +90,7 @@ def check_cspell_dictionary(words: Set[str]) -> Set[str]:
         # Run cspell to check the words
         result = subprocess.run([
             'cspell', 'lint', '--no-summary', '--no-progress', '--no-color', '--words-only', '-c', '.github/cspell.json', str(temp_file)
-        ], capture_output=True, text=True)
+        ], capture_output=True, text=True, check=False)
 
         # Parse cspell output to find misspelled words
         if result.stdout:
@@ -98,9 +107,12 @@ def check_cspell_dictionary(words: Set[str]) -> Set[str]:
         sys.exit(1)
     finally:
         # Clean up temp file
-        if temp_file.exists():
-            temp_file.unlink()
-        pass
+        try:
+            if temp_file.exists():
+                temp_file.unlink()
+        except OSError:
+            # Ignore cleanup errors
+            pass
     
     return missing_words
 
@@ -111,9 +123,18 @@ def update_cspell_config(new_words: Set[str]) -> None:
     try:
         with open(cspell_path, 'r') as f:
             config = json.load(f)
+    except FileNotFoundError:
+        print(f"Error: {cspell_path} not found - aborting.")
+        sys.exit(1)
+    except json.JSONDecodeError as e:
+        print(f"Error: Invalid JSON in {cspell_path} - {e}")
+        sys.exit(1)
+    except PermissionError:
+        print(f"Error: Permission denied reading {cspell_path}")
+        sys.exit(1)
     except Exception as e:
-        print(f"Could not load or parse {cspell_path} ({e})- aborting.")
-        exit(1)
+        print(f"Error: Could not load {cspell_path} - {e}")
+        sys.exit(1)
     
     # Add new words, avoiding duplicates
     existing_words = set(config['words'])

@@ -1,7 +1,7 @@
 name: Markdown Preview
 
 on:
-  pull_request_target:
+  pull_request:
     branches: [main, master]
     paths:
       - 'content/**/*.md'
@@ -17,7 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: Generate markdown preview
         uses: actions/github-script@v7
