@@ -1,6 +1,7 @@
 # Network to Network
 
-* AWS Direct Connect
+## AWS Direct Connect
+
 AWS Direct Connect is a dedicated network connectivity service that establishes a private, high-bandwidth link between your on-premises infrastructure and AWS Cloud, bypassing the public internet. AWS Direct Connect provides a foundation for reliable, secure, and high-performance hybrid cloud architectures, making it an essential service for organizations requiring consistent network performance for latency-sensitive applications and high-performance hybrid connectivity from on-premises to AWS Cloud.
 
 Benefits:
