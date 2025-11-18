@@ -1,6 +1,6 @@
-<mxfile host="drawio.corp.amazon.com" modified="2025-08-20T14:02:17.608Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:141.0) Gecko/20100101 Firefox/141.0" etag="H1FwiuYuvY44ywZCl1l5" version="21.7.4" type="device" pages="13">
+<mxfile host="drawio.corp.amazon.com" modified="2025-11-18T15:45:18.492Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:144.0) Gecko/20100101 Firefox/144.0" etag="uvLgkMMKZcOYDgUfj3yk" version="21.7.4" type="device" pages="13">
   <diagram name="Workspace" id="RIGxXZ_UXlBLKHhy0W1B">
-    <mxGraphModel dx="2074" dy="2257" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2074" dy="2251" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -105,7 +105,7 @@
         <mxCell id="zAr81fbVOcJbG-o6CTYt-1" value="AWS Transit Gateway" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.transit_gateway;fontFamily=Amazon Ember;" parent="1" vertex="1">
           <mxGeometry x="380" y="630" width="25" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="9c7xRbJlylDjIsSE94i9-1" value="Key notes:&lt;br&gt;- Font is Amazon Ember, 12 points for titles, 8 points for icons if needed.&lt;div style=&quot;font-size: 20px;&quot;&gt;- Icons get resized to 25x25 (and turn off their Resizable attribute) - this is their size in the AWS Groups section, but services icons tend to come in at 60x60.&lt;br&gt;- Top spacing on container boxes is -6 pt if multiline, -2 pt if single line titles&lt;br&gt;- Save images as PNG, at 150% scale, 10 pixel border, white background.&lt;br&gt;- Arrows use the 3rd option down for window head.&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;- All images should fit in the &quot;Standard diagram size box&quot; below.&lt;br&gt;- Service boxes are filled with their line color, at 15% opacity&lt;/div&gt;" style="text;strokeColor=none;align=left;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Amazon Ember;fontSize=20;" parent="1" vertex="1">
+        <mxCell id="9c7xRbJlylDjIsSE94i9-1" value="Key notes:&lt;br&gt;- Font is Amazon Ember, 12 points for titles, 8 points for icons if needed.&lt;div style=&quot;font-size: 20px;&quot;&gt;- Icons get resized to 25x25 (and turn off their Resizable attribute) - this is their size in the AWS Groups section, but services icons tend to come in at 60x60.&lt;br&gt;- Top spacing on container boxes is -6 pt if multiline, -2 pt if single line titles&lt;br&gt;- Save images as PNG, at 150% scale, 10 pixel border, white background, turn off &#39;Include a copy of my diagram&#39;.&lt;br&gt;- Arrows use the 3rd option down for window head.&lt;/div&gt;&lt;div style=&quot;font-size: 20px;&quot;&gt;- All images should fit in the &quot;Standard diagram size box&quot; below.&lt;br&gt;- Service boxes are filled with their line color, at 15% opacity&lt;/div&gt;" style="text;strokeColor=none;align=left;fillColor=none;html=1;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Amazon Ember;fontSize=20;" parent="1" vertex="1">
           <mxGeometry x="50" y="-330" width="740" height="330" as="geometry" />
         </mxCell>
         <mxCell id="0tpYjp2IXG1DdZDShSsq-1" value="Endpoint" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.endpoints;fontFamily=Amazon Ember;" parent="1" vertex="1">
@@ -133,7 +133,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="3vDJzXq9tGSLsRDJR0vQ" name="ALB">
-    <mxGraphModel dx="2074" dy="1157" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2074" dy="1151" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -203,7 +203,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="y_60a0u8G8w8lmlT0zBX" name="DX">
-    <mxGraphModel dx="2074" dy="1157" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2074" dy="1151" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -315,7 +315,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="zZdGWmC4fJKy30IBXftJ" name="NLB">
-    <mxGraphModel dx="2074" dy="1157" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="988" dy="548" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -331,7 +331,7 @@
         <mxCell id="Tkx7sIzUMamujaQM-L7D-4" value="" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc;resizable=0;" parent="Tkx7sIzUMamujaQM-L7D-1" vertex="1">
           <mxGeometry width="25" height="25" as="geometry" />
         </mxCell>
-        <mxCell id="Tkx7sIzUMamujaQM-L7D-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=open;startFill=0;endArrow=open;endFill=0;" parent="Tkx7sIzUMamujaQM-L7D-1" target="Tkx7sIzUMamujaQM-L7D-7" edge="1">
+        <mxCell id="Tkx7sIzUMamujaQM-L7D-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=open;startFill=0;endArrow=open;endFill=0;" parent="Tkx7sIzUMamujaQM-L7D-1" target="Tkx7sIzUMamujaQM-L7D-7" edge="1" source="mR6fyZyO5Rj_vIjRa56a-2">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="65" y="110.00000000000011" as="sourcePoint" />
           </mxGeometry>
@@ -360,7 +360,7 @@
           <mxGeometry x="372.5" y="180" width="100" height="30" as="geometry" />
         </mxCell>
         <mxCell id="Tkx7sIzUMamujaQM-L7D-13" value="1" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Amazon Ember;fillColor=#302744;strokeColor=#ffffff;fontColor=#ffffff;fontStyle=0;spacingBottom=2;" parent="Tkx7sIzUMamujaQM-L7D-1" vertex="1">
-          <mxGeometry x="40" y="35" width="25" height="25" as="geometry" />
+          <mxGeometry x="63" y="35" width="25" height="25" as="geometry" />
         </mxCell>
         <mxCell id="Tkx7sIzUMamujaQM-L7D-14" value="2" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Amazon Ember;fillColor=#302744;strokeColor=#ffffff;fontColor=#ffffff;fontStyle=0;spacingBottom=2;" parent="Tkx7sIzUMamujaQM-L7D-1" vertex="1">
           <mxGeometry x="207.5" y="59" width="25" height="25" as="geometry" />
@@ -369,25 +369,41 @@
           <mxGeometry x="410" y="20" width="25" height="25" as="geometry" />
         </mxCell>
         <mxCell id="mR6fyZyO5Rj_vIjRa56a-2" value="Network&lt;br&gt;Load Balancer" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=top;verticalAlign=bottom;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.network_load_balancer;fontFamily=Amazon Ember;labelPosition=center;" parent="Tkx7sIzUMamujaQM-L7D-1" vertex="1">
-          <mxGeometry x="40" y="97.5" width="25" height="25" as="geometry" />
+          <mxGeometry x="63" y="97.5" width="25" height="25" as="geometry" />
         </mxCell>
         <mxCell id="Tkx7sIzUMamujaQM-L7D-17" value="4" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Amazon Ember;fillColor=#302744;strokeColor=#ffffff;fontColor=#ffffff;fontStyle=0;spacingBottom=2;" parent="Tkx7sIzUMamujaQM-L7D-1" vertex="1">
-          <mxGeometry x="60" y="160" width="25" height="25" as="geometry" />
+          <mxGeometry x="61" y="175" width="25" height="25" as="geometry" />
         </mxCell>
         <mxCell id="Tkx7sIzUMamujaQM-L7D-16" value="S3 Bucket" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#7AA116;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;fontFamily=Amazon Ember;" parent="1" vertex="1">
-          <mxGeometry x="160.48" y="550" width="24.04" height="25" as="geometry" />
+          <mxGeometry x="140" y="550" width="24.04" height="25" as="geometry" />
         </mxCell>
         <mxCell id="Tkx7sIzUMamujaQM-L7D-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;" parent="1" target="Tkx7sIzUMamujaQM-L7D-16" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="430" y="545" as="targetPoint" />
-            <mxPoint x="172.5" y="442.4997159155474" as="sourcePoint" />
+            <mxPoint x="194" y="490" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="150" y="490" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="P7PpPwm6WwqHas73bxNT-1" value="CloudWatch Logs" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.cloudwatch_logs;fontFamily=Amazon Ember;" vertex="1" parent="1">
+          <mxGeometry x="220" y="550" width="33.62" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="P7PpPwm6WwqHas73bxNT-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;dashed=1;exitX=0.432;exitY=1.029;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="mR6fyZyO5Rj_vIjRa56a-2" target="P7PpPwm6WwqHas73bxNT-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="142" y="560" as="targetPoint" />
+            <mxPoint x="170" y="450" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="194" y="490" />
+              <mxPoint x="237" y="490" />
+            </Array>
           </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram id="dsTMkuppxnfKRNzXFGxp" name="S2S VPN">
-    <mxGraphModel dx="2074" dy="1157" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2074" dy="1151" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -533,7 +549,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="-8nHJHrbrCpqgFxSMokP" name="TGW">
-    <mxGraphModel dx="2074" dy="1157" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="2074" dy="1151" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />

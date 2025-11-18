@@ -177,7 +177,9 @@ if __name__ == '__main__':
                              ['warn', 'UnHealthyHostCount', 'Higher than 0 for longer than expected for scaling.'],
                              ['warn', 'UnhealthyRoutingFlowCount', 'Greater than 0'],
                              ['warn', 'TCP_(Client|ELB|Target)_Reset_Count', 'Outside of band, or a large percentage of NewFlowCount'],
-                             ['info', 'ActiveFlowCount, NewFlowCount, PeakPacketsPerSecond, ProcessedByte, ProcessedPacket', 'Outside of band']]},
+                             ['warn', 'QUIC_Unknown_Server_ID_Packet_Drop_Count', '(QUIC only) Higher than 0 for longer than expected for scaling.'],
+                             ['info', 'ActiveFlowCount, NewFlowCount, PeakPacketsPerSecond, ProcessedByte, ProcessedPacket', 'Outside of band'],
+                             ['info', 'NewFlowCount_QUIC, ProcessedBytes_QUIC', '(QUIC only) Outside of band']]},
                                  {'type': 'metrics', 'ns': 'AWS/NetworkELB', 'per': 'target group', 'url': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-cloudwatch-metrics.html', 'data':
                                    [['crit', 'PortAllocationErrorCount', 'Greater than 0'],
                                     ['warn', 'UnhealthyRoutingRequestCount, UnhealthyStateDNS, UnhealthyStateRouting', 'Greater than 0']]},
