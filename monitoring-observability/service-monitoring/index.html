@@ -2027,7 +2027,7 @@
 <tr>
 <td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
 <td><code>ConnectionLightLevel(Rx|Tx)</code></td>
-<td>Outside the range of:<br><table><tbody><tr><td>1/10G:</td><td>Rx and Tx</td><td>-14.4 to 2.5</td></tr><tr><td rowspan="2">100G</td><td>Tx</td><td>-4.3 to 4.5</td></tr><tr><td>Rx</td><td>-10.6 to 4.5</td></tr><tr><td rowspan="2">400G</td><td>Tx</td><td>-1 to 6.09</td></tr><tr><td>Rx</td><td>-12 to 7.09</td></tr></tbody></table></td>
+<td>Outside the range of:&lt;br&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;1/10G:&lt;/td&gt;&lt;td&gt;Rx and Tx&lt;/td&gt;&lt;td&gt;-14.4 to 2.5&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td rowspan=&quot;2&quot;&gt;100G&lt;/td&gt;&lt;td&gt;Tx&lt;/td&gt;&lt;td&gt;-4.3 to 4.5&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Rx&lt;/td&gt;&lt;td&gt;-10.6 to 4.5&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td rowspan=&quot;2&quot;&gt;400G&lt;/td&gt;&lt;td&gt;Tx&lt;/td&gt;&lt;td&gt;-1 to 6.09&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Rx&lt;/td&gt;&lt;td&gt;-12 to 7.09&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</td>
 </tr>
 <tr>
 <td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
@@ -2281,7 +2281,7 @@
 </thead>
 <tbody>
 <tr>
-<td rowspan="8" style="text-align: center;vertical-align:top;">1</td>
+<td rowspan="10" style="text-align: center;vertical-align:top;">1</td>
 <td colspan="3" style="text-align:left;"><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-cloudwatch-metrics.html">AWS CloudWatch "AWS/NetworkELB" namespace</a>, per <abbr title="Network Load Balancer">NLB</abbr>:</td>
 </tr>
 <tr>
@@ -2315,9 +2315,19 @@
 <td>Outside of band, or a large percentage of NewFlowCount</td>
 </tr>
 <tr>
+<td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
+<td><code>QUIC_Unknown_Server_ID_Packet_Drop_Count</code></td>
+<td>(QUIC only) Higher than 0 for longer than expected for scaling.</td>
+</tr>
+<tr>
 <td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
 <td><code>ActiveFlowCount, NewFlowCount, PeakPacketsPerSecond, ProcessedByte, ProcessedPacket</code></td>
 <td>Outside of band</td>
+</tr>
+<tr>
+<td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
+<td><code>NewFlowCount_QUIC, ProcessedBytes_QUIC</code></td>
+<td>(QUIC only) Outside of band</td>
 </tr>
 <tr>
 <td rowspan="4" style="text-align: center;vertical-align:top;">2</td>
@@ -2907,7 +2917,7 @@
 </tr>
 <tr>
 <td><span class="twemoji" title="These statistics should trigger alarms if the condition persists for several minutes. A couple increments occasionally should be expected as a normal part of networking."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 3h4v11h-4zm0 18v-4h4v4z"/></svg></span></td>
-<td><code>queue_&lt;X&gt;_tx_queue_stop</code></td>
+<td><code>queue_&amp;lt;X&amp;gt;_tx_queue_stop</code></td>
 <td>Increasing quickly</td>
 </tr>
 <tr>
@@ -2922,7 +2932,7 @@
 </tr>
 <tr>
 <td><span class="twemoji" title="These statistics should always be monitored, and may be alarmed depending on specific use case."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23.5 17-5 5-3.5-3.5 1.5-1.5 2 2 3.5-3.5zM12 9a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m0 8c.5 0 .97-.07 1.42-.21-.27.71-.42 1.43-.42 2.21v.45l-1 .05c-5 0-9.27-3.11-11-7.5 1.73-4.39 6-7.5 11-7.5s9.27 3.11 11 7.5c-.25.64-.56 1.26-.92 1.85-.9-.54-1.96-.85-3.08-.85-.78 0-1.5.15-2.21.42.14-.45.21-.92.21-1.42a5 5 0 0 0-5-5 5 5 0 0 0-5 5 5 5 0 0 0 5 5"/></svg></span></td>
-<td><code>Output from “tc –s qdisc show &lt;interface&gt;”</code></td>
+<td><code>Output from “tc –s qdisc show &amp;lt;interface&amp;gt;”</code></td>
 <td>Shows drops increasing quickly</td>
 </tr>
 <tr>
@@ -3055,7 +3065,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 20, 2025 14:29:16 UTC">August 20, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="December 13, 2025 01:57:10 UTC">December 13, 2025</span>
   </span>
 
     
