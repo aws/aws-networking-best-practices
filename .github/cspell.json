@@ -15,6 +15,7 @@
     "Mbps",
     "MPLS",
     "Mpps",
+    "QUIC",
     "SIEM",
     "VIRTUALENV",
     "acl",
