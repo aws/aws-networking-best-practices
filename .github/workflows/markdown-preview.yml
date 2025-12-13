@@ -24,7 +24,8 @@ jobs:
           script: |
             const { execSync } = require('child_process');
             
-            const changedFiles = execSync(`git diff --name-only origin/${{ github.base_ref }}...HEAD`)
+            const baseBranch = context.payload.pull_request.base.ref;
+            const changedFiles = execSync(`git diff --name-only origin/${baseBranch}...HEAD`)
               .toString().trim().split('\n').filter(f => f.endsWith('.md'));
             
             // Skip preview if multiple markdown files detected (handled by pr-guidelines workflow)
@@ -34,7 +35,7 @@ jobs:
             }
             
             for (const file of changedFiles) {
-              const diffOutput = execSync(`git diff origin/${{ github.base_ref }}...HEAD -- "${file}"`)
+              const diffOutput = execSync(`git diff origin/${baseBranch}...HEAD -- "${file}"`)
                 .toString();
               
               function processMarkdown(lines) {
