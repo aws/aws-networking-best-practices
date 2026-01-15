@@ -18,7 +18,7 @@ graph TB
         end
     end
     
-    style AWS fill:none,stroke:#232f3e,stroke-width:2px,stroke-dasharray:5 5,color:#232f3e
+    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
     style VPC fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
     style AZ1 fill:#dbeafe,stroke:#3b82f6,color:#000
     style AZ2 fill:#dbeafe,stroke:#3b82f6,color:#000

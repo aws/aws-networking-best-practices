@@ -16,8 +16,8 @@ graph LR
     AZ2 <-."Low-latency<br/>private network".-> AZ3
     AZ1 <-."Low-latency<br/>private network".-> AZ3
     
-    style AWS fill:none,stroke:#232f3e,stroke-width:2px,stroke-dasharray:5 5,color:#232f3e
-    style Region fill:#f8fafc,stroke:#64748b,stroke-width:2px,stroke-dasharray:5 5,color:#1e293b,font-size:16px
+    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
+    style Region fill:#f8fafc,stroke:#64748b,stroke-width:2px,stroke-dasharray:5 5,color:#64748b,font-size:16px
     style AZ1 fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#000,font-size:14px
     style AZ2 fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#000,font-size:14px
     style AZ3 fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#000,font-size:14px
