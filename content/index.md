@@ -1,11 +1,97 @@
 # Introduction
 
-Comprehensive AWS networking guidance developed by the user community and
-validated by AWS Networking Specialists.
+**A reference architecture for AWS networking best practices**
+
+Enterprise AWS networks are built on five interconnected pillars:
+
+- **Foundation** - Core infrastructure (AWS Organizations, VPCs, subnets, IPAM) that everything else depends on
+- **Connectivity** - Communication through internet gateways, Transit Gateway, Direct Connect, and VPN services
+- **Application Networking** - Traffic distribution via Elastic Load Balancing, service-to-service communication through VPC Lattice, and container networking
+- **Security** - Protection through Network Firewall, PrivateLink, and Verified Access
+- **Observability** - Monitoring and troubleshooting capabilities
+
+``` mermaid
+block-beta
+  columns 6
+
+  %% 1. Left Sidebar (Takes 1 of 6 columns)
+  block:Left:1
+    columns 1
+    Security
+  end
+
+  %% 2. Center Stack (Takes 4 of 6 columns)
+  block:Center:4
+    columns 1
+
+    %% --- Application Networking ---
+    block:AppNet
+      columns 1
+      AppNetLabel["Application Networking"]
+      block:AppItems
+        columns 3
+        LB["Load Balancing"]
+        S2S["Service to Service"]
+        CM["Container Mesh"]
+      end
+    end
+
+    %% --- Connectivity ---
+    block:Conn
+      columns 1
+      ConnLabel["Connectivity"]
+      block:ConnItems
+        columns 3
+        Internet
+        AWS["Within AWS"]
+        Hybrid["Hybrid & Multi-Cloud"]
+      end
+    end
+
+    %% --- Foundation ---
+    Foundation
+  end
+
+  %% 3. Right Sidebar (Takes 1 of 6 columns)
+  block:Right:1
+    columns 1
+    Observability
+  end
+
+  %% --- STYLING ---
+
+  %% 1. FONT SIZING
+  classDef largeText font-size:24px;
+  class Security,Foundation,Observability,AppNetLabel,ConnLabel largeText
+
+  %% 2. LAYOUT CONTAINERS
+  classDef layout fill:none,stroke:none;
+  class Left,Center,Right,AppItems,ConnItems layout
+
+  %% 3. LABELS
+  classDef label fill:none,stroke:none,color:#fff;
+  class AppNetLabel,ConnLabel label
+
+  %% 4. VISIBLE CONTENT BLOCKS - Consistent color scheme
+  classDef mainBox fill:#2563eb,stroke:#1e40af,stroke-width:2px,color:#fff;
+  class AppNet,Conn,Foundation,Security,Observability mainBox
+
+  %% 5. INNER ITEMS
+  classDef dashed stroke:#64748b,stroke-dasharray:5 5,fill:#f1f5f9,color:#0f172a;
+  class LB,S2S,CM,Internet,AWS,Hybrid dashed
+
+  %% 6. HEIGHT ADJUSTMENT
+  style Security height:377px
+  style Observability height:377px
+```
+
+## Architecture Overview
+
+Start with Foundation to understand the basics, then explore each pillar based on your specific networking requirements.
 
 <div class="grid cards" markdown>
 
-*   :material-network: **Foundation & Core Concepts**
+*   :material-network: **Foundation**
 
     ---
 
@@ -14,42 +100,31 @@ validated by AWS Networking Specialists.
 
     ---
 
-    [:octicons-arrow-right-24: Networking Basics](basics/)
+    [:octicons-arrow-right-24: Foundation](foundation/)
 
-*   :material-lan-connect: **Internal Connectivity**
-
-    ---
-
-    Inter-service communication across regions, availability zones, and VPCs
-    within your AWS environment.
+*   :material-lan-connect: **Connectivity**
 
     ---
 
-    [:octicons-arrow-right-24: Connectivity within AWS](internal-connectivity/)
-
-*   :material-web: **External Network Access**
-
-    ---
-
-    Enable scalable internet access for your AWS workloads with optimized
-    routing and traffic management.
+    Internet access, connectivity within AWS, and hybrid & multi-cloud
+    networking solutions.
 
     ---
 
-    [:octicons-arrow-right-24: Internet Connectivity](internet-connectivity/)
+    [:octicons-arrow-right-24: Connectivity](connectivity/)
 
-*   :material-cloud-sync: **Multi-Environment Connectivity**
-
-    ---
-
-    Establish secure connectivity between AWS, on-premises data centers, and
-    multi-cloud environments.
+*   :material-application: **Application Networking**
 
     ---
 
-    [:octicons-arrow-right-24: Hybrid and multi-cloud](hybrid-connectivity/)
+    Load balancing, service-to-service communication, and container mesh
+    networking for modern applications.
 
-*   :material-lock-outline: **Security & Access Control**
+    ---
+
+    [:octicons-arrow-right-24: Application Networking](application-networking/)
+
+*   :material-lock-outline: **Security**
 
     ---
 
@@ -58,9 +133,9 @@ validated by AWS Networking Specialists.
 
     ---
 
-    [:octicons-arrow-right-24: Network Security](security/)
+    [:octicons-arrow-right-24: Security](security/)
 
-*   :material-monitor-eye: **Visibility & Troubleshooting**
+*   :material-monitor-eye: **Observability**
 
     ---
 
@@ -69,7 +144,7 @@ validated by AWS Networking Specialists.
 
     ---
 
-    [:octicons-arrow-right-24: Monitoring, Logging & Observability](monitoring-observability/)
+    [:octicons-arrow-right-24: Observability](observability/)
 
 </div>
 

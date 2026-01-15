@@ -18,7 +18,7 @@ copyright: >
   <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> |
   <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> |
   <a href="#__consent">Cookie Preferences </a> |
-  &copy; 2025, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+  &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
 
 # Configuration
 theme:
@@ -155,39 +155,42 @@ watch:
 
 # Page tree
 nav:
-  - Introduction:
-      - index.md
+  - Introduction: index.md
+  - Foundation:
+      - foundation/index.md
+      - Before You Start: foundation/aws-prerequisites.md
+      - AWS Organizations: foundation/organizations.md
+      - Amazon VPC: foundation/vpc.md
+      - Regions & Availability Zones: foundation/regions-azs.md
+      - CIDR Planning: foundation/cidr.md
+      - Subnets: foundation/subnets.md
+      - IPAM: foundation/ipam.md
+  - Connectivity:
+      - connectivity/index.md
+      - Internet: connectivity/internet.md
+      - Within AWS: connectivity/within-aws.md
+      - Hybrid & Multi-Cloud: connectivity/hybrid-multicloud.md
+  - Application Networking:
+      - application-networking/index.md
+      - Load Balancing: application-networking/load-balancing.md
+      - Service to Service: application-networking/service-to-service.md
+      - Container Mesh: application-networking/container-mesh.md
+  - Security:
+      - security/index.md
+      - Perimeter Controls: security/perimeter-inbound.md
+      - Outbound Controls: security/outbound.md
+      - Network Segmentation: security/segmentation.md
+  - Observability:
+      - observability/index.md
+      - Notifications: observability/notifications.md
+      - AWS Services: observability/service-monitoring.md
+      - Internal Traffic: observability/internal-traffic.md
+      - External Traffic: observability/external-traffic.md
+  - Community:
+      - community/index.md
       - How to contribute: community/contribute.md
       - Report a correction: community/report-a-correction.md
       - New best practice: community/new-best-practice.md
       - Making a pull request: community/making-a-pull-request.md
       - Philosophy: community/philosophy.md
       - Conventions: community/conventions.md
-  - Networking Basics:
-      - basics/index.md
-      - AWS Prerequisites: basics/aws-prerequisites.md
-      - Setting up your first VPC: basics/first-vpc.md
-  - Connectivity within AWS:
-      - internal-connectivity/index.md
-      - Within the same Region: internal-connectivity/vpc-same-region.md
-      - Across Regions: internal-connectivity/vpc-other-region.md
-  - Connectivity to the Internet:
-      - internet-connectivity/index.md
-      - Egress Traffic: internet-connectivity/egress.md
-      - Ingress Traffic: internet-connectivity/ingress.md
-  - Connectivity to on-premises and multicloud:
-      - hybrid-connectivity/index.md
-      - Network to Network: hybrid-connectivity/network-to-network.md
-      - Clients to Network: hybrid-connectivity/clients-to-network.md
-      - Clients to Applications: hybrid-connectivity/clients-to-apps.md
-  - Network Security:
-      - security/index.md
-      - Perimeter Controls: security/perimeter-inbound.md
-      - Outbound Controls: security/outbound.md
-      - Network Segmentation: security/segmentation.md
-  - Monitoring, Logging & Observability:
-      - monitoring-observability/index.md
-      - Notifications: monitoring-observability/notifications.md
-      - AWS Services: monitoring-observability/service-monitoring.md
-      - Internal Traffic: monitoring-observability/internal-traffic.md
-      - External Traffic: monitoring-observability/external-traffic.md
