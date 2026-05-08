@@ -37,7 +37,7 @@ On the application side, [AWS PrivateLink](https://aws.amazon.com/privatelink/) 
 
 Most organizations will use more than one of these services simultaneously. The goal is to use each where it provides the most value.
 
-## Policy-Driven network management with AWS Cloud WAN
+## Policy-driven network management with AWS Cloud WAN
 
 [AWS Cloud WAN](https://docs.aws.amazon.com/vpc/latest/cloudwan/what-is-cloudwan.html) lets you build, manage, and monitor your network through a single declarative policy. Rather than configuring individual Transit Gateways, peering connections, and route tables across Regions and accounts, AWS Cloud WAN centralizes your entire network topology into a JSON policy document. A network policy defines the entire topology: which Regions participate, how attachments are segmented and automatically connected into the network, and how traffic routes between segments. Changes to the policy are versioned and applied through a change set process, and the service takes care of building and updating the underlying infrastructure.
 
@@ -45,49 +45,49 @@ Most organizations will use more than one of these services simultaneously. The 
 
 <div class="grid cards" markdown>
 
--   :material-file-code: **Policy-driven topology**
+*   :material-file-code: **Policy-driven topology**
 
     ---
 
     Define your network as code. Segments, routing, attachment rules, and inter-Region connectivity are all declared in the network policy.
 
--   :material-chart-pie: **Segments**
+*   :material-chart-pie: **Segments**
 
     ---
 
     Logical isolation boundaries that control which VPCs can communicate. Traffic between segments requires explicit routing rules.
 
--   :material-tag-check: **Automated attachment acceptance**
+*   :material-tag-check: **Automated attachment acceptance**
 
     ---
 
     Attachments (VPC, Direct Connect, Site-to-Site VPN, Connect, or Transit Gateway route tables) connect to the correct segment automatically based on attachment metadata (tags, attachment type, AWS account membership, AWS Region) with or without manual approval.
 
--   :material-shield-check: **Service insertion**
+*   :material-shield-check: **Service insertion**
 
     ---
 
     Route traffic between segments through Inspection VPCs by defining inspection rules in the policy.
 
--   :material-earth: **Multi-Region and single-Region**
+*   :material-earth: **Multi-Region and single-Region**
 
     ---
 
     AWS Cloud WAN works for both global networks spanning many Regions and single-Region deployments where policy-driven management and segmentation are the primary value.
 
--   :material-routes: **Routing policies**
+*   :material-routes: **Routing policies**
 
     ---
 
     Fine-grained control over route propagations, including route filtering, summarization, and BGP attribute manipulation for traffic engineering in multi-path environments.
 
--   :material-ip-network: **Dual-stack support**
+*   :material-ip-network: **Dual-stack support**
 
     ---
 
     IPv4 and IPv6 routing configured in the same network policy.
 
--   :material-transit-connection-variant: **Transit Gateway integration**
+*   :material-transit-connection-variant: **Transit Gateway integration**
 
     ---
 
@@ -117,7 +117,7 @@ This combination of SCPs for tag governance and attachment policies for automate
 
 AWS Cloud WAN's service insertion capability lets you route intra or inter-segment traffic through Inspection VPCs running [AWS Network Firewall](https://aws.amazon.com/network-firewall/) or third-party appliances. The inspection rules are defined in the network policy, so changing which traffic gets inspected, or routing it through a different Inspection VPC, is a policy change rather than a manual routing update across multiple Transit Gateways.
 
-This matters because security and inspection requirements change. A new compliance requirement might mandate inspection of traffic between two segments that previously communicated directly, or you can also apply cost-optimization strategies by removing inspection in enviroments that are protected using other security mechanisms. With service insertion, that's a policy update applied across all affected Regions and segments.
+This matters because security and inspection requirements change. A new compliance requirement might mandate inspection of traffic between two segments that previously communicated directly, or you can also apply cost-optimization strategies by removing inspection in environments that are protected using other security mechanisms. With service insertion, that's a policy update applied across all affected Regions and segments.
 
 #### Use routing policies to control route propagation and traffic paths
 
@@ -147,10 +147,10 @@ AWS Cloud WAN is a natural fit when building a new multi-account network in AWS.
 
 For existing environments with Transit Gateways, consider moving to AWS Cloud WAN when:
 
-- You need centralized segmentation policies that apply consistently across your network, and managing individual Transit Gateway route tables has become error-prone.
-- Your organization is scaling to dozens or hundreds of accounts and manual route management is slowing teams down.
-- You want policy-driven attachment acceptance to remove the networking team as a bottleneck for attachment onboarding.
-- You operate Transit Gateways in multiple Regions and managing inter-Region routing has become complex.
+* You need centralized segmentation policies that apply consistently across your network, and managing individual Transit Gateway route tables has become error-prone.
+* Your organization is scaling to dozens or hundreds of accounts and manual route management is slowing teams down.
+* You want policy-driven attachment acceptance to remove the networking team as a bottleneck for attachment onboarding.
+* You operate Transit Gateways in multiple Regions and managing inter-Region routing has become complex.
 
 #### Migrating from Transit Gateway
 
@@ -162,12 +162,12 @@ AWS Cloud WAN integrates directly with existing Transit Gateway deployments thro
 4. Gradually move VPC attachments from Transit Gateway to AWS Cloud WAN. You can create the core network attachment, shift traffic to the new core network attachment, and remove the Transit Gateway attachment when you validate the traffic.
 5. Decommission Transit Gateways as they become empty.
 
-This approach avoids a disruptive cutover and lets you validate the new network behavior with non-critical workloads first. There is no urgency to migrate from a working Transit Gateway setup. AWS Cloud WAN peers with existing Transit Gateways, so you can adopt it at your own pace.
+This approach avoids a disruptive one-step migration and lets you validate the new network behavior with non-critical workloads first. There is no urgency to migrate from a working Transit Gateway setup. AWS Cloud WAN peers with existing Transit Gateways, so you can adopt it at your own pace.
 
 ### Combining AWS Cloud WAN with other Networking services
 
 | Combination | AWS Cloud WAN handles | Other service handles |
-|---|---|---|
+| --- | --- | --- |
 | **AWS Cloud WAN + VPC Lattice** | Network backbone and segmentation | Service-to-service (HTTP/HTTPS/gRPC) communication with IAM-based auth policies |
 | **AWS Cloud WAN + VPC Resources** | Network backbone and segmentation | Private TCP access to specific resources (databases, on-prem endpoints) without requiring network-level routing between consumer and provider VPCs |
 | **AWS Cloud WAN + PrivateLink** | Inter-VPC routing | Private access to AWS services (gateway/interface endpoints) |
@@ -178,7 +178,7 @@ This approach avoids a disruptive cutover and lets you validate the new network 
 
 <div class="grid cards" markdown>
 
--   :material-file-document: **AWS Cloud WAN documentation**
+*   :material-file-document: **AWS Cloud WAN documentation**
 
     ---
 
@@ -186,7 +186,7 @@ This approach avoids a disruptive cutover and lets you validate the new network 
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc/latest/cloudwan/what-is-cloudwan.html)
 
--   :material-github: **AWS Cloud WAN blueprints**
+*   :material-github: **AWS Cloud WAN blueprints**
 
     ---
 
@@ -194,7 +194,7 @@ This approach avoids a disruptive cutover and lets you validate the new network 
 
     [:octicons-arrow-right-24: GitHub repository](https://github.com/aws-samples/aws-cloud-wan-blueprints)
 
--   :material-school: **AWS Cloud WAN workshop**
+*   :material-school: **AWS Cloud WAN workshop**
 
     ---
 
@@ -202,7 +202,7 @@ This approach avoids a disruptive cutover and lets you validate the new network 
 
     [:octicons-arrow-right-24: Workshop](https://catalog.workshops.aws/cloudwan/en-US)
 
--   :material-post: **AWS Cloud WAN blog posts**
+*   :material-post: **AWS Cloud WAN blog posts**
 
     ---
 
@@ -210,7 +210,7 @@ This approach avoids a disruptive cutover and lets you validate the new network 
 
     [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/aws-cloud-wan/)
 
--   :material-domain: **Customer success stories**
+*   :material-domain: **Customer success stories**
 
     ---
 
@@ -220,48 +220,47 @@ This approach avoids a disruptive cutover and lets you validate the new network 
 
 </div>
 
-
-## Application-Layer service c ommunication with Amazon VPC Lattice
+## Application-layer service communication with Amazon VPC Lattice
 
 [Amazon VPC Lattice](https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html) operates at the application layer, handling service-to-service communication without requiring you to manage the underlying network plumbing. VPC Lattice abstracts away VPC boundaries, letting services communicate across VPCs and accounts through a managed application networking layer. It operates independently of your network topology.
 
-This section focuses on VPC Lattice **services**: the HTTP, HTTPS, and gRPC workloads your teams build and expose to each other. For private access to network resources such as databases, on-premises endpoints, or third-party TCP services, see the [VPC Resources](#private-resource-access-vpc-lattice-vpc-resources) section that follows. Both capabilities are part of VPC Lattice and share the same service network construct, which lets you combine them when needed.
+This section focuses on VPC Lattice **services**: the HTTP, HTTPS, and gRPC workloads your teams build and expose to each other. For private access to network resources such as databases, on-premises endpoints, or third-party TCP services, see the [VPC Resources](#private-resource-access-with-vpc-lattice-vpc-resources) section that follows. Both capabilities are part of VPC Lattice and share the same service network construct, which lets you combine them when needed.
 
 **Key capabilities**:
 
 <div class="grid cards" markdown>
 
--   :material-swap-horizontal: **Service networks**
+*   :material-swap-horizontal: **Service networks**
 
     ---
 
     Logical groupings that enable communication between associated services and VPCs. Applications within a service network can discover and communicate with each other.
 
--   :material-shield-lock: **IAM auth policies**
+*   :material-shield-lock: **IAM auth policies**
 
     ---
 
     Identity-based access control at the service level. Define which principals (IAM roles, accounts, organizations) can invoke which services, regardless of network topology.
 
--   :material-scale-balance: **Traffic management**
+*   :material-scale-balance: **Traffic management**
 
     ---
 
-    Weighted routing across target groups for canary deployments, blue/green rollouts, and gradual migrations across compute types (EC2, ECS, EKS, Lambda, ALB).
+    Weighted routing across target groups for canary deployments, blue/green releases, and gradual migrations across compute types (EC2, ECS, EKS, Lambda, ALB).
 
--   :material-account-multiple: **Cross-account sharing**
+*   :material-account-multiple: **Cross-account sharing**
 
     ---
 
     Share VPC Lattice service networks or services via AWS RAM with specific accounts or your entire organization. No CIDR coordination required between accounts.
 
--   :material-protocol: **HTTP, HTTPS, and gRPC**
+*   :material-protocol: **HTTP, HTTPS, and gRPC**
 
     ---
 
-    Listeners for HTTP, HTTPS, and gRPC services. Services define their protocol, port, and routing rules; VPC Lattice handles the connectivity. For TCP-only workloads like databases, use [VPC Resources](#private-resource-access-vpc-lattice-vpc-resources) instead.
+    Listeners for HTTP, HTTPS, and gRPC services. Services define their protocol, port, and routing rules; VPC Lattice handles the connectivity. For TCP-only workloads like databases, use [VPC Resources](#private-resource-access-with-vpc-lattice-vpc-resources) instead.
 
--   :material-ip-network: **Dual-stack support**
+*   :material-ip-network: **Dual-stack support**
 
     ---
 
@@ -293,8 +292,8 @@ A key piece of flexibility: a VPC Lattice **service or resource configuration ca
 
 Two anti-patterns to avoid:
 
-- **A single organization-wide service network for everything**. Every service and resource ends up behind one auth policy, one set of access logs, and one failure domain. Ownership blurs and misconfigurations have a broad blast radius.
-- **One service network per consumer VPC or per consuming application**. This inverts the association model. If every provider publishes a dedicated service network per consumer, consumers cannot reach multiple providers at once. The exception is when the service network lives in the **consumer's own account**, aggregating resources shared to them from multiple providers behind a single association the consumer owns.
+* **A single organization-wide service network for everything**. Every service and resource ends up behind one auth policy, one set of access logs, and one failure domain. Ownership blurs and misconfigurations have a broad blast radius.
+* **One service network per consumer VPC or per consuming application**. This inverts the association model. If every provider publishes a dedicated service network per consumer, consumers cannot reach multiple providers at once. The exception is when the service network lives in the **consumer's own account**, aggregating resources shared to them from multiple providers behind a single association the consumer owns.
 
 #### Enable auth policies from day one
 
@@ -308,9 +307,9 @@ Retrofitting auth policies onto services deployed with no policy at all is harde
 
 VPC Lattice services support weighted routing to target groups, which lets you shift traffic gradually between versions of a service or between compute types. This is useful for:
 
-- Canary deployments: send 5% of traffic to a new version, monitor, then increase.
-- Compute migrations: gradually shift traffic from EC2 to ECS or Lambda without a cutover.
-- In-place upgrades: run old and new versions side by side, shifting traffic as confidence grows.
+* Canary deployments: send 5% of traffic to a new version, monitor, then increase.
+* Compute migrations: gradually shift traffic from EC2 to ECS or Lambda without a one-step switch.
+* In-place upgrades: run old and new versions side by side, shifting traffic as confidence grows.
 
 Weighted routing works across target types, so you can route to a mix of EC2 instances, ECS tasks, EKS pods, and Lambda functions within the same service.
 
@@ -334,12 +333,12 @@ VPC Lattice is well suited for any new service-to-service communication pattern 
 
 Consider VPC Lattice for services when:
 
-- Application teams need to expose or consume HTTP/HTTPS/gRPC services across VPC and account boundaries without filing network change requests.
-- You want identity-based access control (IAM auth policies) for service communication instead of managing security groups and NACLs per connection.
-- You're running mixed compute (EC2, ECS, EKS, Lambda) and need a unified way to route traffic across target types.
-- You want built-in traffic management (weighted routing, health checks) without deploying additional load balancers.
+* Application teams need to expose or consume HTTP/HTTPS/gRPC services across VPC and account boundaries without filing network change requests.
+* You want identity-based access control (IAM auth policies) for service communication instead of managing security groups and NACLs per connection.
+* You're running mixed compute (EC2, ECS, EKS, Lambda) and need a unified way to route traffic across target types.
+* You want built-in traffic management (weighted routing, health checks) without deploying additional load balancers.
 
-For TCP-only workloads (databases, message brokers, legacy protocols, on-premises resources), use [VPC Resources](#private-resource-access-vpc-lattice-vpc-resources) instead. Both capabilities can live in the same service network.
+For TCP-only workloads (databases, message brokers, legacy protocols, on-premises resources), use [VPC Resources](#private-resource-access-with-vpc-lattice-vpc-resources) instead. Both capabilities can live in the same service network.
 
 #### Onboarding services from existing connectivity patterns
 
@@ -354,17 +353,17 @@ In all cases, VPC Lattice's weighted routing makes the transition safer. You can
 ### Combining VPC Lattice with other Networking services
 
 | Combination | VPC Lattice handles | Other service handles |
-|---|---|---|
+| --- | --- | --- |
 | **VPC Lattice + VPC Resources** | Service-to-service communication (HTTP/HTTPS/gRPC) with auth policies and traffic management | Private TCP access to resources (databases, on-prem endpoints) sharing the same service network |
 | **VPC Lattice + AWS Cloud WAN** | Service discovery, auth policies, and traffic management at the application layer | Network backbone, segmentation, and global routing |
 | **VPC Lattice + Transit Gateway** | Application-layer features (auth, weighted routing, access logs) for service communication | IP-level routing between VPCs |
-| **VPC Lattice + Interface VPC endpoint** | Service-to-service communication between your own workloads and 3rd-parties | Private access to AWS services and 3rd-parties (if not yet onboarded to VPC Lattice)  |
+| **VPC Lattice + Interface VPC endpoint** | Service-to-service communication between your own workloads and 3rd-parties | Private access to AWS services and 3rd-parties (if not yet onboarded to VPC Lattice) |
 
 ### Documentation
 
 <div class="grid cards" markdown>
 
--   :material-file-document: **Amazon VPC Lattice documentation**
+*   :material-file-document: **Amazon VPC Lattice documentation**
 
     ---
 
@@ -372,7 +371,7 @@ In all cases, VPC Lattice's weighted routing makes the transition safer. You can
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html)
 
--   :material-github: **Amazon VPC Lattice blueprints**
+*   :material-github: **Amazon VPC Lattice blueprints**
 
     ---
 
@@ -380,7 +379,7 @@ In all cases, VPC Lattice's weighted routing makes the transition safer. You can
 
     [:octicons-arrow-right-24: GitHub repository](https://github.com/aws-samples/amazon-vpc-lattice-blueprints)
 
--   :material-school: **Amazon VPC Lattice workshop**
+*   :material-school: **Amazon VPC Lattice workshop**
 
     ---
 
@@ -388,7 +387,7 @@ In all cases, VPC Lattice's weighted routing makes the transition safer. You can
 
     [:octicons-arrow-right-24: Workshop](https://catalog.workshops.aws/vpc-lattice/en-US)
 
--   :material-post: **Amazon VPC Lattice blog posts**
+*   :material-post: **Amazon VPC Lattice blog posts**
 
     ---
 
@@ -396,7 +395,7 @@ In all cases, VPC Lattice's weighted routing makes the transition safer. You can
 
     [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-vpc-lattice/)
 
--   :material-domain: **Customer success stories**
+*   :material-domain: **Customer success stories**
 
     ---
 
@@ -416,49 +415,49 @@ VPC Resources address a common pain point: exposing a managed database, a legacy
 
 <div class="grid cards" markdown>
 
--   :material-database-lock: **Resource configurations**
+*   :material-database-lock: **Resource configurations**
 
     ---
 
     Represent a resource (or group of resources) by IP address, domain name, or an ARN (for example, an RDS DB instance). Consumers reach the resource by the custom domain name you assign, not by its actual IP.
 
--   :material-gate: **Resource gateway**
+*   :material-gate: **Resource gateway**
 
     ---
 
     An ENI-based ingress point in the provider VPC, spanning multiple AZs. All consumer traffic lands on the resource gateway and is forwarded to the backend resource as if it were local traffic. Acts as the boundary where VPC Lattice hands traffic off to your VPC.
 
--   :material-account-multiple: **Service network or direct access**
+*   :material-account-multiple: **Service network or direct access**
 
     ---
 
     Associate resource configurations with a service network (the recommended pattern at scale) or expose them through a standalone resource VPC endpoint for direct, per-consumer access without a service network.
 
--   :material-share-variant: **Cross-account sharing via RAM**
+*   :material-share-variant: **Cross-account sharing via RAM**
 
     ---
 
     Resource configurations and service networks are shared through AWS Resource Access Manager, so provider teams control what they publish and consumer teams associate their VPCs on their own timeline. No CIDR coordination required.
 
--   :material-arrow-right-bold: **Unidirectional TCP access**
+*   :material-arrow-right-bold: **Unidirectional TCP access**
 
     ---
 
     Consumers initiate connections to the resource and receive responses on the same connection; the provider cannot initiate new connections back to consumer VPCs.
 
--   :material-swap-horizontal: **Overlapping CIDRs supported**
+*   :material-swap-horizontal: **Overlapping CIDRs supported**
 
     ---
 
     Because traffic is NATed through the resource gateway's IPs, consumer and provider VPCs can have overlapping CIDR blocks. This is a major operational advantage compared to peering / Transit Gateway / AWS Cloud WAN.
 
--   :material-lan-connect: **Works with on-premises and third parties**
+*   :material-lan-connect: **Works with on-premises and third parties**
 
     ---
 
     A resource configuration can point to an IP address or DNS name reachable from the provider VPC, including on-premises resources accessible via Direct Connect or VPN, and third-party SaaS endpoints.
 
--   :material-ip-network: **Dual-stack support**
+*   :material-ip-network: **Dual-stack support**
 
     ---
 
@@ -472,8 +471,8 @@ Like VPC Lattice services, VPC Resources operate independently of your network t
 
 This is particularly valuable in two common situations:
 
-- **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. Peering and Transit Gateway both require non-overlapping CIDRs; VPC Resources do not.
-- **Least-privilege exposure**: You want to expose exactly one database or one endpoint, not connect two entire networks. A resource configuration is a single, explicit entry point, which is easier to reason about than a route table that connects whole CIDR ranges.
+* **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. Peering and Transit Gateway both require non-overlapping CIDRs; VPC Resources do not.
+* **Least-privilege exposure**: You want to expose exactly one database or one endpoint, not connect two entire networks. A resource configuration is a single, explicit entry point, which is easier to reason about than a route table that connects whole CIDR ranges.
 
 ### VPC Resources Best Practices
 
@@ -517,20 +516,20 @@ VPC Resources are the right choice for any pattern where a small number of provi
 
 Consider VPC Resources when:
 
-- You need to give multiple consumer VPCs or accounts private access to a specific database, cache, message broker, or other TCP endpoint.
-- You want to expose an on-premises resource (reachable through Direct Connect or VPN in the provider VPC) to AWS consumers without extending the underlying hybrid connectivity to every consumer VPC.
-- Consumer and provider VPCs have overlapping CIDRs, or you expect they might in the future, and you want to avoid the IP address management burden.
-- You want unidirectional access (consumer to resource) without opening a bidirectional network-level path.
-- You need access logs for TCP resources, which PrivateLink endpoint services don't provide natively.
+* You need to give multiple consumer VPCs or accounts private access to a specific database, cache, message broker, or other TCP endpoint.
+* You want to expose an on-premises resource (reachable through Direct Connect or VPN in the provider VPC) to AWS consumers without extending the underlying hybrid connectivity to every consumer VPC.
+* Consumer and provider VPCs have overlapping CIDRs, or you expect they might in the future, and you want to avoid the IP address management burden.
+* You want unidirectional access (consumer to resource) without opening a bidirectional network-level path.
+* You need access logs for TCP resources, which PrivateLink endpoint services don't provide natively.
 
-For HTTP/HTTPS/gRPC services with routing rules, weighted deployments, and multiple compute backends, use [VPC Lattice services](#application-layer-service-communication-amazon-vpc-lattice) instead. Both capabilities can share a single service network.
+For HTTP/HTTPS/gRPC services with routing rules, weighted deployments, and multiple compute backends, use [VPC Lattice services](#application-layer-service-communication-with-amazon-vpc-lattice) instead. Both capabilities can share a single service network.
 
 #### Migrating from PrivateLink endpoint services to VPC resources
 
 Many teams today expose TCP resources through a PrivateLink endpoint service backed by an NLB in front of the resource. VPC Resources address two limitations of that pattern:
 
-- **Dynamic-IP backends**: resources whose IPs change, such as RDS failovers, Aurora cluster endpoints, or any clustered TCP application, are awkward to keep behind an NLB. A resource configuration can point directly to an RDS ARN or a DNS name and follow the backend as it moves, without an NLB-and-target-group dance.
-- **Scale-out consumption**: a PrivateLink endpoint service requires each consumer VPC to create its own interface endpoint. A resource configuration associated with a service network is consumed through the service network association consumers already have (or create once), so adding new consumers does not require per-VPC endpoint configuration.
+* **Dynamic-IP backends**: resources whose IPs change, such as RDS failover events, Aurora cluster endpoints, or any clustered TCP application, are awkward to keep behind an NLB. A resource configuration can point directly to an RDS ARN or a DNS name and follow the backend as it moves, without an NLB-and-target-group dance.
+* **Scale-out consumption**: a PrivateLink endpoint service requires each consumer VPC to create its own interface endpoint. A resource configuration associated with a service network is consumed through the service network association consumers already have (or create once), so adding new consumers does not require per-VPC endpoint configuration.
 
 Migration path:
 
@@ -543,12 +542,12 @@ Migration path:
 
 Services and resources live in the same service network construct, and a consumer VPC that associates with a service network can reach both through a single association. This makes them natural partners.
 
-**Typical pattern: a business domain exposes both**
+#### Typical pattern: a business domain exposes both
 
 Consider a `payments` service network that contains:
 
-- Several VPC Lattice **services** (HTTP/HTTPS APIs backed by ECS and Lambda): the `payments-api`, `refunds-api`, and `reporting-api`.
-- Several VPC Lattice **resources** (TCP endpoints): the `payments-db` (RDS), a `payments-cache` (ElastiCache), and an on-premises `fraud-detection` system accessible through Direct Connect in the provider VPC.
+* Several VPC Lattice **services** (HTTP/HTTPS APIs backed by ECS and Lambda): the `payments-api`, `refunds-api`, and `reporting-api`.
+* Several VPC Lattice **resources** (TCP endpoints): the `payments-db` (RDS), a `payments-cache` (ElastiCache), and an on-premises `fraud-detection` system accessible through Direct Connect in the provider VPC.
 
 A consumer VPC in a different account needs to:
 
@@ -561,7 +560,7 @@ With a single service network association, the consumer reaches all three. The c
 ### Combining VPC Resources with other Networking services
 
 | Combination | VPC Resources handle | Other service handles |
-|---|---|---|
+| --- | --- | --- |
 | **VPC Resources + VPC Lattice services** | Private TCP access to databases, caches, on-prem endpoints in the same service network | HTTP/HTTPS/gRPC service communication with auth policies and traffic management |
 | **VPC Resources + AWS Cloud WAN** | Targeted private access to specific resources, even across overlapping CIDRs | Inter-VPC routing for general traffic, segmentation, and hybrid connectivity |
 | **VPC Resources + Transit Gateway** | Exposure of specific resources to consumers without requiring TGW attachments on every consumer VPC | Hub-and-spoke routing for VPCs that need full network-level connectivity |
@@ -572,7 +571,7 @@ With a single service network association, the consumer reaches all three. The c
 
 <div class="grid cards" markdown>
 
--   :material-file-document: **Resource configurations documentation**
+*   :material-file-document: **Resource configurations documentation**
 
     ---
 
@@ -580,7 +579,7 @@ With a single service network association, the consumer reaches all three. The c
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/vpc-resources.html)
 
--   :material-file-document-outline: **Resource gateways documentation**
+*   :material-file-document-outline: **Resource gateways documentation**
 
     ---
 
@@ -588,7 +587,7 @@ With a single service network association, the consumer reaches all three. The c
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-gateway.html)
 
--   :material-school: **Amazon VPC Lattice workshop**
+*   :material-school: **Amazon VPC Lattice workshop**
 
     ---
 
@@ -596,7 +595,7 @@ With a single service network association, the consumer reaches all three. The c
 
     [:octicons-arrow-right-24: Workshop](https://catalog.workshops.aws/vpc-lattice/en-US)
 
--   :material-post: **Amazon VPC Lattice blog posts**
+*   :material-post: **Amazon VPC Lattice blog posts**
 
     ---
 
@@ -614,37 +613,37 @@ With a single service network association, the consumer reaches all three. The c
 
 <div class="grid cards" markdown>
 
--   :material-hub: **Regional hub**
+*   :material-hub: **Regional hub**
 
     ---
 
     A single Transit Gateway per Region interconnects up to 5,000 attachments (VPCs, VPN, Direct Connect, peering, Connect).
 
--   :material-routes: **Route tables and segmentation**
+*   :material-routes: **Route tables and segmentation**
 
     ---
 
     Multiple route tables per Transit Gateway let you carve the network into isolated domains (for example, production, development, shared services) and control which attachments reach which others.
 
--   :material-earth: **Inter-Region peering**
+*   :material-earth: **Inter-Region peering**
 
     ---
 
     Transit Gateways in different Regions peer over the AWS global backbone, with static routes controlling what propagates across the peering.
 
--   :material-account-multiple: **Multi-account sharing via RAM**
+*   :material-account-multiple: **Multi-account sharing via RAM**
 
     ---
 
     Share a Transit Gateway across accounts or whole organizational units with AWS Resource Access Manager. Each account attaches its own VPCs while route management stays centralized.
 
--   :material-lan-connect: **VPN and Direct Connect integration**
+*   :material-lan-connect: **VPN and Direct Connect integration**
 
     ---
 
     Terminate Site-to-Site VPN and Direct Connect gateways directly on the Transit Gateway, making hybrid connectivity reachable by every attached VPC through the same hub.
 
--   :material-ip-network: **Dual-stack support**
+*   :material-ip-network: **Dual-stack support**
 
     ---
 
@@ -684,21 +683,21 @@ Transit Gateway is a good fit for organizations that need regional hub-and-spoke
 
 Consider Transit Gateway when:
 
-- You're connecting VPCs within a single Region or a small number of Regions.
-- You need hub-and-spoke routing with segmentation via route tables.
-- You want a proven service with a large ecosystem of reference architectures and existing tooling.
-- You have VPN or Direct Connect hybrid connectivity to terminate on the same hub as your VPC attachments.
+* You're connecting VPCs within a single Region or a small number of Regions.
+* You need hub-and-spoke routing with segmentation via route tables.
+* You want a proven service with a large ecosystem of reference architectures and existing tooling.
+* You have VPN or Direct Connect hybrid connectivity to terminate on the same hub as your VPC attachments.
 
 #### When to start looking at AWS Cloud WAN
 
 Transit Gateway continues to be fully supported and receives new features. There is no urgency to migrate from a working setup. Start looking at AWS Cloud WAN when multi-Region management complexity grows, when you need policy-driven segmentation applied consistently across Regions, or when managing individual Transit Gateways becomes operationally burdensome.
 
-Cloud WAN peers with existing Transit Gateways, so adoption is incremental rather than a cutover. See [Migrating from Transit Gateway](#migrating-from-transit-gateway) in the Cloud WAN section for the full walkthrough.
+Cloud WAN peers with existing Transit Gateways, so adoption is incremental rather than a one-step switch. See [Migrating from Transit Gateway](#migrating-from-transit-gateway) in the Cloud WAN section for the full walkthrough.
 
 ### Combining AWS Transit Gateway with other Networking services
 
 | Combination | Transit Gateway handles | Other service handles |
-|---|---|---|
+| --- | --- | --- |
 | **Transit Gateway + AWS Cloud WAN** | Regional hub-and-spoke routing during migration (both run side by side) | Global, policy-driven network backbone |
 | **Transit Gateway + VPC Lattice** | IP-level routing between VPCs | Application-layer service-to-service communication (HTTP/HTTPS/gRPC) with auth policies and traffic management |
 | **Transit Gateway + VPC Resources** | Hub-and-spoke routing for general traffic | Targeted private access to specific TCP resources without requiring a Transit Gateway attachment on every consumer VPC |
@@ -709,7 +708,7 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 
 <div class="grid cards" markdown>
 
--   :material-file-document: **AWS Transit Gateway documentation**
+*   :material-file-document: **AWS Transit Gateway documentation**
 
     ---
 
@@ -717,7 +716,7 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html)
 
--   :material-file-document-outline: **Design best practices**
+*   :material-file-document-outline: **Design best practices**
 
     ---
 
@@ -725,7 +724,7 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html)
 
--   :material-post: **AWS Transit Gateway blog posts**
+*   :material-post: **AWS Transit Gateway blog posts**
 
     ---
 
@@ -733,7 +732,7 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 
     [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/aws-transit-gateway/)
 
--   :material-currency-usd: **Transit Gateway pricing**
+*   :material-currency-usd: **Transit Gateway pricing**
 
     ---
 
@@ -751,37 +750,37 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 
 <div class="grid cards" markdown>
 
--   :material-ethernet: **Interface endpoints**
+*   :material-ethernet: **Interface endpoints**
 
     ---
 
     ENI-based endpoints in your VPC subnets that provide private access to AWS services, third-party SaaS from AWS Marketplace, or your own services hosted in other VPCs and accounts. Each endpoint gets a private IP inside your VPC.
 
--   :material-gate-open: **Gateway endpoints**
+*   :material-gate-open: **Gateway endpoints**
 
     ---
 
     Route table entries that direct traffic to Amazon S3 or Amazon DynamoDB through the AWS network without an ENI. Free to create, and they eliminate NAT Gateway data processing charges for those services.
 
--   :material-server-network: **Endpoint services**
+*   :material-server-network: **Endpoint services**
 
     ---
 
     Expose your own services privately to other accounts by fronting them with a Network Load Balancer or Gateway Load Balancer. Consumers create interface endpoints in their VPCs to reach the service.
 
--   :material-shield-lock: **Endpoint policies**
+*   :material-shield-lock: **Endpoint policies**
 
     ---
 
     Resource-based policies that restrict which IAM principals, resources, or actions are accessible through each endpoint, providing a layer of defense beyond security groups.
 
--   :material-dns: **Private DNS**
+*   :material-dns: **Private DNS**
 
     ---
 
     Interface endpoints can override public DNS names for AWS services, making the private path transparent to applications without code changes.
 
--   :material-ip-network: **Dual-stack support**
+*   :material-ip-network: **Dual-stack support**
 
     ---
 
@@ -794,7 +793,7 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 VPC Lattice addresses many of the same use cases as PrivateLink endpoint services (cross-VPC and cross-account service communication), but splits them across two capabilities with higher-level abstractions. VPC Lattice **services** target HTTP, HTTPS, and gRPC workloads. VPC Lattice **VPC Resources** target TCP resources like databases and on-premises endpoints.
 
 | Aspect | PrivateLink endpoint services | VPC Lattice services | VPC Lattice VPC Resources |
-|--------|-------------------------------|----------------------|---------------------------|
+| -------- | ------------------------------- | ---------------------- | --------------------------- |
 | Primary use case | Any TCP protocol via NLB | HTTP, HTTPS, gRPC services | TCP resources (databases, on-prem endpoints, third-party IPs/DNS) |
 | Abstraction level | Network (ENI-based) | Application (service-based) | Resource (configuration + resource gateway) |
 | Service discovery | DNS per endpoint | Managed service directory | Custom domain name per resource |
@@ -824,23 +823,23 @@ Create endpoint ENIs in at least two AZs for high availability. An endpoint conf
 
 #### Use endpoint policies for defense in depth
 
-Interface and gateway endpoints support resource-based policies that restrict which principals, resources, or actions are accessible through the endpoint. Use them to scope access even when IAM policies on the caller's side would in principle be sufficient. A common pattern is restricting an S3 gateway endpoint to buckets in your own organization, which blocks accidental or malicious exfiltration to third-party buckets.
+Interface and gateway endpoints support resource-based policies that restrict which principals, resources, or actions are accessible through the endpoint. Use them to scope access even when IAM policies on the caller's side would in principle be sufficient. A common pattern is restricting an S3 gateway endpoint to buckets in your own organization, which blocks accidental or malicious data transfers to third-party buckets.
 
 ### When to use AWS PrivateLink
 
 AWS PrivateLink is relevant from day one in any AWS environment:
 
-- **Gateway endpoints for Amazon S3 and DynamoDB**: a baseline for every VPC. They're free and they eliminate NAT Gateway data processing for those services.
-- **Interface endpoints for AWS services**: as soon as you have private subnets that need to reach AWS APIs without NAT Gateway.
-- **Interface endpoints for third-party SaaS**: when a Marketplace provider exposes its service through PrivateLink and you want private access from your VPCs.
-- **Endpoint services (exposing your own services)**: when you need private access to a specific service for a known set of consumer accounts, the service is backed by an NLB or GWLB, and you need ENI-level integration in the consumer VPC.
+* **Gateway endpoints for Amazon S3 and DynamoDB**: a baseline for every VPC. They're free and they eliminate NAT Gateway data processing for those services.
+* **Interface endpoints for AWS services**: as soon as you have private subnets that need to reach AWS APIs without NAT Gateway.
+* **Interface endpoints for third-party SaaS**: when a Marketplace provider exposes its service through PrivateLink and you want private access from your VPCs.
+* **Endpoint services (exposing your own services)**: when you need private access to a specific service for a known set of consumer accounts, the service is backed by an NLB or GWLB, and you need ENI-level integration in the consumer VPC.
 
 For new cross-account service-to-service patterns, evaluate VPC Lattice first. For HTTP/HTTPS/gRPC services, VPC Lattice services provide auth policies, traffic management, and multi-target support that PrivateLink endpoint services don't offer natively. For private access to TCP resources, evaluate VPC Resources first to avoid the need to run and maintain an NLB in front of the resource and to have access logs at the service network level.
 
 ### Combining AWS PrivateLink with other Networking services
 
 | Combination | AWS PrivateLink handles | Other service handles |
-|---|---|---|
+| --- | --- | --- |
 | **AWS PrivateLink + AWS Cloud WAN** | Private access to AWS services and third-party SaaS inside each VPC | Inter-VPC routing and segmentation |
 | **AWS PrivateLink + Transit Gateway** | Private access to AWS services and exposing shared internal services; the most widely deployed combination in production today | Hub-and-spoke routing between VPCs |
 | **AWS PrivateLink + VPC Lattice** | AWS service access (gateway and interface endpoints) | Your own service-to-service communication (HTTP/HTTPS/gRPC via VPC Lattice services, TCP via VPC Resources) |
@@ -850,7 +849,7 @@ For new cross-account service-to-service patterns, evaluate VPC Lattice first. F
 
 <div class="grid cards" markdown>
 
--   :material-file-document: **AWS PrivateLink documentation**
+*   :material-file-document: **AWS PrivateLink documentation**
 
     ---
 
@@ -858,7 +857,7 @@ For new cross-account service-to-service patterns, evaluate VPC Lattice first. F
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html)
 
--   :material-post: **AWS PrivateLink blog posts**
+*   :material-post: **AWS PrivateLink blog posts**
 
     ---
 
@@ -866,7 +865,7 @@ For new cross-account service-to-service patterns, evaluate VPC Lattice first. F
 
     [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/aws-privatelink/)
 
--   :material-currency-usd: **AWS PrivateLink pricing**
+*   :material-currency-usd: **AWS PrivateLink pricing**
 
     ---
 
@@ -876,7 +875,6 @@ For new cross-account service-to-service patterns, evaluate VPC Lattice first. F
 
 </div>
 
-
 ## Targeted point-to-point connectivity with VPC Peering
 
 [VPC Peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html) creates a direct network connection between two VPCs, letting traffic flow over private IPv4 or IPv6 addresses as if both VPCs were part of the same network. It's the simplest inter-VPC connectivity option and the right choice for specific, justified pairs, but it should not be your default connectivity strategy. The number of peering connections grows quadratically with the number of VPCs, and peering is non-transitive, so it doesn't scale as a primary connectivity model.
@@ -885,49 +883,49 @@ For new cross-account service-to-service patterns, evaluate VPC Lattice first. F
 
 <div class="grid cards" markdown>
 
--   :material-arrow-left-right: **Direct VPC-to-VPC connectivity**
+*   :material-arrow-left-right: **Direct VPC-to-VPC connectivity**
 
     ---
 
     A one-to-one connection between two VPCs in the same account, different accounts, or different Regions. Uses existing VPC infrastructure, no additional gateway or appliance.
 
--   :material-speedometer: **No bandwidth bottleneck**
+*   :material-speedometer: **No bandwidth bottleneck**
 
     ---
 
     Traffic stays on the AWS backbone with no intermediate hop and no per-connection bandwidth limit beyond what the instances themselves can drive. Good for workloads that push the instance network ceiling.
 
--   :material-cash-off: **No hourly or data processing charge**
+*   :material-cash-off: **No hourly or data processing charge**
 
     ---
 
     Same-Region peering has no hourly connection fee and no data processing charge beyond standard cross-AZ data transfer. Cross-Region peering only incurs inter-Region data transfer rates.
 
--   :material-earth: **Same-Region or cross-Region**
+*   :material-earth: **Same-Region or cross-Region**
 
     ---
 
     Peering works within a Region, across Regions, and across accounts. Cross-Region peering traffic stays on the AWS global backbone.
 
--   :material-link-variant-off: **Non-transitive**
+*   :material-link-variant-off: **Non-transitive**
 
     ---
 
     If VPC A peers with VPC B, and VPC B peers with VPC C, VPC A cannot reach VPC C through VPC B. Each pair that needs to communicate requires its own peering connection.
 
--   :material-ip-network-outline: **No CIDR overlap**
+*   :material-ip-network-outline: **No CIDR overlap**
 
     ---
 
     Peered VPCs cannot have overlapping CIDR blocks. This constrains peering as a general-purpose backbone in environments where CIDR overlap is hard to avoid.
 
--   :material-shield-account: **Security group referencing**
+*   :material-shield-account: **Security group referencing**
 
     ---
 
     Same-Region peering lets you reference security groups from the peer VPC in your rules, giving you identity-style access control without IP-based rules.
 
--   :material-ip-network: **Dual-stack support**
+*   :material-ip-network: **Dual-stack support**
 
     ---
 
@@ -967,17 +965,17 @@ If either VPC uses IPv6, configure IPv6 routes in the peering connection alongsi
 
 VPC Peering works well for a small number of specific, justified connections. It's the right choice when:
 
-- Two VPCs exchange large volumes of data and you want to avoid Transit Gateway or AWS Cloud WAN data processing charges.
-- You need the lowest possible latency between two specific VPCs, with no intermediate hop.
-- You have a simple topology with a handful of VPCs that won't grow into a mesh.
-- You're connecting a primary and disaster recovery VPC across Regions and don't want the operational overhead of Transit Gateway peering or AWS Cloud WAN for a single pair.
+* Two VPCs exchange large volumes of data and you want to avoid Transit Gateway or AWS Cloud WAN data processing charges.
+* You need the lowest possible latency between two specific VPCs, with no intermediate hop.
+* You have a simple topology with a handful of VPCs that won't grow into a mesh.
+* You're connecting a primary and disaster recovery VPC across Regions and don't want the operational overhead of Transit Gateway peering or AWS Cloud WAN for a single pair.
 
 Avoid building your connectivity strategy around VPC Peering if you expect to connect more than a few VPCs. The management overhead and lack of transitive routing make it impractical as a primary connectivity model, and most organizations that start with peering at scale end up migrating to Transit Gateway or AWS Cloud WAN.
 
 ### Combining VPC Peering with other Networking services
 
 | Combination | VPC Peering handles | Other service handles |
-|---|---|---|
+| --- | --- | --- |
 | **VPC Peering + AWS Cloud WAN** | Direct connectivity for specific VPC pairs (e.g., high-throughput database replication) to avoid data processing charges on the backbone | Primary network backbone with policy-driven segmentation |
 | **VPC Peering + Transit Gateway** | Direct connectivity for specific VPC pairs with high data transfer volumes, bypassing Transit Gateway data processing | Hub-and-spoke routing for the rest of the network |
 | **VPC Peering + VPC Lattice** | Direct IP-level traffic between the two peered VPCs | Service and resource communication through the VPC Lattice data plane, independent of the peering |
@@ -987,7 +985,7 @@ Avoid building your connectivity strategy around VPC Peering if you expect to co
 
 <div class="grid cards" markdown>
 
--   :material-file-document: **VPC Peering documentation**
+*   :material-file-document: **VPC Peering documentation**
 
     ---
 
@@ -995,7 +993,7 @@ Avoid building your connectivity strategy around VPC Peering if you expect to co
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html)
 
--   :material-file-document-outline: **Peering limitations**
+*   :material-file-document-outline: **Peering limitations**
 
     ---
 
