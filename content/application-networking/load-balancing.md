@@ -5,34 +5,48 @@
 
 Load balancing distributes traffic across multiple targets so that an application stays available, scales horizontally, and can absorb the failure of any individual target. AWS offers three managed load balancers under the Elastic Load Balancing umbrella, and they are not interchangeable: each one is built for a different traffic class and a different role in the architecture.
 
-This page covers the three load balancers as building blocks of an application architecture: what each one does, how to configure it well, when to choose one over the others, and how to combine them with other AWS services.
+This page covers the three Elastic Load Balancing services as building blocks of an application architecture: what each one does, how to configure it well, when to choose one over the others, and how to combine them with other AWS services.
+
+[Amazon VPC Lattice](https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html) services *also* load-balance traffic across targets, with managed health checks and weighted routing. The full treatment of VPC Lattice, including the load-balancing capabilities of its services, are covered in the [Service to Service](service-to-service.md) and [Container Mesh](container-mesh.md) pages, because VPC Lattice's value extends well beyond load balancing into cross-VPC and cross-account service discovery, IAM-based authentication, and service-to-service connectivity. This page focuses on the three Elastic Load Balancing services; references to VPC Lattice on this page are pointers to where it fits, not deep coverage.
 
 ``` mermaid
 graph TB
-    subgraph LB["AWS Elastic Load Balancing"]
+    subgraph LB["AWS managed load-balancing services"]
         direction TB
 
-        subgraph AppTraffic["Application traffic distribution"]
-            ALB["Application Load Balancer (ALB)<br/>L7 — HTTP, HTTPS, gRPC<br/>Content-based routing,<br/>TLS termination, mTLS, WAF"]
-            NLB["Network Load Balancer (NLB)<br/>L4 — TCP, UDP, TLS<br/>Ultra-high throughput,<br/>client IP preservation,<br/>static IPs per AZ"]
+        subgraph ELB["Elastic Load Balancing — covered on this page"]
+            direction TB
+
+            subgraph AppTraffic["Application traffic distribution"]
+                ALB["Application Load Balancer (ALB)<br/>L7 — HTTP, HTTPS, gRPC<br/>Content-based routing,<br/>TLS termination, mTLS, WAF"]
+                NLB["Network Load Balancer (NLB)<br/>L4 — TCP, UDP, TLS<br/>Ultra-high throughput,<br/>client IP preservation,<br/>static IPs per AZ"]
+            end
+
+            subgraph Inspection["Transparent inspection insertion"]
+                GWLB["Gateway Load Balancer (GWLB)<br/>L3 — encapsulated transparent insertion<br/>Third-party firewall, IDS/IPS,<br/>or DPI appliances"]
+            end
         end
 
-        subgraph Inspection["Transparent inspection insertion"]
-            GWLB["Gateway Load Balancer (GWLB)<br/>L3 — encapsulated transparent insertion<br/>Third-party firewall, IDS/IPS,<br/>or DPI appliances"]
+        subgraph Lattice["Application networking — covered in Service to Service and Container Mesh"]
+            VPCLattice["Amazon VPC Lattice services<br/>Service-to-service load balancing<br/>Cross-VPC and cross-account<br/>auth, discovery, weighted routing"]
         end
     end
 
     AppTraffic ~~~ Inspection
+    ELB ~~~ Lattice
 
     style LB fill:none,stroke:none
+    style ELB fill:none,stroke:#1f2937,stroke-width:2px,color:#1f2937
     style AppTraffic fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
     style Inspection fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Lattice fill:none,stroke:#9ca3af,stroke-width:2px,stroke-dasharray:3 5,color:#6b7280
     style ALB fill:#2563eb,stroke:#1e40af,color:#fff
     style NLB fill:#2563eb,stroke:#1e40af,color:#fff
     style GWLB fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style VPCLattice fill:#e5e7eb,stroke:#9ca3af,color:#374151
 ```
 
-Application Load Balancer (ALB) and Networking Load Balancer (NLB) distribute application traffic to targets. Gateway Load Balancer (GWLB) does something fundamentally different: it transparently inserts a fleet of third-party network appliances (firewalls, intrusion detection, deep packet inspection) into the data path. Treating GWLB as if it were a peer of ALB or NLB is the most common source of confusion; this page calls out that distinction explicitly.
+Application Load Balancer (ALB) and Network Load Balancer (NLB) distribute application traffic to targets. Gateway Load Balancer (GWLB) does something fundamentally different: it transparently inserts a fleet of third-party network appliances (firewalls, intrusion detection, deep packet inspection) into the data path. Treating GWLB as if it were a peer of ALB or NLB is the most common source of confusion; this page calls out that distinction explicitly. Amazon VPC Lattice is shown above as a reference because its services also load-balance traffic, but its primary scope is service-to-service application networking rather than ELB-style load balancing of a single workload — that's why it sits in a separate group on the diagram and gets its full treatment elsewhere in this section.
 
 ## Application Load Balancer (ALB)
 
