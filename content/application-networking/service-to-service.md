@@ -396,6 +396,51 @@ The two main patterns this enables:
 
 </div>
 
+## IPv6 for service-to-service communication
+
+Service-to-service traffic should be dual-stack from the start. All of the synchronous patterns on this page support IPv6, and adopting it for internal traffic removes NAT Gateway dependency (and its per-GB cost) for east-west communication.
+
+**IPv6 support across the service-to-service options:**
+
+| Component | IPv6 support | Notes |
+| --- | --- | --- |
+| **Amazon VPC Lattice** | Dual-stack (IPv4, IPv6, or both) | Services and target groups support dual-stack. Consumers can reach providers over IPv6 without NAT. |
+| **Application Load Balancer** | Dual-stack and IPv6-only listeners | Internal ALBs support dual-stack; backend targets can be IPv6. |
+| **Network Load Balancer** | Dual-stack and IPv6-only listeners | Internal NLBs support IPv6 targets for TCP/UDP/TLS. |
+| **Route 53 private hosted zones** | AAAA records | Alias records to dual-stack ALBs and VPC Lattice services resolve to IPv6 addresses for IPv6-capable consumers. |
+| **AWS PrivateLink** | Dual-stack interface endpoints | Interface VPC endpoints support IPv4 and IPv6 addressing. |
+| **Security groups** | Separate IPv4 and IPv6 rules | Security groups require explicit IPv6 rules — IPv4 rules do not apply to IPv6 traffic. |
+
+**Best practices for dual-stack service-to-service:**
+
+* **Configure VPC Lattice services as dual-stack** so that consumers in IPv6-only subnets can reach them without NAT64. This is especially relevant for EKS clusters running in IPv6 mode where pods have only IPv6 addresses.
+* **Add AAAA alias records alongside A records** in Route 53 private hosted zones for every internal service. IPv6-capable consumers will prefer the AAAA record automatically.
+* **Update security groups for both address families** on every service endpoint. A common failure: the ALB's security group allows `10.0.0.0/8` on port 443 but has no IPv6 rule, so IPv6 consumers get connection refused.
+* **Use IPv6 for east-west traffic to eliminate NAT Gateway costs.** Service-to-service calls between VPCs over VPC Lattice or peering don't need NAT when both sides are IPv6-capable. This removes the per-GB NAT Gateway processing charge from internal traffic paths.
+
+***Key insight:*** *IPv6 for service-to-service is primarily a cost optimization: it removes NAT Gateway from east-west traffic paths. The functionality is identical to IPv4 — the same auth policies, the same weighted routing, the same access logs. The difference is that IPv6 traffic between services doesn't incur NAT processing charges.*
+
+## Cost considerations for cross-VPC service access
+
+The choice between service-to-service connectivity options has significant cost implications that scale with traffic volume. The table below compares the cost model of each cross-VPC access pattern.
+
+| Pattern | Fixed cost | Per-GB cost | Cost scales with |
+| --- | --- | --- | --- |
+| **Amazon VPC Lattice** | No hourly charge for the service network or service | $0.025/GB data processed | Request volume and payload size |
+| **AWS PrivateLink endpoint services** | $0.01/hr per AZ per interface endpoint (~$7.20/month per AZ) | $0.01/GB data processed | Number of consumer VPCs × AZs, plus traffic volume |
+| **Transit Gateway + internal ALB/NLB** | $0.05/hr per TGW attachment (~$36/month per VPC) | $0.02/GB TGW data processing | Number of attached VPCs, plus all traffic through TGW (not just service traffic) |
+| **VPC Peering + internal ALB/NLB** | Free (no hourly charge, no data processing) | Standard cross-AZ charges only ($0.01/GB if cross-AZ) | Only cross-AZ traffic; same-AZ is free |
+| **VPC Lattice + IPv6 (no NAT)** | No hourly charge | $0.025/GB Lattice processing (no NAT processing) | Request volume; eliminates the $0.045/GB NAT Gateway charge on the consumer side |
+
+**When cost drives the decision:**
+
+* **Low traffic volume, many consumers**: VPC Lattice wins — no per-consumer fixed cost, and the per-GB rate is competitive.
+* **High traffic volume, few consumers**: VPC Peering + internal LB wins — zero data processing charges. The trade-off is managing peering connections and CIDR non-overlap.
+* **Moderate traffic, moderate consumers**: PrivateLink is cost-effective when consumer count is small (the per-AZ hourly charge is the dominant cost at low traffic).
+* **Already running Transit Gateway for other traffic**: The marginal cost of service-to-service over TGW is just the per-GB processing — the attachment cost is already paid. But if TGW exists only for service-to-service, VPC Lattice is cheaper.
+
+***Key insight:*** *The cheapest cross-VPC service access path depends on two variables: how many consumer VPCs and how much traffic. VPC Lattice's zero fixed cost makes it cheapest for many-consumer, moderate-traffic patterns. VPC Peering's zero processing cost makes it cheapest for high-traffic, few-consumer patterns. Transit Gateway's per-GB charge makes it the most expensive option for service-to-service specifically, but it's often already deployed for other connectivity needs.*
+
 ## Building your service-to-service stack
 
 Service-to-service architecture is the layer between connectivity (covered in the [Within AWS](../connectivity/within-aws.md) page) and application code. The patterns above can be assembled from individual AWS services or covered through Amazon VPC Lattice as a single managed surface; both shapes are valid, and many environments end up combining them per workload.

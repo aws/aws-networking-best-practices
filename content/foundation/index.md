@@ -1,74 +1,98 @@
 # Foundation
 
-This section covers the fundamental building blocks of AWS networking. Understanding these core concepts is essential before implementing connectivity, application networking, security, or observability solutions.
+This section covers the fundamental building blocks of AWS networking. Understanding these core concepts is essential before implementing connectivity, application networking, security, or observability solutions. Every service and pattern in the rest of this guide builds on the foundation described here.
 
-Fundamental concepts for AWS networking. This section covers core VPC concepts, IP addressing, and organizational structure that form the building blocks for all AWS network architectures.
+The foundation layer answers the questions that come before "how do I connect things?": how is your organization structured, where do your networks live, what address space do they use, and how is that address space governed. Getting these decisions right enables everything above them to work cleanly. Getting them wrong creates constraints that are expensive to fix later.
 
-## 1. AWS Organizations and Account Structure
+## 1. Before You Start
 
-**AWS Organizations** enables you to centrally manage and govern multiple AWS accounts. For networking, this is critical for establishing a structured approach to network architecture across your organization.
+Every VPC, route table, and Transit Gateway attachment lives inside an account, is governed by IAM policies, is subject to service quotas, and should be deployed through code. Getting these non-networking foundations right before you touch a single CIDR block prevents the class of problems that are hardest to fix later.
 
-**Key Concepts:**
+**Key topics:**
 
-*   **Organizational Units (OUs):** Logical groupings of accounts (e.g., Production, Development, Shared Services)
-*   **Service Control Policies (SCPs):** Enforce governance and compliance across accounts
-*   **Centralized Networking Account:** Dedicated account for managing shared networking resources like Transit Gateway and Direct Connect
+*   **Identity and Access Management (IAM)** — Cross-account roles, service-linked roles, SCPs, and condition keys for network resources
+*   **Infrastructure as Code** — CloudFormation, Terraform, and CDK for network resource management
+*   **Service Quotas** — Limits that gate deployment and must be planned around
+*   **Tagging Strategy** — Cost allocation, automation targeting, and policy enforcement
+*   **Well-Architected Framework** — Security, Reliability, and Cost Optimization pillars applied to networking
 
-***Best Practice:*** *Establish a dedicated networking account early to centralize connectivity and simplify management as you scale.*
+## 2. AWS Organizations and Account Structure
 
-## 2. The Isolated Foundation: Amazon VPC
+**AWS Organizations** is the governance layer that determines how network resources are shared, how security boundaries are enforced, and how teams operate independently without creating connectivity chaos. Without Organizations, every cross-account networking pattern requires manual trust relationships that don't scale.
 
-**Amazon Virtual Private Cloud (VPC)** is your own private, secure network space within AWS. It is logically isolated from all other networks in the AWS cloud.
+**Key concepts:**
 
-**What you control:** You define the IP address range (CIDR block) and configure all elements inside it, including subnets, route tables, and network gateways.
+*   **Organizational Units (OUs)** — Logical groupings that scope RAM shares, SCP enforcement, and attachment automation
+*   **Service Control Policies (SCPs)** — Guardrails that enforce network architecture, not just security
+*   **Centralized Networking Account** — Dedicated account for Transit Gateway, Direct Connect, Route 53 Resolver, and IPAM
+*   **Resource sharing via RAM** — Share networking resources at the OU level for automatic inheritance
 
-***Analogy:*** *Think of your VPC as your private, high-security building within the vast AWS campus.*
+***Best Practice:*** *Establish a dedicated networking account before any workload accounts. Every subsequent account will depend on shared networking resources, and retrofitting centralized networking is significantly harder than starting centralized.*
 
-## 3. Regions and Availability Zones
+## 3. Amazon VPC
 
-**AWS Regions** are separate geographic areas (e.g., us-east-1, eu-west-1). Each Region contains multiple **Availability Zones (AZs)**, which are isolated data centers with independent power, cooling, and networking.
+**Amazon Virtual Private Cloud (VPC)** is the foundational security boundary, the IP address domain, and the routing context that shapes every networking decision above it. Every compute resource, database, container, and Lambda function that needs network connectivity runs inside a VPC.
 
-**Why it matters:** Distributing resources across AZs protects your applications from data center failures and provides high availability.
+**Key decisions:**
 
-**Planning consideration:** Every subnet must reside entirely within a single AZ, so plan your subnet strategy with AZ distribution in mind.
+*   **VPC design pattern** — VPC per workload (most common), shared VPCs via RAM (centralized control), or multi-VPC per account
+*   **CIDR sizing** — Start with `/16` for production; never go smaller than `/20`
+*   **IPv6 adoption** — Enable dual-stack from day one on new VPCs
+*   **Flow Logs** — Enable at VPC level for comprehensive security and troubleshooting visibility
 
-## 4. IP Address Planning with CIDR Blocks
+***Best Practice:*** *Use custom VPCs for everything. Delete or ignore default VPCs. Deploy an SCP that denies resource creation in default VPCs across your entire Organization.*
 
-**CIDR (Classless Inter-Domain Routing)** notation defines IP address ranges for your VPC and subnets.
+## 4. Regions and Availability Zones
 
-**Common ranges:**
+**AWS Regions** are separate geographic areas with fully independent infrastructure. Each Region contains multiple **Availability Zones (AZs)** — physically separated data centers connected by low-latency private fiber. Every networking resource you deploy exists in exactly one AZ, and your multi-AZ strategy determines resilience, cost, and blast radius.
 
-*   VPC: `/16` (65,536 addresses) for large environments, `/20` (4,096 addresses) for smaller workloads
-*   Subnets: `/24` (256 addresses) is common, but size based on actual needs
+**Key considerations:**
 
-**Critical planning rule:** VPCs cannot have overlapping CIDR blocks if you plan to connect them. Plan your IP address hierarchy before creating your first VPC.
+*   **Region selection** — Latency, Direct Connect locations, service availability, compliance, and cost
+*   **AZ IDs vs AZ names** — AZ names are mapped randomly per account; use AZ IDs for cross-account coordination
+*   **Multi-AZ patterns** — Deploy every stateful networking resource per-AZ; size for N-1 AZ capacity
+*   **Cross-AZ cost** — $0.01/GB in each direction; minimize unnecessary cross-AZ traffic without sacrificing availability
 
-***Example:*** *Use `10.0.0.0/16` for us-east-1 production, `10.1.0.0/16` for us-west-2 production, ensuring no overlap.*
+***Best Practice:*** *Deploy production workloads across at least 3 AZs. Size per-AZ capacity so that losing one AZ doesn't overwhelm the remaining two.*
 
-## 5. Subnets: Segmentation Within Your VPC
+## 5. IP Address Planning with CIDR Blocks
 
-A **Subnet** is a subdivision of your VPC's IP address range where you launch resources like EC2 instances.
+**CIDR (Classless Inter-Domain Routing)** notation defines IP address ranges for your VPCs and subnets. IP address planning is the single most consequential early decision that you cannot easily change later — every VPC, peering connection, hybrid link, and route table is constrained by the CIDRs you chose at creation time.
 
-**Key characteristics:**
+**Key principles:**
 
-*   Each subnet exists in exactly one Availability Zone
-*   Subnets enable you to organize resources by tier (web, application, database) and access requirements
-*   AWS reserves 5 IP addresses in each subnet for internal use
+*   **Allocate contiguously** — Enables route summarization, simplifies firewall rules, and makes topology legible
+*   **Never overlap** — VPCs with overlapping CIDRs cannot be connected via peering, Transit Gateway, or Cloud WAN
+*   **Plan for hybrid** — Coordinate with on-premises ranges before any AWS allocation
+*   **Use 10.0.0.0/8** — Largest contiguous private space; supports deep hierarchical allocation
 
-**Public vs. Private subnets:** This distinction is determined by routing configuration (covered in the Connectivity section), not by the subnet itself.
+***Best Practice:*** *Design a hierarchical allocation: Organization → Environment → Region → VPC → Subnet. This structure enables route summarization at every level and makes your network topology self-documenting.*
 
-## 6. IP Address Management (IPAM)
+## 6. Subnets
 
-**AWS IPAM** helps you plan, track, and monitor IP addresses across your AWS organization.
+A **subnet** is where routing policy meets IP addressing. Every resource you launch lands in a subnet, and that subnet's route table determines what the resource can reach. "Public" and "private" are properties of the route table, not the subnet itself.
 
-**Use IPAM to:**
+**Key patterns:**
 
-*   Automatically allocate non-overlapping CIDR blocks
-*   Track IP address utilization across accounts and regions
-*   Enforce IP address allocation policies
-*   Maintain compliance with your addressing standards
+*   **Five-tier architecture** — Firewall, public, private (application), data, and infrastructure/transit subnets
+*   **One subnet per AZ per tier** — Consistent across all Availability Zones
+*   **Size for the workload** — `/24` for most tiers; `/22` or larger for EKS/ECS container subnets
+*   **Infrastructure subnets** — Dedicated `/28` subnets for Transit Gateway ENIs, firewall endpoints, and VPC endpoint ENIs
 
-***Best Practice:*** *Implement IPAM early, especially in multi-account environments, to prevent addressing conflicts as you scale.*
+***Best Practice:*** *Leave numbering gaps in your subnet scheme (0, 10, 20, 30 instead of 0, 1, 2, 3) so you can insert new tiers later without disrupting existing subnets.*
+
+## 7. IP Address Management (IPAM)
+
+**AWS IPAM** replaces spreadsheets and tribal knowledge with a centralized, policy-driven system that plans, allocates, tracks, and monitors IP addresses across every account and Region. Without IPAM, IP address management degrades into a coordination bottleneck that produces overlaps discovered only when you try to connect VPCs.
+
+**Key capabilities:**
+
+*   **Hierarchical pools** — Organization → Region → Environment → Workload, with allocation rules at every level
+*   **Overlap prevention** — Every allocation validated against the entire pool hierarchy
+*   **Compliance monitoring** — Continuous detection of VPCs with manually assigned CIDRs that violate your standards
+*   **IaC integration** — CloudFormation and Terraform reference IPAM pools instead of hardcoded CIDRs
+
+***Best Practice:*** *Implement IPAM before creating your first production VPC. The cost of a single CIDR overlap (which requires VPC recreation to fix) exceeds the cost of IPAM for years.*
 
 ---
 
@@ -80,56 +104,56 @@ A **Subnet** is a subdivision of your VPC's IP address range where you launch re
 
     ---
 
-    Essential AWS knowledge for networking
+    IAM, Infrastructure as Code, service quotas, tagging, and Well-Architected principles for networking.
 
-    [:octicons-arrow-right-24: Learn more](aws-prerequisites.md)
+    [:octicons-arrow-right-24: Before You Start](aws-prerequisites.md)
 
 -   :material-office-building-outline: **AWS Organizations**
 
     ---
 
-    Centralized management and governance for multi-account networking
+    Multi-account governance, SCPs, centralized networking account, and resource sharing via RAM.
 
-    [:octicons-arrow-right-24: Learn more](organizations.md)
+    [:octicons-arrow-right-24: AWS Organizations](organizations.md)
 
 -   :material-cloud-outline: **Amazon VPC**
 
     ---
 
-    Your isolated virtual network within AWS
+    VPC design patterns, CIDR sizing, IPv6, Flow Logs, and the relationship between VPCs and account strategy.
 
-    [:octicons-arrow-right-24: Learn more](vpc.md)
+    [:octicons-arrow-right-24: Amazon VPC](vpc.md)
 
 -   :material-earth: **Regions and Availability Zones**
 
     ---
 
-    Geographic distribution and fault isolation
+    Region selection, AZ IDs, multi-AZ patterns, cross-AZ cost management, and Local Zones.
 
-    [:octicons-arrow-right-24: Learn more](regions-azs.md)
+    [:octicons-arrow-right-24: Regions and AZs](regions-azs.md)
 
 -   :material-ip-network: **CIDR Planning**
 
     ---
 
-    IP address planning for scalable architectures
+    Hierarchical allocation, route summarization, hybrid coordination, IPv6, and common mistakes.
 
-    [:octicons-arrow-right-24: Learn more](cidr.md)
+    [:octicons-arrow-right-24: CIDR Planning](cidr.md)
 
 -   :material-network: **Subnets**
 
     ---
 
-    Network segmentation within your VPC
+    Tier design, route tables, sizing for containers, NACLs, infrastructure subnets, and VPC sharing.
 
-    [:octicons-arrow-right-24: Learn more](subnets.md)
+    [:octicons-arrow-right-24: Subnets](subnets.md)
 
 -   :material-ip: **IPAM**
 
     ---
 
-    Centralized IP address management at scale
+    Pool hierarchy, allocation rules, compliance monitoring, IaC integration, and hybrid awareness.
 
-    [:octicons-arrow-right-24: Learn more](ipam.md)
+    [:octicons-arrow-right-24: IPAM](ipam.md)
 
 </div>
