@@ -113,15 +113,15 @@ Thank you for helping improve AWS networking guidance for the community.
 
 First, clone the repository.
 
-    ```
-    git clone https://github.com/YOUR-USERNAME/aws-networking-best-practices
-    cd aws-networking-best-practices
-    ```
+```
+git clone https://github.com/YOUR-USERNAME/aws-networking-best-practices
+cd aws-networking-best-practices
+```
 Next, create a new [Python virtual environment][venv] and
 [activate][venv-activate] it:
 
 ```
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 ```
 
@@ -135,24 +135,24 @@ source venv/bin/activate
     you may want to add this to your `.bashrc` or `.zshrc` and
     re-start your shell:
 
-    ```
-    export PIP_REQUIRE_VIRTUALENV=true
-    ```
+```
+export PIP_REQUIRE_VIRTUALENV=true
+```
 
   [venv]: https://docs.python.org/3/library/venv.html
   [venv-activate]: https://docs.python.org/3/library/venv.html#how-venvs-work
 
 Then, install all Python dependencies:
 
-    ```
-    pip install \
-                mkdocs-material \
-                mkdocs-git-revision-date-localized-plugin \
-                mkdocs-git-committers-plugin-2 \
-                "mkdocs-material[imaging]" \
-                yamllint \
-                mdx-spanner
-    ```
+```
+pip install \
+        mkdocs-material \
+        mkdocs-git-revision-date-localized-plugin \
+        mkdocs-git-committers-plugin-2 \
+        "mkdocs-material[imaging]" \
+        yamllint \
+        mdx-spanner
+```
 
 ### Live Preview
 
