@@ -441,7 +441,7 @@ A common vulnerability: workloads have IPv6 addresses assigned but security grou
 
     Architecture walkthrough showing segmentation patterns with Cloud WAN in a multi-account environment.
 
-    [:octicons-arrow-right-24: Blog post](https://aws.amazon.com/blogs/networking-and-content-delivery/building-a-global-network-using-aws-cloud-wan-with-aws-network-firewall/)
+    [:octicons-arrow-right-24: Blog post](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/aws-cloud-wan/)
 
 *   :material-file-document: **AWS Network Firewall deployment models**
 
