@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This section assumes familiarity with [Amazon VPC](../foundation/vpc.md), [Subnets](../foundation/subnets.md), and the connectivity patterns covered in the [Within AWS](../connectivity/within-aws.md) and [Internet connectivity](../connectivity/internet.md) pages. Review those topics first if you're new to AWS networking fundamentals.
 
-Load balancing distributes traffic across multiple targets so that an application stays available, scales horizontally, and can absorb the failure of any individual target. AWS offers three managed load balancers under the Elastic Load Balancing umbrella, and they are not interchangeable: each one is built for a different traffic class and a different role in the architecture.
+AWS Elastic Load Balancing distributes traffic across multiple targets through three managed services: Application Load Balancer (ALB) for L7 HTTP/HTTPS/gRPC with content-based routing across up to 100 listener rules, Network Load Balancer (NLB) for L4 TCP/UDP/TLS handling millions of connections per second with sub-millisecond latency and static IPs per AZ, and Gateway Load Balancer (GWLB) for transparent insertion of third-party firewall appliances using GENEVE encapsulation. These are not interchangeable — each is built for a different traffic class and a different role in the architecture.
 
 This page covers the three Elastic Load Balancing services as building blocks of an application architecture: what each one does, how to configure it well, when to choose one over the others, and how to combine them with other AWS services.
 

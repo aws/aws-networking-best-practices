@@ -156,6 +156,7 @@ watch:
 # Page tree
 nav:
   - Introduction: index.md
+  - Decision Map: decisions.md
   - Foundation:
       - foundation/index.md
       - Before You Start: foundation/aws-prerequisites.md

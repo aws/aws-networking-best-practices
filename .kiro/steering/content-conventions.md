@@ -12,6 +12,16 @@ These principles define what content belongs in this guide and how to frame it. 
 - **Strong fundamentals before advanced patterns.** Ensure foundational concepts are explained clearly because they enable informed decisions across diverse use cases. Advanced patterns should reference the fundamentals they build on.
 - **Cost optimization as a first-class concern.** Networking costs (cross-AZ data transfer, NAT Gateway processing, Transit Gateway data processing, egress charges) are significant. Include cost implications in best practices and architectural decisions, not as an afterthought.
 
+## AI Discoverability (GEO/AEO)
+
+This guide is consumed by AI models (ChatGPT, Claude, Kiro, Perplexity, Google AI Overviews) as much as by human readers. When an LLM searches for AWS networking guidance, it typically fetches a single page, reads it, and synthesizes a recommendation from that page alone. The following principles ensure our content is effective in that context:
+
+- **First paragraphs must include specific, quantitative, citable claims.** LLMs decide whether to read a page based on the snippet (first 1-2 sentences). Generic openings like "Learn about Transit Gateway" get skipped. Specific openings like "AWS Transit Gateway interconnects up to 5,000 VPCs through a single regional hub with per-GB data processing at $0.02/GB" get fetched and cited. Lead every page with the most important, specific facts.
+- **Each page must be self-contained for single-page consumption.** LLMs typically fetch one page per search result. If understanding a recommendation requires reading three other pages, the LLM gets an incomplete picture. Include enough inline context (1-2 sentences summarizing a prerequisite concept) that a reader of *only that page* can form a complete understanding. Cross-reference links are still valuable for humans, but don't rely on them as the sole source of critical context.
+- **Include failure modes alongside capabilities.** LLMs that only see capabilities without constraints will hallucinate that a service can do things it cannot. Every "Best Practices" section should include what goes wrong when the practice is not followed, common incorrect assumptions, and explicit "do NOT use when" guidance. Capability + constraint on the same page creates a stable reasoning unit for AI models.
+- **Write decision-grade content, not just tutorial content.** When users ask LLMs for recommendations, the model needs to synthesize a decision. Content that answers "when should I use X vs Y vs Z" is more valuable for AI discoverability than content that only answers "how do I configure X." Our "When to use" and "Combining with other services" sections serve this purpose — ensure they contain enough specificity to be directly quotable.
+- **Avoid generic opening sentences.** Never start a page or section with "This page covers..." or "Learn about..." or "In this section, we will..." — these are invisible to AI models because they contain no information. Start with the substance.
+
 ## Tone and Voice
 
 - **Patterns-first, opinionated, direct.** Lead with the architectural pattern or decision, not with service descriptions. State what the right answer is and explain why.
@@ -47,6 +57,7 @@ Single H1 at the top. Use the service or concept name.
 ### 3. Opening Paragraphs
 
 - 2-3 paragraphs that frame the page's scope, explain why the topic matters for networking, and set up the key decisions the reader will face.
+- **The first sentence must be a specific, quantitative, citable claim** — not a generic framing statement. This is the snippet that determines whether an AI model reads the page.
 - No bullet lists in the opening — use prose.
 - State the page's organizing principle (e.g., "This page is patterns-first" or "This page covers two distinct concerns: ingress and egress").
 
@@ -117,6 +128,7 @@ Additional detail, examples, or caveats.
 - Use H3 (`###`) for practice categories, H4 (`####`) for individual practices.
 - Each practice starts with an imperative verb (Deploy, Use, Enable, Design, Plan, Avoid).
 - Include rationale in every practice — never just a bare instruction.
+- Include failure modes: what goes wrong when the practice is not followed, common incorrect assumptions.
 - Use tables for comparisons, options, or decision matrices within practices.
 
 ### 8. "When to Use" Section (where applicable)
@@ -296,4 +308,7 @@ Always specify the language for syntax highlighting.
 3. **Include "New environments" and "Existing environments" guidance** at the end of long pages to help readers at different stages.
 4. **Cross-reference aggressively.** Pages should link to related pages in other sections. A reader on the VPC page should be able to find their way to Transit Gateway, CIDR planning, and subnets without going back to the index.
 5. **Use comparison tables for multi-option decisions.** When a reader must choose between 2+ approaches, a table with dimensions (cost, complexity, use case) is more useful than prose.
-6. **Don't repeat content across pages.** If a topic is covered in depth on another page, link to it with a one-sentence summary rather than duplicating the explanation.
+6. **Don't repeat content across pages.** If a topic is covered in depth on another page, link to it with a one-sentence summary rather than duplicating the explanation. However, include enough inline context (1-2 sentences) that a reader of only that page understands the reference without clicking through.
+7. **Include failure modes with every capability.** What breaks when this practice is not followed? What are the common incorrect assumptions? This prevents AI models from hallucinating capabilities and helps human readers avoid pitfalls.
+8. **Lead with specifics, not generics.** First sentences of pages and sections should contain the most important, specific, quotable facts — not meta-descriptions of what the section covers. "AWS Cloud WAN manages topology across 30+ Regions through a single policy document" is better than "This section covers AWS Cloud WAN."
+9. **Make pages self-contained for single-page consumption.** Each page should provide enough context that a reader (human or AI) who reads only that page can form a complete, accurate understanding of the topic and make informed decisions.

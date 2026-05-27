@@ -1,0 +1,63 @@
+# AWS Networking Best Practices Guide
+
+> A reference architecture for AWS networking best practices, covering enterprise network design across five pillars: Foundation, Connectivity, Application Networking, Security, and Observability.
+
+This guide provides opinionated, production-ready networking guidance for AWS environments. It assumes multi-account AWS Organizations deployments, treats IPv6 as a core element, and includes cost implications in every architectural decision.
+
+## Foundation
+
+Essential building blocks that everything else depends on.
+
+- [Before You Start](foundation/aws-prerequisites.md): IAM, Infrastructure as Code, service quotas, tagging, and Well-Architected principles for networking
+- [AWS Organizations](foundation/organizations.md): Multi-account governance, SCPs, centralized networking account, resource sharing via RAM. Use Organizations for any environment with more than 2-3 accounts that need network connectivity between them.
+- [Amazon VPC](foundation/vpc.md): VPC design patterns (VPC-per-workload, shared VPCs via RAM), CIDR sizing (start with /16 for production), IPv6 dual-stack from day one, VPC Flow Logs. Always use custom VPCs; never use default VPCs for production.
+- [Regions and Availability Zones](foundation/regions-azs.md): Region selection criteria, AZ IDs vs AZ names for cross-account coordination, multi-AZ patterns, cross-AZ cost ($0.01/GB each direction), NAT Gateway per-AZ deployment.
+- [CIDR Planning](foundation/cidr.md): Hierarchical allocation (Organization → Environment → Region → VPC → Subnet), route summarization through contiguous allocation, hybrid connectivity coordination, IPv6 /56 per VPC.
+- [Subnets](foundation/subnets.md): Five-tier reference architecture (firewall, public, private, data, infrastructure), sizing for EKS/ECS container workloads, route table design, NACLs as defense-in-depth only.
+- [IPAM](foundation/ipam.md): Pool hierarchy design, allocation rules, compliance monitoring, IaC integration (CloudFormation/Terraform reference IPAM pools instead of hardcoded CIDRs), IPv6 pool management.
+
+## Connectivity
+
+How AWS resources communicate with the internet, with each other, and with networks outside AWS.
+
+- [Internet Connectivity](connectivity/internet.md): Ingress (decentralized preferred: CloudFront + WAF + VPC Origins; centralized only for specific compliance cases) and Egress (IPv6 decentralized by design; IPv4 is a genuine 50-50 trade-off between centralized and decentralized based on cost, ownership, and inspection placement).
+- [Connectivity Within AWS](connectivity/within-aws.md): AWS Cloud WAN (policy-driven global network, recommended for new multi-account deployments), Amazon VPC Lattice (application-layer service-to-service with IAM auth), VPC Lattice VPC Resources (private TCP access to databases/on-prem without NLB), AWS Transit Gateway (regional hub-and-spoke), AWS PrivateLink (private AWS service access), VPC Peering (specific justified pairs only).
+- [Hybrid & Multi-Cloud](connectivity/hybrid-multicloud.md): AWS Direct Connect (foundation for production hybrid, maximum resiliency model), AWS Site-to-Site VPN (fast-start or IPsec overlay), SD-WAN integration (Transit Gateway/Cloud WAN Connect attachments), AWS Interconnect (managed cloud-to-cloud, recommended where supported), AWS Verified Access (zero-trust application access, preferred over Client VPN for new use cases).
+
+## Application Networking
+
+Traffic distribution, service discovery, and communication between application components.
+
+- [Load Balancing](application-networking/load-balancing.md): ALB for L7 HTTP/HTTPS/gRPC (content-based routing, TLS, WAF, Automatic Target Weights), NLB for L4 TCP/UDP/TLS/QUIC (static IPs, client IP preservation, PrivateLink front), GWLB for transparent third-party appliance insertion only.
+- [Service to Service](application-networking/service-to-service.md): Service discovery (Route 53 private hosted zones + Profiles), authentication (VPC Lattice auth policies + SigV4), traffic management (VPC Lattice weighted routing for safe deployments), cross-VPC access (VPC Lattice service networks via RAM), async patterns (EventBridge connections to private APIs).
+- [Container Mesh](application-networking/container-mesh.md): In-cluster networking (VPC CNI, Pod Identity, ECS Service Connect), Amazon VPC Lattice as the alternative to a service mesh (cross-cluster without mesh control plane), self-managed mesh only when sidecar-specific features are genuinely required.
+
+## Security
+
+Protection at every layer from the global edge down to individual resources.
+
+- [Perimeter Controls](security/perimeter-inbound.md): Security groups (primary access control, reference-based rules), NACLs (subnet-level deny only), AWS WAF (L7 on CloudFront/ALB/API Gateway), AWS Shield (Standard automatic, Advanced for business-critical), AWS Network Firewall (managed stateful VPC inspection), Gateway Load Balancer (third-party appliances), AWS Firewall Manager (cross-account policy).
+- [Outbound Controls](security/outbound.md): Defense-in-depth for egress (security groups → Route 53 DNS Firewall → AWS Network Firewall → NAT). DNS Firewall is the first egress control to deploy (cheapest, widest coverage). VPC endpoints eliminate egress for AWS service traffic entirely.
+- [Network Segmentation](security/segmentation.md): Account isolation (strongest, free), VPC isolation (no implicit cross-VPC routing), Cloud WAN segments (policy-driven routing domains), security group micro-segmentation (reference-based rules), VPC Lattice auth policies (identity-based zero-trust independent of network position).
+
+## Observability
+
+Visibility into network traffic, service health, and automated alerting.
+
+- [Internal Traffic Monitoring](observability/internal-traffic.md): VPC Flow Logs (enable on every VPC, custom format, deliver to S3 for cost), Transit Gateway Flow Logs (cross-VPC visibility from single config), VPC Lattice access logs (identity-aware per-request), Athena for large-scale analysis.
+- [External Traffic Monitoring](observability/external-traffic.md): CloudFront logs (edge client experience), ALB/NLB access logs (always enable, free to generate), WAF logs (security evaluation), NAT Gateway metrics (egress cost visibility), Route 53 query logs (DNS patterns).
+- [AWS Services Monitoring](observability/service-monitoring.md): Critical CloudWatch metrics per service (Transit Gateway, NAT Gateway, Direct Connect, VPN, ALB, NLB, Network Firewall, Route 53 Resolver, VPC Lattice), composite alarms to reduce noise, anomaly detection, quota monitoring at 80%.
+- [Notifications](observability/notifications.md): Alarm design (signal over noise), composite alarms for alert fatigue prevention, severity tiers (P1 immediate, P2 business hours, P3 informational), EventBridge for state-change notifications, cross-account event forwarding.
+
+## Key Decision Patterns
+
+When choosing between AWS networking services, these are the most common decision points:
+
+- **Connect two VPCs**: VPC Lattice (if service-to-service HTTP/gRPC), VPC Peering (if high-throughput, few pairs), Transit Gateway (if hub-and-spoke, many VPCs), Cloud WAN (if multi-Region, policy-driven)
+- **Expose a service cross-account**: VPC Lattice service network (preferred for HTTP/gRPC), VPC Lattice VPC Resources (for TCP resources like databases), PrivateLink endpoint service (for NLB-backed TCP with few consumers)
+- **Reach the internet from a private subnet**: NAT Gateway (IPv4, per-AZ), Egress-only IGW (IPv6, per-VPC, free), VPC endpoints first to reduce NAT volume
+- **Protect inbound traffic**: Security groups (always), WAF on CloudFront/ALB (L7), Network Firewall (L3/L4 stateful), GWLB (third-party appliances)
+- **Filter outbound traffic**: Security groups (ports/protocols), DNS Firewall (domain-based, cheapest), Network Firewall (full inspection, most expensive)
+- **Segment your network**: Accounts (strongest, free), VPCs (network isolation), Cloud WAN segments (routing-domain policy), Security groups (micro-segmentation)
+- **Connect to on-premises**: Direct Connect (production, predictable bandwidth), Site-to-Site VPN (fast-start, encrypted), SD-WAN Connect (existing overlay integration)
+- **Connect to another cloud**: AWS Interconnect (managed, where supported), Partner-based Direct Connect (where Interconnect unavailable), VPN between clouds (low-volume)
