@@ -48,6 +48,14 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 
 ### 2. Create a branch for your changes
 
+* Create a new branch: `git checkout -b your-feature-name` ([GitHub Docs: Git branches][branch-docs]{:target="_blank"})
+
+* Keep branch names descriptive: `add-transit-gateway-best-practices` or `fix-vpc-peering-link`
+
+[branch-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches
+
+### 3. Make your edits and commit them
+
 * Edit the documentation files
 
 * Commit changes in logical chunks with clear messages ([GitHub Docs: About commits][commit-docs]{:target="_blank"})
@@ -57,26 +65,19 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 [commit-docs]: https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits
 [push-docs]: https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository
 
-### 3. Make your edits and commit them
+### 4. Submit a pull request with a clear description
 
-* Open a draft pull request early for feedback ([GitHub Docs: Draft PRs][draft-pr-docs]{:target="_blank"})
+* Open a pull request from your fork to the upstream repository ([GitHub Docs: Creating a PR from a fork][create-pr-fork-docs]{:target="_blank"})
 
 * Include a clear description of your changes
 
 * Reference any related issues or discussions ([GitHub Docs: Linking issues][linking-issues]{:target="_blank"})
 
+* Consider opening a draft pull request early for feedback ([GitHub Docs: Draft PRs][draft-pr-docs]{:target="_blank"})
+
+[create-pr-fork-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork
 [draft-pr-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#draft-pull-requests
 [linking-issues]: https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue
-
-### 4. Submit a pull request with a clear description
-
-* Respond to reviewer feedback promptly ([GitHub Docs: Creating a PR][create-pr-docs]{:target="_blank"})
-
-* Make requested changes and push updates
-
-* Your PR will be merged once approved
-
-[create-pr-docs]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
 
 ### 5. Review Process
 

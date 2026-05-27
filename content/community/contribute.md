@@ -76,7 +76,6 @@ Most contributions start with reporting issues or asking questions. Don't worry 
   [report a correction]: report-a-correction.md
   [new best practice]: new-best-practice.md
   [ask a question]: https://repost.aws/questions/ask
-  [add translations]: adding-translations.md
   [create a pull request]: making-a-pull-request.md
 
 ## Contribution Guidelines
