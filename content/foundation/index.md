@@ -100,7 +100,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
 <div class="grid cards" markdown>
 
--   :material-book-open-outline: **Before You Start**
+*   :material-book-open-outline: **Before You Start**
 
     ---
 
@@ -108,7 +108,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     [:octicons-arrow-right-24: Before You Start](aws-prerequisites.md)
 
--   :material-office-building-outline: **AWS Organizations**
+*   :material-office-building-outline: **AWS Organizations**
 
     ---
 
@@ -116,7 +116,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     [:octicons-arrow-right-24: AWS Organizations](organizations.md)
 
--   :material-cloud-outline: **Amazon VPC**
+*   :material-cloud-outline: **Amazon VPC**
 
     ---
 
@@ -124,7 +124,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     [:octicons-arrow-right-24: Amazon VPC](vpc.md)
 
--   :material-earth: **Regions and Availability Zones**
+*   :material-earth: **Regions and Availability Zones**
 
     ---
 
@@ -132,7 +132,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     [:octicons-arrow-right-24: Regions and AZs](regions-azs.md)
 
--   :material-ip-network: **CIDR Planning**
+*   :material-ip-network: **CIDR Planning**
 
     ---
 
@@ -140,7 +140,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     [:octicons-arrow-right-24: CIDR Planning](cidr.md)
 
--   :material-network: **Subnets**
+*   :material-network: **Subnets**
 
     ---
 
@@ -148,7 +148,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     [:octicons-arrow-right-24: Subnets](subnets.md)
 
--   :material-ip: **IPAM**
+*   :material-ip: **IPAM**
 
     ---
 

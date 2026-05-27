@@ -87,8 +87,8 @@ Every Region has at least three AZs. This is the minimum needed for quorum-based
 
 This is the single most misunderstood aspect of AZ architecture, and it causes real problems in cross-account networking:
 
-- **AZ names** (like `us-east-1a`) are mapped randomly per AWS account. Your `us-east-1a` and another account's `us-east-1a` may be different physical locations.
-- **AZ IDs** (like `use1-az1`) are consistent across all accounts and map to the same physical infrastructure.
+* **AZ names** (like `us-east-1a`) are mapped randomly per AWS account. Your `us-east-1a` and another account's `us-east-1a` may be different physical locations.
+* **AZ IDs** (like `use1-az1`) are consistent across all accounts and map to the same physical infrastructure.
 
 | Scenario | Use AZ name or AZ ID? |
 | --- | --- |
@@ -110,9 +110,9 @@ NAT Gateways, interface VPC endpoints, and load balancer nodes are AZ-scoped. If
 
 The correct pattern:
 
-- **One NAT Gateway per AZ** in each public subnet tier. Route tables for private subnets in each AZ point to the NAT Gateway in the same AZ.
-- **Interface VPC endpoints in every AZ** where you have workloads that use the endpoint. A missing endpoint in one AZ means traffic from that AZ crosses to another AZ to reach the endpoint — adding latency and cost.
-- **Load balancers enabled in all AZs** where targets exist. An ALB or NLB with a missing AZ creates asymmetric routing and uneven target utilization.
+* **One NAT Gateway per AZ** in each public subnet tier. Route tables for private subnets in each AZ point to the NAT Gateway in the same AZ.
+* **Interface VPC endpoints in every AZ** where you have workloads that use the endpoint. A missing endpoint in one AZ means traffic from that AZ crosses to another AZ to reach the endpoint — adding latency and cost.
+* **Load balancers enabled in all AZs** where targets exist. An ALB or NLB with a missing AZ creates asymmetric routing and uneven target utilization.
 
 ***Key insight:*** *The "per-AZ" pattern costs more in fixed resources (three NAT Gateways instead of one), but it eliminates cross-AZ data transfer charges, removes single-AZ failure modes, and keeps blast radius contained. For any production workload, the per-AZ pattern is correct.*
 
@@ -122,9 +122,9 @@ Design your per-AZ capacity so that losing one AZ doesn't overwhelm the remainin
 
 This applies to:
 
-- Auto Scaling group minimum and desired counts per AZ
-- NAT Gateway throughput headroom (each NAT GW handles 100 Gbps, but your per-AZ egress patterns matter)
-- Subnet IP address capacity (if one AZ fails and workloads relaunch in the remaining two, those subnets need the IP headroom)
+* Auto Scaling group minimum and desired counts per AZ
+* NAT Gateway throughput headroom (each NAT GW handles 100 Gbps, but your per-AZ egress patterns matter)
+* Subnet IP address capacity (if one AZ fails and workloads relaunch in the remaining two, those subnets need the IP headroom)
 
 #### Use zonal shift for fast AZ evacuation
 
@@ -136,17 +136,17 @@ Amazon Application Recovery Controller's zonal shift removes an impaired AZ from
 
 Cross-AZ data transfer within a Region is charged at $0.01/GB in each direction ($0.02/GB round-trip) in most Regions. This applies to both IPv4 and IPv6 traffic — dual-stack does not change the cross-AZ cost model. This sounds small, but at scale it dominates networking costs:
 
-- A service making 10,000 requests/second with 1 KB payloads across AZs generates ~1.7 TB/month of cross-AZ traffic — roughly $34/month for that single service pair.
-- A chatty microservices architecture with dozens of service-to-service calls can easily generate hundreds of TB/month in cross-AZ traffic.
+* A service making 10,000 requests/second with 1 KB payloads across AZs generates ~1.7 TB/month of cross-AZ traffic — roughly $34/month for that single service pair.
+* A chatty microservices architecture with dozens of service-to-service calls can easily generate hundreds of TB/month in cross-AZ traffic.
 
 #### Minimize cross-AZ traffic without sacrificing availability
 
 The goal is not to eliminate cross-AZ traffic (that would mean single-AZ deployment, which is unacceptable for production). The goal is to keep *unnecessary* cross-AZ traffic out of the data path:
 
-- **Use AZ-aware service discovery** (Cloud Map with health checks, or VPC Lattice's built-in AZ affinity) so that services prefer same-AZ targets when healthy targets exist locally.
-- **Disable cross-zone load balancing on NLB** when client distribution is roughly uniform across AZs. This keeps traffic zonal by default. ALB has cross-zone on by default and that's usually correct for ALB (because ALB's value is L7 routing, not zonal affinity).
-- **Place caches (ElastiCache, DAX) in every AZ** where application instances run. A cache miss that crosses AZs defeats the purpose of caching.
-- **Use VPC Flow Logs with AZ metadata** to identify the largest cross-AZ traffic flows and target them for optimization.
+* **Use AZ-aware service discovery** (Cloud Map with health checks, or VPC Lattice's built-in AZ affinity) so that services prefer same-AZ targets when healthy targets exist locally.
+* **Disable cross-zone load balancing on NLB** when client distribution is roughly uniform across AZs. This keeps traffic zonal by default. ALB has cross-zone on by default and that's usually correct for ALB (because ALB's value is L7 routing, not zonal affinity).
+* **Place caches (ElastiCache, DAX) in every AZ** where application instances run. A cache miss that crosses AZs defeats the purpose of caching.
+* **Use VPC Flow Logs with AZ metadata** to identify the largest cross-AZ traffic flows and target them for optimization.
 
 ***Key insight:*** *Cross-AZ cost optimization is a traffic engineering problem, not a deployment problem. You still deploy in multiple AZs for availability — you just route traffic to prefer same-AZ paths when possible.*
 
@@ -156,9 +156,9 @@ The goal is not to eliminate cross-AZ traffic (that would mean single-AZ deploym
 
 The foundational subnet pattern is one subnet per AZ per network tier (public, private, data, etc.). This isn't optional — it's how AWS networking works:
 
-- A subnet exists in exactly one AZ
-- A route table associates with subnets, not AZs
-- Resources launched in a subnet are placed in that subnet's AZ
+* A subnet exists in exactly one AZ
+* A route table associates with subnets, not AZs
+* Resources launched in a subnet are placed in that subnet's AZ
 
 For a three-AZ, three-tier VPC, you need nine subnets minimum. Plan your CIDR allocation accordingly — see [CIDR Planning](cidr.md) and [Subnets](subnets.md) for sizing guidance.
 
@@ -172,9 +172,9 @@ If you size each AZ's subnets for exactly the current workload, you have no head
 
 A NAT Gateway is an AZ-scoped resource. Deploying one per AZ and routing each AZ's private subnets to its local NAT Gateway achieves:
 
-- **Fault isolation**: An AZ failure takes out only that AZ's NAT Gateway, not egress for the entire VPC.
-- **No cross-AZ charges**: Traffic from a private subnet to the internet stays within the same AZ until it hits the NAT Gateway, then exits through the internet gateway (which is Region-scoped and free of cross-AZ charges).
-- **Predictable throughput**: Each NAT Gateway handles up to 100 Gbps independently.
+* **Fault isolation**: An AZ failure takes out only that AZ's NAT Gateway, not egress for the entire VPC.
+* **No cross-AZ charges**: Traffic from a private subnet to the internet stays within the same AZ until it hits the NAT Gateway, then exits through the internet gateway (which is Region-scoped and free of cross-AZ charges).
+* **Predictable throughput**: Each NAT Gateway handles up to 100 Gbps independently.
 
 The single-NAT-Gateway pattern (one NAT GW, all AZs route to it) is acceptable only for development and test environments where cost matters more than availability.
 
@@ -200,11 +200,11 @@ ALB's cross-zone-on default is correct for most workloads because ALB's value is
 
 AWS Local Zones are extensions of a parent Region that place compute, storage, and select networking services closer to end users. From a networking perspective:
 
-- A Local Zone subnet is part of the parent Region's VPC but exists in the Local Zone's physical location.
-- **Internet egress from a Local Zone uses the Local Zone's own internet gateway** — traffic doesn't backhaul to the parent Region for internet access.
-- **Traffic between a Local Zone and the parent Region traverses the AWS backbone**, not the public internet, but it does incur data transfer charges similar to cross-AZ traffic.
-- **Not all networking services are available in Local Zones**. NAT Gateway, Transit Gateway attachments, and VPC endpoints may not be available — check the [Local Zones features page](https://aws.amazon.com/about-aws/global-infrastructure/localzones/features/) for your specific Local Zone.
-- **Subnet design**: Create dedicated subnets in the Local Zone within your existing VPC. Route tables for Local Zone subnets are independent of the parent Region's AZ route tables.
+* A Local Zone subnet is part of the parent Region's VPC but exists in the Local Zone's physical location.
+* **Internet egress from a Local Zone uses the Local Zone's own internet gateway** — traffic doesn't backhaul to the parent Region for internet access.
+* **Traffic between a Local Zone and the parent Region traverses the AWS backbone**, not the public internet, but it does incur data transfer charges similar to cross-AZ traffic.
+* **Not all networking services are available in Local Zones**. NAT Gateway, Transit Gateway attachments, and VPC endpoints may not be available — check the [Local Zones features page](https://aws.amazon.com/about-aws/global-infrastructure/localzones/features/) for your specific Local Zone.
+* **Subnet design**: Create dedicated subnets in the Local Zone within your existing VPC. Route tables for Local Zone subnets are independent of the parent Region's AZ route tables.
 
 ***Key insight:*** *Local Zones are for latency-sensitive workloads that need single-digit millisecond access from a specific metro area. They are not a replacement for multi-AZ deployment in the parent Region — they complement it by placing a latency-sensitive tier closer to users while the rest of the architecture stays in the parent Region.*
 
@@ -212,10 +212,10 @@ AWS Local Zones are extensions of a parent Region that place compute, storage, a
 
 AWS Wavelength embeds compute and storage within telecommunications providers' 5G networks. From a networking perspective:
 
-- Wavelength Zones have their own carrier gateway for traffic to/from the carrier network — this traffic never touches the public internet.
-- Traffic between a Wavelength Zone and the parent Region uses the AWS backbone.
-- The networking service set is limited: no NAT Gateway, no VPC endpoints, no Transit Gateway attachments within the Wavelength Zone itself.
-- Use Wavelength for ultra-low-latency mobile/edge workloads where the 5G network hop to a Region AZ would add unacceptable latency.
+* Wavelength Zones have their own carrier gateway for traffic to/from the carrier network — this traffic never touches the public internet.
+* Traffic between a Wavelength Zone and the parent Region uses the AWS backbone.
+* The networking service set is limited: no NAT Gateway, no VPC endpoints, no Transit Gateway attachments within the Wavelength Zone itself.
+* Use Wavelength for ultra-low-latency mobile/edge workloads where the 5G network hop to a Region AZ would add unacceptable latency.
 
 ## Documentation
 
@@ -277,8 +277,8 @@ AWS Wavelength embeds compute and storage within telecommunications providers' 5
 
 This page provides the infrastructure context for Region and AZ decisions. The pages below cover how those decisions manifest in specific resource configurations:
 
-- **[VPC](vpc.md)** — VPC design patterns that build on multi-AZ architecture
-- **[Subnets](subnets.md)** — Subnet-per-AZ-per-tier patterns and sizing guidance
-- **[CIDR Planning](cidr.md)** — IP address allocation that accounts for multi-AZ and AZ-failure headroom
-- **[IPAM](ipam.md)** — Centralized IP address management across Regions and accounts
-- **[AWS Organizations](organizations.md)** — Account structure that interacts with AZ ID mapping and shared subnets
+* **[VPC](vpc.md)** — VPC design patterns that build on multi-AZ architecture
+* **[Subnets](subnets.md)** — Subnet-per-AZ-per-tier patterns and sizing guidance
+* **[CIDR Planning](cidr.md)** — IP address allocation that accounts for multi-AZ and AZ-failure headroom
+* **[IPAM](ipam.md)** — Centralized IP address management across Regions and accounts
+* **[AWS Organizations](organizations.md)** — Account structure that interacts with AZ ID mapping and shared subnets

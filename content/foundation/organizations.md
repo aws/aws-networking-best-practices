@@ -92,11 +92,11 @@ OUs are logical groupings of accounts that reflect your business structure and g
 
 Common networking-focused OU patterns:
 
-- **Infrastructure OU**: Centralized networking account(s), shared services, DNS
-- **Security OU**: Security tooling, log archive, audit accounts
-- **Production OU**: Production workload accounts with strict change controls
-- **Non-Production OU**: Development, testing, staging accounts with relaxed policies
-- **Sandbox OU**: Experimentation accounts with no connectivity to production networks
+* **Infrastructure OU**: Centralized networking account(s), shared services, DNS
+* **Security OU**: Security tooling, log archive, audit accounts
+* **Production OU**: Production workload accounts with strict change controls
+* **Non-Production OU**: Development, testing, staging accounts with relaxed policies
+* **Sandbox OU**: Experimentation accounts with no connectivity to production networks
 
 ### Service Control Policies (SCPs)
 
@@ -104,12 +104,12 @@ SCPs define the maximum available permissions across accounts and OUs. They don'
 
 **Networking-specific SCP patterns:**
 
-- **Prevent unauthorized VPC creation**: Restrict `ec2:CreateVpc` to accounts that should own VPCs, preventing shadow networks
-- **Enforce region restrictions**: Limit `ec2:*` actions to approved Regions, preventing network resources in unexpected locations
-- **Block public IP assignment**: Deny `ec2:AssociateAddress` and `ec2:RunInstances` with public IP parameters in accounts that should remain private
-- **Enforce tagging**: Require specific tags on VPCs, subnets, and Transit Gateway attachments to enable automated Cloud WAN segment assignment
-- **Protect shared resources**: Prevent workload accounts from modifying RAM resource shares or detaching from Transit Gateway
-- **Don't inadvertently block IPv6**: SCPs that restrict `ec2:*` actions must not block `ec2:AssignIpv6Addresses`, `ec2:AssociateSubnetCidrBlock` (for IPv6), or `ec2:CreateEgressOnlyInternetGateway`. Test SCPs against IPv6 operations explicitly — a common failure is an SCP that works for IPv4 VPC creation but silently blocks the IPv6 CIDR association
+* **Prevent unauthorized VPC creation**: Restrict `ec2:CreateVpc` to accounts that should own VPCs, preventing shadow networks
+* **Enforce region restrictions**: Limit `ec2:*` actions to approved Regions, preventing network resources in unexpected locations
+* **Block public IP assignment**: Deny `ec2:AssociateAddress` and `ec2:RunInstances` with public IP parameters in accounts that should remain private
+* **Enforce tagging**: Require specific tags on VPCs, subnets, and Transit Gateway attachments to enable automated Cloud WAN segment assignment
+* **Protect shared resources**: Prevent workload accounts from modifying RAM resource shares or detaching from Transit Gateway
+* **Don't inadvertently block IPv6**: SCPs that restrict `ec2:*` actions must not block `ec2:AssignIpv6Addresses`, `ec2:AssociateSubnetCidrBlock` (for IPv6), or `ec2:CreateEgressOnlyInternetGateway`. Test SCPs against IPv6 operations explicitly — a common failure is an SCP that works for IPv4 VPC creation but silently blocks the IPv6 CIDR association
 
 ### Centralized Networking Account
 
@@ -117,22 +117,22 @@ A dedicated networking account hosts shared connectivity infrastructure. This is
 
 **What belongs in the networking account:**
 
-- AWS Transit Gateway or AWS Cloud WAN core network
-- AWS Direct Connect connections and gateways
-- Route 53 Resolver endpoints and forwarding rules
-- Centralized NAT Gateways or egress VPCs (if using centralized egress)
-- Network Firewall inspection VPCs
-- IPAM administrator delegation (including IPv6 pool management)
-- VPN connections and Customer Gateways
+* AWS Transit Gateway or AWS Cloud WAN core network
+* AWS Direct Connect connections and gateways
+* Route 53 Resolver endpoints and forwarding rules
+* Centralized NAT Gateways or egress VPCs (if using centralized egress)
+* Network Firewall inspection VPCs
+* IPAM administrator delegation (including IPv6 pool management)
+* VPN connections and Customer Gateways
 
 **Cost visibility note:** The networking account concentrates costs that scale with the number of consuming accounts: Transit Gateway attachment hours ($0.05/hr per attachment), Cloud WAN attachment hours, data processing charges per GB through Transit Gateway or Cloud WAN, and NAT Gateway hourly + per-GB charges for centralized egress. Use Organizations consolidated billing with cost allocation tags to attribute these shared costs back to the workload accounts that generate the traffic. Without this attribution, the networking account's bill grows opaquely as the organization scales.
 
 **What does NOT belong in the networking account:**
 
-- Application workloads (EC2, ECS, Lambda)
-- Application load balancers
-- VPC Lattice services (these belong in the service owner's account)
-- Per-application security groups
+* Application workloads (EC2, ECS, Lambda)
+* Application load balancers
+* VPC Lattice services (these belong in the service owner's account)
+* Per-application security groups
 
 ## Best Practices
 
@@ -156,10 +156,10 @@ Most organizations think of SCPs as security guardrails. For networking, SCPs ar
 
 **Examples of architecture-enforcing SCPs:**
 
-- Deny `ec2:CreateInternetGateway` in accounts that should use centralized egress — this isn't a security policy, it's an architecture policy that ensures traffic flows through your inspection infrastructure
-- Deny `ec2:CreateVpc` with CIDR blocks outside your IPAM-managed ranges — this prevents IP conflicts before they happen
-- Require the `network-segment` tag on `ec2:CreateVpc` — this enables automated Cloud WAN attachment acceptance
-- Deny `ec2:CreateTransitGateway` in workload accounts — only the networking account should own Transit Gateways
+* Deny `ec2:CreateInternetGateway` in accounts that should use centralized egress — this isn't a security policy, it's an architecture policy that ensures traffic flows through your inspection infrastructure
+* Deny `ec2:CreateVpc` with CIDR blocks outside your IPAM-managed ranges — this prevents IP conflicts before they happen
+* Require the `network-segment` tag on `ec2:CreateVpc` — this enables automated Cloud WAN attachment acceptance
+* Deny `ec2:CreateTransitGateway` in workload accounts — only the networking account should own Transit Gateways
 
 The key insight: SCPs make your network architecture self-enforcing. Teams cannot accidentally (or intentionally) deviate from the intended topology because the API calls that would create deviations are denied at the Organizations level.
 
@@ -197,9 +197,9 @@ For networking, this is critical because automated systems (Cloud WAN attachment
 
 Define tag policies that enforce:
 
-- Allowed values for network segment tags (e.g., `network-segment` must be one of `production`, `development`, `shared-services`, `pci`)
-- Consistent environment naming across all accounts
-- Required cost allocation tags on network resources (NAT Gateway, Transit Gateway attachments, VPN connections)
+* Allowed values for network segment tags (e.g., `network-segment` must be one of `production`, `development`, `shared-services`, `pci`)
+* Consistent environment naming across all accounts
+* Required cost allocation tags on network resources (NAT Gateway, Transit Gateway attachments, VPN connections)
 
 ### Implement a network account vending pattern
 
@@ -220,19 +220,19 @@ AWS Organizations is the right choice for any environment with more than one AWS
 
 **Use Organizations when:**
 
-- You have (or plan to have) more than 2-3 AWS accounts
-- Workloads in different accounts need to communicate with each other
-- You want centralized network infrastructure (Transit Gateway, Direct Connect, DNS)
-- You need consistent security policies across accounts
-- You want automated resource sharing as new accounts are created
-- Compliance requirements mandate centralized governance and audit trails
+* You have (or plan to have) more than 2-3 AWS accounts
+* Workloads in different accounts need to communicate with each other
+* You want centralized network infrastructure (Transit Gateway, Direct Connect, DNS)
+* You need consistent security policies across accounts
+* You want automated resource sharing as new accounts are created
+* Compliance requirements mandate centralized governance and audit trails
 
 **A single account may be sufficient when:**
 
-- You're running a proof of concept or personal project
-- All workloads can coexist in one account without isolation concerns
-- You have no compliance requirements for account-level separation
-- You don't need cross-account networking (everything is in one VPC or peered VPCs within one account)
+* You're running a proof of concept or personal project
+* All workloads can coexist in one account without isolation concerns
+* You have no compliance requirements for account-level separation
+* You don't need cross-account networking (everything is in one VPC or peered VPCs within one account)
 
 **The transition point**: Once you need a second account that communicates with the first, set up Organizations. The overhead is minimal, and retrofitting Organizations into an existing multi-account environment without it is significantly more work than starting with it.
 
@@ -315,14 +315,14 @@ AWS Organizations is the governance layer that sits above all other foundation c
 
 **Relationship to other Foundation topics:**
 
-- **[Amazon VPC](vpc.md)**: Organizations determines which accounts can create VPCs and what CIDR ranges they can use (via SCPs and IPAM delegation)
-- **[CIDR Planning](cidr.md)**: IPAM pools shared through Organizations ensure non-overlapping address space across all accounts
-- **[Subnets](subnets.md)**: SCPs can enforce subnet tagging and restrict subnet creation to approved AZs
-- **[IPAM](ipam.md)**: Delegated IPAM administration through Organizations enables centralized IP governance
-- **[Regions and Availability Zones](regions-azs.md)**: SCPs restrict which Regions accounts can deploy resources in, directly shaping your network's geographic footprint
+* **[Amazon VPC](vpc.md)**: Organizations determines which accounts can create VPCs and what CIDR ranges they can use (via SCPs and IPAM delegation)
+* **[CIDR Planning](cidr.md)**: IPAM pools shared through Organizations ensure non-overlapping address space across all accounts
+* **[Subnets](subnets.md)**: SCPs can enforce subnet tagging and restrict subnet creation to approved AZs
+* **[IPAM](ipam.md)**: Delegated IPAM administration through Organizations enables centralized IP governance
+* **[Regions and Availability Zones](regions-azs.md)**: SCPs restrict which Regions accounts can deploy resources in, directly shaping your network's geographic footprint
 
 **Relationship to Connectivity:**
 
-- **[Connectivity Within AWS](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN rely on Organizations for RAM sharing and attachment governance
-- **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Direct Connect and VPN resources in the centralized networking account are shared via RAM to the Organization
-- **[Internet Connectivity](../connectivity/internet.md)**: Centralized egress patterns depend on Organizations to enforce traffic flow through inspection infrastructure
+* **[Connectivity Within AWS](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN rely on Organizations for RAM sharing and attachment governance
+* **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Direct Connect and VPN resources in the centralized networking account are shared via RAM to the Organization
+* **[Internet Connectivity](../connectivity/internet.md)**: Centralized egress patterns depend on Organizations to enforce traffic flow through inspection infrastructure

@@ -46,10 +46,10 @@ CIDR notation represents IP address ranges using the format: `IP_ADDRESS/PREFIX_
 
 **Example**: `10.0.0.0/16`
 
-- **IP Address**: `10.0.0.0` — the network address (starting point of the range)
-- **Prefix Length**: `/16` — the number of fixed bits in the network portion (the remaining bits are available for hosts)
-- **Address Range**: `10.0.0.0` to `10.0.255.255` (65,536 addresses)
-- **Subnet Mask**: `255.255.0.0`
+* **IP Address**: `10.0.0.0` — the network address (starting point of the range)
+* **Prefix Length**: `/16` — the number of fixed bits in the network portion (the remaining bits are available for hosts)
+* **Address Range**: `10.0.0.0` to `10.0.255.255` (65,536 addresses)
+* **Subnet Mask**: `255.255.0.0`
 
 The prefix length determines how many addresses the block contains: a `/16` has 2^(32-16) = 65,536 addresses. A shorter prefix means more addresses; a longer prefix means fewer. Every time you increase the prefix by 1, you halve the address space.
 
@@ -79,33 +79,35 @@ These are the private IP ranges available for your VPCs:
 
 Beyond RFC 1918, AWS VPCs support these ranges:
 
-- **100.64.0.0/10** (Carrier-Grade NAT range): Useful for EKS pod networking with the VPC CNI custom networking feature. Pods get IPs from this range, preserving your primary RFC 1918 space for nodes and other resources. Also used when RFC 1918 space is exhausted.
-- **RFC 6815 space** (`198.19.0.0/16`): Available as a secondary CIDR for VPCs when other ranges are exhausted.
+* **100.64.0.0/10** (Carrier-Grade NAT range): Useful for EKS pod networking with the VPC CNI custom networking feature. Pods get IPs from this range, preserving your primary RFC 1918 space for nodes and other resources. Also used when RFC 1918 space is exhausted.
+* **RFC 6815 space** (`198.19.0.0/16`): Available as a secondary CIDR for VPCs when other ranges are exhausted.
 
 ***Key insight:*** *The 100.64.0.0/10 range is a strategic tool for EKS-heavy environments. A single EKS cluster can consume thousands of IP addresses for pods. Assigning pod networking to 100.64.0.0/10 via custom networking keeps your primary VPC CIDR available for nodes, load balancers, and other infrastructure.*
 
 ## Best Practices
 
+### CIDR allocation strategy
+
 #### Allocate contiguously for route summarization
 
 The most important property of a good CIDR plan is that allocations within the same logical group are **contiguous**. When all production VPCs in us-east-1 fall within `10.0.0.0/12`, you can advertise a single `/12` summary route to on-premises networks instead of individual `/16` routes for each VPC. This matters because:
 
-- Route tables have size limits (Transit Gateway supports 10,000 routes, but on-premises routers may support far fewer)
-- Fewer routes mean faster convergence after failures
-- Summary routes simplify firewall rules — one rule covers an entire environment instead of per-VPC entries
-- BGP advertisements to on-premises are cleaner and more stable
+* Route tables have size limits (Transit Gateway supports 10,000 routes, but on-premises routers may support far fewer)
+* Fewer routes mean faster convergence after failures
+* Summary routes simplify firewall rules — one rule covers an entire environment instead of per-VPC entries
+* BGP advertisements to on-premises are cleaner and more stable
 
 **Bad allocation** (non-contiguous, cannot summarize):
 
-- Production VPC 1: `10.0.0.0/16`
-- Development VPC: `10.1.0.0/16`
-- Production VPC 2: `10.5.0.0/16`
+* Production VPC 1: `10.0.0.0/16`
+* Development VPC: `10.1.0.0/16`
+* Production VPC 2: `10.5.0.0/16`
 
 **Good allocation** (contiguous, summarizable as `10.0.0.0/12`):
 
-- Production VPC 1: `10.0.0.0/16`
-- Production VPC 2: `10.1.0.0/16`
-- Production VPC 3: `10.2.0.0/16`
+* Production VPC 1: `10.0.0.0/16`
+* Production VPC 2: `10.1.0.0/16`
+* Production VPC 3: `10.2.0.0/16`
 
 #### Start with /16 for production VPCs
 
@@ -163,11 +165,11 @@ When advertising routes to on-premises via Direct Connect or VPN, a per-Region a
 
 IPv6 in AWS VPCs works differently from IPv4 and requires separate planning:
 
-- **VPC-level**: Each VPC receives a `/56` IPv6 CIDR (256 `/64` subnets available). You can use Amazon-provided addresses or bring your own (BYOIP).
-- **Subnet-level**: Each subnet gets a `/64` from the VPC's `/56`. This is fixed — you cannot choose a different subnet prefix length.
-- **No NAT required**: IPv6 addresses are globally unique. Egress-only internet gateways provide outbound-only internet access without NAT.
-- **Dual-stack**: Most organizations run dual-stack (IPv4 + IPv6) rather than IPv6-only, at least during transition.
-- **No address exhaustion concern**: A single `/56` provides 4,722,366,482,869,645,213,696 addresses. Exhaustion is not a planning factor for IPv6.
+* **VPC-level**: Each VPC receives a `/56` IPv6 CIDR (256 `/64` subnets available). You can use Amazon-provided addresses or bring your own (BYOIP).
+* **Subnet-level**: Each subnet gets a `/64` from the VPC's `/56`. This is fixed — you cannot choose a different subnet prefix length.
+* **No NAT required**: IPv6 addresses are globally unique. Egress-only internet gateways provide outbound-only internet access without NAT.
+* **Dual-stack**: Most organizations run dual-stack (IPv4 + IPv6) rather than IPv6-only, at least during transition.
+* **No address exhaustion concern**: A single `/56` provides 4,722,366,482,869,645,213,696 addresses. Exhaustion is not a planning factor for IPv6.
 
 **IPv6 CIDR source options:**
 
@@ -181,19 +183,19 @@ IPv6 planning is simpler than IPv4 in one respect: the address space is so vast 
 
 **IPv6 planning checklist:**
 
-- Decide on Amazon-provided vs BYOIP before creating VPCs (changing later requires disassociation)
-- Update all security groups to include IPv6 rules (IPv4 rules do not automatically apply to IPv6 traffic)
-- Configure route tables with IPv6 routes (`::/0` to internet gateway or egress-only internet gateway)
-- Ensure NACLs permit IPv6 traffic for required flows
-- Verify that applications and DNS resolution handle dual-stack correctly
+* Decide on Amazon-provided vs BYOIP before creating VPCs (changing later requires disassociation)
+* Update all security groups to include IPv6 rules (IPv4 rules do not automatically apply to IPv6 traffic)
+* Configure route tables with IPv6 routes (`::/0` to internet gateway or egress-only internet gateway)
+* Ensure NACLs permit IPv6 traffic for required flows
+* Verify that applications and DNS resolution handle dual-stack correctly
 
 #### Use secondary CIDRs strategically, not as a crutch
 
 AWS allows up to 5 IPv4 CIDR blocks per VPC (1 primary + 4 secondary). Secondary CIDRs are useful for:
 
-- **EKS pod networking**: Adding `100.64.0.0/16` as a secondary CIDR for pod IP space
-- **Acquisitions**: Integrating a newly acquired company's workloads that need temporary address space
-- **Gradual migration**: Adding non-overlapping space while planning a proper re-IP
+* **EKS pod networking**: Adding `100.64.0.0/16` as a secondary CIDR for pod IP space
+* **Acquisitions**: Integrating a newly acquired company's workloads that need temporary address space
+* **Gradual migration**: Adding non-overlapping space while planning a proper re-IP
 
 Secondary CIDRs are **not** a substitute for proper initial planning. They add complexity: route tables need entries for each CIDR, some services handle multiple CIDRs inconsistently, and the operational overhead of managing multiple ranges per VPC compounds across hundreds of VPCs.
 
@@ -247,17 +249,17 @@ Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addre
 
 **Subnet sizing guidance:**
 
-- `/24` is the standard subnet size for most workloads. It provides 251 usable addresses per AZ, which handles most application tiers comfortably.
-- `/20` or larger for EKS worker node subnets if pods use the primary CIDR (each node consumes IPs proportional to its pod capacity).
-- `/28` for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, NAT Gateways).
-- Leave gaps in your numbering scheme (notice the jump from `.2.0` to `.10.0` above) to allow inserting new subnet tiers without renumbering.
+* `/24` is the standard subnet size for most workloads. It provides 251 usable addresses per AZ, which handles most application tiers comfortably.
+* `/20` or larger for EKS worker node subnets if pods use the primary CIDR (each node consumes IPs proportional to its pod capacity).
+* `/28` for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, NAT Gateways).
+* Leave gaps in your numbering scheme (notice the jump from `.2.0` to `.10.0` above) to allow inserting new subnet tiers without renumbering.
 
 **Subnet design principles:**
 
-- **Consistent across AZs**: Every AZ should have the same subnet tiers with the same sizes. This ensures workloads can fail over between AZs without capacity differences.
-- **Separate route tables per tier**: Public subnets route to an internet gateway; private subnets route through NAT or stay internal. Mixing tiers in a single route table creates security risks.
-- **Plan for at least 3 AZs**: Even if you start with 2, design your subnet scheme for 3 AZs from the beginning. Adding a third AZ later with a consistent scheme is trivial if you planned for it.
-- **Reserve space for infrastructure subnets**: Transit Gateway attachments, Network Firewall endpoints, and Gateway Load Balancer endpoints each need a subnet per AZ. These only need `/28` but must exist in every AZ.
+* **Consistent across AZs**: Every AZ should have the same subnet tiers with the same sizes. This ensures workloads can fail over between AZs without capacity differences.
+* **Separate route tables per tier**: Public subnets route to an internet gateway; private subnets route through NAT or stay internal. Mixing tiers in a single route table creates security risks.
+* **Plan for at least 3 AZs**: Even if you start with 2, design your subnet scheme for 3 AZs from the beginning. Adding a third AZ later with a consistent scheme is trivial if you planned for it.
+* **Reserve space for infrastructure subnets**: Transit Gateway attachments, Network Firewall endpoints, and Gateway Load Balancer endpoints each need a subnet per AZ. These only need `/28` but must exist in every AZ.
 
 ***Key insight:*** *The numbering gaps in your subnet scheme are not wasted space — they are future-proofing. A VPC that uses 10.0.0.0/24, 10.0.1.0/24, 10.0.2.0/24 for its first three tiers has no room to insert a new tier between them. A scheme with gaps (0, 10, 20, 30) lets you add tiers at 5, 15, 25 without disrupting existing subnets.*
 
@@ -321,8 +323,8 @@ Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addre
 
 This page covers CIDR planning principles. For related foundational topics, see:
 
-- **[Amazon VPC](vpc.md)** — VPC design patterns, multi-AZ architecture, and how VPC structure builds on your CIDR plan
-- **[Subnets](subnets.md)** — Subnet tiers, route table design, and network ACLs within your CIDR allocation
-- **[AWS IPAM](ipam.md)** — Automating CIDR allocation, preventing overlaps, and enforcing policies across your organization
-- **[Regions and Availability Zones](regions-azs.md)** — How Region selection drives your multi-Region CIDR allocation strategy
-- **[AWS Organizations](organizations.md)** — Account structure that your CIDR hierarchy should mirror
+* **[Amazon VPC](vpc.md)** — VPC design patterns, multi-AZ architecture, and how VPC structure builds on your CIDR plan
+* **[Subnets](subnets.md)** — Subnet tiers, route table design, and network ACLs within your CIDR allocation
+* **[AWS IPAM](ipam.md)** — Automating CIDR allocation, preventing overlaps, and enforcing policies across your organization
+* **[Regions and Availability Zones](regions-azs.md)** — How Region selection drives your multi-Region CIDR allocation strategy
+* **[AWS Organizations](organizations.md)** — Account structure that your CIDR hierarchy should mirror

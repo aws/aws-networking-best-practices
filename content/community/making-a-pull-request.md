@@ -118,6 +118,7 @@ First, clone the repository.
 git clone https://github.com/YOUR-USERNAME/aws-networking-best-practices
 cd aws-networking-best-practices
 ```
+
 Next, create a new [Python virtual environment][venv] and
 [activate][venv-activate] it:
 

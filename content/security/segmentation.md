@@ -104,18 +104,18 @@ Within an account, VPCs provide network-level isolation. Two VPCs in the same ac
 
 Use separate VPCs when workloads within the same account have different:
 
-- **Trust levels** — a management-plane VPC vs. a data-plane VPC
-- **Connectivity requirements** — one VPC needs internet access, another must be fully private
-- **Compliance scopes** — a PCI-scoped VPC with strict inspection vs. a general-purpose VPC
-- **Lifecycle or team ownership** — different teams manage different VPCs independently
+* **Trust levels** — a management-plane VPC vs. a data-plane VPC
+* **Connectivity requirements** — one VPC needs internet access, another must be fully private
+* **Compliance scopes** — a PCI-scoped VPC with strict inspection vs. a general-purpose VPC
+* **Lifecycle or team ownership** — different teams manage different VPCs independently
 
 ### IPv6 considerations for VPC segmentation
 
 VPC segmentation applies identically to IPv6 traffic. When you create separate VPCs for isolation, ensure:
 
-- Each VPC has its own IPv6 CIDR allocation (from IPAM or Amazon-provided)
-- Route tables do not inadvertently create IPv6 connectivity between VPCs that should be isolated
-- Security groups include explicit IPv6 rules — a security group that only has IPv4 rules provides no IPv6 filtering if the ENI has an IPv6 address assigned
+* Each VPC has its own IPv6 CIDR allocation (from IPAM or Amazon-provided)
+* Route tables do not inadvertently create IPv6 connectivity between VPCs that should be isolated
+* Security groups include explicit IPv6 rules — a security group that only has IPv4 rules provides no IPv6 filtering if the ENI has an IPv6 address assigned
 
 ***Key insight:*** *Security groups are stateful but not protocol-aware by default. If you assign IPv6 addresses to resources, you must add IPv6 rules to security groups explicitly — there is no automatic mirroring of IPv4 rules.*
 
@@ -180,10 +180,10 @@ AWS Cloud WAN segments provide network segmentation at the routing layer across 
 
 Segments are the right tool when you need:
 
-- Consistent segmentation policies across multiple Regions
-- Centralized enforcement that individual account owners cannot bypass
-- Automated segment assignment based on attachment metadata (tags, account, Region)
-- Inter-segment inspection through service insertion
+* Consistent segmentation policies across multiple Regions
+* Centralized enforcement that individual account owners cannot bypass
+* Automated segment assignment based on attachment metadata (tags, account, Region)
+* Inter-segment inspection through service insertion
 
 ### Cloud WAN segments vs. Transit Gateway route tables
 
@@ -223,10 +223,10 @@ Traditional network segmentation answers "can network packet X reach network end
 
 Network segmentation breaks down when:
 
-- Multiple services share the same VPC or subnet (common in containerized environments)
-- Services need to communicate across segment boundaries for legitimate business reasons
-- You need per-service access control, not per-network access control
-- Workloads move between network positions (auto-scaling, container orchestration)
+* Multiple services share the same VPC or subnet (common in containerized environments)
+* Services need to communicate across segment boundaries for legitimate business reasons
+* You need per-service access control, not per-network access control
+* Workloads move between network positions (auto-scaling, container orchestration)
 
 In these cases, identity-based segmentation through VPC Lattice auth policies provides finer-grained control that follows the workload regardless of its network position.
 
@@ -292,9 +292,9 @@ AWS PrivateLink provides a different segmentation model: instead of connecting n
 
 This is segmentation by design rather than segmentation by filtering. Use PrivateLink when:
 
-- You want to expose a single service to another account without granting any network-level access
-- The provider and consumer should have no IP-level connectivity beyond the specific service
-- You need to expose services to third parties or partners without VPC peering
+* You want to expose a single service to another account without granting any network-level access
+* The provider and consumer should have no IP-level connectivity beyond the specific service
+* You need to expose services to third parties or partners without VPC peering
 
 ## Best Practices
 
@@ -377,11 +377,11 @@ Place Transit Gateways, Cloud WAN core networks, and shared Inspection VPCs in a
 
 Every segmentation control that applies to IPv4 must also apply to IPv6. This includes:
 
-- Security group rules (separate rules needed for IPv6 CIDRs; reference-based rules cover both automatically)
-- Network ACLs (if used — separate IPv6 rules required)
-- Route tables (IPv6 routes are separate entries)
-- Network Firewall rules (must include IPv6 rule groups)
-- Cloud WAN routing (dual-stack support in network policy)
+* Security group rules (separate rules needed for IPv6 CIDRs; reference-based rules cover both automatically)
+* Network ACLs (if used — separate IPv6 rules required)
+* Route tables (IPv6 routes are separate entries)
+* Network Firewall rules (must include IPv6 rule groups)
+* Cloud WAN routing (dual-stack support in network policy)
 
 #### Avoid IPv6 as a segmentation bypass
 
@@ -457,15 +457,15 @@ A common vulnerability: workloads have IPv6 addresses assigned but security grou
 
 **Relationship to Foundation topics:**
 
-- **[Amazon VPC](../foundation/vpc.md)**: VPCs are the primary network-level segmentation boundary within an account. This page builds on VPC isolation concepts.
-- **[AWS Organizations](../foundation/organizations.md)**: Account and OU structure defines the strongest segmentation boundaries. Organization design is a segmentation decision.
-- **[Subnets](../foundation/subnets.md)**: Subnet design and route table configuration implement routing-based segmentation within a VPC.
+* **[Amazon VPC](../foundation/vpc.md)**: VPCs are the primary network-level segmentation boundary within an account. This page builds on VPC isolation concepts.
+* **[AWS Organizations](../foundation/organizations.md)**: Account and OU structure defines the strongest segmentation boundaries. Organization design is a segmentation decision.
+* **[Subnets](../foundation/subnets.md)**: Subnet design and route table configuration implement routing-based segmentation within a VPC.
 
 **Relationship to Connectivity topics:**
 
-- **[Connectivity Within AWS](../connectivity/within-aws.md)**: Cloud WAN segments and Transit Gateway route tables are covered in depth there. This page focuses on their segmentation properties rather than connectivity mechanics.
+* **[Connectivity Within AWS](../connectivity/within-aws.md)**: Cloud WAN segments and Transit Gateway route tables are covered in depth there. This page focuses on their segmentation properties rather than connectivity mechanics.
 
 **Relationship to other Security topics:**
 
-- **[Perimeter Controls](perimeter-inbound.md)**: Perimeter controls protect the network edge; segmentation controls internal traffic flows. Both are required.
-- **[Outbound Controls](outbound.md)**: Outbound filtering can be applied per-segment (different egress rules for different segments).
+* **[Perimeter Controls](perimeter-inbound.md)**: Perimeter controls protect the network edge; segmentation controls internal traffic flows. Both are required.
+* **[Outbound Controls](outbound.md)**: Outbound filtering can be applied per-segment (different egress rules for different segments).

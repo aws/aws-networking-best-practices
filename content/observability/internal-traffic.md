@@ -211,9 +211,9 @@ This is particularly valuable in multi-account environments where you may not ha
 
 Transit Gateway route tables and attachments define what *can* communicate. Transit Gateway Flow Logs show what *does* communicate. Compare the two to identify:
 
-- Traffic between VPCs that should be isolated (e.g., production to development)
-- Unexpected traffic volumes between specific VPC pairs (potential data exfiltration)
-- Traffic patterns that indicate misconfigured route tables (traffic taking unexpected paths)
+* Traffic between VPCs that should be isolated (e.g., production to development)
+* Unexpected traffic volumes between specific VPC pairs (potential data exfiltration)
+* Traffic patterns that indicate misconfigured route tables (traffic taking unexpected paths)
 
 ***Key insight:*** *Transit Gateway Flow Logs are the only native way to get a single-pane view of all cross-VPC traffic in your organization without configuring Flow Logs in every individual VPC. For networking teams managing hundreds of accounts, this is the starting point for cross-VPC visibility.*
 
@@ -237,10 +237,10 @@ Most organizations should use S3 as the primary destination for all Flow Logs, w
 
 In a multi-account environment, deliver all Flow Logs to a centralized S3 bucket in your log archive account. This provides:
 
-- Single location for security investigations across all accounts
-- Consistent retention policies applied organization-wide
-- Cross-account Athena queries without switching roles
-- Simplified compliance auditing (one bucket to demonstrate log completeness)
+* Single location for security investigations across all accounts
+* Consistent retention policies applied organization-wide
+* Cross-account Athena queries without switching roles
+* Simplified compliance auditing (one bucket to demonstrate log completeness)
 
 Configure cross-account Flow Log delivery using a bucket policy that allows the Flow Logs service (`delivery.logs.amazonaws.com`) to write from any account in your organization. Use the `aws:PrincipalOrgID` condition to restrict access to your organization only.
 
@@ -266,9 +266,9 @@ VPC Flow Logs capture both IPv4 and IPv6 traffic in the same log stream. You do 
 
 Include the `type` field in your custom log format to enable filtering. Common use cases:
 
-- Track IPv6 adoption rate across your VPCs (ratio of type=6 to type=3 flows)
-- Identify workloads that have migrated to IPv6 and validate they're no longer using IPv4
-- Detect unexpected IPv6 traffic in VPCs where IPv6 is not yet intentionally deployed
+* Track IPv6 adoption rate across your VPCs (ratio of type=6 to type=3 flows)
+* Identify workloads that have migrated to IPv6 and validate they're no longer using IPv4
+* Detect unexpected IPv6 traffic in VPCs where IPv6 is not yet intentionally deployed
 
 #### Include IPv6-specific fields in your custom log format
 
@@ -280,9 +280,9 @@ When using dual-stack VPCs, include `pkt-srcaddr` and `pkt-dstaddr` in your cust
 
 Flow Log costs have three components: ingestion, storage, and analysis. At scale, these add up:
 
-- **Ingestion**: The per-GB charge for delivering logs to the destination. S3 is cheapest ($0.25/GB for first 10 TB), CloudWatch Logs is 2x ($0.50/GB).
-- **Storage**: S3 Standard is $0.023/GB/month. Use S3 Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.
-- **Analysis**: Athena charges $5 per TB scanned. Partitioning and columnar formats (Parquet via Firehose) reduce scan volume dramatically.
+* **Ingestion**: The per-GB charge for delivering logs to the destination. S3 is cheapest ($0.25/GB for first 10 TB), CloudWatch Logs is 2x ($0.50/GB).
+* **Storage**: S3 Standard is $0.023/GB/month. Use S3 Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.
+* **Analysis**: Athena charges $5 per TB scanned. Partitioning and columnar formats (Parquet via Firehose) reduce scan volume dramatically.
 
 For a 100-VPC environment generating 1 TB/month of Flow Logs, the baseline cost is approximately $250/month for S3 ingestion + $23/month for storage. CloudWatch Logs for the same volume would be $500/month for ingestion + $30/month for storage. Over a year, the S3 approach saves roughly $3,000 — and the gap widens as you retain more history.
 
@@ -410,15 +410,15 @@ However, Transit Gateway Flow Logs only capture traffic that *crosses* the Trans
 
 ## Related Observability Pages
 
-- **[External Traffic Monitoring](external-traffic.md)** — Covers visibility into traffic between your AWS resources and the internet, including NAT Gateway logs, ALB access logs, and CloudFront logs.
-- **[AWS Services Monitoring](service-monitoring.md)** — Covers health and performance monitoring of the networking services themselves (Transit Gateway metrics, NAT Gateway CloudWatch metrics, VPC endpoint metrics).
-- **[Notifications](notifications.md)** — Covers alerting and notification patterns built on top of the monitoring data described here.
+* **[External Traffic Monitoring](external-traffic.md)** — Covers visibility into traffic between your AWS resources and the internet, including NAT Gateway logs, ALB access logs, and CloudFront logs.
+* **[AWS Services Monitoring](service-monitoring.md)** — Covers health and performance monitoring of the networking services themselves (Transit Gateway metrics, NAT Gateway CloudWatch metrics, VPC endpoint metrics).
+* **[Notifications](notifications.md)** — Covers alerting and notification patterns built on top of the monitoring data described here.
 
 **Relationship to Foundation:**
 
-- **[Amazon VPC](../foundation/vpc.md)**: VPC Flow Logs are configured at the VPC level. VPC design (CIDR, subnets, route tables) determines what traffic patterns are visible and how to interpret them.
-- **[Subnets](../foundation/subnets.md)**: Subnet IDs in Flow Logs identify which tier (public, private, data) traffic originates from — essential for security analysis.
+* **[Amazon VPC](../foundation/vpc.md)**: VPC Flow Logs are configured at the VPC level. VPC design (CIDR, subnets, route tables) determines what traffic patterns are visible and how to interpret them.
+* **[Subnets](../foundation/subnets.md)**: Subnet IDs in Flow Logs identify which tier (public, private, data) traffic originates from — essential for security analysis.
 
 **Relationship to Connectivity:**
 
-- **[Connectivity Within AWS](../connectivity/within-aws.md)**: Transit Gateway Flow Logs provide visibility into the traffic that Transit Gateway and Cloud WAN route between VPCs. The `traffic-path` field in VPC Flow Logs identifies which connectivity service a flow used.
+* **[Connectivity Within AWS](../connectivity/within-aws.md)**: Transit Gateway Flow Logs provide visibility into the traffic that Transit Gateway and Cloud WAN route between VPCs. The `traffic-path` field in VPC Flow Logs identifies which connectivity service a flow used.

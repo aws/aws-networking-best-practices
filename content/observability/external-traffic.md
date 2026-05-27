@@ -197,9 +197,9 @@ Configure cross-account delivery for each log type:
 
 External traffic logs at scale generate terabytes per day. Without proper partitioning, Athena queries scan the entire dataset and cost grows linearly with retention. Partition all log buckets by:
 
-- **Account ID** — enables per-account cost attribution and scoped investigation
-- **Region** — matches the geographic scope of most queries
-- **Year/Month/Day/Hour** — enables time-bounded queries that scan only relevant partitions
+* **Account ID** — enables per-account cost attribution and scoped investigation
+* **Region** — matches the geographic scope of most queries
+* **Year/Month/Day/Hour** — enables time-bounded queries that scan only relevant partitions
 
 ALB and CloudFront logs are already delivered with date-based prefixes. Add account ID as a top-level prefix in your bucket structure. Use Athena partition projection to avoid manual partition management as new data arrives.
 
@@ -229,17 +229,17 @@ The highest-cost items are VPC Flow Logs at volume (generation charge) and Cloud
 
 Real-time log analysis (CloudFront real-time logs → Kinesis → Lambda/KDA, or WAF logs → CloudWatch Logs → metric filters) costs significantly more than batch analysis (logs → S3 → Athena on demand). Default to batch analysis for:
 
-- Post-incident investigation
-- Weekly/monthly trend reporting
-- Cost attribution and chargeback
-- Compliance and audit queries
+* Post-incident investigation
+* Weekly/monthly trend reporting
+* Cost attribution and chargeback
+* Compliance and audit queries
 
 Reserve real-time analysis for:
 
-- Live operational dashboards during deployments
-- Sub-minute alerting on error rate spikes
-- Active incident response where seconds matter
-- DDoS detection and automated response triggers
+* Live operational dashboards during deployments
+* Sub-minute alerting on error rate spikes
+* Active incident response where seconds matter
+* DDoS detection and automated response triggers
 
 ## When to use each data source
 
@@ -384,18 +384,18 @@ CloudFront and ALB logs both record the client's IP version. Track the percentag
 
 **Relationship to other Observability topics:**
 
-- **[Internal Traffic Monitoring](internal-traffic.md)**: Covers east-west traffic visibility within your AWS environment. External traffic monitoring handles north-south flows crossing the internet boundary.
-- **[AWS Services Monitoring](service-monitoring.md)**: Covers health and performance monitoring of AWS networking services themselves. External traffic monitoring uses the data those services produce.
-- **[Notifications](notifications.md)**: Covers alerting and notification routing. External traffic monitoring generates the signals that notifications act on.
+* **[Internal Traffic Monitoring](internal-traffic.md)**: Covers east-west traffic visibility within your AWS environment. External traffic monitoring handles north-south flows crossing the internet boundary.
+* **[AWS Services Monitoring](service-monitoring.md)**: Covers health and performance monitoring of AWS networking services themselves. External traffic monitoring uses the data those services produce.
+* **[Notifications](notifications.md)**: Covers alerting and notification routing. External traffic monitoring generates the signals that notifications act on.
 
 **Relationship to Connectivity:**
 
-- **[Internet Connectivity](../connectivity/internet.md)**: Defines the ingress and egress architecture (centralized vs. decentralized, IPv4 vs. IPv6). External traffic monitoring provides visibility into how that architecture performs in production.
+* **[Internet Connectivity](../connectivity/internet.md)**: Defines the ingress and egress architecture (centralized vs. decentralized, IPv4 vs. IPv6). External traffic monitoring provides visibility into how that architecture performs in production.
 
 **Relationship to Application Networking:**
 
-- **[Load Balancing](../application-networking/load-balancing.md)**: ALB and NLB are both the data plane for ingress traffic and the source of access logs that drive external traffic observability.
+* **[Load Balancing](../application-networking/load-balancing.md)**: ALB and NLB are both the data plane for ingress traffic and the source of access logs that drive external traffic observability.
 
 **Relationship to Security:**
 
-- **[Outbound Controls](../security/outbound.md)**: Defines what egress traffic is allowed. External traffic monitoring (NAT Gateway metrics, VPC Flow Logs) validates that those controls are working and reveals policy gaps.
+* **[Outbound Controls](../security/outbound.md)**: Defines what egress traffic is allowed. External traffic monitoring (NAT Gateway metrics, VPC Flow Logs) validates that those controls are working and reveals policy gaps.

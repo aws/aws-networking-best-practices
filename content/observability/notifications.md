@@ -144,10 +144,10 @@ A single metric crossing a threshold is often not a problem. A VPN tunnel briefl
 
 Networking patterns that benefit from composite alarms:
 
-- **Both VPN tunnels down** on the same connection (single tunnel down is P2; both down is P1)
-- **NAT Gateway errors AND increased packet drops** (errors alone might be transient; combined with drops confirms impact)
-- **BGP session down AND no traffic on the backup path** (BGP down alone might mean traffic shifted to backup successfully)
-- **Multiple Transit Gateway attachments unhealthy** (one attachment flapping is isolated; multiple suggests a broader issue)
+* **Both VPN tunnels down** on the same connection (single tunnel down is P2; both down is P1)
+* **NAT Gateway errors AND increased packet drops** (errors alone might be transient; combined with drops confirms impact)
+* **BGP session down AND no traffic on the backup path** (BGP down alone might mean traffic shifted to backup successfully)
+* **Multiple Transit Gateway attachments unhealthy** (one attachment flapping is isolated; multiple suggests a broader issue)
 
 #### Suppress child alarm actions when using composite alarms
 
@@ -159,12 +159,12 @@ When you create a composite alarm, configure the child alarms with `ActionsEnabl
 
 CloudWatch Alarms are metric-based. EventBridge handles *events* — discrete state changes that don't map cleanly to a metric threshold. For networking, the most important EventBridge patterns are:
 
-- **VPN tunnel state change**: `source: aws.vpn`, `detail-type: "VPN Tunnel Status Change"`
-- **Direct Connect connection state change**: `source: aws.directconnect`, `detail-type: "Direct Connect Connection State Change"`
-- **Direct Connect virtual interface state change**: BGP session up/down events
-- **Network Firewall alert**: Stateful rule match events forwarded to EventBridge
-- **Transit Gateway attachment state change**: Attachment available/failing/deleting
-- **AWS Health events**: Scheduled maintenance, service issues affecting your resources
+* **VPN tunnel state change**: `source: aws.vpn`, `detail-type: "VPN Tunnel Status Change"`
+* **Direct Connect connection state change**: `source: aws.directconnect`, `detail-type: "Direct Connect Connection State Change"`
+* **Direct Connect virtual interface state change**: BGP session up/down events
+* **Network Firewall alert**: Stateful rule match events forwarded to EventBridge
+* **Transit Gateway attachment state change**: Attachment available/failing/deleting
+* **AWS Health events**: Scheduled maintenance, service issues affecting your resources
 
 EventBridge rules match on event patterns and route to targets (SNS, Lambda, SQS, Step Functions). This is the right mechanism for "something changed state" notifications, as opposed to "a metric crossed a threshold."
 
@@ -190,10 +190,10 @@ Create EventBridge rules that match Health events for networking services (`dire
 
 A common anti-pattern is a single SNS topic that sends every network alarm to every engineer. This guarantees alert fatigue. Instead, create separate SNS topics per team and per severity:
 
-- `networking-p1-critical` → PagerDuty rotation for the networking team
-- `networking-p2-high` → Slack #network-ops channel
-- `networking-p3-info` → Slack #network-notifications channel (muted by default)
-- `workload-team-a-network` → Team A's own channel for alarms on their VPC resources
+* `networking-p1-critical` → PagerDuty rotation for the networking team
+* `networking-p2-high` → Slack #network-ops channel
+* `networking-p3-info` → Slack #network-notifications channel (muted by default)
+* `workload-team-a-network` → Team A's own channel for alarms on their VPC resources
 
 Application teams should receive notifications about *their* workload's network health (their VPC endpoints, their load balancer health), not about shared infrastructure they can't act on. The networking team receives notifications about shared infrastructure (Transit Gateway, Direct Connect, Network Firewall).
 
@@ -203,10 +203,10 @@ Application teams should receive notifications about *their* workload's network 
 
 Some network events have well-defined, safe automated responses:
 
-- **VPN tunnel down** → Lambda triggers a CloudFormation stack update to rotate pre-shared keys and re-establish the tunnel
-- **NAT Gateway ErrorPortAllocation** → Lambda provisions an additional NAT Gateway and updates route tables
-- **Direct Connect connection down** → Lambda verifies backup VPN path is active and creates a ticket if it isn't
-- **Network Firewall rule group update failed** → Lambda rolls back to the previous rule group version
+* **VPN tunnel down** → Lambda triggers a CloudFormation stack update to rotate pre-shared keys and re-establish the tunnel
+* **NAT Gateway ErrorPortAllocation** → Lambda provisions an additional NAT Gateway and updates route tables
+* **Direct Connect connection down** → Lambda verifies backup VPN path is active and creates a ticket if it isn't
+* **Network Firewall rule group update failed** → Lambda rolls back to the previous rule group version
 
 Automated remediation is not a replacement for human response — it's a first responder that buys time. The Lambda should always create a ticket or send a notification *in addition to* taking the remediation action, so the team knows what happened and can verify the fix.
 
@@ -295,15 +295,15 @@ The real cost risk is not the notification services themselves — it's creating
 
 ## Related Observability Pages
 
-- **[AWS Services Monitoring](service-monitoring.md)** — The metrics and health checks that feed into the notification pipeline covered on this page
-- **[Internal Traffic Monitoring](internal-traffic.md)** — Flow logs and traffic mirroring that provide the raw data for anomaly-based network alarms
-- **[External Traffic Monitoring](external-traffic.md)** — Internet-facing traffic visibility that drives DDoS and abuse notifications
+* **[AWS Services Monitoring](service-monitoring.md)** — The metrics and health checks that feed into the notification pipeline covered on this page
+* **[Internal Traffic Monitoring](internal-traffic.md)** — Flow logs and traffic mirroring that provide the raw data for anomaly-based network alarms
+* **[External Traffic Monitoring](external-traffic.md)** — Internet-facing traffic visibility that drives DDoS and abuse notifications
 
 **Relationship to Foundation:**
 
-- **[AWS Organizations](../foundation/organizations.md)** — Organization structure determines cross-account event forwarding topology and centralized monitoring account placement
+* **[AWS Organizations](../foundation/organizations.md)** — Organization structure determines cross-account event forwarding topology and centralized monitoring account placement
 
 **Relationship to Connectivity:**
 
-- **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)** — Direct Connect and VPN state-change events are the most critical networking notifications to configure
-- **[Connectivity Within AWS](../connectivity/within-aws.md)** — Transit Gateway and Cloud WAN attachment health drives composite alarm design
+* **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)** — Direct Connect and VPN state-change events are the most critical networking notifications to configure
+* **[Connectivity Within AWS](../connectivity/within-aws.md)** — Transit Gateway and Cloud WAN attachment health drives composite alarm design

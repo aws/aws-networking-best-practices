@@ -8,7 +8,7 @@ Whether you want to fix a typo, suggest improvements, or contribute entirely new
 
 <div class="grid cards" markdown>
 
--   :material-hand-heart: **How to Contribute**
+*   :material-hand-heart: **How to Contribute**
 
     ---
 
@@ -16,7 +16,7 @@ Whether you want to fix a typo, suggest improvements, or contribute entirely new
 
     [:octicons-arrow-right-24: Learn more](contribute.md)
 
--   :material-alert-circle: **Report a Correction**
+*   :material-alert-circle: **Report a Correction**
 
     ---
 
@@ -24,7 +24,7 @@ Whether you want to fix a typo, suggest improvements, or contribute entirely new
 
     [:octicons-arrow-right-24: Report it](report-a-correction.md)
 
--   :material-lightbulb: **New Best Practice**
+*   :material-lightbulb: **New Best Practice**
 
     ---
 
@@ -32,7 +32,7 @@ Whether you want to fix a typo, suggest improvements, or contribute entirely new
 
     [:octicons-arrow-right-24: Submit](new-best-practice.md)
 
--   :material-source-pull: **Making a Pull Request**
+*   :material-source-pull: **Making a Pull Request**
 
     ---
 
@@ -40,7 +40,7 @@ Whether you want to fix a typo, suggest improvements, or contribute entirely new
 
     [:octicons-arrow-right-24: Learn more](making-a-pull-request.md)
 
--   :material-thought-bubble: **Philosophy**
+*   :material-thought-bubble: **Philosophy**
 
     ---
 
@@ -48,7 +48,7 @@ Whether you want to fix a typo, suggest improvements, or contribute entirely new
 
     [:octicons-arrow-right-24: Read more](philosophy.md)
 
--   :material-format-list-checks: **Conventions**
+*   :material-format-list-checks: **Conventions**
 
     ---
 

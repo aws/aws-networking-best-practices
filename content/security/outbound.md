@@ -220,9 +220,9 @@ DNS Firewall operates at the resolution layer and is protocol-agnostic — it bl
 
 AWS does not offer a managed NAT for IPv6. IPv6 egress is always decentralized (per-VPC egress-only internet gateway) and cannot be centralized through a shared egress VPC the way IPv4 can. This means:
 
-- IPv6 egress inspection must happen per-VPC (Network Firewall endpoints in each VPC) or at the DNS layer (DNS Firewall, which is centrally managed regardless of egress topology).
-- There is no IPv6 equivalent of routing all egress through a centralized NAT Gateway for inspection.
-- For organizations that require a single physical inspection point, this is a factor in IPv6 adoption planning.
+* IPv6 egress inspection must happen per-VPC (Network Firewall endpoints in each VPC) or at the DNS layer (DNS Firewall, which is centrally managed regardless of egress topology).
+* There is no IPv6 equivalent of routing all egress through a centralized NAT Gateway for inspection.
+* For organizations that require a single physical inspection point, this is a factor in IPv6 adoption planning.
 
 ***Key insight:*** *IPv6 egress security relies on security groups and DNS Firewall as the primary controls. The egress-only IGW provides directionality (outbound-only) but not filtering — your security posture must not depend on it alone.*
 
@@ -389,15 +389,15 @@ The [Internet Connectivity](../connectivity/internet.md) page covers the archite
 
 **Relationship to other Security topics:**
 
-- **[Perimeter Controls](perimeter-inbound.md)**: Covers inbound traffic filtering — the other half of network security. Outbound controls complement perimeter controls to form a complete security posture.
-- **[Network Segmentation](segmentation.md)**: Controls east-west traffic between workloads. Outbound controls handle north-south traffic leaving your environment.
+* **[Perimeter Controls](perimeter-inbound.md)**: Covers inbound traffic filtering — the other half of network security. Outbound controls complement perimeter controls to form a complete security posture.
+* **[Network Segmentation](segmentation.md)**: Controls east-west traffic between workloads. Outbound controls handle north-south traffic leaving your environment.
 
 **Relationship to Connectivity:**
 
-- **[Internet Connectivity](../connectivity/internet.md)**: Covers the architectural decision of centralized vs. decentralized egress, NAT Gateway modes, and IPv6 egress paths. This page layers security controls on top of those connectivity patterns.
-- **[Within AWS Connectivity](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN are the transit layer that enables centralized egress inspection when that pattern is chosen.
+* **[Internet Connectivity](../connectivity/internet.md)**: Covers the architectural decision of centralized vs. decentralized egress, NAT Gateway modes, and IPv6 egress paths. This page layers security controls on top of those connectivity patterns.
+* **[Within AWS Connectivity](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN are the transit layer that enables centralized egress inspection when that pattern is chosen.
 
 **Relationship to Foundation:**
 
-- **[Amazon VPC](../foundation/vpc.md)**: VPCs are the boundary within which outbound controls operate. Security groups, route tables, and VPC endpoints are all VPC-level constructs.
-- **[Subnets](../foundation/subnets.md)**: Subnet design determines where NAT Gateways, Network Firewall endpoints, and egress-only IGWs are placed.
+* **[Amazon VPC](../foundation/vpc.md)**: VPCs are the boundary within which outbound controls operate. Security groups, route tables, and VPC endpoints are all VPC-level constructs.
+* **[Subnets](../foundation/subnets.md)**: Subnet design determines where NAT Gateways, Network Firewall endpoints, and egress-only IGWs are placed.

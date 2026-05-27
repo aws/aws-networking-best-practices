@@ -171,9 +171,9 @@ Individual metric alarms generate noise. A brief spike in `PacketDropCountNoRout
 
 [Composite alarms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html) combine multiple alarm states with AND/OR logic. Configure them to alert only when multiple signals confirm a problem:
 
-- Transit Gateway: `PacketDropCountBlackhole > 0` AND `BytesOut` anomaly (confirms traffic is affected, not just a transient routing update)
-- NAT Gateway: `ErrorPortAllocation > 0` AND `ActiveConnectionCount` above baseline (confirms the port exhaustion is real load, not a monitoring artifact)
-- Load Balancer: `UnHealthyHostCount > 0` AND `HealthyHostCount < minimum` (confirms actual capacity loss, not a single target cycling)
+* Transit Gateway: `PacketDropCountBlackhole > 0` AND `BytesOut` anomaly (confirms traffic is affected, not just a transient routing update)
+* NAT Gateway: `ErrorPortAllocation > 0` AND `ActiveConnectionCount` above baseline (confirms the port exhaustion is real load, not a monitoring artifact)
+* Load Balancer: `UnHealthyHostCount > 0` AND `HealthyHostCount < minimum` (confirms actual capacity loss, not a single target cycling)
 
 ***Key insight:*** *Composite alarms are the difference between a monitoring system that gets ignored and one that gets acted on. Every alert that fires without requiring action trains your team to ignore alerts.*
 
@@ -181,9 +181,9 @@ Individual metric alarms generate noise. A brief spike in `PacketDropCountNoRout
 
 Static thresholds require constant tuning as traffic patterns change. CloudWatch [anomaly detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html) builds a model of expected behavior and alerts when metrics deviate from the learned pattern. This is particularly effective for:
 
-- `BytesIn`/`BytesOut` on Transit Gateway and NAT Gateway (traffic follows daily/weekly patterns)
-- `RequestCount` on ALB and VPC Lattice (application traffic has predictable cycles)
-- `NewFlowCount` on NLB (connection rates correlate with business activity)
+* `BytesIn`/`BytesOut` on Transit Gateway and NAT Gateway (traffic follows daily/weekly patterns)
+* `RequestCount` on ALB and VPC Lattice (application traffic has predictable cycles)
+* `NewFlowCount` on NLB (connection rates correlate with business activity)
 
 Anomaly detection costs the same as a standard alarm but adapts automatically to traffic growth, seasonal patterns, and baseline shifts. Use a band width of 2 standard deviations for most networking metrics — tight enough to catch real anomalies, loose enough to avoid false positives during normal variance.
 
@@ -213,18 +213,19 @@ In a multi-account environment, networking resources are distributed across shar
 Use [CloudWatch cross-account observability](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html) to designate a monitoring account that can view metrics, logs, and traces from all source accounts. Configure this at the AWS Organizations level so new accounts are automatically enrolled.
 
 The monitoring account hosts:
-- Cross-account dashboards showing all networking service health
-- Centralized alarms that evaluate metrics from any source account
-- EventBridge rules that aggregate networking events from all accounts
+
+* Cross-account dashboards showing all networking service health
+* Centralized alarms that evaluate metrics from any source account
+* EventBridge rules that aggregate networking events from all accounts
 
 #### Build cross-Region dashboards for the networking team
 
 A single CloudWatch dashboard can display metrics from multiple Regions. Build dashboards organized by service type, not by account or Region:
 
-- **Transit Gateway dashboard**: all TGW metrics across all Regions, with per-attachment drill-down
-- **Hybrid connectivity dashboard**: all Direct Connect and VPN metrics, showing connection state and utilization
-- **Load balancer dashboard**: ALB and NLB health across all workload accounts
-- **DNS dashboard**: Route 53 Resolver query volumes and DNS Firewall activity
+* **Transit Gateway dashboard**: all TGW metrics across all Regions, with per-attachment drill-down
+* **Hybrid connectivity dashboard**: all Direct Connect and VPN metrics, showing connection state and utilization
+* **Load balancer dashboard**: ALB and NLB health across all workload accounts
+* **DNS dashboard**: Route 53 Resolver query volumes and DNS Firewall activity
 
 Each dashboard should show the last 3 hours by default with the ability to zoom to 1 week for trend analysis.
 
@@ -236,9 +237,9 @@ Each dashboard should show the last 3 hours by default with the ability to zoom 
 
 Several networking services report metrics that differ between IPv4 and IPv6 traffic paths. When running dual-stack:
 
-- **ALB/NLB**: Monitor `IPv6ProcessedBytes` and `IPv6RequestCount` separately from their IPv4 counterparts. A failure in the IPv6 path won't show up in aggregate metrics if IPv4 traffic dominates.
-- **NAT Gateway**: NAT64 metrics (`BytesOutToDestination` for IPv6-to-IPv4 translation) track a different failure mode than standard NAT. Monitor both paths.
-- **VPC Lattice**: Dual-stack service networks carry both IPv4 and IPv6 traffic. Monitor per-protocol error rates to catch IPv6-specific routing issues.
+* **ALB/NLB**: Monitor `IPv6ProcessedBytes` and `IPv6RequestCount` separately from their IPv4 counterparts. A failure in the IPv6 path won't show up in aggregate metrics if IPv4 traffic dominates.
+* **NAT Gateway**: NAT64 metrics (`BytesOutToDestination` for IPv6-to-IPv4 translation) track a different failure mode than standard NAT. Monitor both paths.
+* **VPC Lattice**: Dual-stack service networks carry both IPv4 and IPv6 traffic. Monitor per-protocol error rates to catch IPv6-specific routing issues.
 
 #### Configure IPv6-specific health checks
 
@@ -250,9 +251,9 @@ For services that support IPv6 health checks (ALB, NLB), configure health checks
 
 CloudWatch charges per alarm per month. Instead of creating individual alarms for every NAT Gateway or every Transit Gateway attachment, use [metric math](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html) to aggregate:
 
-- Sum `ErrorPortAllocation` across all NAT Gateways in a Region into a single alarm
-- Calculate the ratio of `UnHealthyHostCount` to total targets across all target groups
-- Compute `PacketDropCountBlackhole + PacketDropCountNoRoute` as a single "routing failures" metric
+* Sum `ErrorPortAllocation` across all NAT Gateways in a Region into a single alarm
+* Calculate the ratio of `UnHealthyHostCount` to total targets across all target groups
+* Compute `PacketDropCountBlackhole + PacketDropCountNoRoute` as a single "routing failures" metric
 
 This reduces alarm count (and cost) while maintaining coverage. Create per-resource alarms only for the most critical individual resources (primary Direct Connect connections, production ALBs).
 
@@ -294,10 +295,10 @@ CloudWatch alarms transition states. [EventBridge](https://docs.aws.amazon.com/e
 
 Beyond CloudWatch metrics, active health checking validates end-to-end path availability. Design synthetic checks that probe the networking layer:
 
-- **VPN path validation**: Lambda in the VPC sends ICMP or TCP probes through the VPN tunnel to an on-premises endpoint every 60 seconds. Failure triggers an alarm independent of the `TunnelState` metric (which only reflects IKE/IPsec state, not actual data-plane forwarding).
-- **NAT Gateway validation**: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates NAT Gateway or internet gateway issues.
-- **Transit Gateway path validation**: Lambda in spoke VPC A sends a request to a known endpoint in spoke VPC B through the Transit Gateway. Validates routing, not just attachment state.
-- **Direct Connect path validation**: On-premises probe sends traffic to a known VPC endpoint. Validates the full path including BGP routing, not just the physical connection state.
+* **VPN path validation**: Lambda in the VPC sends ICMP or TCP probes through the VPN tunnel to an on-premises endpoint every 60 seconds. Failure triggers an alarm independent of the `TunnelState` metric (which only reflects IKE/IPsec state, not actual data-plane forwarding).
+* **NAT Gateway validation**: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates NAT Gateway or internet gateway issues.
+* **Transit Gateway path validation**: Lambda in spoke VPC A sends a request to a known endpoint in spoke VPC B through the Transit Gateway. Validates routing, not just attachment state.
+* **Direct Connect path validation**: On-premises probe sends traffic to a known VPC endpoint. Validates the full path including BGP routing, not just the physical connection state.
 
 ***Key insight:*** *CloudWatch metrics tell you the service is healthy. Synthetic health checks tell you the path works end-to-end. You need both — a healthy service with broken routing still means an outage.*
 
@@ -369,12 +370,12 @@ Beyond CloudWatch metrics, active health checking validates end-to-end path avai
 
 ## Related Observability Pages
 
-- **[Internal Traffic Monitoring](internal-traffic.md)** — Covers VPC Flow Logs and traffic mirroring for understanding what's flowing through your network, complementing the service health view on this page.
-- **[External Traffic Monitoring](external-traffic.md)** — Covers monitoring traffic between AWS and the internet, including CloudFront and edge service metrics.
-- **[Notifications](notifications.md)** — Covers alert routing, escalation policies, and integration with incident management tools. Service monitoring generates the signals; notifications deliver them to the right people.
+* **[Internal Traffic Monitoring](internal-traffic.md)** — Covers VPC Flow Logs and traffic mirroring for understanding what's flowing through your network, complementing the service health view on this page.
+* **[External Traffic Monitoring](external-traffic.md)** — Covers monitoring traffic between AWS and the internet, including CloudFront and edge service metrics.
+* **[Notifications](notifications.md)** — Covers alert routing, escalation policies, and integration with incident management tools. Service monitoring generates the signals; notifications deliver them to the right people.
 
 **Relationship to other sections:**
 
-- **[Connectivity Within AWS](../connectivity/within-aws.md)**: Covers the Transit Gateway, Cloud WAN, and VPC Peering services that this page monitors.
-- **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Covers Direct Connect and Site-to-Site VPN architecture; this page covers their operational monitoring.
-- **[Load Balancing](../application-networking/load-balancing.md)**: Covers ALB, NLB, and GWLB architecture and best practices; this page covers their health metrics and alarms.
+* **[Connectivity Within AWS](../connectivity/within-aws.md)**: Covers the Transit Gateway, Cloud WAN, and VPC Peering services that this page monitors.
+* **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Covers Direct Connect and Site-to-Site VPN architecture; this page covers their operational monitoring.
+* **[Load Balancing](../application-networking/load-balancing.md)**: Covers ALB, NLB, and GWLB architecture and best practices; this page covers their health metrics and alarms.

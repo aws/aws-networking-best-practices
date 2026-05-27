@@ -92,16 +92,16 @@ IPAM becomes essential the moment your AWS environment grows beyond what a singl
 
 **Use IPAM when:**
 
-- You operate more than 5-10 VPCs across any number of accounts. Manual tracking breaks down quickly, and the cost of a single CIDR overlap (which requires VPC recreation to fix) exceeds the cost of IPAM for years.
-- Multiple teams create VPCs independently. Without centralized allocation, teams will choose CIDRs that conflict with each other or with on-premises networks.
-- You need to connect VPCs to each other or to on-premises networks. Overlapping CIDRs make Transit Gateway, Cloud WAN, and VPC Peering impossible between the affected VPCs.
-- Compliance frameworks require you to demonstrate IP address governance and audit trails.
-- You plan to use Infrastructure as Code for VPC provisioning. IPAM pools integrate directly with CloudFormation and Terraform, enabling fully automated, conflict-free VPC creation.
+* You operate more than 5-10 VPCs across any number of accounts. Manual tracking breaks down quickly, and the cost of a single CIDR overlap (which requires VPC recreation to fix) exceeds the cost of IPAM for years.
+* Multiple teams create VPCs independently. Without centralized allocation, teams will choose CIDRs that conflict with each other or with on-premises networks.
+* You need to connect VPCs to each other or to on-premises networks. Overlapping CIDRs make Transit Gateway, Cloud WAN, and VPC Peering impossible between the affected VPCs.
+* Compliance frameworks require you to demonstrate IP address governance and audit trails.
+* You plan to use Infrastructure as Code for VPC provisioning. IPAM pools integrate directly with CloudFormation and Terraform, enabling fully automated, conflict-free VPC creation.
 
 **You can defer IPAM when:**
 
-- You have a single account with 1-2 VPCs and no hybrid connectivity. Even here, setting up IPAM early avoids retrofitting later.
-- You're running isolated sandbox accounts that will never connect to production networks.
+* You have a single account with 1-2 VPCs and no hybrid connectivity. Even here, setting up IPAM early avoids retrofitting later.
+* You're running isolated sandbox accounts that will never connect to production networks.
 
 ***Key insight:*** *The cost of not using IPAM is invisible until it's catastrophic. CIDR overlaps are discovered when you try to peer VPCs, attach them to Transit Gateway, or establish hybrid connectivity — at which point the only fix is recreating VPCs and migrating workloads. IPAM is insurance that costs pennies compared to the operational disruption of an overlap.*
 
@@ -115,10 +115,10 @@ The pool hierarchy should mirror your organizational structure and reflect how y
 
 A well-designed hierarchy for a typical enterprise:
 
-- **Top-level pool**: `10.0.0.0/8` — your entire private address space
-- **Regional pools**: `/12` per Region — gives each Region 1,048,576 addresses (enough for thousands of VPCs)
-- **Environment pools**: `/13` or `/14` per environment within a Region — separates production from non-production
-- **Workload pools** (optional): `/16` or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs
+* **Top-level pool**: `10.0.0.0/8` — your entire private address space
+* **Regional pools**: `/12` per Region — gives each Region 1,048,576 addresses (enough for thousands of VPCs)
+* **Environment pools**: `/13` or `/14` per environment within a Region — separates production from non-production
+* **Workload pools** (optional): `/16` or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs
 
 This structure enables route summarization at every level. Your on-premises network can route to `10.0.0.0/12` for all of us-east-1, rather than maintaining individual routes for every VPC. That summarization reduces route table size on your on-premises routers and simplifies firewall rules.
 
@@ -134,10 +134,10 @@ The cost of oversizing a pool is zero — unused address space in a pool costs n
 
 Production and non-production workloads should draw from different pool branches, not different allocations within the same pool. This separation enables:
 
-- Different allocation rules (production VPCs get `/16`, development VPCs get `/20`)
-- Different sharing policies (production pools shared only with production OUs)
-- Independent utilization monitoring (production pool exhaustion is a different severity than dev pool exhaustion)
-- Route summarization by environment (useful for firewall rules that treat production traffic differently)
+* Different allocation rules (production VPCs get `/16`, development VPCs get `/20`)
+* Different sharing policies (production pools shared only with production OUs)
+* Independent utilization monitoring (production pool exhaustion is a different severity than dev pool exhaustion)
+* Route summarization by environment (useful for firewall rules that treat production traffic differently)
 
 ***Key insight:*** *Your pool hierarchy is your IP governance model expressed as infrastructure. A flat hierarchy with one pool per Region gives you overlap prevention but nothing else. A deep hierarchy gives you governance, summarization, environment isolation, and differentiated allocation rules — all enforced automatically.*
 
@@ -160,9 +160,9 @@ Recommended sizing rules:
 
 Allocation rules can mandate specific tags before a CIDR is granted. At minimum, require:
 
-- `Environment` (production, staging, development, sandbox)
-- `Team` or `CostCenter` (for accountability)
-- `Application` (for traceability)
+* `Environment` (production, staging, development, sandbox)
+* `Team` or `CostCenter` (for accountability)
+* `Application` (for traceability)
 
 Required tags serve two purposes: they enforce governance at allocation time (teams must classify their VPCs before getting address space), and they enable IPAM's compliance monitoring to identify untagged or mistagged resources later.
 
@@ -184,9 +184,9 @@ The private scope is where you manage your internal IP address space: RFC 1918 r
 
 The public scope manages publicly routable IPv4 addresses that you own and have registered with AWS through the BYOIP process. Most organizations don't need this — AWS-assigned public IPs and Elastic IPs are managed outside IPAM. The public scope becomes relevant when you:
 
-- Own portable IPv4 address blocks (from ARIN, RIPE, etc.) and want to use them in AWS
-- Need to maintain consistent public IP addresses across cloud providers
-- Have compliance requirements that mandate using organization-owned public address space
+* Own portable IPv4 address blocks (from ARIN, RIPE, etc.) and want to use them in AWS
+* Need to maintain consistent public IP addresses across cloud providers
+* Have compliance requirements that mandate using organization-owned public address space
 
 If you don't own public IPv4 blocks, ignore the public scope entirely. It adds no value for AWS-assigned addresses.
 
@@ -208,9 +208,9 @@ IPAM supports IPv6 pool management alongside IPv4, and your pool hierarchy shoul
 
 Create IPv6 pools that mirror your IPv4 pool structure: top-level → regional → environment. Even though IPv6 exhaustion is not a concern, the parallel structure gives you:
 
-- Consistent governance (same allocation rules, same required tags)
-- Unified compliance monitoring (one view of both address families per VPC)
-- Clear audit trail (which VPCs have IPv6, when it was enabled, from which pool)
+* Consistent governance (same allocation rules, same required tags)
+* Unified compliance monitoring (one view of both address families per VPC)
+* Clear audit trail (which VPCs have IPv6, when it was enabled, from which pool)
 
 #### Use IPAM to enforce dual-stack adoption
 
@@ -226,10 +226,10 @@ IPAM should be administered from a dedicated networking account (or shared-servi
 
 The delegated administrator account can:
 
-- Create and manage all IPAM pools and allocation rules
-- Monitor compliance across the entire Organization
-- Share pools with other accounts via RAM
-- View IP address usage in all member accounts
+* Create and manage all IPAM pools and allocation rules
+* Monitor compliance across the entire Organization
+* Share pools with other accounts via RAM
+* View IP address usage in all member accounts
 
 #### Share pools at the OU level, not individual accounts
 
@@ -237,9 +237,9 @@ When sharing IPAM pools via AWS RAM, share with Organizational Units rather than
 
 Structure your sharing to match your pool hierarchy:
 
-- Production OU → access to production pools
-- Development OU → access to non-production pools
-- Sandbox OU → access to sandbox pools
+* Production OU → access to production pools
+* Development OU → access to non-production pools
+* Sandbox OU → access to sandbox pools
 
 ***Key insight:*** *Delegated administration + OU-level sharing creates a self-service model where teams get the right address space automatically. The networking team defines the rules once; every subsequent VPC creation follows those rules without human intervention.*
 
@@ -249,10 +249,10 @@ Structure your sharing to match your pool hierarchy:
 
 IPAM continuously monitors all VPCs in your Organization and flags those that:
 
-- Have CIDRs that overlap with managed pool allocations
-- Were created with manually assigned CIDRs outside any IPAM pool
-- Lack required tags defined in allocation rules
-- Violate locale restrictions
+* Have CIDRs that overlap with managed pool allocations
+* Were created with manually assigned CIDRs outside any IPAM pool
+* Lack required tags defined in allocation rules
+* Violate locale restrictions
 
 This monitoring catches VPCs created before IPAM was deployed, VPCs created by teams that bypassed IPAM (using hardcoded CIDRs in their templates), and VPCs in accounts that were recently added to the Organization.
 
@@ -374,8 +374,8 @@ IPAM is a governance layer that integrates with every service that consumes or m
 
 IPAM pricing is based on two dimensions:
 
-- **Active IP address monitoring**: Per public IP address monitored per hour. This applies to the public scope and BYOIP addresses. Private IP monitoring within your Organization is included at no additional per-IP charge with an active IPAM.
-- **IPAM instance**: There is no separate charge for the IPAM instance itself. You pay for the monitoring and auditing capabilities.
+* **Active IP address monitoring**: Per public IP address monitored per hour. This applies to the public scope and BYOIP addresses. Private IP monitoring within your Organization is included at no additional per-IP charge with an active IPAM.
+* **IPAM instance**: There is no separate charge for the IPAM instance itself. You pay for the monitoring and auditing capabilities.
 
 For most organizations using only private address space (RFC 1918), IPAM costs are minimal — significantly less than the operational cost of a single CIDR overlap incident. The pricing model means IPAM is effectively free for private IP governance in organizations that don't use BYOIP.
 
@@ -441,13 +441,13 @@ IPAM is the governance layer that sits between your [CIDR planning](cidr.md) str
 
 **Relationship to other Foundation topics:**
 
-- **[CIDR Planning](cidr.md)**: CIDR planning defines your addressing strategy — which ranges to use, how to subdivide them, and how to enable summarization. IPAM implements and enforces that strategy through pools and allocation rules. Without CIDR planning, IPAM has no coherent structure to enforce. Without IPAM, CIDR plans exist only on paper.
-- **[Amazon VPC](vpc.md)**: VPCs are the primary consumers of IPAM allocations. Every VPC should get its CIDR from an IPAM pool rather than a hardcoded value. IPAM's allocation rules determine what sizes and tags are acceptable for VPC CIDRs.
-- **[Subnets](subnets.md)**: While IPAM manages VPC-level CIDR allocation, subnet design within the VPC is a separate concern. IPAM ensures the VPC has enough address space; your subnet strategy determines how that space is divided.
-- **[AWS Organizations](organizations.md)**: Organizations provides the account structure that IPAM governs. Delegated administration, OU-level pool sharing, and cross-account compliance monitoring all depend on a well-structured Organization.
-- **[Regions and Availability Zones](regions-azs.md)**: Your Region strategy determines how many regional pools you need and how address space is distributed geographically. IPAM's locale restrictions enforce that distribution.
+* **[CIDR Planning](cidr.md)**: CIDR planning defines your addressing strategy — which ranges to use, how to subdivide them, and how to enable summarization. IPAM implements and enforces that strategy through pools and allocation rules. Without CIDR planning, IPAM has no coherent structure to enforce. Without IPAM, CIDR plans exist only on paper.
+* **[Amazon VPC](vpc.md)**: VPCs are the primary consumers of IPAM allocations. Every VPC should get its CIDR from an IPAM pool rather than a hardcoded value. IPAM's allocation rules determine what sizes and tags are acceptable for VPC CIDRs.
+* **[Subnets](subnets.md)**: While IPAM manages VPC-level CIDR allocation, subnet design within the VPC is a separate concern. IPAM ensures the VPC has enough address space; your subnet strategy determines how that space is divided.
+* **[AWS Organizations](organizations.md)**: Organizations provides the account structure that IPAM governs. Delegated administration, OU-level pool sharing, and cross-account compliance monitoring all depend on a well-structured Organization.
+* **[Regions and Availability Zones](regions-azs.md)**: Your Region strategy determines how many regional pools you need and how address space is distributed geographically. IPAM's locale restrictions enforce that distribution.
 
 **Relationship to Connectivity:**
 
-- **[Connectivity Within AWS](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN require non-overlapping CIDRs across all connected VPCs. IPAM is the service that guarantees this precondition.
-- **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: On-premises CIDR ranges must be imported into IPAM to prevent AWS allocations from conflicting with existing networks. IPAM's hybrid awareness is essential for any organization with Direct Connect or VPN connectivity.
+* **[Connectivity Within AWS](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN require non-overlapping CIDRs across all connected VPCs. IPAM is the service that guarantees this precondition.
+* **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: On-premises CIDR ranges must be imported into IPAM to prevent AWS allocations from conflicting with existing networks. IPAM's hybrid awareness is essential for any organization with Direct Connect or VPN connectivity.

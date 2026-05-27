@@ -283,13 +283,13 @@ The VPC is the attachment point for every connectivity and application networkin
 
 Understanding VPC limits prevents architectural dead ends:
 
-- **VPCs per Region**: 5 (default), increasable to hundreds. Request increases proactively if using VPC-per-workload pattern.
-- **CIDR blocks per VPC**: 5 (1 primary + 4 secondary). Plan your primary CIDR generously — you only get 4 expansion opportunities.
-- **Subnets per VPC**: 200 (default). Rarely a constraint unless you create excessive subnet tiers.
-- **Route table entries**: 50 per route table (default), increasable to 1,000. Becomes relevant with many VPC peering connections or specific routes.
-- **Security groups per VPC**: 2,500 (default). Can become a constraint in shared VPCs with many workload accounts.
-- **Network interfaces per Region**: 5,000 (default). Relevant for VPCs with many PrivateLink endpoints, EKS pods, or ECS tasks in awsvpc mode.
-- **IPv4 CIDR block size**: `/16` (largest) to `/28` (smallest). You cannot create a VPC larger than `/16` with a single CIDR.
+* **VPCs per Region**: 5 (default), increasable to hundreds. Request increases proactively if using VPC-per-workload pattern.
+* **CIDR blocks per VPC**: 5 (1 primary + 4 secondary). Plan your primary CIDR generously — you only get 4 expansion opportunities.
+* **Subnets per VPC**: 200 (default). Rarely a constraint unless you create excessive subnet tiers.
+* **Route table entries**: 50 per route table (default), increasable to 1,000. Becomes relevant with many VPC peering connections or specific routes.
+* **Security groups per VPC**: 2,500 (default). Can become a constraint in shared VPCs with many workload accounts.
+* **Network interfaces per Region**: 5,000 (default). Relevant for VPCs with many PrivateLink endpoints, EKS pods, or ECS tasks in awsvpc mode.
+* **IPv4 CIDR block size**: `/16` (largest) to `/28` (smallest). You cannot create a VPC larger than `/16` with a single CIDR.
 
 ## Documentation
 
@@ -351,19 +351,19 @@ Amazon VPC is the central construct that every other foundation component plugs 
 
 **Relationship to other Foundation topics:**
 
-- **[CIDR Planning](cidr.md)**: The VPC's primary and secondary CIDRs come from your CIDR plan. Poor CIDR planning at the VPC level cascades into routing conflicts, peering limitations, and summarization failures.
-- **[Subnets](subnets.md)**: Subnets divide the VPC's CIDR across AZs and tiers. Subnet design is constrained by the VPC's CIDR size — an undersized VPC limits your subnet options.
-- **[IPAM](ipam.md)**: IPAM pools allocate CIDRs to VPCs automatically, preventing overlaps and enforcing organizational standards. Every VPC should get its CIDR from an IPAM pool, not from manual selection.
-- **[Regions and Availability Zones](regions-azs.md)**: A VPC exists in exactly one Region and spans all its AZs. Your Region strategy determines how many VPCs you need and where.
-- **[AWS Organizations](organizations.md)**: Organizations governs who can create VPCs (SCPs), how VPCs are shared (RAM), and how VPCs attach to connectivity services (Cloud WAN attachment policies).
+* **[CIDR Planning](cidr.md)**: The VPC's primary and secondary CIDRs come from your CIDR plan. Poor CIDR planning at the VPC level cascades into routing conflicts, peering limitations, and summarization failures.
+* **[Subnets](subnets.md)**: Subnets divide the VPC's CIDR across AZs and tiers. Subnet design is constrained by the VPC's CIDR size — an undersized VPC limits your subnet options.
+* **[IPAM](ipam.md)**: IPAM pools allocate CIDRs to VPCs automatically, preventing overlaps and enforcing organizational standards. Every VPC should get its CIDR from an IPAM pool, not from manual selection.
+* **[Regions and Availability Zones](regions-azs.md)**: A VPC exists in exactly one Region and spans all its AZs. Your Region strategy determines how many VPCs you need and where.
+* **[AWS Organizations](organizations.md)**: Organizations governs who can create VPCs (SCPs), how VPCs are shared (RAM), and how VPCs attach to connectivity services (Cloud WAN attachment policies).
 
 **Relationship to Connectivity:**
 
-- **[Connectivity Within AWS](../connectivity/within-aws.md)**: Every Transit Gateway attachment, Cloud WAN attachment, and VPC peering connection terminates in a VPC. Your VPC design enables or constrains your connectivity architecture.
-- **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Direct Connect and VPN traffic enters AWS through a VPC. The VPC hosting these connections is typically in a centralized networking account.
-- **[Internet Connectivity](../connectivity/internet.md)**: Internet Gateways, NAT Gateways, and egress-only internet gateways are VPC-level constructs. Your VPC's subnet tiers determine which resources can reach the internet and how.
+* **[Connectivity Within AWS](../connectivity/within-aws.md)**: Every Transit Gateway attachment, Cloud WAN attachment, and VPC peering connection terminates in a VPC. Your VPC design enables or constrains your connectivity architecture.
+* **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Direct Connect and VPN traffic enters AWS through a VPC. The VPC hosting these connections is typically in a centralized networking account.
+* **[Internet Connectivity](../connectivity/internet.md)**: Internet Gateways, NAT Gateways, and egress-only internet gateways are VPC-level constructs. Your VPC's subnet tiers determine which resources can reach the internet and how.
 
 **Relationship to Application Networking:**
 
-- **[Load Balancing](../application-networking/load-balancing.md)**: ALBs and NLBs deploy into VPC subnets. Subnet sizing and tier design must account for load balancer ENIs and scaling behavior.
-- **[Service to Service](../application-networking/service-to-service.md)**: VPC Lattice associates with VPCs through service network associations. PrivateLink endpoints consume IP addresses in VPC subnets.
+* **[Load Balancing](../application-networking/load-balancing.md)**: ALBs and NLBs deploy into VPC subnets. Subnet sizing and tier design must account for load balancer ENIs and scaling behavior.
+* **[Service to Service](../application-networking/service-to-service.md)**: VPC Lattice associates with VPCs through service network associations. PrivateLink endpoints consume IP addresses in VPC subnets.

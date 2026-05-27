@@ -251,10 +251,10 @@ Firewall Manager charges per policy per Region ($100/month per policy per Region
 
 The most dangerous IPv6 security posture is accidental: a VPC is dual-stack, resources receive IPv6 addresses, but security groups, NACLs, and firewall rules only cover IPv4. In this state, IPv6 traffic bypasses every control you've configured. The fix is straightforward but requires discipline:
 
-- **Security groups**: Add explicit IPv6 rules (`::/0` for public, specific IPv6 prefixes for internal). No IPv4 rule applies to IPv6 traffic.
-- **NACLs**: Add IPv6 entries for both inbound and outbound, including ephemeral port ranges. Custom NACLs start with no IPv6 rules.
-- **Network Firewall**: Stateful rules that reference IP addresses need both IPv4 and IPv6 variants. Domain-based rules (SNI, HTTP host) work regardless of IP version.
-- **WAF**: Handles both address families transparently — no separate configuration needed.
+* **Security groups**: Add explicit IPv6 rules (`::/0` for public, specific IPv6 prefixes for internal). No IPv4 rule applies to IPv6 traffic.
+* **NACLs**: Add IPv6 entries for both inbound and outbound, including ephemeral port ranges. Custom NACLs start with no IPv6 rules.
+* **Network Firewall**: Stateful rules that reference IP addresses need both IPv4 and IPv6 variants. Domain-based rules (SNI, HTTP host) work regardless of IP version.
+* **WAF**: Handles both address families transparently — no separate configuration needed.
 
 #### Audit for unintended IPv6 exposure in dual-stack VPCs
 
@@ -403,18 +403,18 @@ Perimeter controls vary significantly in cost, and understanding the cost model 
 
 **Relationship to other Security topics:**
 
-- **[Outbound Controls](outbound.md)**: Perimeter controls protect inbound boundaries; outbound controls manage what traffic leaves your network. Many services (Network Firewall, security groups) enforce both directions — this page covers the inbound perspective.
-- **[Network Segmentation](segmentation.md)**: Perimeter controls protect the external boundary; segmentation controls traffic between internal workloads. Security groups serve both purposes — as perimeter controls (allowing internet traffic to load balancers) and as segmentation controls (restricting backend-to-database communication).
+* **[Outbound Controls](outbound.md)**: Perimeter controls protect inbound boundaries; outbound controls manage what traffic leaves your network. Many services (Network Firewall, security groups) enforce both directions — this page covers the inbound perspective.
+* **[Network Segmentation](segmentation.md)**: Perimeter controls protect the external boundary; segmentation controls traffic between internal workloads. Security groups serve both purposes — as perimeter controls (allowing internet traffic to load balancers) and as segmentation controls (restricting backend-to-database communication).
 
 **Relationship to Foundation topics:**
 
-- **[Amazon VPC](../foundation/vpc.md)**: The VPC is the network boundary where most perimeter controls are enforced. VPC design (subnet tiers, route tables) directly determines where Network Firewall endpoints and GWLB endpoints can be placed.
-- **[Subnets](../foundation/subnets.md)**: Subnet tier design must account for dedicated firewall subnets. NACLs are applied at the subnet level, making subnet boundaries the enforcement point for stateless deny rules.
+* **[Amazon VPC](../foundation/vpc.md)**: The VPC is the network boundary where most perimeter controls are enforced. VPC design (subnet tiers, route tables) directly determines where Network Firewall endpoints and GWLB endpoints can be placed.
+* **[Subnets](../foundation/subnets.md)**: Subnet tier design must account for dedicated firewall subnets. NACLs are applied at the subnet level, making subnet boundaries the enforcement point for stateless deny rules.
 
 **Relationship to Connectivity topics:**
 
-- **[Internet Connectivity](../connectivity/internet.md)**: Internet connectivity covers the ingress and egress patterns; this page covers the security controls that protect those patterns. The two pages are complementary — read Internet Connectivity for the architecture, this page for the security controls layered on top.
+* **[Internet Connectivity](../connectivity/internet.md)**: Internet connectivity covers the ingress and egress patterns; this page covers the security controls that protect those patterns. The two pages are complementary — read Internet Connectivity for the architecture, this page for the security controls layered on top.
 
 **Relationship to Application Networking topics:**
 
-- **[Load Balancing](../application-networking/load-balancing.md)**: Load balancers are the primary targets of perimeter controls — security groups on ALBs/NLBs, WAF on ALBs, and Network Firewall inspection in front of load balancer subnets.
+* **[Load Balancing](../application-networking/load-balancing.md)**: Load balancers are the primary targets of perimeter controls — security groups on ALBs/NLBs, WAF on ALBs, and Network Firewall inspection in front of load balancer subnets.

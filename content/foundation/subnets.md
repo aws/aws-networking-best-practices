@@ -132,9 +132,9 @@ The most common route table pattern is one shared route table per tier, associat
 
 Transit Gateway attachments, VPC interface endpoints, Network Firewall endpoints, and Direct Connect virtual interface attachments all place ENIs in your subnets. Mixing these with application workloads creates problems:
 
-- **IP accounting becomes unpredictable.** A new VPC endpoint consumes IPs from the same pool your application uses.
-- **Route table conflicts.** Infrastructure ENIs often need different routing than application workloads in the same tier.
-- **Security group sprawl.** Infrastructure ENIs have different access patterns than application resources.
+* **IP accounting becomes unpredictable.** A new VPC endpoint consumes IPs from the same pool your application uses.
+* **Route table conflicts.** Infrastructure ENIs often need different routing than application workloads in the same tier.
+* **Security group sprawl.** Infrastructure ENIs have different access patterns than application resources.
 
 Dedicated infrastructure subnets (small — `/27` or `/28`) solve all three. They have their own route tables, their own NACLs if needed, and their IP consumption is isolated and predictable.
 
@@ -148,15 +148,15 @@ NACLs are stateless, operate at the subnet level, and apply to all traffic enter
 
 **When NACLs add value:**
 
-- Compliance frameworks (PCI-DSS, HIPAA) that require network-level deny rules independent of instance-level controls
-- Blocking entire CIDR ranges at the subnet boundary (e.g., denying traffic from a known-bad range before it reaches any security group)
-- Defense-in-depth for data-tier subnets where you want an explicit allowlist of source CIDRs regardless of what security groups permit
+* Compliance frameworks (PCI-DSS, HIPAA) that require network-level deny rules independent of instance-level controls
+* Blocking entire CIDR ranges at the subnet boundary (e.g., denying traffic from a known-bad range before it reaches any security group)
+* Defense-in-depth for data-tier subnets where you want an explicit allowlist of source CIDRs regardless of what security groups permit
 
 **When NACLs add complexity without value:**
 
-- Duplicating security group rules at the subnet level "just in case" — this doubles your maintenance burden and creates drift
-- Environments where all access control is already handled by security groups, IAM policies, and service-level auth
-- Workloads with dynamic port ranges (ephemeral ports for return traffic) where stateless rules require broad port ranges that negate the security benefit
+* Duplicating security group rules at the subnet level "just in case" — this doubles your maintenance burden and creates drift
+* Environments where all access control is already handled by security groups, IAM policies, and service-level auth
+* Workloads with dynamic port ranges (ephemeral ports for return traffic) where stateless rules require broad port ranges that negate the security benefit
 
 ***Key insight:*** The default VPC NACL allows all inbound and outbound traffic. Leave it that way unless you have a specific, documented reason to restrict at the subnet level. Security groups are your primary network access control; NACLs are your secondary, compliance-driven layer.
 
@@ -168,14 +168,14 @@ NACLs are stateless, operate at the subnet level, and apply to all traffic enter
 
 **Use CIDR reservations when:**
 
-- Running EKS with prefix delegation — reserve a range for `/28` prefixes so that pod IPs come from a predictable block
-- You need stable IP ranges for specific workloads (e.g., a block of IPs that on-premises firewalls allowlist)
-- Preventing IP conflicts between auto-assigned resources and manually assigned ENIs
+* Running EKS with prefix delegation — reserve a range for `/28` prefixes so that pod IPs come from a predictable block
+* You need stable IP ranges for specific workloads (e.g., a block of IPs that on-premises firewalls allowlist)
+* Preventing IP conflicts between auto-assigned resources and manually assigned ENIs
 
 **Skip CIDR reservations when:**
 
-- The subnet hosts a single workload type (no contention for address space)
-- You're using IPAM pools with allocation rules that already govern assignment
+* The subnet hosts a single workload type (no contention for address space)
+* You're using IPAM pools with allocation rules that already govern assignment
 
 ### IPv6 subnet addressing
 
@@ -185,10 +185,10 @@ Unlike IPv4, where you choose subnet sizes from `/28` to `/16`, IPv6 subnets in 
 
 Design implications:
 
-- **No variable sizing.** You cannot create a "small" IPv6 subnet. Every subnet gets the same `/64` regardless of tier.
-- **Subnet count is the constraint, not size.** With 256 `/64`s available from a single `/56`, plan your tier and AZ layout to fit within that budget.
-- **Dual-stack subnets carry both an IPv4 CIDR and an IPv6 /64.** Size the IPv4 CIDR for the workload; the IPv6 side takes care of itself.
-- **IPv6-only subnets** eliminate IPv4 entirely. Use these for workloads that don't need IPv4 connectivity (internal microservices, batch processing) to simplify addressing and avoid IPv4 exhaustion.
+* **No variable sizing.** You cannot create a "small" IPv6 subnet. Every subnet gets the same `/64` regardless of tier.
+* **Subnet count is the constraint, not size.** With 256 `/64`s available from a single `/56`, plan your tier and AZ layout to fit within that budget.
+* **Dual-stack subnets carry both an IPv4 CIDR and an IPv6 /64.** Size the IPv4 CIDR for the workload; the IPv6 side takes care of itself.
+* **IPv6-only subnets** eliminate IPv4 entirely. Use these for workloads that don't need IPv4 connectivity (internal microservices, batch processing) to simplify addressing and avoid IPv4 exhaustion.
 
 ***Key insight:*** The `/56` per VPC gives you 256 subnets. If you run 3 AZs × 5 tiers = 15 subnets, you've used 15 of 256 — plenty of room. But if you're building a shared VPC with dozens of workload-specific subnets, track your `/64` allocation to avoid running out.
 
@@ -198,9 +198,9 @@ Design implications:
 
 The Amazon VPC CNI plugin assigns a VPC IP address to every pod by default. On a `m5.xlarge` (4 ENIs × 15 IPs per ENI = 58 max pods), a fully packed node consumes 58 subnet IPs. Strategies to manage this:
 
-- **Enable prefix delegation**: each ENI slot gets a `/28` prefix (16 IPs) instead of individual IPs, increasing pod density per node without consuming more ENI slots. This changes the consumption pattern from "1 IP per pod" to "1 /28 per slot, shared across pods."
-- **Use custom networking**: assign pod IPs from a different subnet (or CIDR range) than the node's primary ENI. This lets you size node subnets conservatively while giving pods access to a much larger address pool.
-- **Consider IPv6-only clusters**: pods get IPv6 addresses from the `/64` subnet (effectively unlimited) and use NAT64 for IPv4-only destinations.
+* **Enable prefix delegation**: each ENI slot gets a `/28` prefix (16 IPs) instead of individual IPs, increasing pod density per node without consuming more ENI slots. This changes the consumption pattern from "1 IP per pod" to "1 /28 per slot, shared across pods."
+* **Use custom networking**: assign pod IPs from a different subnet (or CIDR range) than the node's primary ENI. This lets you size node subnets conservatively while giving pods access to a much larger address pool.
+* **Consider IPv6-only clusters**: pods get IPv6 addresses from the `/64` subnet (effectively unlimited) and use NAT64 for IPv4-only destinations.
 
 The worst-case scenario is an EKS cluster that auto-scales aggressively without prefix delegation in a `/24` subnet. A burst from 5 to 30 nodes can exhaust the subnet in minutes, causing pod scheduling failures that look like cluster issues but are actually subnet IP exhaustion. Monitor the `available IPs` CloudWatch metric on your subnets and alert well before exhaustion.
 
@@ -224,10 +224,10 @@ Subnet names should be immediately parseable by both humans and automation. A pa
 
 Tag subnets with at minimum:
 
-- `Environment` (prod, staging, dev)
-- `Tier` (public, private, data, infrastructure, firewall)
-- `Network` or `VPC` (identifies which VPC in multi-VPC accounts)
-- For EKS: `kubernetes.io/role/elb` and `kubernetes.io/role/internal-elb` tags on the appropriate subnets so the AWS Load Balancer Controller can auto-discover them
+* `Environment` (prod, staging, dev)
+* `Tier` (public, private, data, infrastructure, firewall)
+* `Network` or `VPC` (identifies which VPC in multi-VPC accounts)
+* For EKS: `kubernetes.io/role/elb` and `kubernetes.io/role/internal-elb` tags on the appropriate subnets so the AWS Load Balancer Controller can auto-discover them
 
 ### Shared subnets (VPC sharing via RAM)
 
@@ -237,10 +237,10 @@ Tag subnets with at minimum:
 
 Design considerations for shared subnets:
 
-- **The owner account controls routing, NACLs, and subnet lifecycle.** Participant accounts cannot modify route tables or NACLs on shared subnets.
-- **Security groups are per-account.** Each participant account manages its own security groups within the shared subnet. Cross-account security group references are not supported.
-- **Subnet sizing must account for all participants.** When multiple accounts share a subnet, aggregate their IP consumption. A `/24` that's comfortable for one account may be tight when three accounts deploy into it.
-- **Use separate subnets per tier, not per account.** The value of VPC sharing is that accounts share infrastructure — don't recreate per-account isolation at the subnet level unless compliance requires it.
+* **The owner account controls routing, NACLs, and subnet lifecycle.** Participant accounts cannot modify route tables or NACLs on shared subnets.
+* **Security groups are per-account.** Each participant account manages its own security groups within the shared subnet. Cross-account security group references are not supported.
+* **Subnet sizing must account for all participants.** When multiple accounts share a subnet, aggregate their IP consumption. A `/24` that's comfortable for one account may be tight when three accounts deploy into it.
+* **Use separate subnets per tier, not per account.** The value of VPC sharing is that accounts share infrastructure — don't recreate per-account isolation at the subnet level unless compliance requires it.
 
 ***Key insight:*** VPC sharing is the most operationally efficient pattern for organizations that want centralized network control. The networking team manages the VPC, subnets, route tables, and connectivity; application teams deploy resources without needing networking expertise. The trade-off is that the networking team must size subnets for aggregate demand across all participant accounts.
 
@@ -315,18 +315,18 @@ Subnet design doesn't exist in isolation. Every connectivity and security servic
 
 **Foundation pages:**
 
-- [Amazon VPC](vpc.md) — VPC design patterns, CIDR allocation, and the relationship between VPCs and subnets
-- [CIDR Planning](cidr.md) — How to plan address space across VPCs and subnets without conflicts
-- [Regions and Availability Zones](regions-azs.md) — AZ placement strategy that drives subnet distribution
-- [IPAM](ipam.md) — Automated IP address management for subnet CIDR allocation at scale
+* [Amazon VPC](vpc.md) — VPC design patterns, CIDR allocation, and the relationship between VPCs and subnets
+* [CIDR Planning](cidr.md) — How to plan address space across VPCs and subnets without conflicts
+* [Regions and Availability Zones](regions-azs.md) — AZ placement strategy that drives subnet distribution
+* [IPAM](ipam.md) — Automated IP address management for subnet CIDR allocation at scale
 
 **Connectivity pages:**
 
-- [Connectivity Within AWS](../connectivity/within-aws.md) — Transit Gateway and Cloud WAN patterns that depend on infrastructure subnet design
-- [Internet Connectivity](../connectivity/internet.md) — NAT Gateway, Internet Gateway, and firewall patterns that shape public and firewall subnet tiers
-- [Hybrid and Multicloud](../connectivity/hybrid-multicloud.md) — Direct Connect and VPN attachments that land in infrastructure subnets
+* [Connectivity Within AWS](../connectivity/within-aws.md) — Transit Gateway and Cloud WAN patterns that depend on infrastructure subnet design
+* [Internet Connectivity](../connectivity/internet.md) — NAT Gateway, Internet Gateway, and firewall patterns that shape public and firewall subnet tiers
+* [Hybrid and Multicloud](../connectivity/hybrid-multicloud.md) — Direct Connect and VPN attachments that land in infrastructure subnets
 
 **Application Networking pages:**
 
-- [Load Balancing](../application-networking/load-balancing.md) — ALB and NLB subnet requirements and AZ placement
-- [Container Mesh](../application-networking/container-mesh.md) — EKS and ECS networking patterns that drive private subnet sizing
+* [Load Balancing](../application-networking/load-balancing.md) — ALB and NLB subnet requirements and AZ placement
+* [Container Mesh](../application-networking/container-mesh.md) — EKS and ECS networking patterns that drive private subnet sizing
