@@ -229,6 +229,7 @@ jobs:
               '2001:db8::/32', '3fff::/20',
               '10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16',
               '169.254.0.0/16', '127.0.0.0/8', '224.0.0.0/4', '240.0.0.0/4', '100.64.0.0/10',
+              '198.18.0.0/15',  # RFC 6815 - benchmarking, also supported as VPC secondary CIDR
               'fe80::/10', 'fc00::/7', '::1/128', 'ff00::/8', '::/128', '::ffff:0:0/96',
               'fd00:ec2::/64'   # Used by AWS and appears in our documentation frequently.
           ]
@@ -236,6 +237,10 @@ jobs:
           # Special approved CIDR notations that don't fit standard doc ranges
           approved_cidrs = ['0.0.0.0/0']
           doc_networks = [ipaddress.ip_network(r) for r in doc_ranges]
+          
+          def strip_code_blocks(text):
+              """Remove fenced code blocks to avoid false positives on code content."""
+              return re.sub(r'```[^\n]*\n.*?```', '', text, flags=re.DOTALL)
           
           def validate_ipv4(ip):
               try:
@@ -273,6 +278,9 @@ jobs:
               
               with open(file, 'r') as f:
                   content = f.read()
+              
+              # Strip fenced code blocks to avoid false positives (e.g., AWS::EC2::VPC)
+              content = strip_code_blocks(content)
               
               for match in re.finditer(ipv4_pattern, content):
                   ip_cidr = match.group()

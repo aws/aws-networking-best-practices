@@ -80,7 +80,7 @@ These are the private IP ranges available for your VPCs:
 Beyond RFC 1918, AWS VPCs support these ranges:
 
 - **100.64.0.0/10** (Carrier-Grade NAT range): Useful for EKS pod networking with the VPC CNI custom networking feature. Pods get IPs from this range, preserving your primary RFC 1918 space for nodes and other resources. Also used when RFC 1918 space is exhausted.
-- **198.19.0.0/16**: Available as a secondary CIDR for VPCs when other ranges are exhausted.
+- **RFC 6815 space** (`198.19.0.0/16`): Available as a secondary CIDR for VPCs when other ranges are exhausted.
 
 ***Key insight:*** *The 100.64.0.0/10 range is a strategic tool for EKS-heavy environments. A single EKS cluster can consume thousands of IP addresses for pods. Assigning pod networking to 100.64.0.0/10 via custom networking keeps your primary VPC CIDR available for nodes, load balancers, and other infrastructure.*
 

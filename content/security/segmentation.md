@@ -167,7 +167,7 @@ SecurityGroupIngress:
   - IpProtocol: tcp
     FromPort: 443
     ToPort: 443
-    CidrIpv6: 2600:1f00::/24    # IPv6 corporate range
+    CidrIpv6: 2001:db8:cafe::/48  # IPv6 corporate range
 ```
 
 When using reference-based rules (source security group), the rule applies to both IPv4 and IPv6 traffic from members of that security group — no duplication needed. This is another reason to prefer reference-based rules over CIDR-based rules.
