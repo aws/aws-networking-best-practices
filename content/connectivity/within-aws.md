@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This section assumes familiarity with [Amazon VPC](../foundation/vpc.md), [CIDR Planning](../foundation/cidr.md), and [AWS Organizations](../foundation/organizations.md). Review those topics first if you're new to AWS networking fundamentals.
 
-Connecting VPCs and services within AWS is rarely a single-service decision. A mature AWS network typically combines multiple connectivity services, each operating at the layer where it fits best. Network-level connectivity (how VPCs route traffic to each other), application-level service communication (how services discover and talk to each other), and private resource access (how workloads reach specific network resources like databases) are complementary layers that work together.
+Connecting VPCs and services within AWS is rarely a single-service decision. AWS provides six connectivity services that operate at different layers — from AWS Cloud WAN managing global topology across 30+ Regions through a single declarative policy, to Amazon VPC Lattice handling service-to-service HTTP/gRPC communication with IAM-based auth and no CIDR coordination, to VPC Peering providing zero-cost same-Region data transfer between specific VPC pairs. A mature AWS network combines multiple services simultaneously, each at the layer where it provides the most value: network-level connectivity (how VPCs route traffic to each other), application-level service communication (how services discover and talk to each other), and private resource access (how workloads reach specific network resources like databases).
 
 ``` mermaid
 graph TB
