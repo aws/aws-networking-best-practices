@@ -1,6 +1,6 @@
 # Introduction
 
-**A reference architecture for AWS networking best practices**
+A reference architecture for AWS networking best practices.
 
 Enterprise AWS networks are built on five interconnected pillars:
 
