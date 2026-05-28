@@ -1,0 +1,3417 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/observability/service-monitoring/">
+      
+      
+        <link rel="prev" href="../notifications/">
+      
+      
+        <link rel="next" href="../internal-traffic/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>AWS Services - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="AWS Services - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/observability/service-monitoring.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/observability/service-monitoring/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="AWS Services - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/observability/service-monitoring.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aws-services-monitoring" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AWS Services
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#critical-metrics-by-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical metrics by service
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical metrics by service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#site-to-site-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site-to-Site VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Load Balancer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Load Balancer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-network-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Network Firewall
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-53-resolver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route 53 Resolver
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-lattice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Lattice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alarm-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarm design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alarm design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alarm-on-state-changes-not-just-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarm on state changes, not just thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-composite-alarms-to-reduce-noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use composite alarms to reduce noise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-anomaly-detection-instead-of-static-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use anomaly detection instead of static thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-quotas-before-you-hit-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor quotas before you hit them
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-account-monitoring-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account monitoring architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-account monitoring architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-a-centralized-monitoring-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy a centralized monitoring account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-cross-region-dashboards-for-the-networking-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build cross-Region dashboards for the networking team
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-monitoring-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 monitoring considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 monitoring considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitor-dual-stack-metrics-separately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor dual-stack metrics separately
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-ipv6-specific-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure IPv6-specific health checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-effective-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost-effective monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost-effective monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-metric-math-to-reduce-alarm-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use metric math to reduce alarm count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-cost-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the cost model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefer-built-in-metrics-over-custom-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefer built-in metrics over custom metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-remediation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated remediation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automated remediation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-eventbridge-for-automated-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use EventBridge for automated response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-health-checks-for-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design health checks for networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-service-monitoring-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining service monitoring with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-observability-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Observability Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#critical-metrics-by-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical metrics by service
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical metrics by service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#site-to-site-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Site-to-Site VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#application-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Application Load Balancer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Load Balancer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-network-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Network Firewall
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-53-resolver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route 53 Resolver
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-lattice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Lattice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alarm-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarm design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alarm design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alarm-on-state-changes-not-just-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarm on state changes, not just thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-composite-alarms-to-reduce-noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use composite alarms to reduce noise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-anomaly-detection-instead-of-static-thresholds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use anomaly detection instead of static thresholds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-quotas-before-you-hit-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor quotas before you hit them
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-account-monitoring-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account monitoring architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-account monitoring architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-a-centralized-monitoring-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy a centralized monitoring account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-cross-region-dashboards-for-the-networking-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build cross-Region dashboards for the networking team
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-monitoring-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 monitoring considerations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 monitoring considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitor-dual-stack-metrics-separately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor dual-stack metrics separately
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-ipv6-specific-health-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure IPv6-specific health checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-effective-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost-effective monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost-effective monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-metric-math-to-reduce-alarm-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use metric math to reduce alarm count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-cost-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the cost model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefer-built-in-metrics-over-custom-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefer built-in metrics over custom metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-remediation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated remediation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Automated remediation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-eventbridge-for-automated-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use EventBridge for automated response
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-health-checks-for-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design health checks for networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-service-monitoring-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining service monitoring with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-observability-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Observability Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Observability
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/observability/service-monitoring.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/observability/service-monitoring.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="aws-services-monitoring">AWS Services Monitoring<a class="headerlink" href="#aws-services-monitoring" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../connectivity/within-aws/">Connectivity Within AWS</a>, <a href="../../application-networking/load-balancing/">Load Balancing</a>, and <a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a>. Review those topics first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Monitoring network traffic (covered in <a href="../internal-traffic/">Internal Traffic</a> and <a href="../external-traffic/">External Traffic</a>) tells you what's flowing through your network. Monitoring the networking <em>services themselves</em> tells you whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a <abbr title="Network Address Translation">NAT</abbr> Gateway exhausting its port allocation, or a Direct Connect connection flapping between states — these are service-level failures that traffic monitoring alone won't catch until users are already affected.</p>
+<p>This page focuses on the operational health of AWS networking services: the CloudWatch metrics that matter, the alarms you should configure from day one, and the automation patterns that turn monitoring signals into remediation actions. The goal is to detect degradation in the networking plane before it becomes an outage, and to respond automatically where possible.</p>
+<p>Service monitoring in a multi-account AWS environment requires a deliberate architecture. Metrics live in the account that owns the resource, but the networking team needs a unified view across all accounts and Regions. The patterns here assume a centralized monitoring account with cross-account CloudWatch dashboards and a shared EventBridge bus for networking events.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Sources["Networking Service Metrics"]
+        TGW["Transit Gateway"]
+        NAT["NAT Gateway"]
+        DX["Direct Connect"]
+        VPN["Site-to-Site VPN"]
+        ALB["Application LB"]
+        NLB["Network LB"]
+        NFW["Network Firewall"]
+        R53["Route 53 Resolver"]
+        Lattice["VPC Lattice"]
+    end
+
+    subgraph Monitoring["Centralized Monitoring Account"]
+        CW["CloudWatch Metrics&lt;br/&gt;Cross-account observability"]
+        Alarms["CloudWatch Alarms&lt;br/&gt;Composite &amp; anomaly detection"]
+        Dash["CloudWatch Dashboards&lt;br/&gt;Cross-account, cross-Region"]
+    end
+
+    subgraph Action["Automated Response"]
+        EB["EventBridge Rules"]
+        SNS["SNS Notifications"]
+        Lambda["Lambda Remediation"]
+        Incident["Incident Manager"]
+    end
+
+    Sources --&gt; CW
+    CW --&gt; Alarms
+    CW --&gt; Dash
+    Alarms --&gt; EB
+    EB --&gt; SNS
+    EB --&gt; Lambda
+    EB --&gt; Incident
+
+    style Sources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Monitoring fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Action fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
+    style NAT fill:#2563eb,stroke:#1e40af,color:#fff
+    style DX fill:#2563eb,stroke:#1e40af,color:#fff
+    style VPN fill:#2563eb,stroke:#1e40af,color:#fff
+    style ALB fill:#2563eb,stroke:#1e40af,color:#fff
+    style NLB fill:#2563eb,stroke:#1e40af,color:#fff
+    style NFW fill:#2563eb,stroke:#1e40af,color:#fff
+    style R53 fill:#2563eb,stroke:#1e40af,color:#fff
+    style Lattice fill:#2563eb,stroke:#1e40af,color:#fff
+    style CW fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Alarms fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Dash fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style EB fill:#059669,stroke:#047857,color:#fff
+    style SNS fill:#059669,stroke:#047857,color:#fff
+    style Lambda fill:#059669,stroke:#047857,color:#fff
+    style Incident fill:#059669,stroke:#047857,color:#fff</code></pre>
+<h2 id="critical-metrics-by-service">Critical metrics by service<a class="headerlink" href="#critical-metrics-by-service" title="Permanent link">&para;</a></h2>
+<p>Not all CloudWatch metrics deserve an alarm. The table below identifies the metrics that signal real operational problems — the ones you should alarm on from day one, before the first production workload routes through the service.</p>
+<h3 id="transit-gateway">Transit Gateway<a class="headerlink" href="#transit-gateway" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PacketDropCountBlackhole</code></td>
+<td>Traffic is being sent to a route that leads nowhere. Indicates a missing or misconfigured route table entry.</td>
+<td>&gt; 0 for 2 consecutive periods</td>
+</tr>
+<tr>
+<td><code>PacketDropCountNoRoute</code></td>
+<td>No matching route exists for the destination. Often caused by missing route propagation or a detached attachment.</td>
+<td>&gt; 0 for 2 consecutive periods</td>
+</tr>
+<tr>
+<td><code>BytesIn</code> / <code>BytesOut</code></td>
+<td>Baseline throughput. Sudden drops indicate connectivity loss; sustained growth signals capacity planning needs.</td>
+<td>Anomaly detection band (2 standard deviations)</td>
+</tr>
+<tr>
+<td><code>AttachmentCount</code></td>
+<td>Track attachment growth against the per-Region quota (default 5,000).</td>
+<td>&gt; 80% of quota</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nat-gateway"><abbr title="Network Address Translation">NAT</abbr> Gateway<a class="headerlink" href="#nat-gateway" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ErrorPortAllocation</code></td>
+<td>The <abbr title="Network Address Translation">NAT</abbr> Gateway has exhausted its 55,000 simultaneous connections to a single destination. Workloads will fail to establish new connections.</td>
+<td>&gt; 0 for 1 period</td>
+</tr>
+<tr>
+<td><code>PacketsDropCount</code></td>
+<td>Packets dropped due to <abbr title="Network Address Translation">NAT</abbr> Gateway processing limits. Indicates the gateway is overwhelmed.</td>
+<td>&gt; 0 sustained over 3 periods</td>
+</tr>
+<tr>
+<td><code>ActiveConnectionCount</code></td>
+<td>Tracks connection table utilization. Useful for capacity planning and detecting connection leaks.</td>
+<td>Anomaly detection or &gt; 80% of expected baseline</td>
+</tr>
+<tr>
+<td><code>BytesOutToDestination</code></td>
+<td>Data processing volume directly correlates with cost. Unexpected spikes indicate misconfigured routing or data exfiltration.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>ConnectionEstablishedCount</code></td>
+<td>Rate of new connections. Sudden spikes may indicate scanning or misconfigured retry logic.</td>
+<td>Anomaly detection band</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em><code>ErrorPortAllocation</code> is the single most critical <abbr title="Network Address Translation">NAT</abbr> Gateway metric. When it fires, connections are already failing. Alarm on it immediately and consider multiple <abbr title="Network Address Translation">NAT</abbr> Gateways or destination diversification.</em></p>
+<h3 id="direct-connect">Direct Connect<a class="headerlink" href="#direct-connect" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ConnectionState</code></td>
+<td>Binary: the physical connection is up or down. State changes indicate fiber cuts, router failures, or maintenance events.</td>
+<td>State != 1 (up) for 1 period</td>
+</tr>
+<tr>
+<td><code>VirtualInterfaceBpsEgress</code> / <code>VirtualInterfaceBpsIngress</code></td>
+<td>Per-VIF throughput. Approaching the port capacity means you need to add capacity or shift traffic.</td>
+<td>&gt; 80% of port speed sustained over 5 minutes</td>
+</tr>
+<tr>
+<td><code>ConnectionBpsEgress</code> / <code>ConnectionBpsIngress</code></td>
+<td>Aggregate connection throughput.</td>
+<td>&gt; 80% of port speed sustained over 5 minutes</td>
+</tr>
+<tr>
+<td><code>ConnectionLightLevelTx</code> / <code>ConnectionLightLevelRx</code></td>
+<td>Optical signal strength. Degrading light levels predict physical failures before they happen.</td>
+<td>Outside acceptable dBm range for the optic type</td>
+</tr>
+</tbody>
+</table>
+<h3 id="site-to-site-vpn">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#site-to-site-vpn" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TunnelState</code></td>
+<td>Binary: the IPsec tunnel is up or down. Each <abbr title="Virtual Private Network">VPN</abbr> connection has two tunnels for redundancy.</td>
+<td>Either tunnel state = 0 for 2 consecutive periods</td>
+</tr>
+<tr>
+<td><code>TunnelDataIn</code> / <code>TunnelDataOut</code></td>
+<td>Per-tunnel throughput. Asymmetric traffic may indicate a routing problem or a failed tunnel with traffic on the remaining one.</td>
+<td>Anomaly detection; alert on zero traffic when traffic is expected</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>Alarm when a single tunnel goes down, not just when both are down. A single-tunnel failure means you're running without redundancy — the next failure is an outage.</em></p>
+<h3 id="application-load-balancer">Application Load Balancer<a class="headerlink" href="#application-load-balancer" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HealthyHostCount</code></td>
+<td>Tracks how many targets are passing health checks. A declining count means capacity is shrinking.</td>
+<td>&lt; expected minimum per target group</td>
+</tr>
+<tr>
+<td><code>UnHealthyHostCount</code></td>
+<td>Targets failing health checks. Non-zero means something is wrong with the application or its dependencies.</td>
+<td>&gt; 0 sustained over 2 periods</td>
+</tr>
+<tr>
+<td><code>HTTPCode_ELB_5XX_Count</code></td>
+<td>Errors generated by the <abbr title="Application Load Balancer">ALB</abbr> itself (not the targets). Indicates <abbr title="Application Load Balancer">ALB</abbr>-level issues like capacity exhaustion or no healthy targets.</td>
+<td>&gt; 0 sustained over 3 periods</td>
+</tr>
+<tr>
+<td><code>TargetResponseTime</code></td>
+<td>P99 latency from the <abbr title="Application Load Balancer">ALB</abbr> to targets. Degradation here affects every request.</td>
+<td>Anomaly detection or &gt; SLA threshold</td>
+</tr>
+<tr>
+<td><code>RejectedConnectionCount</code></td>
+<td>Connections rejected because the <abbr title="Application Load Balancer">ALB</abbr> hit its maximum connections. Indicates undersized subnets or a traffic spike beyond <abbr title="Application Load Balancer">ALB</abbr> scaling.</td>
+<td>&gt; 0 for 1 period</td>
+</tr>
+<tr>
+<td><code>RequestCount</code></td>
+<td>Baseline traffic volume. Useful for anomaly detection and correlating with other metrics.</td>
+<td>Anomaly detection band</td>
+</tr>
+</tbody>
+</table>
+<h3 id="network-load-balancer">Network Load Balancer<a class="headerlink" href="#network-load-balancer" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HealthyHostCount</code> / <code>UnHealthyHostCount</code></td>
+<td>Same as <abbr title="Application Load Balancer">ALB</abbr> — tracks target availability.</td>
+<td>Same thresholds as <abbr title="Application Load Balancer">ALB</abbr></td>
+</tr>
+<tr>
+<td><code>TCP_ELB_Reset_Count</code></td>
+<td><abbr title="Transmission Control Protocol">TCP</abbr> resets generated by the <abbr title="Network Load Balancer">NLB</abbr> (not targets). Indicates idle timeout mismatches or connection tracking issues.</td>
+<td>Anomaly detection; sustained increase</td>
+</tr>
+<tr>
+<td><code>ProcessedBytes</code></td>
+<td>Total throughput. Correlates directly with cost and capacity utilization.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>NewFlowCount</code></td>
+<td>Rate of new <abbr title="Transmission Control Protocol">TCP</abbr>/<abbr title="User Datagram Protocol">UDP</abbr> flows. Sudden spikes may indicate <abbr title="Distributed Denial of Service">DDoS</abbr> or misconfigured clients.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>UnHealthyHostCount</code> (per <abbr title="Availability Zone">AZ</abbr>)</td>
+<td>Per-<abbr title="Availability Zone">AZ</abbr> health. Critical when cross-zone load balancing is off (<abbr title="Network Load Balancer">NLB</abbr> default).</td>
+<td>&gt; 0 in any single <abbr title="Availability Zone">AZ</abbr></td>
+</tr>
+</tbody>
+</table>
+<h3 id="aws-network-firewall">AWS Network Firewall<a class="headerlink" href="#aws-network-firewall" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DroppedPackets</code></td>
+<td>Packets explicitly dropped by firewall rules. Expected in normal operation, but sudden spikes indicate either an attack or a rule misconfiguration blocking legitimate traffic.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>PassedPackets</code></td>
+<td>Packets allowed through. A sudden drop to zero means traffic isn't reaching the firewall (routing issue) or the firewall is down.</td>
+<td>&lt; baseline for 2 periods</td>
+</tr>
+<tr>
+<td><code>ReceivedPackets</code></td>
+<td>Total packets entering the firewall. Baseline for capacity planning.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>Packets</code> (per rule group)</td>
+<td>Per-rule-group hit counts. Identifies which rules are active and whether new rules are matching as expected.</td>
+<td>Monitor for zero hits on rules expected to match</td>
+</tr>
+</tbody>
+</table>
+<h3 id="route-53-resolver">Route 53 Resolver<a class="headerlink" href="#route-53-resolver" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>InboundQueryVolume</code></td>
+<td><abbr title="Domain Name System">DNS</abbr> queries arriving from on-premises or peered networks. Spikes may indicate <abbr title="Domain Name System">DNS</abbr> amplification or misconfigured resolvers.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>OutboundQueryVolume</code></td>
+<td><abbr title="Domain Name System">DNS</abbr> queries forwarded to on-premises or external resolvers. Drops indicate forwarding rule issues.</td>
+<td>&lt; baseline for 3 periods</td>
+</tr>
+<tr>
+<td><code>FirewallRuleGroupQueryVolume</code></td>
+<td>Queries evaluated by <abbr title="Domain Name System">DNS</abbr> Firewall rules. Tracks <abbr title="Domain Name System">DNS</abbr>-layer security enforcement.</td>
+<td>Monitor for expected baseline</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vpc-lattice"><abbr title="Virtual Private Cloud">VPC</abbr> Lattice<a class="headerlink" href="#vpc-lattice" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Why it matters</th>
+<th>Alarm condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RequestCount</code></td>
+<td>Total requests through the service network. Baseline for capacity and cost tracking.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>HTTPCode_Target_4XX_Count</code></td>
+<td>Client errors at the target. Elevated counts indicate API contract issues or auth failures.</td>
+<td>Anomaly detection band</td>
+</tr>
+<tr>
+<td><code>HTTPCode_Target_5XX_Count</code></td>
+<td>Server errors at the target. Direct indicator of backend health problems.</td>
+<td>&gt; threshold for 2 periods</td>
+</tr>
+<tr>
+<td><code>TargetResponseTime</code></td>
+<td>Latency from <abbr title="Virtual Private Cloud">VPC</abbr> Lattice to the target. Degradation affects all consumers on the service network.</td>
+<td>&gt; SLA threshold or anomaly detection</td>
+</tr>
+</tbody>
+</table>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="alarm-design">Alarm design<a class="headerlink" href="#alarm-design" title="Permanent link">&para;</a></h3>
+<h4 id="alarm-on-state-changes-not-just-thresholds">Alarm on state changes, not just thresholds<a class="headerlink" href="#alarm-on-state-changes-not-just-thresholds" title="Permanent link">&para;</a></h4>
+<p>Many networking services have binary state metrics (tunnel up/down, connection active/inactive, <abbr title="Border Gateway Protocol">BGP</abbr> session established/idle). These deserve state-change alarms, not threshold-based alarms. A <abbr title="Virtual Private Network">VPN</abbr> tunnel transitioning from up to down is immediately actionable regardless of traffic volume. Configure alarms that trigger on the state value itself (e.g., <code>TunnelState &lt; 1</code> for 1 evaluation period) rather than waiting for traffic metrics to reflect the failure.</p>
+<p>For Direct Connect, monitor <code>ConnectionState</code> transitions. For <abbr title="Virtual Private Network">VPN</abbr>, monitor individual <code>TunnelState</code> per tunnel. For <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr>, monitor <code>HealthyHostCount</code> dropping below the expected minimum rather than waiting for error rates to climb.</p>
+<h4 id="use-composite-alarms-to-reduce-noise">Use composite alarms to reduce noise<a class="headerlink" href="#use-composite-alarms-to-reduce-noise" title="Permanent link">&para;</a></h4>
+<p>Individual metric alarms generate noise. A brief spike in <code>PacketDropCountNoRoute</code> during a Transit Gateway route table update is expected. A sustained spike combined with increased <code>ErrorPortAllocation</code> on a <abbr title="Network Address Translation">NAT</abbr> Gateway in the same path is a real problem.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html">Composite alarms</a> combine multiple alarm states with AND/OR logic. Configure them to alert only when multiple signals confirm a problem:</p>
+<ul>
+<li>Transit Gateway: <code>PacketDropCountBlackhole &gt; 0</code> AND <code>BytesOut</code> anomaly (confirms traffic is affected, not just a transient routing update)</li>
+<li><abbr title="Network Address Translation">NAT</abbr> Gateway: <code>ErrorPortAllocation &gt; 0</code> AND <code>ActiveConnectionCount</code> above baseline (confirms the port exhaustion is real load, not a monitoring artifact)</li>
+<li>Load Balancer: <code>UnHealthyHostCount &gt; 0</code> AND <code>HealthyHostCount &lt; minimum</code> (confirms actual capacity loss, not a single target cycling)</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Composite alarms are the difference between a monitoring system that gets ignored and one that gets acted on. Every alert that fires without requiring action trains your team to ignore alerts.</em></p>
+<h4 id="use-anomaly-detection-instead-of-static-thresholds">Use anomaly detection instead of static thresholds<a class="headerlink" href="#use-anomaly-detection-instead-of-static-thresholds" title="Permanent link">&para;</a></h4>
+<p>Static thresholds require constant tuning as traffic patterns change. CloudWatch <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html">anomaly detection</a> builds a model of expected behavior and alerts when metrics deviate from the learned pattern. This is particularly effective for:</p>
+<ul>
+<li><code>BytesIn</code>/<code>BytesOut</code> on Transit Gateway and <abbr title="Network Address Translation">NAT</abbr> Gateway (traffic follows daily/weekly patterns)</li>
+<li><code>RequestCount</code> on <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Virtual Private Cloud">VPC</abbr> Lattice (application traffic has predictable cycles)</li>
+<li><code>NewFlowCount</code> on <abbr title="Network Load Balancer">NLB</abbr> (connection rates correlate with business activity)</li>
+</ul>
+<p>Anomaly detection costs the same as a standard alarm but adapts automatically to traffic growth, seasonal patterns, and baseline shifts. Use a band width of 2 standard deviations for most networking metrics — tight enough to catch real anomalies, loose enough to avoid false positives during normal variance.</p>
+<h4 id="monitor-quotas-before-you-hit-them">Monitor quotas before you hit them<a class="headerlink" href="#monitor-quotas-before-you-hit-them" title="Permanent link">&para;</a></h4>
+<p>Every networking service has quotas. Hitting a quota silently — no new <abbr title="Virtual Private Network">VPN</abbr> connections, no additional Transit Gateway attachments, no more <abbr title="Network Address Translation">NAT</abbr> Gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.</p>
+<p>Use <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html">AWS Service Quotas</a> integration with CloudWatch to alarm at 80% utilization:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Quota to monitor</th>
+<th>Default limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transit Gateway</td>
+<td>Attachments per <abbr title="Transit Gateway">TGW</abbr></td>
+<td>5,000</td>
+</tr>
+<tr>
+<td>Transit Gateway</td>
+<td>Routes per route table</td>
+<td>10,000</td>
+</tr>
+<tr>
+<td><abbr title="Network Address Translation">NAT</abbr> Gateway</td>
+<td><abbr title="Network Address Translation">NAT</abbr> Gateways per <abbr title="Availability Zone">AZ</abbr></td>
+<td>5</td>
+</tr>
+<tr>
+<td><abbr title="Virtual Private Network">VPN</abbr></td>
+<td><abbr title="Virtual Private Network">VPN</abbr> connections per <abbr title="Virtual Private Gateway">VGW</abbr>/<abbr title="Transit Gateway">TGW</abbr></td>
+<td>10 / 20</td>
+</tr>
+<tr>
+<td>Direct Connect</td>
+<td>Virtual interfaces per connection</td>
+<td>50</td>
+</tr>
+<tr>
+<td><abbr title="Application Load Balancer">ALB</abbr></td>
+<td>Rules per <abbr title="Application Load Balancer">ALB</abbr></td>
+<td>100</td>
+</tr>
+<tr>
+<td><abbr title="Network Load Balancer">NLB</abbr></td>
+<td>Targets per target group</td>
+<td>500 (IP) / 500 (instance)</td>
+</tr>
+<tr>
+<td>Network Firewall</td>
+<td>Rule groups per firewall policy</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<h3 id="multi-account-monitoring-architecture">Multi-account monitoring architecture<a class="headerlink" href="#multi-account-monitoring-architecture" title="Permanent link">&para;</a></h3>
+<h4 id="deploy-a-centralized-monitoring-account">Deploy a centralized monitoring account<a class="headerlink" href="#deploy-a-centralized-monitoring-account" title="Permanent link">&para;</a></h4>
+<p>In a multi-account environment, networking resources are distributed across shared-services accounts, workload accounts, and connectivity accounts. The networking team needs a single pane of glass.</p>
+<p>Use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html">CloudWatch cross-account observability</a> to designate a monitoring account that can view metrics, logs, and traces from all source accounts. Configure this at the AWS Organizations level so new accounts are automatically enrolled.</p>
+<p>The monitoring account hosts:</p>
+<ul>
+<li>Cross-account dashboards showing all networking service health</li>
+<li>Centralized alarms that evaluate metrics from any source account</li>
+<li>EventBridge rules that aggregate networking events from all accounts</li>
+</ul>
+<h4 id="build-cross-region-dashboards-for-the-networking-team">Build cross-Region dashboards for the networking team<a class="headerlink" href="#build-cross-region-dashboards-for-the-networking-team" title="Permanent link">&para;</a></h4>
+<p>A single CloudWatch dashboard can display metrics from multiple Regions. Build dashboards organized by service type, not by account or Region:</p>
+<ul>
+<li><strong>Transit Gateway dashboard</strong>: all <abbr title="Transit Gateway">TGW</abbr> metrics across all Regions, with per-attachment drill-down</li>
+<li><strong>Hybrid connectivity dashboard</strong>: all Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> metrics, showing connection state and utilization</li>
+<li><strong>Load balancer dashboard</strong>: <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> health across all workload accounts</li>
+<li><strong><abbr title="Domain Name System">DNS</abbr> dashboard</strong>: Route 53 Resolver query volumes and <abbr title="Domain Name System">DNS</abbr> Firewall activity</li>
+</ul>
+<p>Each dashboard should show the last 3 hours by default with the ability to zoom to 1 week for trend analysis.</p>
+<p><strong><em>Key insight:</em></strong> <em>Organize dashboards by networking concern (connectivity health, capacity, security), not by AWS account or Region. The networking team thinks in terms of paths and services, not account boundaries.</em></p>
+<h3 id="ipv6-monitoring-considerations"><abbr title="Internet Protocol version 6">IPv6</abbr> monitoring considerations<a class="headerlink" href="#ipv6-monitoring-considerations" title="Permanent link">&para;</a></h3>
+<h4 id="monitor-dual-stack-metrics-separately">Monitor dual-stack metrics separately<a class="headerlink" href="#monitor-dual-stack-metrics-separately" title="Permanent link">&para;</a></h4>
+<p>Several networking services report metrics that differ between <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic paths. When running dual-stack:</p>
+<ul>
+<li><strong><abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr></strong>: Monitor <code>IPv6ProcessedBytes</code> and <code>IPv6RequestCount</code> separately from their <abbr title="Internet Protocol version 4">IPv4</abbr> counterparts. A failure in the <abbr title="Internet Protocol version 6">IPv6</abbr> path won't show up in aggregate metrics if <abbr title="Internet Protocol version 4">IPv4</abbr> traffic dominates.</li>
+<li><strong><abbr title="Network Address Translation">NAT</abbr> Gateway</strong>: NAT64 metrics (<code>BytesOutToDestination</code> for <abbr title="Internet Protocol version 6">IPv6</abbr>-to-<abbr title="Internet Protocol version 4">IPv4</abbr> translation) track a different failure mode than standard <abbr title="Network Address Translation">NAT</abbr>. Monitor both paths.</li>
+<li><strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice</strong>: Dual-stack service networks carry both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic. Monitor per-protocol error rates to catch <abbr title="Internet Protocol version 6">IPv6</abbr>-specific routing issues.</li>
+</ul>
+<h4 id="configure-ipv6-specific-health-checks">Configure <abbr title="Internet Protocol version 6">IPv6</abbr>-specific health checks<a class="headerlink" href="#configure-ipv6-specific-health-checks" title="Permanent link">&para;</a></h4>
+<p>For services that support <abbr title="Internet Protocol version 6">IPv6</abbr> health checks (<abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>), configure health checks over both protocols when targets are dual-stack. An <abbr title="Internet Protocol version 4">IPv4</abbr> health check passing doesn't guarantee the <abbr title="Internet Protocol version 6">IPv6</abbr> path is functional — different security groups, NACLs, or routing may apply to each address family.</p>
+<h3 id="cost-effective-monitoring">Cost-effective monitoring<a class="headerlink" href="#cost-effective-monitoring" title="Permanent link">&para;</a></h3>
+<h4 id="use-metric-math-to-reduce-alarm-count">Use metric math to reduce alarm count<a class="headerlink" href="#use-metric-math-to-reduce-alarm-count" title="Permanent link">&para;</a></h4>
+<p>CloudWatch charges per alarm per month. Instead of creating individual alarms for every <abbr title="Network Address Translation">NAT</abbr> Gateway or every Transit Gateway attachment, use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html">metric math</a> to aggregate:</p>
+<ul>
+<li>Sum <code>ErrorPortAllocation</code> across all <abbr title="Network Address Translation">NAT</abbr> Gateways in a Region into a single alarm</li>
+<li>Calculate the ratio of <code>UnHealthyHostCount</code> to total targets across all target groups</li>
+<li>Compute <code>PacketDropCountBlackhole + PacketDropCountNoRoute</code> as a single "routing failures" metric</li>
+</ul>
+<p>This reduces alarm count (and cost) while maintaining coverage. Create per-resource alarms only for the most critical individual resources (primary Direct Connect connections, production ALBs).</p>
+<h4 id="understand-the-cost-model">Understand the cost model<a class="headerlink" href="#understand-the-cost-model" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>CloudWatch component</th>
+<th>Pricing consideration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard metrics</td>
+<td>Free (included with the service)</td>
+</tr>
+<tr>
+<td>Custom metrics</td>
+<td>$0.30/metric/month (first 10,000)</td>
+</tr>
+<tr>
+<td>Alarms (standard)</td>
+<td>$0.10/alarm/month</td>
+</tr>
+<tr>
+<td>Alarms (high-resolution)</td>
+<td>$0.30/alarm/month</td>
+</tr>
+<tr>
+<td>Anomaly detection alarms</td>
+<td>$0.30/alarm/month</td>
+</tr>
+<tr>
+<td>Composite alarms</td>
+<td>$0.50/alarm/month</td>
+</tr>
+<tr>
+<td>Dashboards</td>
+<td>$3.00/dashboard/month (first 3 free)</td>
+</tr>
+<tr>
+<td>Cross-account observability</td>
+<td>No additional charge for metrics</td>
+</tr>
+</tbody>
+</table>
+<p>For a typical multi-account networking setup with 50 alarms, 5 dashboards, and 10 anomaly detection alarms, expect approximately $20–30/month in CloudWatch costs — negligible compared to the networking services themselves, but worth understanding to avoid surprise bills from over-instrumentation with custom metrics.</p>
+<h4 id="prefer-built-in-metrics-over-custom-metrics">Prefer built-in metrics over custom metrics<a class="headerlink" href="#prefer-built-in-metrics-over-custom-metrics" title="Permanent link">&para;</a></h4>
+<p>Every networking service publishes metrics to CloudWatch at no additional cost. Before building custom metrics with Lambda functions or CloudWatch agents, verify the built-in metrics don't already cover your need. Custom metrics at $0.30/metric/month add up quickly when you're monitoring hundreds of resources across multiple accounts.</p>
+<h3 id="automated-remediation">Automated remediation<a class="headerlink" href="#automated-remediation" title="Permanent link">&para;</a></h3>
+<h4 id="use-eventbridge-for-automated-response">Use EventBridge for automated response<a class="headerlink" href="#use-eventbridge-for-automated-response" title="Permanent link">&para;</a></h4>
+<p>CloudWatch alarms transition states. <a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html">EventBridge</a> captures those transitions and routes them to automated actions. Common networking remediation patterns:</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Automated action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><abbr title="Virtual Private Network">VPN</abbr> <code>TunnelState</code> → 0 on both tunnels</td>
+<td>Trigger failover to backup <abbr title="Virtual Private Network">VPN</abbr> or Direct Connect path</td>
+</tr>
+<tr>
+<td><abbr title="Network Address Translation">NAT</abbr> Gateway <code>ErrorPortAllocation</code> &gt; 0</td>
+<td>Scale out by provisioning additional <abbr title="Network Address Translation">NAT</abbr> Gateways and updating route tables</td>
+</tr>
+<tr>
+<td><abbr title="Application Load Balancer">ALB</abbr> <code>HealthyHostCount</code> &lt; minimum</td>
+<td>Trigger Auto Scaling step scaling or notify on-call</td>
+</tr>
+<tr>
+<td>Direct Connect <code>ConnectionState</code> → down</td>
+<td>Update Route 53 health checks to failover to <abbr title="Virtual Private Network">VPN</abbr> backup</td>
+</tr>
+<tr>
+<td>Transit Gateway <code>PacketDropCountBlackhole</code> &gt; 0</td>
+<td>Run diagnostic Lambda to identify the affected route and notify</td>
+</tr>
+<tr>
+<td>Network Firewall <code>DroppedPackets</code> spike</td>
+<td>Capture packet samples and create incident ticket</td>
+</tr>
+</tbody>
+</table>
+<h4 id="design-health-checks-for-networking-services">Design health checks for networking services<a class="headerlink" href="#design-health-checks-for-networking-services" title="Permanent link">&para;</a></h4>
+<p>Beyond CloudWatch metrics, active health checking validates end-to-end path availability. Design synthetic checks that probe the networking layer:</p>
+<ul>
+<li><strong><abbr title="Virtual Private Network">VPN</abbr> path validation</strong>: Lambda in the <abbr title="Virtual Private Cloud">VPC</abbr> sends <abbr title="Internet Control Message Protocol">ICMP</abbr> or <abbr title="Transmission Control Protocol">TCP</abbr> probes through the <abbr title="Virtual Private Network">VPN</abbr> tunnel to an on-premises endpoint every 60 seconds. Failure triggers an alarm independent of the <code>TunnelState</code> metric (which only reflects IKE/IPsec state, not actual data-plane forwarding).</li>
+<li><strong><abbr title="Network Address Translation">NAT</abbr> Gateway validation</strong>: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates <abbr title="Network Address Translation">NAT</abbr> Gateway or internet gateway issues.</li>
+<li><strong>Transit Gateway path validation</strong>: Lambda in spoke <abbr title="Virtual Private Cloud">VPC</abbr> A sends a request to a known endpoint in spoke <abbr title="Virtual Private Cloud">VPC</abbr> B through the Transit Gateway. Validates routing, not just attachment state.</li>
+<li><strong>Direct Connect path validation</strong>: On-premises probe sends traffic to a known <abbr title="Virtual Private Cloud">VPC</abbr> endpoint. Validates the full path including <abbr title="Border Gateway Protocol">BGP</abbr> routing, not just the physical connection state.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>CloudWatch metrics tell you the service is healthy. Synthetic health checks tell you the path works end-to-end. You need both — a healthy service with broken routing still means an outage.</em></p>
+<h2 id="combining-service-monitoring-with-other-services">Combining service monitoring with other services<a class="headerlink" href="#combining-service-monitoring-with-other-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>Service monitoring provides</th>
+<th>Other service provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Service monitoring + <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></td>
+<td>Health state of networking services (up/down, error rates, capacity)</td>
+<td>Actual traffic patterns, source/destination pairs, accepted/rejected flows</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + AWS CloudTrail</strong></td>
+<td>Runtime operational metrics</td>
+<td>API-level audit trail (who changed what configuration and when)</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + AWS Network Manager</strong></td>
+<td>Per-service metric alarms and dashboards</td>
+<td>Topology visualization and route analysis across the global network</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + AWS Health Dashboard</strong></td>
+<td>Your resource-specific metrics and alarms</td>
+<td>AWS-side service events, maintenance notifications, and regional issues</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + Amazon DevOps Guru</strong></td>
+<td>Explicit alarm thresholds and anomaly bands you define</td>
+<td>ML-driven anomaly detection across related resources that you didn't explicitly instrument</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + AWS Trusted Advisor</strong></td>
+<td>Real-time operational health</td>
+<td>Periodic checks for quota utilization, security, and cost optimization</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + Notifications</strong></td>
+<td>Metric collection and alarm evaluation</td>
+<td>Alert routing, escalation, and on-call integration (see <a href="../notifications/">Notifications</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>CloudWatch cross-account observability</strong></p>
+<hr />
+<p>Set up a centralized monitoring account to view metrics, logs, and traces across your AWS Organization.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Unified-Cross-Account.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>CloudWatch anomaly detection</strong></p>
+<hr />
+<p>Configure ML-based anomaly detection alarms that adapt to changing traffic patterns without manual threshold tuning.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>CloudWatch composite alarms</strong></p>
+<hr />
+<p>Combine multiple alarm states into a single composite alarm to reduce noise and alert only on confirmed problems.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>EventBridge rules for CloudWatch alarms</strong></p>
+<hr />
+<p>Route alarm state changes to automated remediation actions through EventBridge rules.</p>
+<p><a href="https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-service-event.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>CloudWatch pricing</strong></p>
+<hr />
+<p>Understand the cost model for metrics, alarms, dashboards, and cross-account observability.</p>
+<p><a href="https://aws.amazon.com/cloudwatch/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Service Quotas</strong></p>
+<hr />
+<p>Monitor service quota utilization with CloudWatch integration and request increases before hitting limits.</p>
+<p><a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+</ul>
+</div>
+<h2 id="related-observability-pages">Related Observability Pages<a class="headerlink" href="#related-observability-pages" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../internal-traffic/">Internal Traffic Monitoring</a></strong> — Covers <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs and traffic mirroring for understanding what's flowing through your network, complementing the service health view on this page.</li>
+<li><strong><a href="../external-traffic/">External Traffic Monitoring</a></strong> — Covers monitoring traffic between AWS and the internet, including CloudFront and edge service metrics.</li>
+<li><strong><a href="../notifications/">Notifications</a></strong> — Covers alert routing, escalation policies, and integration with incident management tools. Service monitoring generates the signals; notifications deliver them to the right people.</li>
+</ul>
+<p><strong>Relationship to other sections:</strong></p>
+<ul>
+<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Covers the Transit Gateway, Cloud WAN, and <abbr title="Virtual Private Cloud">VPC</abbr> Peering services that this page monitors.</li>
+<li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a></strong>: Covers Direct Connect and Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> architecture; this page covers their operational monitoring.</li>
+<li><strong><a href="../../application-networking/load-balancing/">Load Balancing</a></strong>: Covers <abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>, and <abbr title="Gateway Load Balancer">GWLB</abbr> architecture and best practices; this page covers their health metrics and alarms.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../notifications/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Notifications">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Notifications
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../internal-traffic/" class="md-footer__link md-footer__link--next" aria-label="Next: Internal Traffic">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Internal Traffic
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

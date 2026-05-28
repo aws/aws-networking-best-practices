@@ -1,0 +1,3840 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/connectivity/hybrid-multicloud/">
+      
+      
+        <link rel="prev" href="../within-aws/">
+      
+      
+        <link rel="next" href="../../application-networking/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Hybrid & Multi-Cloud - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Hybrid & Multi-Cloud - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/connectivity/hybrid-multicloud.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/connectivity/hybrid-multicloud/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Hybrid & Multi-Cloud - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/connectivity/hybrid-multicloud.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hybrid-and-multi-cloud-connectivity" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hybrid & Multi-Cloud
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#private-on-premises-connectivity-with-aws-direct-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private on-premises connectivity with AWS Direct Connect
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Private on-premises connectivity with AWS Direct Connect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-direct-connect-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Direct Connect Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Direct Connect Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-for-resiliency-at-the-location-and-provider-level-not-just-at-the-connection-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design for resiliency at the location and provider level, not just at the connection level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-a-direct-connect-gateway-as-the-attach-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a Direct Connect Gateway as the attach point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-right-vif-type-for-each-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the right VIF type for each workload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-bgp-attributes-for-traffic-engineering-across-multiple-direct-connect-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use BGP attributes for traffic engineering across multiple Direct Connect paths
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-bfd-for-sub-second-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable BFD for sub-second failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-bgp-and-vif-metrics-actively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor BGP and VIF metrics actively
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-direct-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Direct Connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-aws-direct-connect-with-other-hybrid-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining AWS Direct Connect with other Hybrid Networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encrypted-on-premises-connectivity-with-aws-site-to-site-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypted on-premises connectivity with AWS Site-to-Site VPN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encrypted on-premises connectivity with AWS Site-to-Site VPN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-site-to-site-vpn-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Site-to-Site VPN Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Site-to-Site VPN Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-multiple-vpn-connections-with-diverse-isp-paths-and-dynamic-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use multiple VPN connections with diverse ISP paths and dynamic routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminate-vpn-on-transit-gateway-or-aws-cloud-wan-not-virtual-private-gateways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminate VPN on Transit Gateway or AWS Cloud WAN, not virtual private gateways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-vpn-concentrator-for-many-low-bandwidth-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use VPN Concentrator for many low-bandwidth sites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-accelerated-vpn-for-distant-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Accelerated VPN for distant sites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-tunnel-state-bgp-sessions-and-enable-site-to-site-vpn-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor tunnel state, BGP sessions, and enable Site-to-Site VPN logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-site-to-site-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Site-to-Site VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-aws-site-to-site-vpn-with-other-hybrid-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining AWS Site-to-Site VPN with other Hybrid Networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sd-wan-integration-with-aws-transit-gateway-and-aws-cloud-wan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SD-WAN integration with AWS Transit Gateway and AWS Cloud WAN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SD-WAN integration with AWS Transit Gateway and AWS Cloud WAN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-integrating-sd-wan-networks-with-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices for integrating SD-WAN networks with AWS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices for integrating SD-WAN networks with AWS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-underlay-based-on-where-the-sd-wan-appliance-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the underlay based on where the SD-WAN appliance lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-for-connect-peer-redundancy-per-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design for Connect peer redundancy per segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-aws-cloud-wan-segments-instead-of-transit-gateway-route-tables-for-multi-region-sd-wan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use AWS Cloud WAN segments instead of Transit Gateway route tables for multi-Region SD-WAN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-bgp-prefix-counts-manageable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep BGP prefix counts manageable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-cloud-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-cloud connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-cloud connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-cloud-to-cloud-connectivity-with-aws-interconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct cloud-to-cloud connectivity with AWS Interconnect
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Direct cloud-to-cloud connectivity with AWS Interconnect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-interconnect-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Interconnect Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Interconnect Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use AWS Interconnect as the default for supported Region pairs and providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-interconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Interconnect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-multi-cloud-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other multi-cloud options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other multi-cloud options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#partner-based-aws-direct-connect-to-another-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partner-based AWS Direct Connect to another cloud
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-site-to-site-vpn-between-clouds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Site-to-Site VPN between clouds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-the-multi-cloud-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing the multi-cloud options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-communication-to-aws-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client communication to AWS applications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client communication to AWS applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-client-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Client VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-verified-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Verified Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-hybrid-and-multi-cloud-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your hybrid and multi-cloud stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building your hybrid and multi-cloud stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#private-on-premises-connectivity-with-aws-direct-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private on-premises connectivity with AWS Direct Connect
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Private on-premises connectivity with AWS Direct Connect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-direct-connect-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Direct Connect Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Direct Connect Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-for-resiliency-at-the-location-and-provider-level-not-just-at-the-connection-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design for resiliency at the location and provider level, not just at the connection level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-a-direct-connect-gateway-as-the-attach-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use a Direct Connect Gateway as the attach point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-right-vif-type-for-each-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the right VIF type for each workload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-bgp-attributes-for-traffic-engineering-across-multiple-direct-connect-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use BGP attributes for traffic engineering across multiple Direct Connect paths
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-bfd-for-sub-second-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable BFD for sub-second failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-bgp-and-vif-metrics-actively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor BGP and VIF metrics actively
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-direct-connect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Direct Connect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-aws-direct-connect-with-other-hybrid-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining AWS Direct Connect with other Hybrid Networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encrypted-on-premises-connectivity-with-aws-site-to-site-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encrypted on-premises connectivity with AWS Site-to-Site VPN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encrypted on-premises connectivity with AWS Site-to-Site VPN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-site-to-site-vpn-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Site-to-Site VPN Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Site-to-Site VPN Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-multiple-vpn-connections-with-diverse-isp-paths-and-dynamic-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use multiple VPN connections with diverse ISP paths and dynamic routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terminate-vpn-on-transit-gateway-or-aws-cloud-wan-not-virtual-private-gateways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terminate VPN on Transit Gateway or AWS Cloud WAN, not virtual private gateways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-vpn-concentrator-for-many-low-bandwidth-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use VPN Concentrator for many low-bandwidth sites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-accelerated-vpn-for-distant-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Accelerated VPN for distant sites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitor-tunnel-state-bgp-sessions-and-enable-site-to-site-vpn-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor tunnel state, BGP sessions, and enable Site-to-Site VPN logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-site-to-site-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Site-to-Site VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-aws-site-to-site-vpn-with-other-hybrid-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining AWS Site-to-Site VPN with other Hybrid Networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sd-wan-integration-with-aws-transit-gateway-and-aws-cloud-wan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SD-WAN integration with AWS Transit Gateway and AWS Cloud WAN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SD-WAN integration with AWS Transit Gateway and AWS Cloud WAN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#best-practices-for-integrating-sd-wan-networks-with-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices for integrating SD-WAN networks with AWS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices for integrating SD-WAN networks with AWS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-the-underlay-based-on-where-the-sd-wan-appliance-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose the underlay based on where the SD-WAN appliance lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-for-connect-peer-redundancy-per-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design for Connect peer redundancy per segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-aws-cloud-wan-segments-instead-of-transit-gateway-route-tables-for-multi-region-sd-wan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use AWS Cloud WAN segments instead of Transit Gateway route tables for multi-Region SD-WAN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keep-bgp-prefix-counts-manageable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keep BGP prefix counts manageable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-cloud-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-cloud connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-cloud connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#direct-cloud-to-cloud-connectivity-with-aws-interconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct cloud-to-cloud connectivity with AWS Interconnect
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Direct cloud-to-cloud connectivity with AWS Interconnect">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-interconnect-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Interconnect Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Interconnect Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use AWS Interconnect as the default for supported Region pairs and providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plan-ipv6-from-the-start_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plan IPv6 from the start
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-interconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Interconnect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-multi-cloud-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other multi-cloud options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other multi-cloud options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#partner-based-aws-direct-connect-to-another-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partner-based AWS Direct Connect to another cloud
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-site-to-site-vpn-between-clouds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Site-to-Site VPN between clouds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-the-multi-cloud-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing the multi-cloud options
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-communication-to-aws-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client communication to AWS applications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client communication to AWS applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-client-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Client VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aws-verified-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Verified Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-hybrid-and-multi-cloud-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your hybrid and multi-cloud stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building your hybrid and multi-cloud stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Connectivity
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/connectivity/hybrid-multicloud.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/connectivity/hybrid-multicloud.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="hybrid-and-multi-cloud-connectivity">Hybrid and Multi-Cloud Connectivity<a class="headerlink" href="#hybrid-and-multi-cloud-connectivity" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>, <a href="../../foundation/organizations/">AWS Organizations</a>, and the <a href="../within-aws/">Within AWS connectivity</a> services (AWS Transit Gateway and AWS Cloud WAN in particular). Review those topics first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Connecting AWS to networks outside AWS covers three distinct concerns, and the right answer is rarely a single service. <strong>Hybrid connectivity</strong> brings on-premises data centers and branch offices to AWS through private circuits, encrypted <abbr title="Virtual Private Network">VPN</abbr>, or <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays. <strong>Multi-cloud connectivity</strong> connects AWS to other public clouds for workloads that span providers. <strong>Client communication to AWS applications</strong> gives users and devices access to specific applications from wherever they are.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Hybrid["Hybrid Connectivity (on-premises ↔ AWS)"]
+        DX["AWS Direct Connect&lt;br/&gt;Private circuits"]
+        VPN["AWS Site-to-Site VPN&lt;br/&gt;Encrypted over internet"]
+        SDWAN["SD-WAN integration&lt;br/&gt;via Transit Gateway or Cloud WAN"]
+    end
+
+    subgraph Multi["Multi-Cloud Connectivity (AWS ↔ other clouds)"]
+        IC["AWS Interconnect&lt;br/&gt;Direct cloud-to-cloud"]
+        Partner["Partner-based Direct Connect&lt;br/&gt;or VPN over internet"]
+    end
+
+    subgraph Users["Client Communication (users/devices ↔ AWS applications)"]
+        CVPN["AWS Client VPN&lt;br/&gt;Network-level user access"]
+        VA["AWS Verified Access&lt;br/&gt;Zero-trust application access"]
+    end
+
+    Hybrid ~~~ Multi ~~~ Users
+
+    style Hybrid fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Multi fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Users fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style DX fill:#2563eb,stroke:#1e40af,color:#fff
+    style VPN fill:#2563eb,stroke:#1e40af,color:#fff
+    style SDWAN fill:#2563eb,stroke:#1e40af,color:#fff
+    style IC fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Partner fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style CVPN fill:#059669,stroke:#047857,color:#fff
+    style VA fill:#059669,stroke:#047857,color:#fff</code></pre>
+<p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
+<p>For multi-cloud, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.</p>
+<p>For users reaching AWS applications, <a href="https://aws.amazon.com/vpn/client-vpn/">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> provides network-level access into VPCs when applications need traditional IP reachability. <a href="https://aws.amazon.com/verified-access/">AWS Verified Access</a> provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a <abbr title="Virtual Private Network">VPN</abbr> client entirely.</p>
+<p>Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value.</p>
+<h2 id="private-on-premises-connectivity-with-aws-direct-connect">Private on-premises connectivity with AWS Direct Connect<a class="headerlink" href="#private-on-premises-connectivity-with-aws-direct-connect" title="Permanent link">&para;</a></h2>
+<p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html">AWS Direct Connect</a> provides private, dedicated network connectivity between your on-premises network and AWS. Traffic flows over physical circuits provisioned at a Direct Connect location, bypassing the public internet entirely, so bandwidth is predictable, latency is consistent, and data transfer out of AWS is cheaper than over the internet. Direct Connect is the foundation for most production hybrid deployments, and it integrates with every AWS network service that terminates hybrid traffic: virtual private gateways, Transit Gateway, and AWS Cloud WAN.</p>
+<p><strong>Key capabilities</strong>:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p>:material-fiber: <strong>Dedicated and hosted connections</strong></p>
+<hr />
+<p>Dedicated connections at 1 Gbps, 10 Gbps, or 100 Gbps come directly from AWS at a Direct Connect location. Hosted connections at smaller speeds (50 Mbps to 25 Gbps) come from a Direct Connect Partner that has already provisioned capacity into the location.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.11 0-2 .89-2 2v3c0 1.11.89 2 2 2h1v2H2v2h4v2H5c-1.11 0-2 .89-2 2v3c0 1.11.89 2 2 2h4c1.11 0 2-.89 2-2v-3c0-1.11-.89-2-2-2H8v-2h8v2h-1c-1.11 0-2 .89-2 2v3c0 1.11.89 2 2 2h4c1.11 0 2-.89 2-2v-3c0-1.11-.89-2-2-2h-1v-2h4v-2h-9V9h1c1.11 0 2-.89 2-2V4c0-1.11-.89-2-2-2zm0 2h4v3h-4zM5 17h4v3H5zm10 0h4v3h-4z"/></svg></span> <strong>Virtual interfaces (VIFs)</strong></p>
+<hr />
+<p>A single physical connection carries multiple VLAN-tagged virtual interfaces. <strong>Private VIFs</strong> reach <abbr title="Virtual Private Cloud">VPC</abbr> resources (via a virtual private gateway or a Direct Connect gateway). <strong>Transit VIFs</strong> reach Transit Gateways or AWS Cloud WAN core networks (via a Direct Connect gateway). <strong>Public VIFs</strong> reach AWS public service endpoints over private links.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect Gateway</strong></p>
+<hr />
+<p>A globally distributed <abbr title="Border Gateway Protocol">BGP</abbr> route reflector. A single Direct Connect Gateway associates with virtual private gateways, Transit Gateways, or AWS Cloud WAN core networks across any AWS Region (except China), so one physical connection can reach many Regions without provisioning multiple circuits.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.5 15.5H22V17h-5.5v1.75l-2.5-2.5 2.5-2.5zm3 4.25V18l2.5 2.5-2.5 2.5v-1.75H14v-1.5zM9.5 5.5a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2M5.75 8.9 4 9.65V13H2V8.3l5.25-2.15Q7.625 6 8 6c.7 0 1.35.35 1.7.95l.95 1.6C11.55 10 13.15 11 15 11v2c-2.2 0-4.15-1-5.45-2.6l-.6 3L11 15.45V23H9v-6l-2.15-2-1.75 8H3z"/></svg></span> <strong>SiteLink</strong></p>
+<hr />
+<p>Routes traffic between two Direct Connect locations over the AWS global backbone without touching an AWS Region. Useful for connecting on-premises sites to each other through the AWS network when that path is shorter or more reliable than your WAN.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>MACsec encryption</strong></p>
+<hr />
+<p>IEEE 802.1AE MACsec encrypts traffic at layer 2 between your router and the AWS Direct Connect router on supported 10 Gbps and 100 Gbps connections. Useful when compliance requires link-layer encryption on the dedicated circuit itself.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Dual-stack support</strong></p>
+<hr />
+<p>Private, transit, and public VIFs all support <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions. Dual-stack is configured per VIF, so you can run <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> on the same physical connection.</p>
+</li>
+</ul>
+</div>
+<h3 id="aws-direct-connect-best-practices">AWS Direct Connect Best Practices<a class="headerlink" href="#aws-direct-connect-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="design-for-resiliency-at-the-location-and-provider-level-not-just-at-the-connection-level">Design for resiliency at the location and provider level, not just at the connection level<a class="headerlink" href="#design-for-resiliency-at-the-location-and-provider-level-not-just-at-the-connection-level" title="Permanent link">&para;</a></h4>
+<p>A single dedicated connection, even at 100 Gbps, is still one circuit through one Direct Connect location. For production hybrid traffic, follow the Resiliency Toolkit's <strong>maximum resiliency</strong> model: at least two connections at two separate Direct Connect locations, each sourced from a different provider and terminating on different on-premises routers. This removes location, provider, cross-connect, and device as single points of failure.</p>
+<p>If the workload can tolerate degraded performance during a single location failure, the <strong>high resiliency</strong> model (two connections across two locations through one or more providers) is a reasonable middle ground. The <strong>development/test</strong> single-connection model is rarely appropriate for anything that ends up carrying production traffic.</p>
+<h4 id="use-a-direct-connect-gateway-as-the-attach-point">Use a Direct Connect Gateway as the attach point<a class="headerlink" href="#use-a-direct-connect-gateway-as-the-attach-point" title="Permanent link">&para;</a></h4>
+<p>A Direct Connect Gateway is a free, globally distributed resource that acts as the <abbr title="Border Gateway Protocol">BGP</abbr> attach point between your VIFs and AWS network services (virtual private gateways, Transit Gateways, or AWS Cloud WAN core networks). Associating a single Direct Connect Gateway with multiple regional attach points means one physical connection can reach workloads in any Region, without a Region-specific VIF per destination.</p>
+<p>This also simplifies migrations: when you move workloads between Regions or from Transit Gateway to AWS Cloud WAN, you re-associate the Direct Connect Gateway rather than re-provisioning VIFs. It also keeps the <abbr title="Border Gateway Protocol">BGP</abbr> control plane off the data path, so <abbr title="Border Gateway Protocol">BGP</abbr> re-convergence doesn't interrupt traffic on healthy paths.</p>
+<h4 id="choose-the-right-vif-type-for-each-workload">Choose the right VIF type for each workload<a class="headerlink" href="#choose-the-right-vif-type-for-each-workload" title="Permanent link">&para;</a></h4>
+<p>Direct Connect offers three VIF types, each suited to a different use case. Picking the right one per workload matters more than defaulting to one type everywhere:</p>
+<ul>
+<li><strong>Transit VIF</strong> is the default for extending on-premises connectivity to the AWS network at large. Terminating on a Transit Gateway or AWS Cloud WAN core network (via a Direct Connect Gateway), a single Transit VIF reaches every <abbr title="Virtual Private Cloud">VPC</abbr> the hub routes to, with less VIF sprawl and centralized routing.</li>
+<li><strong>Private VIF</strong> to a specific <abbr title="Virtual Private Cloud">VPC</abbr> makes sense for workloads that justify a dedicated path: sustained high-throughput data transfer or latency-sensitive traffic where the hub's data processing adds overhead you want to avoid, or compliance cases where the workload can't share an attach point.</li>
+<li><strong>Public VIF</strong> is the right choice for consumption of AWS public service endpoints (for example, Amazon <abbr title="Simple Storage Service">S3</abbr> or Amazon DynamoDB) directly over the Direct Connect path.</li>
+</ul>
+<p>Most production environments run all three: one or more Transit VIFs as the backbone, Private VIFs for a small number of demanding workloads, and Public VIF where AWS public endpoint traffic is significant (<abbr title="Simple Storage Service">S3</abbr> as the most common use case).</p>
+<h4 id="use-bgp-attributes-for-traffic-engineering-across-multiple-direct-connect-paths">Use <abbr title="Border Gateway Protocol">BGP</abbr> attributes for traffic engineering across multiple Direct Connect paths<a class="headerlink" href="#use-bgp-attributes-for-traffic-engineering-across-multiple-direct-connect-paths" title="Permanent link">&para;</a></h4>
+<p>When you have multiple Direct Connect connections, <abbr title="Border Gateway Protocol">BGP</abbr> attributes let you shape how traffic flows: primary vs. secondary paths, load distribution across circuits, and symmetric return traffic. The supported attributes are <strong>Local Preference communities</strong> (on routes from AWS, higher wins), <strong>AS_PATH prepending</strong> (on routes you advertise, longer is less preferred), <strong>MED</strong> (on routes you advertise, lower wins when AS_PATH ties), and <strong>longest prefix match</strong> (which always overrides the attributes above).</p>
+<p>For VIFs terminating on a Direct Connect Gateway, the on-side configuration happens on your on-premises router. The VIF and Direct Connect Gateway themselves don't have configurable <abbr title="Border Gateway Protocol">BGP</abbr> policy knobs, so traffic engineering is primarily an on-premises exercise. For AWS Cloud WAN deployments, Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> add an AWS-side control point: you can filter, summarize, and manipulate <abbr title="Border Gateway Protocol">BGP</abbr> attributes on routes between Cloud WAN segments and Direct Connect Gateway attachments from the policy rather than only from the on-premises router.</p>
+<h4 id="enable-bfd-for-sub-second-failover">Enable BFD for sub-second failover<a class="headerlink" href="#enable-bfd-for-sub-second-failover" title="Permanent link">&para;</a></h4>
+<p><abbr title="Border Gateway Protocol">BGP</abbr> hold timers alone detect a failed neighbor in around 90 seconds by default (three times the 30-second keep-alive interval). That's too long for most production hybrid workloads. <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/enable_bfd.html">Bidirectional Forwarding Detection (BFD)</a> runs a lightweight liveness check alongside the <abbr title="Border Gateway Protocol">BGP</abbr> session and tears the session down as soon as the forwarding path fails, typically within about a second.</p>
+<p>AWS enables asynchronous BFD on every Direct Connect <abbr title="Border Gateway Protocol">BGP</abbr> session automatically, with a 300 ms detection timer and a multiplier of 3 (roughly 900 ms to declare the session down). On your side, enable BFD with compatible timers on the on-premises router to complete the negotiation. Without BFD active on both ends, failover on a connection, VIF, or peer device issue still falls back to <abbr title="Border Gateway Protocol">BGP</abbr> hold timers, and the outage window is tens of seconds rather than sub-second.</p>
+<p>BFD is especially important in multi-circuit or active/passive designs where the whole point of the redundancy is quick failover. Confirm that BFD is up on every session as part of turn-up validation, and alarm on BFD state the same way you alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state.</p>
+<h4 id="plan-ipv6-from-the-start">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start" title="Permanent link">&para;</a></h4>
+<p>Every VIF type supports <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions. Configure <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on each VIF from the beginning, even if your on-premises hosts are <abbr title="Internet Protocol version 4">IPv4</abbr>-only today. The AWS side supports dual-stack; the hard part is the on-premises rollout, and having the AWS side ready means you can adopt <abbr title="Internet Protocol version 6">IPv6</abbr> when the on-premises network is ready without reopening VIF configuration.</p>
+<h4 id="monitor-bgp-and-vif-metrics-actively">Monitor <abbr title="Border Gateway Protocol">BGP</abbr> and VIF metrics actively<a class="headerlink" href="#monitor-bgp-and-vif-metrics-actively" title="Permanent link">&para;</a></h4>
+<p>Direct Connect publishes CloudWatch metrics for <abbr title="Border Gateway Protocol">BGP</abbr> session state, connection state, and per-VIF ingress and egress bytes and packets. Alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state flapping and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when <abbr title="Border Gateway Protocol">BGP</abbr> should balance them). Fast detection of <abbr title="Border Gateway Protocol">BGP</abbr> state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.</p>
+<h3 id="when-to-use-aws-direct-connect">When to use AWS Direct Connect<a class="headerlink" href="#when-to-use-aws-direct-connect" title="Permanent link">&para;</a></h3>
+<p>Direct Connect is the right choice whenever any of the following applies:</p>
+<ul>
+<li>Your hybrid workloads require predictable bandwidth or latency that the public internet can't guarantee.</li>
+<li>You transfer large volumes of data out of AWS and want the lower Direct Connect egress pricing rather than internet egress rates.</li>
+<li>You have compliance requirements that forbid sensitive traffic from traversing the public internet.</li>
+<li>You are building any new production hybrid architecture. The path to high resiliency is multiple Direct Connect connections across multiple locations and providers, not a single Direct Connect paired with a <abbr title="Virtual Private Network">VPN</abbr> fallback.</li>
+</ul>
+<p>Direct Connect is <strong>not</strong> the right starting point when connectivity needs to be up in days rather than weeks (provisioning involves cross-connects and provider coordination), when traffic volume is low enough that <abbr title="Virtual Private Network">VPN</abbr> cost and performance are acceptable, or when connectivity is short-lived (for example, a one-time data migration where <abbr title="Virtual Private Network">VPN</abbr> throughput is sufficient).</p>
+<h3 id="combining-aws-direct-connect-with-other-hybrid-networking-services">Combining AWS Direct Connect with other Hybrid Networking services<a class="headerlink" href="#combining-aws-direct-connect-with-other-hybrid-networking-services" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>AWS Direct Connect handles</th>
+<th>Other service handles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Direct Connect + Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong></td>
+<td>Private path into AWS</td>
+<td>IPsec overlay on top of Direct Connect when MACsec is not available (for example, sub-10 Gbps hosted connections or compliance baselines that require layer-3 encryption)</td>
+</tr>
+<tr>
+<td><strong>Direct Connect + <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> (via <abbr title="Transit Gateway">TGW</abbr>/Cloud WAN Connect)</strong></td>
+<td>Underlying transport between on-premises <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances and AWS</td>
+<td>Overlay delivered by the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> solution</td>
+</tr>
+<tr>
+<td><strong>Direct Connect + AWS Interconnect (multi-cloud)</strong></td>
+<td>On-premises hybrid path</td>
+<td>Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect Gateway</td>
+</tr>
+</tbody>
+</table>
+<h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Direct Connect documentation</strong></p>
+<hr />
+<p>Complete service documentation covering connections, virtual interfaces, Direct Connect Gateway, SiteLink, and MACsec.</p>
+<p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>Resiliency Toolkit</strong></p>
+<hr />
+<p>AWS's recommended resiliency models (development, high, maximum) and the guided workflow for implementing them.</p>
+<p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/resilency_toolkit.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>AWS Direct Connect blog posts</strong></p>
+<hr />
+<p>Architecture walkthroughs, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.</p>
+<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/aws-direct-connect/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog posts</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>AWS Direct Connect pricing</strong></p>
+<hr />
+<p>Port-hour charges for dedicated and hosted connections, plus data transfer out pricing that is typically lower than internet egress.</p>
+<p><a href="https://aws.amazon.com/directconnect/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
+</li>
+</ul>
+</div>
+<h2 id="encrypted-on-premises-connectivity-with-aws-site-to-site-vpn">Encrypted on-premises connectivity with AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#encrypted-on-premises-connectivity-with-aws-site-to-site-vpn" title="Permanent link">&para;</a></h2>
+<p><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted IPsec connectivity between your on-premises networks and AWS over the public internet. Each <abbr title="Virtual Private Network">VPN</abbr> connection consists of two IPsec tunnels terminating on separate AWS endpoints for redundancy, and supports both static routing and dynamic routing with <abbr title="Border Gateway Protocol">BGP</abbr>. Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> can terminate on a virtual private gateway attached to a <abbr title="Virtual Private Cloud">VPC</abbr>, on a Transit Gateway, or on an AWS Cloud WAN core network.</p>
+<p>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> is the fastest way to establish hybrid connectivity. It is commonly used as the primary path for sites that do not require a private circuit, for short-lived connectivity such as data migrations, and as an IPsec overlay on top of Direct Connect when MACsec is not available and layer-3 encryption is required.</p>
+<p><strong>Key capabilities</strong>:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m9 3c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4 9 4zm-9-5a3 3 0 0 0-3 3c0 1.31.83 2.42 2 2.83V18h2v-2h2v-2h-2v-2.17c1.17-.41 2-1.52 2-2.83a3 3 0 0 0-3-3"/></svg></span> <strong>IPsec encryption with two tunnels per connection</strong></p>
+<hr />
+<p>Every <abbr title="Virtual Private Network">VPN</abbr> connection provides two IPsec tunnels terminating on endpoints in separate Availability Zones.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41s-1.03.39-1.42.01A9.97 9.97 0 0 1 2 13 10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"/></svg></span> <strong>Standard and Large tunnel bandwidth</strong></p>
+<hr />
+<p>Standard tunnels provide up to 1.25 Gbps per tunnel. Large tunnels provide up to 5 Gbps per tunnel, removing the need for complex ECMP bonding on high-throughput workloads. Large tunnels are available on Transit Gateway <abbr title="Virtual Private Network">VPN</abbr> and AWS Cloud WAN <abbr title="Virtual Private Network">VPN</abbr> attachments.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.19 21C14.12 19.43 13 17.36 13 15.5c0-1.83.96-3.5 2.4-4.5H15V9h2v1.23c.5-.14 1-.23 1.5-.23.17 0 .34 0 .5.03V3H5v18h6v-3.5h2V21zM15 5h2v2h-2zM9 19H7v-2h2zm0-4H7v-2h2zm0-4H7V9h2zm0-4H7V5h2zm2-2h2v2h-2zm0 4h2v2h-2zm0 6v-2h2v2zm7.5-3c-1.9 0-3.5 1.61-3.5 3.5 0 2.61 3.5 6.5 3.5 6.5s3.5-3.89 3.5-6.5c0-1.89-1.6-3.5-3.5-3.5m0 4.81c-.7 0-1.2-.6-1.2-1.2 0-.7.6-1.2 1.2-1.2s1.2.59 1.2 1.2c.1.6-.5 1.2-1.2 1.2"/></svg></span> <strong><abbr title="Virtual Private Network">VPN</abbr> Concentrator for many remote sites</strong></p>
+<hr />
+<p>A Transit Gateway attachment that aggregates many low-bandwidth (under 100 Mbps) <abbr title="Virtual Private Network">VPN</abbr> connections into a single attachment, with up to 100 sites per Concentrator and 5 Gbps aggregate bandwidth. Designed for distributed enterprises with dozens of branches (retail, hospitality, healthcare) that previously required managing multiple virtual concentrator appliances in AWS.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m13.13 22.19-1.63-3.83c1.57-.58 3.04-1.36 4.4-2.27zM5.64 12.5l-3.83-1.63 6.1-2.77C7 9.46 6.22 10.93 5.64 12.5M21.61 2.39S16.66.269 11 5.93c-2.19 2.19-3.5 4.6-4.35 6.71-.28.75-.09 1.57.46 2.13l2.13 2.12c.55.56 1.37.74 2.12.46A19.1 19.1 0 0 0 18.07 13c5.66-5.66 3.54-10.61 3.54-10.61m-7.07 7.07c-.78-.78-.78-2.05 0-2.83s2.05-.78 2.83 0c.77.78.78 2.05 0 2.83s-2.05.78-2.83 0m-5.66 7.07-1.41-1.41zM6.24 22l3.64-3.64c-.34-.09-.67-.24-.97-.45L4.83 22zM2 22h1.41l4.77-4.76-1.42-1.41L2 20.59zm0-2.83 4.09-4.08c-.21-.3-.36-.62-.45-.97L2 17.76z"/></svg></span> <strong>Accelerated <abbr title="Virtual Private Network">VPN</abbr></strong></p>
+<hr />
+<p>Routes <abbr title="Virtual Private Network">VPN</abbr> traffic through AWS Global Accelerator and the AWS edge network, reducing jitter and improving throughput for customers far from the AWS Region. Available on Transit Gateway <abbr title="Virtual Private Network">VPN</abbr> connections.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8m1-7v3h2l-3 3-3-3h2v-3m-6 0h3v2l3-3-3-3v2H5m6 0V8H9l3-3 3 3h-2v3m6 0h-3V9l-3 3 3 3v-2h3"/></svg></span> <strong>Private IP <abbr title="Virtual Private Network">VPN</abbr> over Direct Connect</strong></p>
+<hr />
+<p>Terminates the <abbr title="Virtual Private Network">VPN</abbr> on a private IP address reachable over a Direct Connect connection instead of the public internet. Useful when you want IPsec encryption on top of a Direct Connect circuit without exposing the tunnel endpoint to the internet.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></span> <strong>Dynamic routing with <abbr title="Border Gateway Protocol">BGP</abbr></strong></p>
+<hr />
+<p><abbr title="Border Gateway Protocol">BGP</abbr> on each tunnel lets the on-premises router learn AWS prefixes dynamically and advertise on-premises prefixes into AWS. Static routing is supported for devices that don't run <abbr title="Border Gateway Protocol">BGP</abbr>, but <abbr title="Border Gateway Protocol">BGP</abbr> is strongly recommended for any non-trivial topology.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Dual-stack support</strong></p>
+<hr />
+<p><abbr title="Virtual Private Network">VPN</abbr> tunnels support <abbr title="Internet Protocol version 4">IPv4</abbr> or <abbr title="Internet Protocol version 6">IPv6</abbr> inside addresses. Dual-stack communication requires separate <abbr title="Virtual Private Network">VPN</abbr> tunnels for each protocol.</p>
+</li>
+</ul>
+</div>
+<h3 id="aws-site-to-site-vpn-best-practices">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> Best Practices<a class="headerlink" href="#aws-site-to-site-vpn-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="use-multiple-vpn-connections-with-diverse-isp-paths-and-dynamic-routing">Use multiple <abbr title="Virtual Private Network">VPN</abbr> connections with diverse ISP paths and dynamic routing<a class="headerlink" href="#use-multiple-vpn-connections-with-diverse-isp-paths-and-dynamic-routing" title="Permanent link">&para;</a></h4>
+<p>Every <abbr title="Virtual Private Network">VPN</abbr> connection provides two IPsec tunnels, but both terminate on AWS endpoints within the same connection. For production resiliency, provision <strong>two or more <abbr title="Virtual Private Network">VPN</abbr> connections</strong>, terminate them on different on-premises routers, and have each router reach AWS over a <strong>different ISP</strong> so a single-provider outage does not take down both paths at once. Use <abbr title="Border Gateway Protocol">BGP</abbr> on every tunnel so AWS learns and fails over between paths automatically, reports reachability through session state, and lets you steer traffic with <abbr title="Border Gateway Protocol">BGP</abbr> attributes; static routing skips all of that and is almost never appropriate for production. If an on-premises device does not support <abbr title="Border Gateway Protocol">BGP</abbr>, the fix is to replace the device rather than build around it.</p>
+<h4 id="terminate-vpn-on-transit-gateway-or-aws-cloud-wan-not-virtual-private-gateways">Terminate <abbr title="Virtual Private Network">VPN</abbr> on Transit Gateway or AWS Cloud WAN, not virtual private gateways<a class="headerlink" href="#terminate-vpn-on-transit-gateway-or-aws-cloud-wan-not-virtual-private-gateways" title="Permanent link">&para;</a></h4>
+<p>A <abbr title="Virtual Private Network">VPN</abbr> to a virtual private gateway reaches exactly one <abbr title="Virtual Private Cloud">VPC</abbr>. A <abbr title="Virtual Private Network">VPN</abbr> to a Transit Gateway or AWS Cloud WAN core network reaches every <abbr title="Virtual Private Cloud">VPC</abbr> the hub routes to, with segmentation applied through route tables or network policy. For any environment with more than one <abbr title="Virtual Private Cloud">VPC</abbr>, terminate <abbr title="Virtual Private Network">VPN</abbr> on a Transit Gateway or AWS Cloud WAN.</p>
+<p>This also enables Large tunnels (5 Gbps per tunnel), Accelerated <abbr title="Virtual Private Network">VPN</abbr>, and ECMP across multiple <abbr title="Virtual Private Network">VPN</abbr> attachments, none of which are available on virtual private gateway <abbr title="Virtual Private Network">VPN</abbr>.</p>
+<h4 id="use-vpn-concentrator-for-many-low-bandwidth-sites">Use <abbr title="Virtual Private Network">VPN</abbr> Concentrator for many low-bandwidth sites<a class="headerlink" href="#use-vpn-concentrator-for-many-low-bandwidth-sites" title="Permanent link">&para;</a></h4>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-vpn-concentrator-attachments.html"><abbr title="Virtual Private Network">VPN</abbr> Concentrator</a> addresses the many-branches use case: many sites, each with modest bandwidth needs, where provisioning a dedicated <abbr title="Virtual Private Network">VPN</abbr> connection per site creates Transit Gateway attachment sprawl and per-connection cost that doesn't match the workload. A <abbr title="Virtual Private Network">VPN</abbr> Concentrator attachment aggregates up to 100 sites (each under 100 Mbps) into a single Transit Gateway attachment, with 5 Gbps aggregate per Concentrator and up to 5 Concentrators per Transit Gateway.</p>
+<p>Reach for <abbr title="Virtual Private Network">VPN</abbr> Concentrator when you have around 25 or more remote sites fitting the low-bandwidth profile (retail chains, hotels, healthcare branches, distributed field offices). The Concentrator runs <abbr title="Border Gateway Protocol">BGP</abbr>-only routing and provides <abbr title="Availability Zone">AZ</abbr>-redundant endpoints, so operationally it looks like one attachment with consistent routing policies and security rules applied across all connected sites, instead of a per-site connection to manage. For a handful of sites, or for sites that need more than 100 Mbps, stick with standard Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> connections.</p>
+<h4 id="use-accelerated-vpn-for-distant-sites">Use Accelerated <abbr title="Virtual Private Network">VPN</abbr> for distant sites<a class="headerlink" href="#use-accelerated-vpn-for-distant-sites" title="Permanent link">&para;</a></h4>
+<p>For branch offices or data centers far from the AWS Region, Accelerated <abbr title="Virtual Private Network">VPN</abbr> routes traffic through the AWS Global Accelerator edge network instead of the public internet. The improvement in jitter and throughput is meaningful for latency-sensitive or bandwidth-sensitive hybrid workloads, and enabling it is a per-connection toggle.</p>
+<p>Accelerated <abbr title="Virtual Private Network">VPN</abbr> is most valuable when the AWS Region isn't in the same continent as the site or when internet routing between the site and the Region is historically unreliable.</p>
+<h4 id="plan-ipv6-from-the-start_1">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start_1" title="Permanent link">&para;</a></h4>
+<p><abbr title="Virtual Private Network">VPN</abbr> tunnels support <abbr title="Internet Protocol version 4">IPv4</abbr> or <abbr title="Internet Protocol version 6">IPv6</abbr> inside addresses, but a single tunnel carries one protocol. If you need both, provision dual-stack by creating one tunnel for <abbr title="Internet Protocol version 4">IPv4</abbr> and another for <abbr title="Internet Protocol version 6">IPv6</abbr> within the same connection configuration, and account for that in bandwidth and tunnel-count planning.</p>
+<h4 id="monitor-tunnel-state-bgp-sessions-and-enable-site-to-site-vpn-logs">Monitor tunnel state, <abbr title="Border Gateway Protocol">BGP</abbr> sessions, and enable Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> logs<a class="headerlink" href="#monitor-tunnel-state-bgp-sessions-and-enable-site-to-site-vpn-logs" title="Permanent link">&para;</a></h4>
+<p>CloudWatch publishes <code>TunnelState</code>, <code>TunnelIpAddress</code>, and <abbr title="Border Gateway Protocol">BGP</abbr> session state metrics per tunnel. Alarm on tunnel state transitions and on <abbr title="Border Gateway Protocol">BGP</abbr> session flap counts. A single tunnel going down is expected to happen periodically (AWS performs planned maintenance on tunnel endpoints); both tunnels down on the same connection for more than a few minutes is an outage.</p>
+<p>Enable <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-logs.html">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> logs</a> on every connection. These logs capture IKE negotiations, IPsec tunnel establishment, dead peer detection, and <abbr title="Border Gateway Protocol">BGP</abbr> routing activity, which is the information you need to troubleshoot a failed negotiation or a flapping session. Without them, diagnosing a tunnel that won't establish typically means pulling logs from the on-premises device alone; with them, both sides of the conversation are visible in one place.</p>
+<h3 id="when-to-use-aws-site-to-site-vpn">When to use AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#when-to-use-aws-site-to-site-vpn" title="Permanent link">&para;</a></h3>
+<p>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> fits any of the following:</p>
+<ul>
+<li>You need hybrid connectivity running today and Direct Connect takes longer to provision.</li>
+<li>The site is small or remote, and the cost and physical provisioning of a Direct Connect circuit aren't justified.</li>
+<li>You need an encrypted overlay on top of Direct Connect because MACsec is not available (sub-10 Gbps hosted connections) or compliance requires layer-3 encryption.</li>
+<li>Connectivity is short-lived, for example, a one-time data migration where internet-based encrypted throughput is sufficient.</li>
+<li>You're connecting many small branch offices that collectively would need more Direct Connect circuits than is practical (<abbr title="Virtual Private Network">VPN</abbr> Concentrator is typically the right tool at scale).</li>
+</ul>
+<p>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> is <strong>not</strong> the right choice when you need predictable latency beyond what the public internet can guarantee, when you transfer volumes of data where internet egress cost becomes prohibitive, or when compliance specifically requires private physical circuits rather than encrypted overlays.</p>
+<h3 id="combining-aws-site-to-site-vpn-with-other-hybrid-networking-services">Combining AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> with other Hybrid Networking services<a class="headerlink" href="#combining-aws-site-to-site-vpn-with-other-hybrid-networking-services" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> handles</th>
+<th>Other service handles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Virtual Private Network">VPN</abbr> + AWS Direct Connect</strong></td>
+<td>IPsec overlay on top of Direct Connect when MACsec is not available or layer-3 encryption is required</td>
+<td>Private path into AWS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="documentation_1">Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> documentation</strong></p>
+<hr />
+<p>Complete service documentation covering tunnel configuration, <abbr title="Border Gateway Protocol">BGP</abbr>, Transit Gateway and AWS Cloud WAN attachments, Large tunnels, and Accelerated <abbr title="Virtual Private Network">VPN</abbr>.</p>
+<p><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>Accelerated <abbr title="Virtual Private Network">VPN</abbr></strong></p>
+<hr />
+<p>How to enable Accelerated <abbr title="Virtual Private Network">VPN</abbr> and when it improves throughput for distant sites.</p>
+<p><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/accelerated-vpn.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 0H8C6.9 0 6 .9 6 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V6zm4 18H8V2h7v5h5zM4 4v18h16v2H4c-1.1 0-2-.9-2-2V4zm6 6v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>Hybrid Connectivity whitepaper</strong></p>
+<hr />
+<p>AWS whitepaper covering Site-to-Site <abbr title="Virtual Private Network">VPN</abbr>, Direct Connect, and <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> architectures for hybrid connectivity.</p>
+<p><a href="https://docs.aws.amazon.com/whitepapers/latest/hybrid-connectivity/hybrid-connectivity.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Whitepaper</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> blog posts</strong></p>
+<hr />
+<p>Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.</p>
+<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/aws-vpn/aws-site-to-site-vpn/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog posts</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> pricing</strong></p>
+<hr />
+<p>Per-connection-hour charges plus data transfer, with separate pricing for standard and Large tunnels and for Accelerated <abbr title="Virtual Private Network">VPN</abbr>.</p>
+<p><a href="https://aws.amazon.com/vpn/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
+</li>
+</ul>
+</div>
+<h2 id="sd-wan-integration-with-aws-transit-gateway-and-aws-cloud-wan"><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration with AWS Transit Gateway and AWS Cloud WAN<a class="headerlink" href="#sd-wan-integration-with-aws-transit-gateway-and-aws-cloud-wan" title="Permanent link">&para;</a></h2>
+<p>This section is for organizations that already run <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across their branches and data centers and want AWS to participate in that overlay as a first-class site. The <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendor handles the overlay itself (path selection, WAN optimization, site-to-site encryption, orchestration); AWS provides the attach point that brings the overlay into the AWS network plane.</p>
+<p>The integration mechanism is <strong>Connect attachments</strong> on <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html">AWS Transit Gateway</a> or <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-connect-attachment.html">AWS Cloud WAN</a>. A Connect attachment carries multiple Connect peers, each with <abbr title="Border Gateway Protocol">BGP</abbr> for dynamic routing between the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance and AWS. <abbr title="Border Gateway Protocol">BGP</abbr> is the standard control plane every <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendor speaks. The tunnel protocol, the underlay, and the supported landing service differ between Transit Gateway and AWS Cloud WAN, and those differences shape the integration design; the sections that follow cover them.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph OnPrem["On-premises and branches"]
+        B1["Branch&lt;br/&gt;SD-WAN device"]
+        DC["Data center&lt;br/&gt;SD-WAN device"]
+    end
+
+    subgraph AWS["AWS"]
+        subgraph VPC["Transit VPC"]
+            APP1["SD-WAN appliance&lt;br/&gt;(virtual)"]
+            APP2["SD-WAN appliance&lt;br/&gt;(virtual)"]
+        end
+        TGW["Transit Gateway&lt;br/&gt;or AWS Cloud WAN"]
+        V["Workload VPCs"]
+    end
+
+    B1 -."SD-WAN overlay&lt;br/&gt;(IPsec/SSL)".-&gt; APP1
+    DC -."SD-WAN overlay&lt;br/&gt;(IPsec/SSL)".-&gt; APP2
+    APP1 ==="Connect attachment&lt;br/&gt;(GRE or Tunnel-less, BGP)"===&gt; TGW
+    APP2 ==="Connect attachment&lt;br/&gt;(GRE or Tunnel-less, BGP)"===&gt; TGW
+    TGW === V
+
+    style OnPrem fill:none,stroke:#64748b,stroke-width:2px,stroke-dasharray:5 5,color:#64748b
+    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
+    style VPC fill:none,stroke:#059669,stroke-width:1px,stroke-dasharray:5 5,color:#059669
+    style B1 fill:#64748b,stroke:#475569,color:#fff
+    style DC fill:#64748b,stroke:#475569,color:#fff
+    style APP1 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style APP2 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
+    style V fill:#059669,stroke:#047857,color:#fff</code></pre>
+<p><strong>Integration building blocks</strong>:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.4 18.2q.6.75.6 1.8c0 1.7-1.3 3-3 3s-3-1.3-3-3 1.3-3 3-3q.6 0 1.2.3l1.4-1.8c-.9-1-1.3-2.4-1.1-3.7l-2-.7c-.5.8-1.4 1.4-2.5 1.4-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3v.2l2 .7c.6-1.2 1.8-2.1 3.2-2.3V5.9C10 5.6 9 4.4 9 3c0-1.7 1.3-3 3-3s3 1.3 3 3c0 1.4-1 2.6-2.2 2.9v2.2c1.4.2 2.6 1.1 3.2 2.3l2-.7v-.2c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3c-1.1 0-2-.6-2.5-1.4l-2 .7c.2 1.3-.2 2.7-1.1 3.7l1.4 1.8q.6-.3 1.2-.3c1.7 0 3 1.3 3 3s-1.3 3-3 3-3-1.3-3-3q0-1.05.6-1.8l-1.4-1.8c-1.4.8-3 .8-4.4 0z"/></svg></span> <strong>Transit Gateway vs AWS Cloud WAN differences</strong></p>
+<hr />
+<p>Both services support Connect attachments with <abbr title="Border Gateway Protocol">BGP</abbr>, but the supported <strong>tunnel protocol</strong> and <strong>underlay</strong> differ. Transit Gateway Connect uses GRE only and supports both <abbr title="Virtual Private Cloud">VPC</abbr> and Direct Connect underlays. AWS Cloud WAN Connect supports GRE and <strong>Tunnel-less Connect</strong> (a higher-performance option that eliminates encapsulation overhead), and the underlay must be a <abbr title="Virtual Private Cloud">VPC</abbr> attachment; Direct Connect Gateway is not supported. Pick the landing service that matches your existing AWS network backbone.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12v10h20V12c0-5.5-4.5-10-10-10M7.1 5.69A7.94 7.94 0 0 1 11 4.07v2.02c-.91.15-1.75.51-2.47 1.02zm8.37 1.42A5.95 5.95 0 0 0 13 6.09V4.07c1.46.18 2.79.76 3.9 1.62zM5.69 7.1l1.42 1.43A5.95 5.95 0 0 0 6.09 11H4.07c.18-1.46.76-2.79 1.62-3.9M6 13v2.5H4V13zm-2 7v-2.5h2V20zM16.89 8.53l1.42-1.43a7.94 7.94 0 0 1 1.62 3.9h-2.02a5.95 5.95 0 0 0-1.02-2.47M18 13h2v2.5h-2zm0 7v-2.5h2V20z"/></svg></span> <strong>GRE and Tunnel-less Connect</strong></p>
+<hr />
+<p>GRE encapsulates the <abbr title="Border Gateway Protocol">BGP</abbr> and data traffic in a tunnel between the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance and the AWS side. Tunnel-less Connect (AWS Cloud WAN only) skips the encapsulation entirely, so <abbr title="Border Gateway Protocol">BGP</abbr> runs directly between the appliance and Cloud WAN. Tunnel-less removes GRE overhead and typically delivers higher per-peer throughput.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.2 5.9.8-.8C19.6 3.7 17.8 3 16 3s-3.6.7-5 2.1l.8.8C13 4.8 14.5 4.2 16 4.2s3 .6 4.2 1.7m-.9.8c-.9-.9-2.1-1.4-3.3-1.4s-2.4.5-3.3 1.4l.8.8c.7-.7 1.6-1 2.5-1s1.8.3 2.5 1zM19 13h-2V9h-2v4H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M8 18H6v-2h2zm3.5 0h-2v-2h2zm3.5 0h-2v-2h2z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> or Direct Connect underlay (Transit Gateway only)</strong></p>
+<hr />
+<p>For Transit Gateway Connect, the underlay can be a <abbr title="Virtual Private Cloud">VPC</abbr> (where <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> virtual appliances run as <abbr title="Elastic Compute Cloud">EC2</abbr> instances) or a Direct Connect attachment (where the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance is on-premises and peers with AWS over Direct Connect via a Direct Connect Gateway). The right choice depends on where you want your <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances to sit. AWS Cloud WAN Connect currently supports <abbr title="Virtual Private Cloud">VPC</abbr> underlay only.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 2v20c-5.1-.5-9-4.8-9-10s3.9-9.5 9-10m2 0v9h9c-.5-4.8-4.2-8.5-9-9m0 11v9c4.7-.5 8.5-4.2 9-9z"/></svg></span> <strong>Segment <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic into AWS environments</strong></p>
+<hr />
+<p>With Transit Gateway route tables or AWS Cloud WAN segments, you can map <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic classes (production, non-production, guest, IoT) to distinct routing domains inside AWS. This requires either multiple Connect peers (one per segment) or <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr>-side encapsulation that the vendor then maps to the appropriate AWS segment.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Dual-stack support</strong></p>
+<hr />
+<p>Connect attachments support <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions on the same GRE tunnel, so you can propagate <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> routes between the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlay and the AWS network without provisioning separate tunnels.</p>
+</li>
+</ul>
+</div>
+<h3 id="best-practices-for-integrating-sd-wan-networks-with-aws">Best Practices for integrating <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> networks with AWS<a class="headerlink" href="#best-practices-for-integrating-sd-wan-networks-with-aws" title="Permanent link">&para;</a></h3>
+<h4 id="choose-the-underlay-based-on-where-the-sd-wan-appliance-lives">Choose the underlay based on where the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance lives<a class="headerlink" href="#choose-the-underlay-based-on-where-the-sd-wan-appliance-lives" title="Permanent link">&para;</a></h4>
+<p>If the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendor recommends running virtual appliances inside AWS (a common pattern), use a <abbr title="Virtual Private Cloud">VPC</abbr>-based Connect attachment on either Transit Gateway or AWS Cloud WAN: deploy the appliances in a transit <abbr title="Virtual Private Cloud">VPC</abbr>, attach the <abbr title="Virtual Private Cloud">VPC</abbr> to the chosen service, then layer the Connect attachment on top. The <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlay connects on-premises devices to the appliances over the internet or Direct Connect.</p>
+<p>If the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances stay on-premises and peer with AWS directly, use a Transit Gateway Connect attachment with a Direct Connect underlay (via a Direct Connect Gateway). The on-premises <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> devices establish GRE peers to the Transit Gateway over the Direct Connect circuit. This removes the virtual-appliance tier in AWS entirely, at the cost of requiring Direct Connect everywhere the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> terminates. This pattern is currently Transit Gateway only; AWS Cloud WAN Connect does not support a Direct Connect Gateway underlay.</p>
+<h4 id="design-for-connect-peer-redundancy-per-segment">Design for Connect peer redundancy per segment<a class="headerlink" href="#design-for-connect-peer-redundancy-per-segment" title="Permanent link">&para;</a></h4>
+<p>A Connect attachment supports up to four Connect peers, each with two <abbr title="Border Gateway Protocol">BGP</abbr> sessions. For redundancy, provision at least two Connect peers per attachment, terminated on different <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances or different on-premises devices. AWS strongly recommends configuring both <abbr title="Border Gateway Protocol">BGP</abbr> sessions on every Connect peer; running a single session removes protection against <abbr title="Border Gateway Protocol">BGP</abbr> control plane failures during AWS maintenance events.</p>
+<p>If you're segmenting <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic into multiple AWS environments (for example, production and non-production over the same Connect attachment), each segment typically requires its own Connect peer with routes filtered appropriately.</p>
+<h4 id="use-aws-cloud-wan-segments-instead-of-transit-gateway-route-tables-for-multi-region-sd-wan">Use AWS Cloud WAN segments instead of Transit Gateway route tables for multi-Region <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr><a class="headerlink" href="#use-aws-cloud-wan-segments-instead-of-transit-gateway-route-tables-for-multi-region-sd-wan" title="Permanent link">&para;</a></h4>
+<p>For a single-Region <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> landing, Transit Gateway Connect with route table segmentation works well. For global <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> deployments that land in multiple AWS Regions, AWS Cloud WAN Connect attachments into policy-defined segments are operationally simpler: the segmentation is part of the network policy, applied consistently across Regions, rather than being managed per-Region through individual Transit Gateway route tables.</p>
+<p>Existing Transit Gateway Connect deployments can migrate incrementally. AWS Cloud WAN peers with Transit Gateways, so the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> attachments can stay on Transit Gateway while other traffic moves to AWS Cloud WAN.</p>
+<h4 id="keep-bgp-prefix-counts-manageable">Keep <abbr title="Border Gateway Protocol">BGP</abbr> prefix counts manageable<a class="headerlink" href="#keep-bgp-prefix-counts-manageable" title="Permanent link">&para;</a></h4>
+<p>Connect peers support larger prefix counts than IPsec <abbr title="Virtual Private Network">VPN</abbr> (multi-protocol <abbr title="Border Gateway Protocol">BGP</abbr> with many thousands of prefixes is viable), but <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays often advertise every branch subnet as a separate prefix and the numbers grow quickly. Summarize on the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> side where possible, and monitor received-route counts on the AWS side through CloudWatch. Approaching per-peer limits is easy to miss until an advertisement storm triggers them.</p>
+<p>If you land <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> on AWS Cloud WAN, you can also summarize on the AWS side through <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a>: aggregate the prefixes announced to the Connect attachment, or filter routes arriving/leaving the AWS Cloud WAN network. This is useful when the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> orchestrator can't summarize cleanly at the source, or when different segments need different views of the branch prefix space.</p>
+<h4 id="plan-ipv6-from-the-start_2">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start_2" title="Permanent link">&para;</a></h4>
+<p>Configure <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on every Connect peer from the beginning. <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendors are increasingly <abbr title="Internet Protocol version 6">IPv6</abbr>-capable, and the AWS side supports dual-stack natively. Retrofitting <abbr title="Internet Protocol version 6">IPv6</abbr> after the fact often requires coordination with the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> orchestrator, which is smoother when the Connect peers are already dual-stack.</p>
+<h3 id="documentation_2">Documentation<a class="headerlink" href="#documentation_2" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Transit Gateway Connect documentation</strong></p>
+<hr />
+<p>Complete documentation on Connect attachments, Connect peers, GRE and <abbr title="Border Gateway Protocol">BGP</abbr> configuration, and <abbr title="Virtual Private Cloud">VPC</abbr> or Direct Connect underlays.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>AWS Cloud WAN Connect attachments</strong></p>
+<hr />
+<p>How to use Connect attachments with AWS Cloud WAN and policy-driven segments for global <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> deployments.</p>
+<p><a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-connect-attachment.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+</ul>
+</div>
+<h2 id="multi-cloud-connectivity">Multi-cloud connectivity<a class="headerlink" href="#multi-cloud-connectivity" title="Permanent link">&para;</a></h2>
+<p>Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's VPCs historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and <abbr title="Border Gateway Protocol">BGP</abbr> configuration on both sides. <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.</p>
+<p>This section covers all of the multi-cloud options, with AWS Interconnect recommended as the default where it's available and the partner-based alternatives documented for cases where AWS Interconnect doesn't yet cover your Region pair or your other cloud.</p>
+<h3 id="direct-cloud-to-cloud-connectivity-with-aws-interconnect">Direct cloud-to-cloud connectivity with AWS Interconnect<a class="headerlink" href="#direct-cloud-to-cloud-connectivity-with-aws-interconnect" title="Permanent link">&para;</a></h3>
+<p>AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's VPCs. Today, AWS Interconnect - Multi-cloud supports connections between AWS and Google Cloud in a set of paired AWS and Google Cloud Regions. Coverage continues to expand; consult the <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect documentation</a> for the current list of supported Regions. On the AWS side, an Interconnect attaches to a Direct Connect Gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway. On the other cloud's side, the service attaches to that cloud's equivalent construct.</p>
+<p>Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstracts away physical cross-connects, <abbr title="Border Gateway Protocol">BGP</abbr> configuration, and VLAN provisioning. You select the AWS Region, the peer cloud's Region, the required bandwidth, and the provider, and AWS and the provider provision both sides automatically. Capacity can be scaled up or down without re-provisioning.</p>
+<p><strong>Key capabilities</strong>:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 17.5c0 .89.18 1.73.5 2.5h-7c-1.5 0-2.81-.5-3.89-1.57C1.54 17.38 1 16.09 1 14.58q0-1.95 1.17-3.48C3.34 9.57 4 9.43 5.25 9.15c.42-1.53 1.25-2.77 2.5-3.72S10.42 4 12 4c1.95 0 3.6.68 4.96 2.04S19 9.05 19 11h.1c-3.4.23-6.1 3.05-6.1 6.5m6-4V12l-2.25 2.25L19 16.5V15a2.5 2.5 0 0 1 2.5 2.5c0 .4-.09.78-.26 1.12l1.09 1.09c.42-.63.67-1.39.67-2.21 0-2.21-1.79-4-4-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5c0-.4.09-.78.26-1.12l-1.09-1.09c-.42.63-.67 1.39-.67 2.21 0 2.21 1.79 4 4 4V23l2.25-2.25L19 18.5z"/></svg></span> <strong>Direct AWS ↔ other-cloud connectivity</strong></p>
+<hr />
+<p>A single managed object (the <em>interconnect</em>) connects an AWS Direct Connect Gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4 9 4zm-9 10c3.75-1 7-5.46 7-9.78V6.3l-7-3.12L5 6.3v4.92C5 15.54 8.25 20 12 21m2.8-10V9.5C14.8 8.1 13.4 7 12 7S9.2 8.1 9.2 9.5V11c-.6 0-1.2.6-1.2 1.2v3.5c0 .7.6 1.3 1.2 1.3h5.5c.7 0 1.3-.6 1.3-1.2v-3.5c0-.7-.6-1.3-1.2-1.3m-1.3 0h-3V9.5c0-.8.7-1.3 1.5-1.3s1.5.5 1.5 1.3z"/></svg></span> <strong>MACsec encryption by default</strong></p>
+<hr />
+<p>Every physical link is encrypted with IEEE 802.1AE MACsec between the AWS router and the provider's router. Traffic only flows when encryption is active, so there is no unencrypted path.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> <strong>Built-in maximum resiliency</strong></p>
+<hr />
+<p>Every Interconnect is provisioned across redundant devices in at least two physically distinct facilities with independent power and networking. Multi-cloud connections use a four-connection model with ECMP load balancing, so at least one link stays up during planned maintenance or a device failure.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41s-1.03.39-1.42.01A9.97 9.97 0 0 1 2 13 10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"/></svg></span> <strong>Elastic bandwidth</strong></p>
+<hr />
+<p>Capacity can be increased or decreased without re-provisioning cross-connects or coordinating with the provider.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect Gateway as the AWS attach point</strong></p>
+<hr />
+<p>The AWS side of the Interconnect attaches to a Direct Connect Gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway. The same Direct Connect Gateway can anchor on-premises Direct Connect and multi-cloud Interconnect, so both paths share one global routing construct.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8m0 2a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-6-6m-1 2h1.5v3.78l2.33 2.33-1.06 1.06L14 12.4zM2 18a1 1 0 0 1-1-1 1 1 0 0 1 1-1h3.83c.31.71.71 1.38 1.17 2zm1-5a1 1 0 0 1-1-1 1 1 0 0 1 1-1h2.05L5 12l.05 1zm1-5a1 1 0 0 1-1-1 1 1 0 0 1 1-1h3c-.46.62-.86 1.29-1.17 2z"/></svg></span> <strong>Fast provisioning</strong></p>
+<hr />
+<p>Interconnects are typically provisioned within minutes using the create-and-accept workflow between AWS and the provider. No cross-connect ticket, no <abbr title="Border Gateway Protocol">BGP</abbr> configuration, no VLAN negotiation.</p>
+</li>
+</ul>
+</div>
+<h4 id="aws-interconnect-best-practices">AWS Interconnect Best Practices<a class="headerlink" href="#aws-interconnect-best-practices" title="Permanent link">&para;</a></h4>
+<h5 id="use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers">Use AWS Interconnect as the default for supported Region pairs and providers<a class="headerlink" href="#use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers" title="Permanent link">&para;</a></h5>
+<p>Where AWS Interconnect supports the AWS Region and peer cloud Region you need, it should be the default choice. The operational difference versus the partner-based Direct Connect alternative is substantial: no cross-connect, no <abbr title="Border Gateway Protocol">BGP</abbr> on your routers, no provider coordination during capacity changes, and MACsec encryption on every link by default.</p>
+<p>The primary reason to consider the alternatives is coverage. AWS Interconnect - Multi-cloud currently supports AWS-to-Google Cloud, and that support is expanding. For Region pairs not yet in the supported list, or for cloud pairs where AWS Interconnect is not yet available, the partner-based approach or internet-based <abbr title="Virtual Private Network">VPN</abbr> remain the options.</p>
+<h5 id="use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region">Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region<a class="headerlink" href="#use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region" title="Permanent link">&para;</a></h5>
+<p>When AWS Interconnect is reached through a Direct Connect Gateway attached to a virtual private gateway or a Transit Gateway, the reachable Interconnect is "local" to that AWS Region: a Transit Gateway in one AWS Region can only reach the Interconnect whose paired Google Cloud Region is itself paired with that same AWS Region. When the Direct Connect Gateway is attached to <strong>AWS Cloud WAN</strong>, any Core Network Edge in the global network can reach any Interconnect on that Direct Connect Gateway, so one Interconnect can serve workloads across every AWS Region participating in the core network.</p>
+<p>The peer cloud's side is a different story: the Google Cloud Region an Interconnect pairs with is fixed by the Interconnect itself. Reaching a specific Google Cloud Region still requires an Interconnect for that Region, regardless of what AWS Cloud WAN does on the AWS side.</p>
+<h5 id="plan-ipv6-from-the-start_3">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start_3" title="Permanent link">&para;</a></h5>
+<p>AWS Interconnect supports both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions to the Direct Connect Gateway. Enable <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on the Interconnect from the beginning so that when the peer cloud's <abbr title="Internet Protocol version 6">IPv6</abbr> support catches up on your workloads' side, the transport is ready.</p>
+<h4 id="when-to-use-aws-interconnect">When to use AWS Interconnect<a class="headerlink" href="#when-to-use-aws-interconnect" title="Permanent link">&para;</a></h4>
+<p>AWS Interconnect is the right choice when:</p>
+<ul>
+<li>You need private, predictable connectivity between AWS and another cloud provider, and the required AWS and peer cloud Regions are supported.</li>
+<li>You want encrypted cloud-to-cloud traffic without running and maintaining IPsec tunnels.</li>
+<li>You want to avoid the operational burden of provisioning cross-connects at a colocation and coordinating <abbr title="Border Gateway Protocol">BGP</abbr> and VLAN configuration between two cloud providers and a facility.</li>
+<li>You plan to scale bandwidth up or down as multi-cloud workloads evolve, rather than committing to a static capacity at a colocation.</li>
+</ul>
+<h3 id="other-multi-cloud-options">Other multi-cloud options<a class="headerlink" href="#other-multi-cloud-options" title="Permanent link">&para;</a></h3>
+<p>Where AWS Interconnect isn't available (unsupported cloud, unsupported Region pair, or existing commitments at a colocation), two established patterns remain valid.</p>
+<h4 id="partner-based-aws-direct-connect-to-another-cloud">Partner-based AWS Direct Connect to another cloud<a class="headerlink" href="#partner-based-aws-direct-connect-to-another-cloud" title="Permanent link">&para;</a></h4>
+<p>The long-established pattern: provision an AWS Direct Connect connection at a Direct Connect location that also houses a peer cloud's equivalent service (Google Cloud Partner Interconnect, Microsoft Azure ExpressRoute, Oracle FastConnect), order a cross-connect or use a virtual interconnection partner's fabric to bridge the two, and configure <abbr title="Border Gateway Protocol">BGP</abbr> on each side to advertise prefixes between the clouds.</p>
+<p>This gives you private, high-bandwidth connectivity in Regions and cloud pairs that AWS Interconnect doesn't yet support, and it can be the right choice where you already have Direct Connect circuits and a colocation footprint and want to extend the same facility to connect a second cloud.</p>
+<p>The trade-offs compared to AWS Interconnect:</p>
+<ul>
+<li><strong>Physical and logical cross-connect to manage</strong>. Two clouds plus a facility means three parties.</li>
+<li><strong><abbr title="Border Gateway Protocol">BGP</abbr> configuration on both sides</strong>. The path isn't managed end to end; you configure <abbr title="Border Gateway Protocol">BGP</abbr>, maintain the sessions, and debug the combined behavior.</li>
+<li><strong>Encryption is your responsibility</strong>. Cross-connects at colocation facilities aren't MACsec-encrypted by default. If compliance requires encryption, you run IPsec over the cross-connect, which reintroduces the tunnel overhead AWS Interconnect avoids.</li>
+<li><strong>Capacity changes take longer</strong>. Scaling bandwidth usually means re-provisioning cross-connects rather than adjusting through a console.</li>
+</ul>
+<p>This pattern is the right choice when AWS Interconnect doesn't cover the cloud or Region pair and the traffic volume or latency requirements don't tolerate the internet-based alternative.</p>
+<h4 id="aws-site-to-site-vpn-between-clouds">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds<a class="headerlink" href="#aws-site-to-site-vpn-between-clouds" title="Permanent link">&para;</a></h4>
+<p>The simplest multi-cloud option, and sometimes the only option for low-volume or short-lived workloads: establish Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> from an AWS Transit Gateway or AWS Cloud WAN core network to the peer cloud's <abbr title="Virtual Private Network">VPN</abbr> gateway. <abbr title="Border Gateway Protocol">BGP</abbr> runs over the tunnels and carries prefixes between the clouds.</p>
+<p>Internet-based <abbr title="Virtual Private Network">VPN</abbr> is fast to set up (no physical provisioning), cheap for low-volume workloads, and widely supported. It is also internet-based, which means performance is subject to public internet conditions, and it ties up IPsec throughput on both sides.</p>
+<p>Use this when AWS Interconnect isn't available and the workload can tolerate internet-based performance, or for low-volume cloud-to-cloud traffic that doesn't justify a partner-based Direct Connect setup.</p>
+<h4 id="comparing-the-multi-cloud-options">Comparing the multi-cloud options<a class="headerlink" href="#comparing-the-multi-cloud-options" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>AWS Interconnect</th>
+<th>Partner-based Direct Connect</th>
+<th>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td>AWS global backbone, direct handoff to peer cloud</td>
+<td>Dedicated cross-connect at a colocation facility</td>
+<td>Public internet</td>
+</tr>
+<tr>
+<td>Management model</td>
+<td>Fully managed by AWS and the provider</td>
+<td>You manage <abbr title="Border Gateway Protocol">BGP</abbr>, VLANs, cross-connects across three parties</td>
+<td>You manage <abbr title="Border Gateway Protocol">BGP</abbr> and IPsec on both sides</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>MACsec by default</td>
+<td>Your responsibility (typically IPsec overlay)</td>
+<td>IPsec over internet</td>
+</tr>
+<tr>
+<td>Provisioning time</td>
+<td>Minutes</td>
+<td>Days to weeks</td>
+<td>Minutes</td>
+</tr>
+<tr>
+<td>Capacity changes</td>
+<td>Elastic, on demand</td>
+<td>Requires cross-connect re-provisioning</td>
+<td>Elastic on each cloud</td>
+</tr>
+<tr>
+<td>Coverage today</td>
+<td>AWS ↔ Google Cloud, expanding</td>
+<td>All major clouds, subject to colocation footprint</td>
+<td>All major clouds</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Supported cloud pairs and Regions, production multi-cloud workloads</td>
+<td>Cloud pairs and Regions not yet covered by AWS Interconnect, existing colocation deployments</td>
+<td>Low-volume or short-lived workloads where the cloud pair or Region is not yet covered by AWS Interconnect</td>
+</tr>
+</tbody>
+</table>
+<h3 id="documentation_3">Documentation<a class="headerlink" href="#documentation_3" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Interconnect documentation</strong></p>
+<hr />
+<p>Complete service documentation covering both the Multi-cloud and last-mile offerings, concepts, attach points, and supported Region pairs.</p>
+<p><a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>AWS Interconnect pricing</strong></p>
+<hr />
+<p>Per-hour charges by bandwidth tier, plus data transfer. Shared cross-connect fees are included in the managed service, unlike the partner-based alternative.</p>
+<p><a href="https://aws.amazon.com/interconnect/multicloud/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
+</li>
+</ul>
+</div>
+<h2 id="client-communication-to-aws-applications">Client communication to AWS applications<a class="headerlink" href="#client-communication-to-aws-applications" title="Permanent link">&para;</a></h2>
+<p>Users and devices reaching AWS applications over the internet have two AWS-native options. <a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> brings clients into a <abbr title="Virtual Private Cloud">VPC</abbr> at the network layer, so the applications they reach look as if they're on a local network. <a href="https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html">AWS Verified Access</a> takes the opposite approach: instead of putting the user on the network, it puts the application behind a zero-trust policy engine that authenticates and authorizes every request based on identity and device posture, with no <abbr title="Virtual Private Network">VPN</abbr> client involved.</p>
+<p>Both services have a place, but the recommendation for new application access use cases is to start with AWS Verified Access. Zero-trust application access scales better across large numbers of applications and users, removes the operational burden of maintaining <abbr title="Virtual Private Network">VPN</abbr> clients and endpoint certificates, and enforces per-request policies that are hard to replicate at the network layer.</p>
+<h3 id="aws-client-vpn">AWS Client <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#aws-client-vpn" title="Permanent link">&para;</a></h3>
+<p>AWS Client <abbr title="Virtual Private Network">VPN</abbr> is a managed OpenVPN-compatible service that gives end users a network-level connection into a <abbr title="Virtual Private Cloud">VPC</abbr>. Each connected client receives an IP address from a client <abbr title="Classless Inter-Domain Routing">CIDR</abbr> you configure, and can reach resources in the associated <abbr title="Virtual Private Cloud">VPC</abbr> (and, through transit paths, other VPCs and on-premises networks). Authentication supports Active Directory, SAML-based federation with identity providers such as AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center, and certificate-based mutual authentication.</p>
+<p>Client <abbr title="Virtual Private Network">VPN</abbr> fits when applications genuinely need network-layer reachability: administrators using SSH or RDP to reach <abbr title="Elastic Compute Cloud">EC2</abbr> instances, developers using tools that require direct IP connectivity, or legacy applications that authenticate clients by IP address. It also fits established workflows where users are already trained on a <abbr title="Virtual Private Network">VPN</abbr> client and the applications haven't been refactored for identity-aware access.</p>
+<p>Operational considerations:</p>
+<ul>
+<li><strong>Split-tunnel by default</strong>. Unless a specific compliance requirement justifies full-tunnel, use split-tunnel so only AWS-destined traffic goes through Client <abbr title="Virtual Private Network">VPN</abbr> and general internet traffic exits the client's local network directly. Full-tunnel multiplies egress cost and concentrates load on the <abbr title="Virtual Private Network">VPN</abbr> endpoint.</li>
+<li><strong>Authorization rules, not route tables alone</strong>. Client <abbr title="Virtual Private Network">VPN</abbr> authorization rules control which users can reach which destinations. Route tables alone allow traffic to flow; without matching authorization rules, users can still be blocked from destinations that their role shouldn't reach.</li>
+<li><strong>Scale by endpoint, not by <abbr title="Availability Zone">AZ</abbr> alone</strong>. A Client <abbr title="Virtual Private Network">VPN</abbr> endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.</li>
+</ul>
+<h3 id="aws-verified-access">AWS Verified Access<a class="headerlink" href="#aws-verified-access" title="Permanent link">&para;</a></h3>
+<p>AWS Verified Access provides zero-trust access to corporate applications without a <abbr title="Virtual Private Network">VPN</abbr> client. Users reach an application through a browser or an application-specific client, and Verified Access evaluates every request against a policy that combines identity (from AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center or a third-party identity provider) and device posture (from an integrated device-trust provider such as CrowdStrike or a mobile-device-management vendor). Requests that don't satisfy the policy are rejected. Requests that satisfy it are forwarded to the application.</p>
+<p>Verified Access supports both web-based applications (HTTP/HTTPS) and non-web applications reached over <abbr title="Transmission Control Protocol">TCP</abbr>, SSH, or RDP, so it covers most of the use cases that previously required Client <abbr title="Virtual Private Network">VPN</abbr>. The policies are centrally managed in AWS, expressed in Cedar policy language, and evaluated per-request, which gives you fine-grained control that network-layer access can't provide (for example, blocking access when a device's posture check fails even though the user is authenticated).</p>
+<p>For new application access use cases, AWS Verified Access is the preferred option because:</p>
+<ul>
+<li><strong>No <abbr title="Virtual Private Network">VPN</abbr> client to deploy, distribute, or maintain on endpoints.</strong> Users reach applications through standard clients they already use (browsers or protocol-specific clients).</li>
+<li><strong>Per-request policy evaluation</strong> with identity and device posture, instead of the all-or-nothing trust model of a network connection.</li>
+<li><strong>Comprehensive logging</strong> of every access attempt (allow and deny), with reason, user, and device context. This is harder to reconstruct from <abbr title="Virtual Private Network">VPN</abbr> connection logs plus application logs separately.</li>
+<li><strong>Simpler operational model</strong> at scale. Onboarding a new application means adding a Verified Access endpoint and a policy, rather than expanding <abbr title="Virtual Private Network">VPN</abbr> authorization rules and re-propagating routes.</li>
+</ul>
+<p>Where Verified Access doesn't fit today, Client <abbr title="Virtual Private Network">VPN</abbr> remains available, and the two can coexist during migration. The <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/">Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access interoperability patterns</a> cover starting with Client <abbr title="Virtual Private Network">VPN</abbr>, adding Verified Access for new applications, migrating existing applications to Verified Access, and consolidating on Verified Access over time.</p>
+<h3 id="documentation_4">Documentation<a class="headerlink" href="#documentation_4" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr> documentation</strong></p>
+<hr />
+<p>Complete service documentation covering endpoints, authentication methods, authorization rules, and split-tunnel configuration.</p>
+<p><a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>AWS Verified Access documentation</strong></p>
+<hr />
+<p>Complete service documentation covering endpoints, policies in Cedar, identity and device trust providers, and supported application types.</p>
+<p><a href="https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access interoperability patterns</strong></p>
+<hr />
+<p>Four migration and interoperability patterns for running Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access side by side during a transition.</p>
+<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog post</a></p>
+</li>
+</ul>
+</div>
+<h2 id="building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack<a class="headerlink" href="#building-your-hybrid-and-multi-cloud-stack" title="Permanent link">&para;</a></h2>
+<p>Real-world hybrid and multi-cloud architectures combine several of these services, with each one operating at the layer where it provides the most value.</p>
+<p>The services covered in this page are complementary layers, not competing alternatives.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Stack["Hybrid and Multi-Cloud Stack"]
+        direction TB
+
+        subgraph Users2["Client communication"]
+            VA2["AWS Verified Access&lt;br/&gt;Zero-trust application access"]
+            CVPN2["AWS Client VPN&lt;br/&gt;Network-layer user access"]
+        end
+
+        subgraph Multi2["Multi-cloud"]
+            IC2["AWS Interconnect&lt;br/&gt;Direct cloud-to-cloud&lt;br/&gt;(preferred, where supported)"]
+            Partner2["Partner-based DX or VPN&lt;br/&gt;where AWS Interconnect unavailable"]
+        end
+
+        subgraph Hybrid2["Hybrid connectivity"]
+            DX2["AWS Direct Connect&lt;br/&gt;Primary private path"]
+            VPN2["AWS Site-to-Site VPN&lt;br/&gt;Fast-start or IPsec over DX&lt;br/&gt;when MACsec unavailable"]
+            SDWAN2["SD-WAN Connect attachments&lt;br/&gt;for existing SD-WAN overlays"]
+        end
+    end
+
+    Users2 ~~~ Multi2 ~~~ Hybrid2
+
+    style Stack fill:none,stroke:none
+    style Users2 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style Multi2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Hybrid2 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style VA2 fill:#059669,stroke:#047857,color:#fff
+    style CVPN2 fill:#059669,stroke:#047857,color:#fff
+    style IC2 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Partner2 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style DX2 fill:#2563eb,stroke:#1e40af,color:#fff
+    style VPN2 fill:#2563eb,stroke:#1e40af,color:#fff
+    style SDWAN2 fill:#2563eb,stroke:#1e40af,color:#fff</code></pre>
+<h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
+<p>Organizations building hybrid and multi-cloud connectivity from scratch have the opportunity to adopt the patterns that scale best from day one:</p>
+<ol>
+<li><strong>On-premises path and resiliency</strong>: AWS Direct Connect terminating on a Transit Gateway or AWS Cloud WAN core network through a Direct Connect Gateway, designed to the Resiliency Toolkit's maximum resiliency model (multiple connections across multiple locations and providers). Resiliency comes from multiple Direct Connect connections, not from pairing a single Direct Connect with a <abbr title="Virtual Private Network">VPN</abbr> fallback.</li>
+<li><strong><abbr title="Virtual Private Network">VPN</abbr> where it adds value</strong>: AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.</li>
+<li><strong>Multi-cloud</strong>: AWS Interconnect where supported, sharing the same Direct Connect Gateway as the on-premises Direct Connect. Partner-based Direct Connect or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds only where AWS Interconnect coverage isn't there yet.</li>
+<li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong>: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across branches and wants that overlay to extend into AWS.</li>
+<li><strong>Application access</strong>: AWS Verified Access for new applications. AWS Client <abbr title="Virtual Private Network">VPN</abbr> only where protocol or workflow requirements genuinely need network-layer access.</li>
+</ol>
+<h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
+<p>Organizations running established hybrid patterns have working foundations that don't need to be replaced:</p>
+<ol>
+<li><strong>AWS Direct Connect</strong> remains the foundation. If circuits are terminated on virtual private gateways rather than Transit Gateway or AWS Cloud WAN, evaluate consolidating onto a hub through a Direct Connect Gateway as the environment grows.</li>
+<li><strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong> remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated <abbr title="Virtual Private Network">VPN</abbr> for sites distant from the Region.</li>
+<li><strong>Partner-based Direct Connect to another cloud</strong> keeps working and should not be ripped out for its own sake. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.</li>
+<li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integrations</strong> on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic doesn't have to move all at once.</li>
+<li><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> can coexist with AWS Verified Access during migration. The recommended direction is to add new applications to Verified Access, migrate existing applications as their lifecycle allows, and gradually reduce Client <abbr title="Virtual Private Network">VPN</abbr> usage to the cases that genuinely require network-layer access.</li>
+</ol>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 8, 2026 16:30:31 UTC">May 8, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../within-aws/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Within AWS">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Within AWS
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../application-networking/" class="md-footer__link md-footer__link--next" aria-label="Next: Application Networking">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Application Networking
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

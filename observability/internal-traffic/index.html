@@ -1,0 +1,3240 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/observability/internal-traffic/">
+      
+      
+        <link rel="prev" href="../service-monitoring/">
+      
+      
+        <link rel="next" href="../external-traffic/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Internal Traffic - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Internal Traffic - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/observability/internal-traffic.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/observability/internal-traffic/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Internal Traffic - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/observability/internal-traffic.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#internal-traffic-monitoring" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Internal Traffic
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vpc-flow-logs-as-the-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Flow Logs as the foundation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC Flow Logs as the foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-vpc-flow-logs-on-every-vpc-in-every-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable VPC Flow Logs on every VPC in every account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-custom-log-format-for-richer-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use custom log format for richer metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliver-flow-logs-to-s3-for-cost-effective-storage-and-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliver Flow Logs to S3 for cost-effective storage and analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partition-flow-log-data-in-s3-for-efficient-athena-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partition Flow Log data in S3 for efficient Athena queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway-flow-logs-for-cross-vpc-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway Flow Logs for cross-VPC visibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transit Gateway Flow Logs for cross-VPC visibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-transit-gateway-flow-logs-for-organization-wide-traffic-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Transit Gateway Flow Logs for organization-wide traffic visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Transit Gateway Flow Logs to detect unauthorized cross-VPC communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-delivery-destinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing delivery destinations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing delivery destinations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#match-the-delivery-destination-to-the-use-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Match the delivery destination to the use case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralize-flow-log-delivery-in-a-dedicated-log-archive-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralize Flow Log delivery in a dedicated log archive account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-firewall-log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Firewall log analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Firewall log analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-both-alert-and-flow-logs-on-network-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable both alert and flow logs on Network Firewall
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlate-network-firewall-logs-with-vpc-flow-logs-for-full-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlate Network Firewall logs with VPC Flow Logs for full context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-traffic-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 traffic visibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 traffic visibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-the-same-flow-logs-for-ipv4-and-ipv6-no-separate-configuration-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the same Flow Logs for IPv4 and IPv6 — no separate configuration needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-ipv6-specific-fields-in-your-custom-log-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include IPv6-specific fields in your custom log format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-cost-model-before-scaling-flow-log-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the cost model before scaling Flow Log collection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-aggregation-intervals-to-reduce-volume-without-losing-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use aggregation intervals to reduce volume without losing visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convert-flow-logs-to-parquet-format-for-cheaper-athena-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convert Flow Logs to Parquet format for cheaper Athena queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-each-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use each data source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-internal-traffic-monitoring-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining internal traffic monitoring with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-account-deployment-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account deployment patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-account deployment patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#centralized-log-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized log aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-account-flow-log-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-account Flow Log delivery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway-flow-logs-for-org-wide-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway Flow Logs for org-wide visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-observability-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Observability Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vpc-flow-logs-as-the-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Flow Logs as the foundation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC Flow Logs as the foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-vpc-flow-logs-on-every-vpc-in-every-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable VPC Flow Logs on every VPC in every account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-custom-log-format-for-richer-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use custom log format for richer metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deliver-flow-logs-to-s3-for-cost-effective-storage-and-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliver Flow Logs to S3 for cost-effective storage and analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partition-flow-log-data-in-s3-for-efficient-athena-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partition Flow Log data in S3 for efficient Athena queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway-flow-logs-for-cross-vpc-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway Flow Logs for cross-VPC visibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transit Gateway Flow Logs for cross-VPC visibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-transit-gateway-flow-logs-for-organization-wide-traffic-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Transit Gateway Flow Logs for organization-wide traffic visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Transit Gateway Flow Logs to detect unauthorized cross-VPC communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-delivery-destinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing delivery destinations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing delivery destinations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#match-the-delivery-destination-to-the-use-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Match the delivery destination to the use case
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralize-flow-log-delivery-in-a-dedicated-log-archive-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralize Flow Log delivery in a dedicated log archive account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-firewall-log-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Firewall log analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Firewall log analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-both-alert-and-flow-logs-on-network-firewall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable both alert and flow logs on Network Firewall
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlate-network-firewall-logs-with-vpc-flow-logs-for-full-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlate Network Firewall logs with VPC Flow Logs for full context
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-traffic-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 traffic visibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 traffic visibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-the-same-flow-logs-for-ipv4-and-ipv6-no-separate-configuration-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the same Flow Logs for IPv4 and IPv6 — no separate configuration needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#include-ipv6-specific-fields-in-your-custom-log-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include IPv6-specific fields in your custom log format
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-cost-model-before-scaling-flow-log-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the cost model before scaling Flow Log collection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-aggregation-intervals-to-reduce-volume-without-losing-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use aggregation intervals to reduce volume without losing visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#convert-flow-logs-to-parquet-format-for-cheaper-athena-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convert Flow Logs to Parquet format for cheaper Athena queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-each-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use each data source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-internal-traffic-monitoring-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining internal traffic monitoring with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-account-deployment-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account deployment patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-account deployment patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#centralized-log-aggregation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized log aggregation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-account-flow-log-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-account Flow Log delivery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transit-gateway-flow-logs-for-org-wide-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transit Gateway Flow Logs for org-wide visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-observability-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Observability Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Observability
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/observability/internal-traffic.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/observability/internal-traffic.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="internal-traffic-monitoring">Internal Traffic Monitoring<a class="headerlink" href="#internal-traffic-monitoring" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/subnets/">Subnets</a>, and <a href="../../connectivity/within-aws/">Connectivity Within AWS</a>. Review those topics first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Understanding what traffic flows between your internal resources is the foundation of network security, cost optimization, and troubleshooting in AWS. Security groups and NACLs define what's <em>allowed</em> — internal traffic monitoring tells you what's <em>actually happening</em>. Without it, you're operating blind: unable to detect lateral movement, unable to identify unexpected cross-<abbr title="Availability Zone">AZ</abbr> data transfer costs, and unable to troubleshoot connectivity failures beyond "it doesn't work."</p>
+<p>Internal traffic monitoring in AWS is not a single tool — it's a layered approach. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs provide packet-level metadata at the network layer. Transit Gateway Flow Logs give you centralized cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility. <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs capture per-request application-layer detail. Network Firewall logs record stateful inspection decisions. Each data source answers different questions, and a production environment needs most of them working together.</p>
+<p>This page is organized around data sources and the decisions you face when building internal traffic visibility: what to enable, where to send the data, how to query it cost-effectively, and how to correlate across sources.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph DataSources["Internal Traffic Data Sources"]
+        FlowLogs["VPC Flow Logs&lt;br/&gt;Packet metadata at VPC/subnet/ENI"]
+        TGWLogs["Transit Gateway Flow Logs&lt;br/&gt;Cross-VPC and cross-account traffic"]
+        LatticeLogs["VPC Lattice Access Logs&lt;br/&gt;Per-request service-to-service detail"]
+        NFWLogs["Network Firewall Logs&lt;br/&gt;Stateful inspection decisions"]
+    end
+
+    subgraph Destinations["Analysis &amp; Storage"]
+        S3["Amazon S3&lt;br/&gt;Cost-effective long-term storage"]
+        CWLogs["CloudWatch Logs&lt;br/&gt;Real-time querying"]
+        Firehose["Kinesis Data Firehose&lt;br/&gt;Streaming delivery"]
+    end
+
+    subgraph Analysis["Query &amp; Alerting"]
+        Athena["Amazon Athena&lt;br/&gt;SQL over S3 data"]
+        CWInsights["CloudWatch Logs Insights&lt;br/&gt;Real-time log queries"]
+        CWMetrics["CloudWatch Metrics&lt;br/&gt;Network throughput &amp; errors"]
+    end
+
+    FlowLogs --&gt; S3
+    FlowLogs --&gt; CWLogs
+    FlowLogs --&gt; Firehose
+    TGWLogs --&gt; S3
+    TGWLogs --&gt; CWLogs
+    LatticeLogs --&gt; S3
+    LatticeLogs --&gt; CWLogs
+    LatticeLogs --&gt; Firehose
+    NFWLogs --&gt; S3
+    NFWLogs --&gt; CWLogs
+    NFWLogs --&gt; Firehose
+    S3 --&gt; Athena
+    CWLogs --&gt; CWInsights
+    CWLogs --&gt; CWMetrics
+
+    style DataSources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Destinations fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style Analysis fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style FlowLogs fill:#2563eb,stroke:#1e40af,color:#fff
+    style TGWLogs fill:#2563eb,stroke:#1e40af,color:#fff
+    style LatticeLogs fill:#2563eb,stroke:#1e40af,color:#fff
+    style NFWLogs fill:#2563eb,stroke:#1e40af,color:#fff
+    style S3 fill:#059669,stroke:#065f46,color:#fff
+    style CWLogs fill:#059669,stroke:#065f46,color:#fff
+    style Firehose fill:#059669,stroke:#065f46,color:#fff
+    style Athena fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style CWInsights fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style CWMetrics fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 2c-1.11 0-2 .89-2 2v3c0 1.11.89 2 2 2h1v2H2v2h4v2H5c-1.11 0-2 .89-2 2v3c0 1.11.89 2 2 2h4c1.11 0 2-.89 2-2v-3c0-1.11-.89-2-2-2H8v-2h8v2h-1c-1.11 0-2 .89-2 2v3c0 1.11.89 2 2 2h4c1.11 0 2-.89 2-2v-3c0-1.11-.89-2-2-2h-1v-2h4v-2h-9V9h1c1.11 0 2-.89 2-2V4c0-1.11-.89-2-2-2zm0 2h4v3h-4zM5 17h4v3H5zm10 0h4v3h-4z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></p>
+<hr />
+<p>Capture IP traffic metadata at the <abbr title="Virtual Private Cloud">VPC</abbr>, subnet, or ENI level. Custom log format includes 40+ fields covering source/destination, ports, protocols, <abbr title="Transmission Control Protocol">TCP</abbr> flags, traffic path, and flow direction. Supports both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 11h-3.18C14.4 9.84 13.3 9 12 9s-2.4.84-2.82 2H6c-.33 0-2-.1-2-2V8c0-1.83 1.54-2 2-2h10.18C16.6 7.16 17.7 8 19 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3c-1.3 0-2.4.84-2.82 2H6C4.39 4 2 5.06 2 8v1c0 2.94 2.39 4 4 4h3.18c.42 1.16 1.52 2 2.82 2s2.4-.84 2.82-2H18c.33 0 2 .1 2 2v1c0 1.83-1.54 2-2 2H7.82C7.4 16.84 6.3 16 5 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3c1.3 0 2.4-.84 2.82-2H18c1.61 0 4-1.07 4-4v-1c0-2.93-2.39-4-4-4m1-7a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1M5 20a1 1 0 0 1-1-1 1 1 0 0 1 1-1 1 1 0 0 1 1 1 1 1 0 0 1-1 1"/></svg></span> <strong>Transit Gateway Flow Logs</strong></p>
+<hr />
+<p>Centralized view of all traffic crossing your Transit Gateway — cross-<abbr title="Virtual Private Cloud">VPC</abbr>, cross-account, and hybrid. One configuration provides org-wide visibility without per-<abbr title="Virtual Private Cloud">VPC</abbr> setup.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21 9-4-4v3h-7v2h7v3M7 11l-4 4 4 4v-3h7v-2H7z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Access Logs</strong></p>
+<hr />
+<p>Per-request logs with caller identity, target identity, latency, response code, and auth policy decisions. Application-layer visibility for service-to-service traffic.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>Network Firewall Logs</strong></p>
+<hr />
+<p>Alert and flow logs from stateful inspection. Records what was allowed, denied, or triggered an alert, with full 5-tuple detail and rule group attribution.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.68 12.32a4.49 4.49 0 0 0-6.36.01 4.49 4.49 0 0 0 0 6.36 4.51 4.51 0 0 0 5.57.63L21 22.39 22.39 21l-3.09-3.11c1.13-1.77.87-4.09-.62-5.57m-1.41 4.95c-.98.98-2.56.97-3.54 0-.97-.98-.97-2.56.01-3.54.97-.97 2.55-.97 3.53 0 .97.98.97 2.56 0 3.54M10.9 20.1a6.5 6.5 0 0 1-1.48-2.32C6.27 17.25 4 15.76 4 14v3c0 2.21 3.58 4 8 4-.4-.26-.77-.56-1.1-.9M4 9v3c0 1.68 2.07 3.12 5 3.7v-.2c0-.93.2-1.85.58-2.69C6.34 12.3 4 10.79 4 9m8-6C7.58 3 4 4.79 4 7c0 2 3 3.68 6.85 4h.05c1.2-1.26 2.86-2 4.6-2 .91 0 1.81.19 2.64.56A3.22 3.22 0 0 0 20 7c0-2.21-3.58-4-8-4"/></svg></span> <strong>Amazon Athena</strong></p>
+<hr />
+<p>SQL-based querying of Flow Logs stored in <abbr title="Simple Storage Service">S3</abbr>. The recommended analysis tool for large-scale Flow Log data with partitioned tables and pre-built query patterns.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16 11.78 4.24-7.33 1.73 1-5.23 9.05-6.51-3.75L5.46 19H22v2H2V3h2v14.54L9.5 8z"/></svg></span> <strong>CloudWatch Metrics &amp; Logs Insights</strong></p>
+<hr />
+<p>Real-time network metrics (NetworkIn/Out, <abbr title="Network Address Translation">NAT</abbr> Gateway bytes, Transit Gateway bytes) and interactive log querying for Flow Logs delivered to CloudWatch Logs.</p>
+</li>
+</ul>
+</div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="vpc-flow-logs-as-the-foundation"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs as the foundation<a class="headerlink" href="#vpc-flow-logs-as-the-foundation" title="Permanent link">&para;</a></h3>
+<h4 id="enable-vpc-flow-logs-on-every-vpc-in-every-account">Enable <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs on every <abbr title="Virtual Private Cloud">VPC</abbr> in every account<a class="headerlink" href="#enable-vpc-flow-logs-on-every-vpc-in-every-account" title="Permanent link">&para;</a></h4>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are the single most important internal traffic monitoring tool. Enable them at the <abbr title="Virtual Private Cloud">VPC</abbr> level — not subnet or ENI level — to capture all traffic within the <abbr title="Virtual Private Cloud">VPC</abbr> with a single configuration. Subnet-level and ENI-level logs are useful for targeted troubleshooting but create coverage gaps when used as the primary mechanism.</p>
+<p>In a multi-account environment, deploy Flow Logs as part of your account vending process. Every new <abbr title="Virtual Private Cloud">VPC</abbr> should have Flow Logs enabled automatically, delivering to a centralized <abbr title="Simple Storage Service">S3</abbr> bucket in your log archive account. This ensures no <abbr title="Virtual Private Cloud">VPC</abbr> operates without visibility, regardless of which team created it.</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are not optional in production. They are the network equivalent of application logging — without them, you cannot investigate security incidents, troubleshoot connectivity issues, or understand your actual traffic patterns.</em></p>
+<h4 id="use-custom-log-format-for-richer-metadata">Use custom log format for richer metadata<a class="headerlink" href="#use-custom-log-format-for-richer-metadata" title="Permanent link">&para;</a></h4>
+<p>The default Flow Log format captures only 14 fields. The custom format supports 40+ fields that are essential for production analysis. At minimum, include these fields beyond the default:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>traffic-path</code></td>
+<td>Identifies the path traffic took (IGW, <abbr title="Virtual Private Gateway">VGW</abbr>, Transit Gateway, <abbr title="Virtual Private Cloud">VPC</abbr> Peering, etc.) — critical for cost attribution</td>
+</tr>
+<tr>
+<td><code>flow-direction</code></td>
+<td>Distinguishes ingress from egress at the ENI level</td>
+</tr>
+<tr>
+<td><code>pkt-src-addr</code> / <code>pkt-dst-addr</code></td>
+<td>Original source/destination before <abbr title="Network Address Translation">NAT</abbr> translation — essential when traffic traverses <abbr title="Network Address Translation">NAT</abbr> Gateways</td>
+</tr>
+<tr>
+<td><code>tcp-flags</code></td>
+<td>Identifies SYN-only flows (connection attempts), RST (rejected connections), and FIN (clean closures)</td>
+</tr>
+<tr>
+<td><code>sublocation-type</code> / <code>sublocation-id</code></td>
+<td>Identifies the specific wavelength zone or local zone</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td><abbr title="Internet Protocol version 4">IPv4</abbr> or <abbr title="Internet Protocol version 6">IPv6</abbr> — use this to filter and analyze <abbr title="Internet Protocol version 6">IPv6</abbr> traffic patterns</td>
+</tr>
+<tr>
+<td><code>az-id</code></td>
+<td>Availability Zone ID — critical for identifying cross-<abbr title="Availability Zone">AZ</abbr> traffic and associated costs</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>type</code> field is particularly important for <abbr title="Internet Protocol version 6">IPv6</abbr> visibility. Flow Logs capture both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic in the same log stream. Use the <code>type</code> field to filter, analyze adoption rates, and identify workloads that have migrated to <abbr title="Internet Protocol version 6">IPv6</abbr>.</p>
+<h4 id="deliver-flow-logs-to-s3-for-cost-effective-storage-and-analysis">Deliver Flow Logs to <abbr title="Simple Storage Service">S3</abbr> for cost-effective storage and analysis<a class="headerlink" href="#deliver-flow-logs-to-s3-for-cost-effective-storage-and-analysis" title="Permanent link">&para;</a></h4>
+<p>You have three delivery options: <abbr title="Simple Storage Service">S3</abbr>, CloudWatch Logs, and Kinesis Data Firehose. For the primary, always-on Flow Log configuration, deliver to <abbr title="Simple Storage Service">S3</abbr>. The cost difference is significant:</p>
+<table>
+<thead>
+<tr>
+<th>Delivery destination</th>
+<th>Ingestion cost</th>
+<th>Storage cost</th>
+<th>Query method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Simple Storage Service">S3</abbr></strong></td>
+<td>$0.25 per GB (first 10 TB/month)</td>
+<td><abbr title="Simple Storage Service">S3</abbr> storage rates (~$0.023/GB/month)</td>
+<td>Athena ($5 per TB scanned)</td>
+</tr>
+<tr>
+<td><strong>CloudWatch Logs</strong></td>
+<td>$0.50 per GB</td>
+<td>$0.03 per GB/month</td>
+<td>Logs Insights ($0.005 per GB scanned)</td>
+</tr>
+<tr>
+<td><strong>Kinesis Data Firehose</strong></td>
+<td>$0.029 per GB + destination costs</td>
+<td>Depends on destination</td>
+<td>Depends on destination</td>
+</tr>
+</tbody>
+</table>
+<p>For a <abbr title="Virtual Private Cloud">VPC</abbr> generating 100 GB/month of Flow Log data, <abbr title="Simple Storage Service">S3</abbr> delivery costs roughly $25/month for ingestion. CloudWatch Logs costs $50/month for the same data. At scale across dozens of VPCs, this difference compounds into thousands of dollars monthly.</p>
+<p>Use CloudWatch Logs as a <em>secondary</em> destination only when you need real-time alerting on specific traffic patterns (e.g., rejected flows to sensitive subnets). Keep the retention short (7-14 days) to control costs.</p>
+<h4 id="partition-flow-log-data-in-s3-for-efficient-athena-queries">Partition Flow Log data in <abbr title="Simple Storage Service">S3</abbr> for efficient Athena queries<a class="headerlink" href="#partition-flow-log-data-in-s3-for-efficient-athena-queries" title="Permanent link">&para;</a></h4>
+<p>When delivering to <abbr title="Simple Storage Service">S3</abbr>, use Hive-compatible partitioning with the following structure: <code>{bucket}/{prefix}/AWSLogs/{account-id}/vpcflowlogs/{region}/{year}/{month}/{day}/</code>. This is the default delivery structure and enables Athena partition projection, which eliminates the need to run <code>MSCK REPAIR TABLE</code> as new partitions arrive.</p>
+<p>Create your Athena table with partition projection enabled:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">EXTERNAL</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">vpc_flow_logs</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="k">version</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="n">account_id</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="n">interface_id</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="n">srcaddr</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="n">dstaddr</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="n">srcport</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="n">dstport</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="n">protocol</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="n">packets</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="n">bytes</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="k">start</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="n">end_time</span><span class="w"> </span><span class="nb">bigint</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="n">action</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="n">log_status</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="n">vpc_id</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="n">subnet_id</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="n">tcp_flags</span><span class="w"> </span><span class="nb">int</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="k">type</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span><span class="n">pkt_srcaddr</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="n">pkt_dstaddr</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="n">az_id</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="n">flow_direction</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="n">traffic_path</span><span class="w"> </span><span class="nb">int</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="p">)</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">PARTITIONED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span><span class="o">`</span><span class="nb">date</span><span class="o">`</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="w">  </span><span class="n">region</span><span class="w"> </span><span class="n">string</span><span class="p">,</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span><span class="n">account_id_partition</span><span class="w"> </span><span class="n">string</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="p">)</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="k">ROW</span><span class="w"> </span><span class="n">FORMAT</span><span class="w"> </span><span class="n">DELIMITED</span><span class="w"> </span><span class="n">FIELDS</span><span class="w"> </span><span class="n">TERMINATED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39; &#39;</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="k">LOCATION</span><span class="w"> </span><span class="s1">&#39;s3://your-flow-logs-bucket/AWSLogs/&#39;</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="n">TBLPROPERTIES</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="w">  </span><span class="s1">&#39;projection.enabled&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;true&#39;</span><span class="p">,</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="w">  </span><span class="s1">&#39;projection.date.type&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;date&#39;</span><span class="p">,</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="w">  </span><span class="s1">&#39;projection.date.range&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;2024/01/01,NOW&#39;</span><span class="p">,</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="w">  </span><span class="s1">&#39;projection.date.format&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;yyyy/MM/dd&#39;</span><span class="p">,</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="w">  </span><span class="s1">&#39;projection.date.interval&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;1&#39;</span><span class="p">,</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="w">  </span><span class="s1">&#39;projection.date.interval.unit&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;DAYS&#39;</span><span class="p">,</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="w">  </span><span class="s1">&#39;projection.region.type&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;enum&#39;</span><span class="p">,</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="w">  </span><span class="s1">&#39;projection.region.values&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;us-east-1,us-west-2,eu-west-1&#39;</span><span class="p">,</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="w">  </span><span class="s1">&#39;projection.account_id_partition.type&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;enum&#39;</span><span class="p">,</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="w">  </span><span class="s1">&#39;projection.account_id_partition.values&#39;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;111111111111,222222222222&#39;</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>This approach means Athena queries only scan the partitions you specify, reducing both query time and cost dramatically.</p>
+<h3 id="transit-gateway-flow-logs-for-cross-vpc-visibility">Transit Gateway Flow Logs for cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility<a class="headerlink" href="#transit-gateway-flow-logs-for-cross-vpc-visibility" title="Permanent link">&para;</a></h3>
+<h4 id="enable-transit-gateway-flow-logs-for-organization-wide-traffic-visibility">Enable Transit Gateway Flow Logs for organization-wide traffic visibility<a class="headerlink" href="#enable-transit-gateway-flow-logs-for-organization-wide-traffic-visibility" title="Permanent link">&para;</a></h4>
+<p>Transit Gateway Flow Logs capture traffic at the Transit Gateway level — every packet crossing between VPCs, between accounts, or between your AWS network and on-premises. This provides a single, centralized view of cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic without requiring per-<abbr title="Virtual Private Cloud">VPC</abbr> Flow Log configuration in every account.</p>
+<p>This is particularly valuable in multi-account environments where you may not have direct access to enable <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs in every workload account. Transit Gateway Flow Logs are configured in the networking account that owns the Transit Gateway, giving the networking team visibility into all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic patterns regardless of workload account configurations.</p>
+<h4 id="use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication">Use Transit Gateway Flow Logs to detect unauthorized cross-<abbr title="Virtual Private Cloud">VPC</abbr> communication<a class="headerlink" href="#use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication" title="Permanent link">&para;</a></h4>
+<p>Transit Gateway route tables and attachments define what <em>can</em> communicate. Transit Gateway Flow Logs show what <em>does</em> communicate. Compare the two to identify:</p>
+<ul>
+<li>Traffic between VPCs that should be isolated (e.g., production to development)</li>
+<li>Unexpected traffic volumes between specific <abbr title="Virtual Private Cloud">VPC</abbr> pairs (potential data exfiltration)</li>
+<li>Traffic patterns that indicate misconfigured route tables (traffic taking unexpected paths)</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Transit Gateway Flow Logs are the only native way to get a single-pane view of all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic in your organization without configuring Flow Logs in every individual <abbr title="Virtual Private Cloud">VPC</abbr>. For networking teams managing hundreds of accounts, this is the starting point for cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility.</em></p>
+<h3 id="choosing-delivery-destinations">Choosing delivery destinations<a class="headerlink" href="#choosing-delivery-destinations" title="Permanent link">&para;</a></h3>
+<h4 id="match-the-delivery-destination-to-the-use-case">Match the delivery destination to the use case<a class="headerlink" href="#match-the-delivery-destination-to-the-use-case" title="Permanent link">&para;</a></h4>
+<p>The choice between <abbr title="Simple Storage Service">S3</abbr>, CloudWatch Logs, and Kinesis Data Firehose is not about preference — it's about what you need to do with the data:</p>
+<table>
+<thead>
+<tr>
+<th>Use case</th>
+<th>Recommended destination</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Long-term retention and compliance</td>
+<td><abbr title="Simple Storage Service">S3</abbr></td>
+<td>Lowest storage cost, lifecycle policies for archival, Athena for ad-hoc queries</td>
+</tr>
+<tr>
+<td>Real-time alerting on traffic patterns</td>
+<td>CloudWatch Logs</td>
+<td>Metric filters and alarms trigger within minutes of log delivery</td>
+</tr>
+<tr>
+<td>Security incident investigation</td>
+<td><abbr title="Simple Storage Service">S3</abbr> + Athena</td>
+<td>SQL queries across months of data, partition pruning for fast results</td>
+</tr>
+<tr>
+<td>Streaming to SIEM or third-party tools</td>
+<td>Kinesis Data Firehose</td>
+<td>Real-time delivery to Splunk, Datadog, or custom consumers</td>
+</tr>
+<tr>
+<td>Cost-optimized daily reporting</td>
+<td><abbr title="Simple Storage Service">S3</abbr> + Athena scheduled queries</td>
+<td>Run queries on a schedule, store results in a reporting table</td>
+</tr>
+</tbody>
+</table>
+<p>Most organizations should use <abbr title="Simple Storage Service">S3</abbr> as the primary destination for all Flow Logs, with CloudWatch Logs as a secondary destination only for VPCs or accounts where real-time alerting is required.</p>
+<h4 id="centralize-flow-log-delivery-in-a-dedicated-log-archive-account">Centralize Flow Log delivery in a dedicated log archive account<a class="headerlink" href="#centralize-flow-log-delivery-in-a-dedicated-log-archive-account" title="Permanent link">&para;</a></h4>
+<p>In a multi-account environment, deliver all Flow Logs to a centralized <abbr title="Simple Storage Service">S3</abbr> bucket in your log archive account. This provides:</p>
+<ul>
+<li>Single location for security investigations across all accounts</li>
+<li>Consistent retention policies applied organization-wide</li>
+<li>Cross-account Athena queries without switching roles</li>
+<li>Simplified compliance auditing (one bucket to demonstrate log completeness)</li>
+</ul>
+<p>Configure cross-account Flow Log delivery using a bucket policy that allows the Flow Logs service (<code>delivery.logs.amazonaws.com</code>) to write from any account in your organization. Use the <code>aws:PrincipalOrgID</code> condition to restrict access to your organization only.</p>
+<h3 id="network-firewall-log-analysis">Network Firewall log analysis<a class="headerlink" href="#network-firewall-log-analysis" title="Permanent link">&para;</a></h3>
+<h4 id="enable-both-alert-and-flow-logs-on-network-firewall">Enable both alert and flow logs on Network Firewall<a class="headerlink" href="#enable-both-alert-and-flow-logs-on-network-firewall" title="Permanent link">&para;</a></h4>
+<p>AWS Network Firewall produces two log types: alert logs (traffic that matched a stateful rule with an alert or drop action) and flow logs (all traffic evaluated by the stateful engine). Enable both.</p>
+<p>Alert logs tell you what was blocked or flagged. Flow logs tell you what was allowed through. Together, they provide complete visibility into the firewall's decisions. Without flow logs, you only see problems — you can't confirm that legitimate traffic is flowing correctly or identify traffic that should be inspected but isn't matching any rule.</p>
+<h4 id="correlate-network-firewall-logs-with-vpc-flow-logs-for-full-context">Correlate Network Firewall logs with <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs for full context<a class="headerlink" href="#correlate-network-firewall-logs-with-vpc-flow-logs-for-full-context" title="Permanent link">&para;</a></h4>
+<p>Network Firewall logs include the 5-tuple (source IP, destination IP, source port, destination port, protocol) but lack <abbr title="Virtual Private Cloud">VPC</abbr>-level context like subnet ID, instance ID, or ENI ID. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs provide that context. Correlating the two gives you the complete picture: which specific resource initiated the traffic, what path it took, and what the firewall decided to do with it.</p>
+<p>Use the timestamp and 5-tuple as the correlation key. Athena queries that join Flow Log and Network Firewall log tables on these fields are the most effective approach for incident investigation.</p>
+<h3 id="ipv6-traffic-visibility"><abbr title="Internet Protocol version 6">IPv6</abbr> traffic visibility<a class="headerlink" href="#ipv6-traffic-visibility" title="Permanent link">&para;</a></h3>
+<h4 id="use-the-same-flow-logs-for-ipv4-and-ipv6-no-separate-configuration-needed">Use the same Flow Logs for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> — no separate configuration needed<a class="headerlink" href="#use-the-same-flow-logs-for-ipv4-and-ipv6-no-separate-configuration-needed" title="Permanent link">&para;</a></h4>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs capture both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic in the same log stream. You do not need separate Flow Log configurations for <abbr title="Internet Protocol version 6">IPv6</abbr>. The <code>type</code> field in the custom log format distinguishes between <abbr title="Internet Protocol version 4">IPv4</abbr> (<code>3</code>) and <abbr title="Internet Protocol version 6">IPv6</abbr> (<code>6</code>) flows.</p>
+<p>Include the <code>type</code> field in your custom log format to enable filtering. Common use cases:</p>
+<ul>
+<li>Track <abbr title="Internet Protocol version 6">IPv6</abbr> adoption rate across your VPCs (ratio of type=6 to type=3 flows)</li>
+<li>Identify workloads that have migrated to <abbr title="Internet Protocol version 6">IPv6</abbr> and validate they're no longer using <abbr title="Internet Protocol version 4">IPv4</abbr></li>
+<li>Detect unexpected <abbr title="Internet Protocol version 6">IPv6</abbr> traffic in VPCs where <abbr title="Internet Protocol version 6">IPv6</abbr> is not yet intentionally deployed</li>
+</ul>
+<h4 id="include-ipv6-specific-fields-in-your-custom-log-format">Include <abbr title="Internet Protocol version 6">IPv6</abbr>-specific fields in your custom log format<a class="headerlink" href="#include-ipv6-specific-fields-in-your-custom-log-format" title="Permanent link">&para;</a></h4>
+<p>When using dual-stack VPCs, include <code>pkt-srcaddr</code> and <code>pkt-dstaddr</code> in your custom format. These fields show the original packet addresses before any translation, which is essential when traffic traverses NAT64 or other translation mechanisms. The standard <code>srcaddr</code>/<code>dstaddr</code> fields show the post-translation addresses at the ENI, while <code>pkt-srcaddr</code>/<code>pkt-dstaddr</code> show what was on the wire.</p>
+<h3 id="cost-optimization">Cost optimization<a class="headerlink" href="#cost-optimization" title="Permanent link">&para;</a></h3>
+<h4 id="understand-the-cost-model-before-scaling-flow-log-collection">Understand the cost model before scaling Flow Log collection<a class="headerlink" href="#understand-the-cost-model-before-scaling-flow-log-collection" title="Permanent link">&para;</a></h4>
+<p>Flow Log costs have three components: ingestion, storage, and analysis. At scale, these add up:</p>
+<ul>
+<li><strong>Ingestion</strong>: The per-GB charge for delivering logs to the destination. <abbr title="Simple Storage Service">S3</abbr> is cheapest ($0.25/GB for first 10 TB), CloudWatch Logs is 2x ($0.50/GB).</li>
+<li><strong>Storage</strong>: <abbr title="Simple Storage Service">S3</abbr> Standard is $0.023/GB/month. Use <abbr title="Simple Storage Service">S3</abbr> Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.</li>
+<li><strong>Analysis</strong>: Athena charges $5 per TB scanned. Partitioning and columnar formats (Parquet via Firehose) reduce scan volume dramatically.</li>
+</ul>
+<p>For a 100-<abbr title="Virtual Private Cloud">VPC</abbr> environment generating 1 TB/month of Flow Logs, the baseline cost is approximately $250/month for <abbr title="Simple Storage Service">S3</abbr> ingestion + $23/month for storage. CloudWatch Logs for the same volume would be $500/month for ingestion + $30/month for storage. Over a year, the <abbr title="Simple Storage Service">S3</abbr> approach saves roughly $3,000 — and the gap widens as you retain more history.</p>
+<h4 id="use-aggregation-intervals-to-reduce-volume-without-losing-visibility">Use aggregation intervals to reduce volume without losing visibility<a class="headerlink" href="#use-aggregation-intervals-to-reduce-volume-without-losing-visibility" title="Permanent link">&para;</a></h4>
+<p>Flow Logs support 1-minute and 10-minute aggregation intervals. The 10-minute interval produces significantly less data (flows are aggregated over longer windows), reducing both ingestion and storage costs. Use 10-minute intervals for general visibility and compliance. Use 1-minute intervals only for VPCs where you need near-real-time detection of traffic anomalies.</p>
+<h4 id="convert-flow-logs-to-parquet-format-for-cheaper-athena-queries">Convert Flow Logs to Parquet format for cheaper Athena queries<a class="headerlink" href="#convert-flow-logs-to-parquet-format-for-cheaper-athena-queries" title="Permanent link">&para;</a></h4>
+<p>Athena charges per TB scanned. Parquet format is columnar and compressed, reducing scan volume by 80-90% compared to raw text logs. Use Kinesis Data Firehose with format conversion to deliver Flow Logs directly in Parquet format to <abbr title="Simple Storage Service">S3</abbr>. This increases ingestion cost slightly (Firehose processing charges) but dramatically reduces ongoing Athena query costs — which matters more for data you'll query repeatedly over months.</p>
+<p><strong><em>Key insight:</em></strong> <em>The cheapest Flow Log is one you never query. Deliver everything to <abbr title="Simple Storage Service">S3</abbr> for compliance and incident response, but invest in Parquet conversion and partitioning for the data you query regularly. The upfront effort in data engineering pays for itself within weeks at scale.</em></p>
+<h2 id="when-to-use-each-data-source">When to use each data source<a class="headerlink" href="#when-to-use-each-data-source" title="Permanent link">&para;</a></h2>
+<p>Each internal traffic monitoring tool answers different questions. Using the wrong tool for the question wastes time and money.</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Best data source</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"What IPs is this instance talking to?"</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs (ENI-level)</td>
+<td>Provides per-interface traffic metadata with source/destination</td>
+</tr>
+<tr>
+<td>"Is traffic flowing between <abbr title="Virtual Private Cloud">VPC</abbr> A and <abbr title="Virtual Private Cloud">VPC</abbr> B?"</td>
+<td>Transit Gateway Flow Logs</td>
+<td>Centralized cross-<abbr title="Virtual Private Cloud">VPC</abbr> view without per-<abbr title="Virtual Private Cloud">VPC</abbr> configuration</td>
+</tr>
+<tr>
+<td>"Why is Service A getting 500 errors from Service B?"</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Access Logs</td>
+<td>Per-request detail with response codes, latency, and identity</td>
+</tr>
+<tr>
+<td>"What did the firewall block in the last hour?"</td>
+<td>Network Firewall Alert Logs</td>
+<td>Records every drop/alert action with rule attribution</td>
+</tr>
+<tr>
+<td>"How much cross-<abbr title="Availability Zone">AZ</abbr> traffic is this <abbr title="Virtual Private Cloud">VPC</abbr> generating?"</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs + <code>az-id</code> field</td>
+<td>The <code>az-id</code> field identifies which <abbr title="Availability Zone">AZ</abbr> each flow originates from</td>
+</tr>
+<tr>
+<td>"Which accounts are generating the most inter-<abbr title="Virtual Private Cloud">VPC</abbr> traffic?"</td>
+<td>Transit Gateway Flow Logs</td>
+<td>Account-level attribution for all Transit Gateway traffic</td>
+</tr>
+<tr>
+<td>"Was this request authorized by the auth policy?"</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Access Logs</td>
+<td>Logs include auth policy decision (allow/deny) and principal</td>
+</tr>
+<tr>
+<td>"What's the total network throughput for this instance?"</td>
+<td>CloudWatch Metrics (NetworkIn/Out)</td>
+<td>Pre-aggregated metrics without log parsing</td>
+</tr>
+<tr>
+<td>"Is <abbr title="Internet Protocol version 6">IPv6</abbr> traffic flowing in this <abbr title="Virtual Private Cloud">VPC</abbr>?"</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs + <code>type</code> field</td>
+<td>Filter on type=6 to isolate <abbr title="Internet Protocol version 6">IPv6</abbr> flows</td>
+</tr>
+</tbody>
+</table>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs and <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are complementary, not alternatives. Lattice logs tell you <em>what happened at the application layer</em> (which service called which, with what identity, and what the response was). Flow Logs tell you <em>what happened at the network layer</em> (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, use both to get full request-to-packet visibility.</p>
+<h2 id="combining-internal-traffic-monitoring-with-other-services">Combining internal traffic monitoring with other services<a class="headerlink" href="#combining-internal-traffic-monitoring-with-other-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>Internal traffic monitoring provides</th>
+<th>Other service provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flow Logs + Amazon GuardDuty</strong></td>
+<td>Raw traffic metadata for custom analysis</td>
+<td>Automated threat detection using Flow Logs as a data source (<abbr title="Domain Name System">DNS</abbr>-based, port probe, crypto mining)</td>
+</tr>
+<tr>
+<td><strong>Flow Logs + AWS Security Hub</strong></td>
+<td>Evidence for security findings</td>
+<td>Aggregated security posture with findings from multiple sources</td>
+</tr>
+<tr>
+<td><strong>Flow Logs + Amazon Detective</strong></td>
+<td>Historical traffic data for investigation</td>
+<td>Graph-based visualization of entity relationships during incident response</td>
+</tr>
+<tr>
+<td><strong>Flow Logs + AWS Cost Explorer</strong></td>
+<td>Traffic volume data for cost attribution</td>
+<td>Cost breakdowns by service, showing data transfer charges</td>
+</tr>
+<tr>
+<td><strong>Transit Gateway Flow Logs + AWS Network Manager</strong></td>
+<td>Per-flow traffic detail</td>
+<td>Topology visualization and route analysis for Transit Gateway and Cloud WAN</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Logs + AWS X-Ray</strong></td>
+<td>Network-level request logging with auth decisions</td>
+<td>Distributed tracing across services for latency analysis</td>
+</tr>
+<tr>
+<td><strong>Network Firewall Logs + AWS Firewall Manager</strong></td>
+<td>Per-firewall inspection decisions</td>
+<td>Centralized firewall policy management across accounts</td>
+</tr>
+<tr>
+<td><strong>Flow Logs + Amazon CloudWatch</strong></td>
+<td>Detailed per-flow records</td>
+<td>Aggregated metrics, dashboards, and alarms for network health</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>Internal traffic monitoring data is most valuable when it feeds other services. GuardDuty consumes Flow Logs automatically. Detective uses them for investigation graphs. Cost Explorer correlates with data transfer charges. Enable the data sources first, then layer analysis services on top — the data has compounding value across your security and operations tooling.</em></p>
+<h2 id="multi-account-deployment-patterns">Multi-account deployment patterns<a class="headerlink" href="#multi-account-deployment-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="centralized-log-aggregation">Centralized log aggregation<a class="headerlink" href="#centralized-log-aggregation" title="Permanent link">&para;</a></h3>
+<p>In an AWS Organizations environment, deploy a centralized logging architecture:</p>
+<ol>
+<li><strong>Log archive account</strong> owns the <abbr title="Simple Storage Service">S3</abbr> bucket where all Flow Logs are delivered</li>
+<li><strong>Networking account</strong> owns Transit Gateway Flow Logs and Network Firewall logs</li>
+<li><strong>Workload accounts</strong> deliver <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs cross-account to the centralized bucket</li>
+<li><strong>Security account</strong> runs Athena queries and CloudWatch dashboards against the centralized data</li>
+</ol>
+<p>Configure the <abbr title="Simple Storage Service">S3</abbr> bucket policy to accept Flow Log delivery from any account in your organization using the <code>aws:PrincipalOrgID</code> condition. This scales automatically as new accounts are added — no bucket policy updates required per account.</p>
+<h3 id="cross-account-flow-log-delivery">Cross-account Flow Log delivery<a class="headerlink" href="#cross-account-flow-log-delivery" title="Permanent link">&para;</a></h3>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs support cross-account delivery to <abbr title="Simple Storage Service">S3</abbr> natively. The Flow Log in the source account specifies the destination <abbr title="Simple Storage Service">S3</abbr> bucket <abbr title="Amazon Resource Name">ARN</abbr> in the log archive account. The bucket policy grants <code>delivery.logs.amazonaws.com</code> permission to write, conditioned on the organization ID. No additional <abbr title="Identity and Access Management">IAM</abbr> roles or cross-account trust relationships are needed beyond the bucket policy.</p>
+<p>For CloudWatch Logs delivery, cross-account requires a CloudWatch Logs destination in the receiving account with a resource policy allowing the source accounts. This is more complex to manage and is generally not recommended for large-scale centralized logging — use <abbr title="Simple Storage Service">S3</abbr> instead.</p>
+<h3 id="transit-gateway-flow-logs-for-org-wide-visibility">Transit Gateway Flow Logs for org-wide visibility<a class="headerlink" href="#transit-gateway-flow-logs-for-org-wide-visibility" title="Permanent link">&para;</a></h3>
+<p>Transit Gateway Flow Logs are configured in the account that owns the Transit Gateway (typically the networking account). Since all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic in a hub-and-spoke architecture traverses the Transit Gateway, these logs provide organization-wide cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility from a single configuration point. This is significantly simpler than ensuring every workload account has <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs enabled and properly delivered.</p>
+<p>However, Transit Gateway Flow Logs only capture traffic that <em>crosses</em> the Transit Gateway. Traffic within a single <abbr title="Virtual Private Cloud">VPC</abbr> (subnet-to-subnet, ENI-to-ENI) is not visible. You still need <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs for intra-<abbr title="Virtual Private Cloud">VPC</abbr> visibility.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs documentation</strong></p>
+<hr />
+<p>Complete guide to Flow Log configuration, custom log format fields, delivery destinations, and <abbr title="Identity and Access Management">IAM</abbr> permissions.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Transit Gateway Flow Logs</strong></p>
+<hr />
+<p>Configuration and field reference for Transit Gateway Flow Logs, including cross-account delivery.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.68 12.32a4.49 4.49 0 0 0-6.36.01 4.49 4.49 0 0 0 0 6.36 4.51 4.51 0 0 0 5.57.63L21 22.39 22.39 21l-3.09-3.11c1.13-1.77.87-4.09-.62-5.57m-1.41 4.95c-.98.98-2.56.97-3.54 0-.97-.98-.97-2.56.01-3.54.97-.97 2.55-.97 3.53 0 .97.98.97 2.56 0 3.54M10.9 20.1a6.5 6.5 0 0 1-1.48-2.32C6.27 17.25 4 15.76 4 14v3c0 2.21 3.58 4 8 4-.4-.26-.77-.56-1.1-.9M4 9v3c0 1.68 2.07 3.12 5 3.7v-.2c0-.93.2-1.85.58-2.69C6.34 12.3 4 10.79 4 9m8-6C7.58 3 4 4.79 4 7c0 2 3 3.68 6.85 4h.05c1.2-1.26 2.86-2 4.6-2 .91 0 1.81.19 2.64.56A3.22 3.22 0 0 0 20 7c0-2.21-3.58-4-8-4"/></svg></span> <strong>Querying Flow Logs with Athena</strong></p>
+<hr />
+<p>Pre-built Athena table definitions, partition projection setup, and example queries for Flow Log analysis.</p>
+<p><a href="https://docs.aws.amazon.com/athena/latest/ug/vpc-flow-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Athena integration</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21 9-4-4v3h-7v2h7v3M7 11l-4 4 4 4v-3h7v-2H7z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs</strong></p>
+<hr />
+<p>Access log configuration, field reference, and delivery options for <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service networks.</p>
+<p><a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/monitoring-access-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>Network Firewall logging</strong></p>
+<hr />
+<p>Alert and flow log configuration, log types, and integration with <abbr title="Simple Storage Service">S3</abbr> and CloudWatch Logs.</p>
+<p><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-logging.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs pricing</strong></p>
+<hr />
+<p>Detailed pricing for Flow Log ingestion by destination (<abbr title="Simple Storage Service">S3</abbr>, CloudWatch Logs, Kinesis Data Firehose) with volume tiers.</p>
+<p><a href="https://aws.amazon.com/cloudwatch/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
+</li>
+</ul>
+</div>
+<h2 id="related-observability-pages">Related Observability Pages<a class="headerlink" href="#related-observability-pages" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../external-traffic/">External Traffic Monitoring</a></strong> — Covers visibility into traffic between your AWS resources and the internet, including <abbr title="Network Address Translation">NAT</abbr> Gateway logs, <abbr title="Application Load Balancer">ALB</abbr> access logs, and CloudFront logs.</li>
+<li><strong><a href="../service-monitoring/">AWS Services Monitoring</a></strong> — Covers health and performance monitoring of the networking services themselves (Transit Gateway metrics, <abbr title="Network Address Translation">NAT</abbr> Gateway CloudWatch metrics, <abbr title="Virtual Private Cloud">VPC</abbr> endpoint metrics).</li>
+<li><strong><a href="../notifications/">Notifications</a></strong> — Covers alerting and notification patterns built on top of the monitoring data described here.</li>
+</ul>
+<p><strong>Relationship to Foundation:</strong></p>
+<ul>
+<li><strong><a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are configured at the <abbr title="Virtual Private Cloud">VPC</abbr> level. <abbr title="Virtual Private Cloud">VPC</abbr> design (<abbr title="Classless Inter-Domain Routing">CIDR</abbr>, subnets, route tables) determines what traffic patterns are visible and how to interpret them.</li>
+<li><strong><a href="../../foundation/subnets/">Subnets</a></strong>: Subnet IDs in Flow Logs identify which tier (public, private, data) traffic originates from — essential for security analysis.</li>
+</ul>
+<p><strong>Relationship to Connectivity:</strong></p>
+<ul>
+<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Transit Gateway Flow Logs provide visibility into the traffic that Transit Gateway and Cloud WAN route between VPCs. The <code>traffic-path</code> field in <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs identifies which connectivity service a flow used.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../service-monitoring/" class="md-footer__link md-footer__link--prev" aria-label="Previous: AWS Services">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                AWS Services
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../external-traffic/" class="md-footer__link md-footer__link--next" aria-label="Next: External Traffic">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                External Traffic
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

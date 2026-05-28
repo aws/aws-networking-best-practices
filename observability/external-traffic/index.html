@@ -1,0 +1,3197 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/observability/external-traffic/">
+      
+      
+        <link rel="prev" href="../internal-traffic/">
+      
+      
+        <link rel="next" href="../../community/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>External Traffic - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="External Traffic - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/observability/external-traffic.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/observability/external-traffic/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="External Traffic - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/observability/external-traffic.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#external-traffic-monitoring" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              External Traffic
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingress-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ingress observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#always-enable-alb-access-logs-they-are-your-primary-ingress-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Always enable ALB access logs — they are your primary ingress data source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-nlb-access-logs-for-tls-and-connection-level-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable NLB access logs for TLS and connection-level visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cloudfront-real-time-logs-for-live-operational-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use CloudFront real-time logs for live operational visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlate-cloudfront-logs-with-alb-logs-for-full-path-latency-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlate CloudFront logs with ALB logs for full-path latency analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-ipv6-client-addresses-for-complete-client-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log IPv6 client addresses for complete client visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-waf-logging-for-every-web-acl-not-just-during-incidents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable WAF logging for every web ACL — not just during incidents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detect-ddos-patterns-before-shield-advanced-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detect DDoS patterns before Shield Advanced triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-route-53-query-logs-to-detect-reconnaissance-and-validate-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Route 53 query logs to detect reconnaissance and validate failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#egress-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Egress observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Egress observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitor-nat-gateway-metrics-for-egress-cost-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor NAT Gateway metrics for egress cost visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-vpc-flow-logs-to-identify-unexpected-egress-destinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use VPC Flow Logs to identify unexpected egress destinations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#track-global-accelerator-flow-logs-for-l4-ingress-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Track Global Accelerator flow logs for L4 ingress patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-account-logging-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account logging architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-account logging architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#centralize-all-external-traffic-logs-in-a-dedicated-logging-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralize all external traffic logs in a dedicated logging account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partition-logs-for-efficient-querying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partition logs for efficient querying
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-cost-profile-of-each-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the cost profile of each data source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-batch-analysis-as-the-default-real-time-only-where-justified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use batch analysis as the default, real-time only where justified
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-each-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use each data source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-external-traffic-monitoring-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining external traffic monitoring with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-experience-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client experience monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client experience monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latency-percentiles-from-alb-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency percentiles from ALB logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-hit-ratios-from-cloudfront-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache hit ratios from CloudFront logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-client-adoption-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 client adoption tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingress-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ingress observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#always-enable-alb-access-logs-they-are-your-primary-ingress-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Always enable ALB access logs — they are your primary ingress data source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-nlb-access-logs-for-tls-and-connection-level-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable NLB access logs for TLS and connection-level visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cloudfront-real-time-logs-for-live-operational-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use CloudFront real-time logs for live operational visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correlate-cloudfront-logs-with-alb-logs-for-full-path-latency-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlate CloudFront logs with ALB logs for full-path latency analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#log-ipv6-client-addresses-for-complete-client-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log IPv6 client addresses for complete client visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-waf-logging-for-every-web-acl-not-just-during-incidents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable WAF logging for every web ACL — not just during incidents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detect-ddos-patterns-before-shield-advanced-triggers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detect DDoS patterns before Shield Advanced triggers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-route-53-query-logs-to-detect-reconnaissance-and-validate-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Route 53 query logs to detect reconnaissance and validate failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#egress-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Egress observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Egress observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#monitor-nat-gateway-metrics-for-egress-cost-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor NAT Gateway metrics for egress cost visibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-vpc-flow-logs-to-identify-unexpected-egress-destinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use VPC Flow Logs to identify unexpected egress destinations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#track-global-accelerator-flow-logs-for-l4-ingress-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Track Global Accelerator flow logs for L4 ingress patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-account-logging-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account logging architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-account logging architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#centralize-all-external-traffic-logs-in-a-dedicated-logging-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralize all external traffic logs in a dedicated logging account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partition-logs-for-efficient-querying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partition logs for efficient querying
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cost management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understand-the-cost-profile-of-each-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the cost profile of each data source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-batch-analysis-as-the-default-real-time-only-where-justified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use batch analysis as the default, real-time only where justified
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-each-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use each data source
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-external-traffic-monitoring-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining external traffic monitoring with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-experience-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client experience monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client experience monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#latency-percentiles-from-alb-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency percentiles from ALB logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cache-hit-ratios-from-cloudfront-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache hit ratios from CloudFront logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-client-adoption-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 client adoption tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Observability
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/observability/external-traffic.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/observability/external-traffic.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="external-traffic-monitoring">External Traffic Monitoring<a class="headerlink" href="#external-traffic-monitoring" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../connectivity/internet/">Internet Connectivity</a>, <a href="../../application-networking/load-balancing/">Load Balancing</a>, and <a href="../../security/outbound/">Outbound Controls</a>. Review those topics first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>External traffic monitoring covers visibility into every flow that crosses the boundary between your AWS environment and the public internet — both ingress from clients reaching your applications and egress from your workloads reaching external services. This is the observability layer that answers questions no internal monitoring can: how are real clients experiencing your application, what is the actual latency at the edge, which external destinations are your workloads calling, and where is your egress spend going?</p>
+<p>The challenge is not a lack of data sources — AWS provides logging at every layer from the <abbr title="Content Delivery Network">CDN</abbr> edge to the <abbr title="Network Address Translation">NAT</abbr> Gateway. The challenge is knowing which data source answers which question, when real-time analysis justifies its cost over batch processing, and how to correlate signals across layers to build a complete picture of a single external flow. This page is organized by observability layer, from the edge inward, and covers the architectural decisions that determine which combination of logs and metrics you need.</p>
+<p>The organizing principle is <strong>layered external observability</strong>: each layer captures what the layers above and below cannot see, and the combination gives you full-path visibility without redundant collection.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph External["External Traffic Observability Layers"]
+        direction TB
+        Edge["CloudFront access logs / real-time logs&lt;br/&gt;+ Route 53 query logs&lt;br/&gt;(edge-level: client IP, latency, cache, DNS patterns)"]
+        WAF["AWS WAF logs&lt;br/&gt;(security evaluation: rule matches, allow/block/count)"]
+        LB["ALB access logs / NLB access logs&lt;br/&gt;(per-request/connection: target latency, response codes, TLS details)"]
+        VPC["NAT Gateway CloudWatch metrics&lt;br/&gt;+ VPC Flow Logs&lt;br/&gt;(egress volume, connection counts, packet drops)"]
+    end
+
+    Client["Internet clients"] --&gt; Edge
+    Edge --&gt; WAF
+    WAF --&gt; LB
+    LB --&gt; VPC
+    VPC --&gt; Destination["External destinations"]
+
+    style External fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Edge fill:#2563eb,stroke:#1e40af,color:#fff
+    style WAF fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style LB fill:#2563eb,stroke:#1e40af,color:#fff
+    style VPC fill:#059669,stroke:#047857,color:#fff
+    style Client fill:#ff9900,stroke:#cc7a00,color:#fff
+    style Destination fill:#ff9900,stroke:#cc7a00,color:#fff</code></pre>
+<p>Each layer captures distinct information: CloudFront logs show what the client experienced at the edge (cache hit or miss, edge latency, protocol version). <abbr title="Web Application Firewall">WAF</abbr> logs show which requests were evaluated and what security decisions were made. <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr> logs show what happened between the load balancer and your targets (target response time, backend errors). <abbr title="Network Address Translation">NAT</abbr> Gateway metrics and <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs show what your workloads sent outbound and how much it cost. No single layer gives you the full picture — the combination does.</p>
+<h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 20q-2.28 0-3.89-1.57Q1 16.85 1 14.58q0-1.95 1.17-3.48 1.18-1.53 3.08-1.95.58-2.02 2.14-3.4Q8.95 4.38 11 4.08v8.07L9.4 10.6 8 12l4 4 4-4-1.4-1.4-1.6 1.55V4.08q2.58.35 4.29 2.31T19 11q1.73.2 2.86 1.5 1.14 1.28 1.14 3 0 1.88-1.31 3.19T18.5 20Z"/></svg></span> <strong>CloudFront access logs and real-time logs</strong></p>
+<hr />
+<p>Edge-level visibility into every client request: latency, cache status (hit/miss/error), client IP (<abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>), HTTP protocol version, <abbr title="Transport Layer Security">TLS</abbr> version, and geographic distribution. Real-time logs deliver to Kinesis Data Streams within seconds for live dashboards.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c-1.27 0-2.4.8-2.82 2H3v2h1.95L2 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3L6.05 7h3.12c.33.85.98 1.5 1.83 1.83V20H2v2h20v-2h-9V8.82c.85-.32 1.5-.97 1.82-1.82h3.13L15 14c-.47 2 1 3 3.5 3s4.06-1 3.5-3l-2.95-7H21V5h-6.17C14.4 3.8 13.27 3 12 3m0 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m-6.5 5.25L7 14H4zm13 0L20 14h-3z"/></svg></span> <strong><abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> access logs</strong></p>
+<hr />
+<p>Per-request (<abbr title="Application Load Balancer">ALB</abbr>) or per-connection (<abbr title="Network Load Balancer">NLB</abbr>) logs with client IP, request details, response code, target processing time, and <abbr title="Transport Layer Security">TLS</abbr> handshake metadata. The primary ingress observability tool for understanding what happens between the load balancer and your targets.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5M11 7h2v6h-2m0 2h2v2h-2"/></svg></span> <strong>AWS <abbr title="Web Application Firewall">WAF</abbr> logs</strong></p>
+<hr />
+<p>Per-request evaluation results showing which rules matched, the action taken (allow, block, count, CAPTCHA), and the request attributes that triggered the match. Essential for security investigation and tuning <abbr title="Web Application Firewall">WAF</abbr> rules without blind spots.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-5 2.5L7.5 10H11v4h2v-4h3.5z"/></svg></span> <strong><abbr title="Network Address Translation">NAT</abbr> Gateway CloudWatch metrics</strong></p>
+<hr />
+<p>Bytes processed, packets dropped, active connections, connection attempts, and error counts. The primary tool for egress cost visibility and detecting workloads that are generating unexpected outbound traffic.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.9 17.39c-.26-.8-1.01-1.39-1.9-1.39h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41a7.984 7.984 0 0 1 2.9 12.8M11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1a2 2 0 0 0 2 2m1-16A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg></span> <strong>AWS Global Accelerator flow logs</strong></p>
+<hr />
+<p>Client-to-accelerator traffic visibility for L4 workloads using anycast entry points. Captures source/destination IPs, ports, protocol, bytes, and packets for every flow through the accelerator.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M7 19a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/></svg></span> <strong>Route 53 query logs</strong></p>
+<hr />
+<p><abbr title="Domain Name System">DNS</abbr> query patterns for your public hosted zones: which domains are queried, from which resolver IPs, and at what volume. Useful for detecting reconnaissance, measuring <abbr title="Domain Name System">DNS</abbr>-level traffic distribution, and validating failover behavior.</p>
+</li>
+</ul>
+</div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="ingress-observability">Ingress observability<a class="headerlink" href="#ingress-observability" title="Permanent link">&para;</a></h3>
+<h4 id="always-enable-alb-access-logs-they-are-your-primary-ingress-data-source">Always enable <abbr title="Application Load Balancer">ALB</abbr> access logs — they are your primary ingress data source<a class="headerlink" href="#always-enable-alb-access-logs-they-are-your-primary-ingress-data-source" title="Permanent link">&para;</a></h4>
+<p><abbr title="Application Load Balancer">ALB</abbr> access logs capture every request that reaches the load balancer: client IP (<abbr title="Internet Protocol version 4">IPv4</abbr> or <abbr title="Internet Protocol version 6">IPv6</abbr>), request URL, response code, request processing time, target processing time, and the target that served the request. There is no additional charge from <abbr title="Application Load Balancer">ALB</abbr> for access logs — you pay only for <abbr title="Simple Storage Service">S3</abbr> storage. The cost is negligible relative to the operational value.</p>
+<p><abbr title="Application Load Balancer">ALB</abbr> access logs answer the questions that CloudWatch metrics cannot: which specific clients are seeing errors, which targets are slow, what the latency distribution looks like at the request level (not just averages), and whether a 5xx spike is coming from one target or all of them. Without access logs enabled, you're debugging production incidents with aggregated metrics alone.</p>
+<p>Enable access logs on every <abbr title="Application Load Balancer">ALB</abbr> at creation time. Deliver them to a centralized logging account's <abbr title="Simple Storage Service">S3</abbr> bucket using cross-account delivery (<abbr title="Application Load Balancer">ALB</abbr> writes directly to the bucket; configure the bucket policy to allow the <abbr title="Elastic Load Balancer">ELB</abbr> service principal for your Region). Partition logs by account, Region, and date for efficient querying with Amazon Athena.</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Application Load Balancer">ALB</abbr> access logs are free to generate, cost pennies to store, and are irreplaceable during incident investigation. There is no valid reason to leave them disabled on a production <abbr title="Application Load Balancer">ALB</abbr>.</em></p>
+<h4 id="enable-nlb-access-logs-for-tls-and-connection-level-visibility">Enable <abbr title="Network Load Balancer">NLB</abbr> access logs for <abbr title="Transport Layer Security">TLS</abbr> and connection-level visibility<a class="headerlink" href="#enable-nlb-access-logs-for-tls-and-connection-level-visibility" title="Permanent link">&para;</a></h4>
+<p><abbr title="Network Load Balancer">NLB</abbr> access logs capture connection-level details that <abbr title="Application Load Balancer">ALB</abbr> logs do not: <abbr title="Transport Layer Security">TLS</abbr> handshake latency, <abbr title="Transport Layer Security">TLS</abbr> cipher negotiated, client certificate details (for mutual <abbr title="Transport Layer Security">TLS</abbr>), connection duration, and bytes transferred per connection. For L4 workloads where you need to understand connection patterns rather than individual requests, <abbr title="Network Load Balancer">NLB</abbr> logs are the primary data source.</p>
+<p><abbr title="Network Load Balancer">NLB</abbr> access logs are disabled by default and must be explicitly enabled. Like <abbr title="Application Load Balancer">ALB</abbr> logs, they deliver to <abbr title="Simple Storage Service">S3</abbr> with no additional <abbr title="Network Load Balancer">NLB</abbr> charge. Enable them on every internet-facing <abbr title="Network Load Balancer">NLB</abbr>, particularly those terminating <abbr title="Transport Layer Security">TLS</abbr>, to maintain visibility into client connection behavior and <abbr title="Transport Layer Security">TLS</abbr> negotiation failures.</p>
+<h4 id="use-cloudfront-real-time-logs-for-live-operational-visibility">Use CloudFront real-time logs for live operational visibility<a class="headerlink" href="#use-cloudfront-real-time-logs-for-live-operational-visibility" title="Permanent link">&para;</a></h4>
+<p>CloudFront offers two logging modes: standard logs (delivered to <abbr title="Simple Storage Service">S3</abbr> in batches, typically within minutes) and real-time logs (delivered to Kinesis Data Streams within seconds). Standard logs are sufficient for post-incident analysis and trend reporting. Real-time logs are justified when you need live dashboards, sub-minute alerting on error rates, or immediate visibility into cache behavior changes during deployments.</p>
+<p>The cost difference is significant: standard logs are free (you pay only for <abbr title="Simple Storage Service">S3</abbr> storage), while real-time logs incur Kinesis Data Streams charges based on the number of records and shards. For a high-traffic distribution processing millions of requests per hour, real-time log costs can reach hundreds of dollars per month.</p>
+<table>
+<thead>
+<tr>
+<th>Log type</th>
+<th>Delivery latency</th>
+<th>Cost</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Standard logs</strong></td>
+<td>Minutes (batch delivery to <abbr title="Simple Storage Service">S3</abbr>)</td>
+<td>Free (<abbr title="Simple Storage Service">S3</abbr> storage only)</td>
+<td>Post-incident analysis, trend reporting, compliance archival</td>
+</tr>
+<tr>
+<td><strong>Real-time logs</strong></td>
+<td>Seconds (Kinesis Data Streams)</td>
+<td>Kinesis shard-hours + per-record charges</td>
+<td>Live dashboards, sub-minute alerting, deployment monitoring</td>
+</tr>
+</tbody>
+</table>
+<p>Choose real-time logs when the operational value of seconds-level visibility justifies the Kinesis cost — typically for high-traffic, revenue-critical distributions where a cache misconfiguration or origin failure must be detected in under a minute.</p>
+<h4 id="correlate-cloudfront-logs-with-alb-logs-for-full-path-latency-analysis">Correlate CloudFront logs with <abbr title="Application Load Balancer">ALB</abbr> logs for full-path latency analysis<a class="headerlink" href="#correlate-cloudfront-logs-with-alb-logs-for-full-path-latency-analysis" title="Permanent link">&para;</a></h4>
+<p>A single client request that traverses CloudFront → <abbr title="Application Load Balancer">ALB</abbr> → target generates log entries at both layers. CloudFront logs capture the total time the client waited (including edge processing, origin fetch, and network transit). <abbr title="Application Load Balancer">ALB</abbr> logs capture the time the target took to respond. The difference between CloudFront's total time and <abbr title="Application Load Balancer">ALB</abbr>'s target processing time is the network and edge overhead.</p>
+<p>Use the <code>x-amz-cf-id</code> request ID (present in both CloudFront logs and the <code>X-Amz-Cf-Id</code> header forwarded to the origin) to correlate entries across layers. This correlation reveals whether latency problems are at the edge (CloudFront processing, <abbr title="Transport Layer Security">TLS</abbr> negotiation), in transit (network path between edge and origin), or at the target (application processing time).</p>
+<h4 id="log-ipv6-client-addresses-for-complete-client-visibility">Log <abbr title="Internet Protocol version 6">IPv6</abbr> client addresses for complete client visibility<a class="headerlink" href="#log-ipv6-client-addresses-for-complete-client-visibility" title="Permanent link">&para;</a></h4>
+<p>Both <abbr title="Application Load Balancer">ALB</abbr> and CloudFront log the actual client <abbr title="Internet Protocol version 6">IPv6</abbr> address when clients connect over <abbr title="Internet Protocol version 6">IPv6</abbr>. This is not a translated or proxied address — it's the real client IP. For dual-stack deployments, your log analysis must handle both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> addresses in the client IP field.</p>
+<p><abbr title="Network Load Balancer">NLB</abbr> access logs similarly capture <abbr title="Internet Protocol version 6">IPv6</abbr> client addresses for dual-stack or <abbr title="Internet Protocol version 6">IPv6</abbr>-only listeners. Ensure your log parsing, IP-based analytics, and security investigation tools support <abbr title="Internet Protocol version 6">IPv6</abbr> address formats. Geographic IP databases and threat intelligence feeds must cover <abbr title="Internet Protocol version 6">IPv6</abbr> ranges to maintain the same analytical capability you have for <abbr title="Internet Protocol version 4">IPv4</abbr> clients.</p>
+<p><strong><em>Key insight:</em></strong> <em>As <abbr title="Internet Protocol version 6">IPv6</abbr> client adoption grows, any log analysis pipeline that only handles <abbr title="Internet Protocol version 4">IPv4</abbr> addresses creates a blind spot. Validate <abbr title="Internet Protocol version 6">IPv6</abbr> support in your SIEM, dashboards, and alerting rules.</em></p>
+<h3 id="security-observability">Security observability<a class="headerlink" href="#security-observability" title="Permanent link">&para;</a></h3>
+<h4 id="enable-waf-logging-for-every-web-acl-not-just-during-incidents">Enable <abbr title="Web Application Firewall">WAF</abbr> logging for every web <abbr title="Access Control List">ACL</abbr> — not just during incidents<a class="headerlink" href="#enable-waf-logging-for-every-web-acl-not-just-during-incidents" title="Permanent link">&para;</a></h4>
+<p>AWS <abbr title="Web Application Firewall">WAF</abbr> logs capture the full evaluation result for every request: which rules were evaluated, which matched, what action was taken, and the request attributes (headers, URI, query string) that triggered the match. This data is essential for three purposes: tuning rules to reduce false positives, investigating attack patterns after the fact, and validating that new rules behave as expected before switching from Count to Block.</p>
+<p><abbr title="Web Application Firewall">WAF</abbr> logs can be delivered to <abbr title="Simple Storage Service">S3</abbr>, CloudWatch Logs, or Kinesis Data Firehose. For most environments, deliver to <abbr title="Simple Storage Service">S3</abbr> in the centralized logging account for cost-effective long-term storage and Athena-based analysis. Use CloudWatch Logs only when you need real-time metric filters and alarms on specific rule matches (the per-GB ingestion cost is significantly higher than <abbr title="Simple Storage Service">S3</abbr>).</p>
+<h4 id="detect-ddos-patterns-before-shield-advanced-triggers">Detect <abbr title="Distributed Denial of Service">DDoS</abbr> patterns before Shield Advanced triggers<a class="headerlink" href="#detect-ddos-patterns-before-shield-advanced-triggers" title="Permanent link">&para;</a></h4>
+<p>CloudFront and <abbr title="Application Load Balancer">ALB</abbr> access logs contain the raw signal that precedes a <abbr title="Distributed Denial of Service">DDoS</abbr> event: sudden spikes in request rate from concentrated IP ranges, unusual geographic distribution shifts, or abnormal request patterns (identical User-Agent strings, repeated paths). By monitoring these patterns in near-real-time, you can detect application-layer attacks before they reach the threshold where Shield Advanced's automatic mitigation activates.</p>
+<p>Build CloudWatch alarms on <abbr title="Application Load Balancer">ALB</abbr> request count and 4xx/5xx rates with short evaluation periods (1-minute intervals). For CloudFront, use real-time logs with a Kinesis consumer that tracks request rate by client IP prefix and triggers alerts on anomalous concentration. These early-warning signals give your operations team time to tighten <abbr title="Web Application Firewall">WAF</abbr> rate limits or engage AWS Shield Response Team before the attack fully develops.</p>
+<h4 id="use-route-53-query-logs-to-detect-reconnaissance-and-validate-failover">Use Route 53 query logs to detect reconnaissance and validate failover<a class="headerlink" href="#use-route-53-query-logs-to-detect-reconnaissance-and-validate-failover" title="Permanent link">&para;</a></h4>
+<p>Route 53 query logs for public hosted zones capture every <abbr title="Domain Name System">DNS</abbr> query: the queried domain, query type, resolver IP, and response code. This data reveals reconnaissance patterns (systematic enumeration of subdomains), validates that <abbr title="Domain Name System">DNS</abbr> failover is working as expected during incidents, and provides baseline query volumes for anomaly detection.</p>
+<p>Query logs are delivered to CloudWatch Logs in the us-east-1 Region (regardless of where the hosted zone is queried from). For multi-account environments, configure query logging on all public hosted zones and forward the CloudWatch Logs to your centralized logging account using cross-account log subscriptions.</p>
+<h3 id="egress-observability">Egress observability<a class="headerlink" href="#egress-observability" title="Permanent link">&para;</a></h3>
+<h4 id="monitor-nat-gateway-metrics-for-egress-cost-visibility">Monitor <abbr title="Network Address Translation">NAT</abbr> Gateway metrics for egress cost visibility<a class="headerlink" href="#monitor-nat-gateway-metrics-for-egress-cost-visibility" title="Permanent link">&para;</a></h4>
+<p><abbr title="Network Address Translation">NAT</abbr> Gateway CloudWatch metrics are the primary tool for understanding and controlling egress costs. The key metrics:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>What it reveals</th>
+<th>Alert threshold guidance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BytesOutToDestination</code></td>
+<td>Total bytes sent to external destinations (your egress bill)</td>
+<td>Baseline + percentage deviation</td>
+</tr>
+<tr>
+<td><code>BytesOutToSource</code></td>
+<td>Total bytes returned to your workloads (response traffic)</td>
+<td>Unusual ratio to BytesOut suggests data download patterns</td>
+</tr>
+<tr>
+<td><code>ConnectionAttemptCount</code></td>
+<td>New connections initiated per period</td>
+<td>Spike indicates new workload behavior or compromise</td>
+</tr>
+<tr>
+<td><code>ActiveConnectionCount</code></td>
+<td>Concurrent active connections</td>
+<td>Approaching 55,000 per-<abbr title="Availability Zone">AZ</abbr> limit signals scaling need</td>
+</tr>
+<tr>
+<td><code>PacketsDropCount</code></td>
+<td>Packets dropped due to <abbr title="Network Address Translation">NAT</abbr> Gateway limits</td>
+<td>Any non-zero value requires investigation</td>
+</tr>
+<tr>
+<td><code>ErrorPortAllocation</code></td>
+<td>Port allocation failures (source port exhaustion)</td>
+<td>Any non-zero value — workload is exceeding connection limits</td>
+</tr>
+<tr>
+<td><code>IdleTimeoutCount</code></td>
+<td>Connections closed due to idle timeout</td>
+<td>High values suggest connection pooling issues</td>
+</tr>
+</tbody>
+</table>
+<p>Set CloudWatch alarms on <code>PacketsDropCount</code> and <code>ErrorPortAllocation</code> with a threshold of 1 — any occurrence means traffic is being silently dropped. Alarm on <code>BytesOutToDestination</code> with a percentage-over-baseline threshold to catch unexpected egress cost increases before the monthly bill arrives.</p>
+<h4 id="use-vpc-flow-logs-to-identify-unexpected-egress-destinations">Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs to identify unexpected egress destinations<a class="headerlink" href="#use-vpc-flow-logs-to-identify-unexpected-egress-destinations" title="Permanent link">&para;</a></h4>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs capture source and destination IPs for every flow, including egress traffic. When combined with <abbr title="Network Address Translation">NAT</abbr> Gateway metrics showing unexpected egress volume, Flow Logs answer the critical follow-up question: <em>where is that traffic going?</em></p>
+<p>Configure Flow Logs on the <abbr title="Network Address Translation">NAT</abbr> Gateway's ENI or on the subnets that route through it. Use the <code>dstaddr</code> field to identify external destination IPs, and correlate with <abbr title="Domain Name System">DNS</abbr> query logs to map IPs back to domain names. This combination reveals which workloads are calling which external services and how much data they're transferring — essential for both cost attribution and security investigation.</p>
+<h4 id="track-global-accelerator-flow-logs-for-l4-ingress-patterns">Track Global Accelerator flow logs for L4 ingress patterns<a class="headerlink" href="#track-global-accelerator-flow-logs-for-l4-ingress-patterns" title="Permanent link">&para;</a></h4>
+<p>AWS Global Accelerator flow logs provide the same visibility for L4 traffic that <abbr title="Application Load Balancer">ALB</abbr> access logs provide for L7: source and destination IPs, ports, protocol, bytes, and packets for every flow through the accelerator. Enable flow logs on every Global Accelerator accelerator that serves production traffic.</p>
+<p>Flow logs are delivered to <abbr title="Simple Storage Service">S3</abbr> and follow the same format as <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs, making them compatible with existing log analysis pipelines. Use them to understand client geographic distribution, detect connection anomalies, and measure traffic volume per endpoint group.</p>
+<h3 id="multi-account-logging-architecture">Multi-account logging architecture<a class="headerlink" href="#multi-account-logging-architecture" title="Permanent link">&para;</a></h3>
+<h4 id="centralize-all-external-traffic-logs-in-a-dedicated-logging-account">Centralize all external traffic logs in a dedicated logging account<a class="headerlink" href="#centralize-all-external-traffic-logs-in-a-dedicated-logging-account" title="Permanent link">&para;</a></h4>
+<p>In a multi-account environment, external traffic logs from every account must flow to a centralized logging account for correlation, long-term retention, and cross-account investigation. The logging account is a restricted-access account that application teams cannot modify — ensuring log integrity and retention compliance.</p>
+<p>Configure cross-account delivery for each log type:</p>
+<table>
+<thead>
+<tr>
+<th>Log source</th>
+<th>Cross-account delivery mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr> access logs</strong></td>
+<td><abbr title="Simple Storage Service">S3</abbr> bucket policy allowing the <abbr title="Elastic Load Balancer">ELB</abbr> service principal for each Region</td>
+</tr>
+<tr>
+<td><strong>CloudFront standard logs</strong></td>
+<td><abbr title="Simple Storage Service">S3</abbr> bucket policy allowing the CloudFront service principal</td>
+</tr>
+<tr>
+<td><strong>CloudFront real-time logs</strong></td>
+<td>Kinesis Data Streams in the logging account (or same account with cross-account <abbr title="Identity and Access Management">IAM</abbr>)</td>
+</tr>
+<tr>
+<td><strong><abbr title="Web Application Firewall">WAF</abbr> logs</strong></td>
+<td>Kinesis Data Firehose to <abbr title="Simple Storage Service">S3</abbr> in the logging account, or direct <abbr title="Simple Storage Service">S3</abbr> delivery</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></td>
+<td>Cross-account delivery to <abbr title="Simple Storage Service">S3</abbr> or CloudWatch Logs with resource policies</td>
+</tr>
+<tr>
+<td><strong>Route 53 query logs</strong></td>
+<td>CloudWatch Logs cross-account subscription filters to centralized destination</td>
+</tr>
+<tr>
+<td><strong>Global Accelerator flow logs</strong></td>
+<td><abbr title="Simple Storage Service">S3</abbr> bucket policy allowing the Global Accelerator service principal</td>
+</tr>
+</tbody>
+</table>
+<h4 id="partition-logs-for-efficient-querying">Partition logs for efficient querying<a class="headerlink" href="#partition-logs-for-efficient-querying" title="Permanent link">&para;</a></h4>
+<p>External traffic logs at scale generate terabytes per day. Without proper partitioning, Athena queries scan the entire dataset and cost grows linearly with retention. Partition all log buckets by:</p>
+<ul>
+<li><strong>Account ID</strong> — enables per-account cost attribution and scoped investigation</li>
+<li><strong>Region</strong> — matches the geographic scope of most queries</li>
+<li><strong>Year/Month/Day/Hour</strong> — enables time-bounded queries that scan only relevant partitions</li>
+</ul>
+<p><abbr title="Application Load Balancer">ALB</abbr> and CloudFront logs are already delivered with date-based prefixes. Add account ID as a top-level prefix in your bucket structure. Use Athena partition projection to avoid manual partition management as new data arrives.</p>
+<p><strong><em>Key insight:</em></strong> <em>The cost of storing external traffic logs is trivial compared to the cost of querying them inefficiently. Invest in partitioning and projection upfront — it determines whether your logs are practically queryable or just an archive.</em></p>
+<h3 id="cost-management">Cost management<a class="headerlink" href="#cost-management" title="Permanent link">&para;</a></h3>
+<h4 id="understand-the-cost-profile-of-each-data-source">Understand the cost profile of each data source<a class="headerlink" href="#understand-the-cost-profile-of-each-data-source" title="Permanent link">&para;</a></h4>
+<p>External traffic monitoring costs vary by orders of magnitude depending on which data sources you enable and how you consume them:</p>
+<table>
+<thead>
+<tr>
+<th>Data source</th>
+<th>Generation cost</th>
+<th>Storage/delivery cost</th>
+<th>Analysis cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Application Load Balancer">ALB</abbr> access logs</strong></td>
+<td>Free</td>
+<td><abbr title="Simple Storage Service">S3</abbr> storage only (~$0.023/GB/month standard)</td>
+<td>Athena per-query scanning</td>
+</tr>
+<tr>
+<td><strong><abbr title="Network Load Balancer">NLB</abbr> access logs</strong></td>
+<td>Free</td>
+<td><abbr title="Simple Storage Service">S3</abbr> storage only</td>
+<td>Athena per-query scanning</td>
+</tr>
+<tr>
+<td><strong>CloudFront standard logs</strong></td>
+<td>Free</td>
+<td><abbr title="Simple Storage Service">S3</abbr> storage only</td>
+<td>Athena per-query scanning</td>
+</tr>
+<tr>
+<td><strong>CloudFront real-time logs</strong></td>
+<td>Free</td>
+<td>Kinesis Data Streams shard-hours + per-record</td>
+<td>Consumer compute (Lambda, KDA)</td>
+</tr>
+<tr>
+<td><strong><abbr title="Web Application Firewall">WAF</abbr> logs (<abbr title="Simple Storage Service">S3</abbr>)</strong></td>
+<td>Free</td>
+<td><abbr title="Simple Storage Service">S3</abbr> storage only</td>
+<td>Athena per-query scanning</td>
+</tr>
+<tr>
+<td><strong><abbr title="Web Application Firewall">WAF</abbr> logs (CloudWatch)</strong></td>
+<td>Free</td>
+<td>CloudWatch Logs ingestion ($0.50/GB) + storage</td>
+<td>CloudWatch Insights queries</td>
+</tr>
+<tr>
+<td><strong><abbr title="Network Address Translation">NAT</abbr> Gateway metrics</strong></td>
+<td>Free (included)</td>
+<td>N/A (CloudWatch default retention)</td>
+<td>CloudWatch dashboard/alarm cost</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs (<abbr title="Simple Storage Service">S3</abbr>)</strong></td>
+<td>$0.25/GB (first 10 TB)</td>
+<td><abbr title="Simple Storage Service">S3</abbr> storage</td>
+<td>Athena per-query scanning</td>
+</tr>
+<tr>
+<td><strong>Route 53 query logs</strong></td>
+<td>Free</td>
+<td>CloudWatch Logs ingestion + storage</td>
+<td>CloudWatch Insights queries</td>
+</tr>
+</tbody>
+</table>
+<p>The highest-cost items are <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs at volume (generation charge) and CloudFront real-time logs (Kinesis charges). For <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs, use custom formats that capture only the fields you need, and filter to capture only rejected traffic or traffic to/from specific ENIs when full capture is not required.</p>
+<h4 id="use-batch-analysis-as-the-default-real-time-only-where-justified">Use batch analysis as the default, real-time only where justified<a class="headerlink" href="#use-batch-analysis-as-the-default-real-time-only-where-justified" title="Permanent link">&para;</a></h4>
+<p>Real-time log analysis (CloudFront real-time logs → Kinesis → Lambda/KDA, or <abbr title="Web Application Firewall">WAF</abbr> logs → CloudWatch Logs → metric filters) costs significantly more than batch analysis (logs → <abbr title="Simple Storage Service">S3</abbr> → Athena on demand). Default to batch analysis for:</p>
+<ul>
+<li>Post-incident investigation</li>
+<li>Weekly/monthly trend reporting</li>
+<li>Cost attribution and chargeback</li>
+<li>Compliance and audit queries</li>
+</ul>
+<p>Reserve real-time analysis for:</p>
+<ul>
+<li>Live operational dashboards during deployments</li>
+<li>Sub-minute alerting on error rate spikes</li>
+<li>Active incident response where seconds matter</li>
+<li><abbr title="Distributed Denial of Service">DDoS</abbr> detection and automated response triggers</li>
+</ul>
+<h2 id="when-to-use-each-data-source">When to use each data source<a class="headerlink" href="#when-to-use-each-data-source" title="Permanent link">&para;</a></h2>
+<p>Each data source answers different questions. The right combination depends on what you need to know and how quickly you need to know it.</p>
+<p><strong>CloudFront access logs</strong> are the right choice when:</p>
+<ul>
+<li>You need client-experience metrics (latency, cache hit ratio, error rates at the edge)</li>
+<li>You want geographic distribution of client traffic</li>
+<li>You need to understand cache behavior and optimize cache policies</li>
+<li>You're investigating edge-level issues (<abbr title="Transport Layer Security">TLS</abbr> negotiation failures, HTTP protocol errors)</li>
+</ul>
+<p><strong><abbr title="Application Load Balancer">ALB</abbr> access logs</strong> are the right choice when:</p>
+<ul>
+<li>You need per-request visibility into target behavior (which target served which request, how long it took)</li>
+<li>You're debugging 5xx errors and need to distinguish load-balancer errors from target errors</li>
+<li>You need client IP correlation with specific requests for security investigation</li>
+<li>You want latency percentile analysis at the request level</li>
+</ul>
+<p><strong><abbr title="Network Load Balancer">NLB</abbr> access logs</strong> are the right choice when:</p>
+<ul>
+<li>You need connection-level visibility for L4 workloads (connection duration, bytes per connection)</li>
+<li>You're debugging <abbr title="Transport Layer Security">TLS</abbr> handshake failures or cipher negotiation issues</li>
+<li>You need to understand connection patterns for capacity planning</li>
+</ul>
+<p><strong>AWS <abbr title="Web Application Firewall">WAF</abbr> logs</strong> are the right choice when:</p>
+<ul>
+<li>You're investigating blocked requests to determine if they're legitimate (false positives)</li>
+<li>You need to tune <abbr title="Web Application Firewall">WAF</abbr> rules based on actual match data</li>
+<li>You're correlating attack patterns across time to identify persistent threats</li>
+<li>You need audit evidence of security decisions made on each request</li>
+</ul>
+<p><strong><abbr title="Network Address Translation">NAT</abbr> Gateway metrics</strong> are the right choice when:</p>
+<ul>
+<li>You need egress cost visibility and trending</li>
+<li>You're detecting unexpected outbound traffic volume</li>
+<li>You need to monitor for connection limits and port exhaustion</li>
+<li>You want early warning of workload behavior changes that affect egress spend</li>
+</ul>
+<p><strong>Route 53 query logs</strong> are the right choice when:</p>
+<ul>
+<li>You need to validate <abbr title="Domain Name System">DNS</abbr> failover behavior during incidents</li>
+<li>You're detecting subdomain enumeration or reconnaissance</li>
+<li>You want baseline query volumes for anomaly detection</li>
+<li>You need to understand <abbr title="Domain Name System">DNS</abbr>-level traffic distribution across endpoints</li>
+</ul>
+<p><strong>Global Accelerator flow logs</strong> are the right choice when:</p>
+<ul>
+<li>You need client-to-accelerator traffic visibility for L4 workloads</li>
+<li>You're analyzing geographic client distribution for accelerator endpoint placement</li>
+<li>You need flow-level data for capacity planning on accelerator endpoints</li>
+</ul>
+<h2 id="combining-external-traffic-monitoring-with-other-services">Combining external traffic monitoring with other services<a class="headerlink" href="#combining-external-traffic-monitoring-with-other-services" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>External traffic monitoring provides</th>
+<th>Other service provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Application Load Balancer">ALB</abbr> access logs + Amazon Athena</strong></td>
+<td>Per-request log data in <abbr title="Simple Storage Service">S3</abbr></td>
+<td>SQL-based ad-hoc querying with partition pruning for cost-efficient analysis</td>
+</tr>
+<tr>
+<td><strong>CloudFront real-time logs + Kinesis Data Streams + Lambda</strong></td>
+<td>Per-request edge data in real time</td>
+<td>Stream processing for live dashboards, anomaly detection, and automated response</td>
+</tr>
+<tr>
+<td><strong><abbr title="Web Application Firewall">WAF</abbr> logs + Amazon OpenSearch Service</strong></td>
+<td>Per-request security evaluation data</td>
+<td>Full-text search, visualization, and correlation for security investigation</td>
+</tr>
+<tr>
+<td><strong><abbr title="Network Address Translation">NAT</abbr> Gateway metrics + CloudWatch Alarms + SNS</strong></td>
+<td>Egress volume and connection metrics</td>
+<td>Threshold-based alerting and notification routing to operations teams</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs + Amazon Athena</strong></td>
+<td>Per-flow network data including egress destinations</td>
+<td>Destination analysis, cost attribution, and security investigation queries</td>
+</tr>
+<tr>
+<td><strong>Route 53 query logs + CloudWatch Logs Insights</strong></td>
+<td><abbr title="Domain Name System">DNS</abbr> query patterns for public zones</td>
+<td>Pattern analysis, anomaly detection, and failover validation queries</td>
+</tr>
+<tr>
+<td><strong><abbr title="Application Load Balancer">ALB</abbr> access logs + AWS Security Hub</strong></td>
+<td>Request-level evidence of attacks</td>
+<td>Centralized security findings aggregation and compliance reporting</td>
+</tr>
+<tr>
+<td><strong>CloudFront logs + Amazon QuickSight</strong></td>
+<td>Client experience and cache performance data</td>
+<td>Business intelligence dashboards for stakeholder reporting</td>
+</tr>
+<tr>
+<td><strong>All log sources + AWS Glue + <abbr title="Simple Storage Service">S3</abbr></strong></td>
+<td>Raw log data from every layer</td>
+<td>Schema discovery, ETL, and data lake organization for cross-layer correlation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="client-experience-monitoring">Client experience monitoring<a class="headerlink" href="#client-experience-monitoring" title="Permanent link">&para;</a></h2>
+<p>External traffic logs are the only source of truth for how real clients experience your application. CloudWatch metrics on your targets show server-side health; external traffic logs show client-side reality.</p>
+<h3 id="latency-percentiles-from-alb-logs">Latency percentiles from <abbr title="Application Load Balancer">ALB</abbr> logs<a class="headerlink" href="#latency-percentiles-from-alb-logs" title="Permanent link">&para;</a></h3>
+<p><abbr title="Application Load Balancer">ALB</abbr> access logs include <code>target_processing_time</code> (time the target took to respond), <code>request_processing_time</code> (time <abbr title="Application Load Balancer">ALB</abbr> spent before forwarding), and <code>response_processing_time</code> (time <abbr title="Application Load Balancer">ALB</abbr> spent sending the response). Use these fields to compute latency percentiles (p50, p95, p99) that reveal the tail-latency experience your slowest clients face — something average-based CloudWatch metrics hide.</p>
+<p>Query <abbr title="Application Load Balancer">ALB</abbr> logs with Athena to compute percentiles per target group, per target, or per URL path. A p99 that's 10x the p50 indicates a subset of requests hitting a slow path — often a cold cache, a specific target, or a particular request pattern.</p>
+<h3 id="cache-hit-ratios-from-cloudfront-logs">Cache hit ratios from CloudFront logs<a class="headerlink" href="#cache-hit-ratios-from-cloudfront-logs" title="Permanent link">&para;</a></h3>
+<p>CloudFront logs include the <code>x-edge-result-type</code> field that indicates whether each request was served from cache (Hit), fetched from origin (Miss), or resulted in an error. Compute cache hit ratio as the percentage of requests served as Hit or RefreshHit versus total requests.</p>
+<p>A dropping cache hit ratio directly increases origin load and client latency. Monitor this metric after deployments (new cache behaviors or invalidations can tank hit rates), after <abbr title="Time To Live">TTL</abbr> changes, and during traffic pattern shifts. CloudFront's built-in cache statistics in the console provide aggregate views; log-based analysis gives you per-path and per-geographic breakdown.</p>
+<h3 id="ipv6-client-adoption-tracking"><abbr title="Internet Protocol version 6">IPv6</abbr> client adoption tracking<a class="headerlink" href="#ipv6-client-adoption-tracking" title="Permanent link">&para;</a></h3>
+<p>CloudFront and <abbr title="Application Load Balancer">ALB</abbr> logs both record the client's IP version. Track the percentage of requests arriving over <abbr title="Internet Protocol version 6">IPv6</abbr> versus <abbr title="Internet Protocol version 4">IPv4</abbr> to measure your <abbr title="Internet Protocol version 6">IPv6</abbr> client adoption over time. This data informs decisions about <abbr title="Internet Protocol version 6">IPv6</abbr>-only infrastructure (when <abbr title="Internet Protocol version 6">IPv6</abbr> clients reach a threshold, <abbr title="Internet Protocol version 4">IPv4</abbr> infrastructure becomes the legacy path rather than the default).</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>CloudFront access logs</strong></p>
+<hr />
+<p>Standard and real-time logging for CloudFront distributions, including log fields, delivery configuration, and <abbr title="Simple Storage Service">S3</abbr>/Kinesis setup.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> CloudFront logging documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong><abbr title="Application Load Balancer">ALB</abbr> access logs</strong></p>
+<hr />
+<p>Per-request logging for Application Load Balancers, including log format, <abbr title="Simple Storage Service">S3</abbr> delivery, and cross-account configuration.</p>
+<p><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Application Load Balancer">ALB</abbr> access log documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong><abbr title="Network Load Balancer">NLB</abbr> access logs</strong></p>
+<hr />
+<p>Connection-level logging for Network Load Balancers, including <abbr title="Transport Layer Security">TLS</abbr> metadata and connection timing fields.</p>
+<p><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Network Load Balancer">NLB</abbr> access log documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS <abbr title="Web Application Firewall">WAF</abbr> logging</strong></p>
+<hr />
+<p>Per-request <abbr title="Web Application Firewall">WAF</abbr> evaluation logging to <abbr title="Simple Storage Service">S3</abbr>, CloudWatch Logs, or Kinesis Data Firehose, including log field reference and filtering.</p>
+<p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/logging.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Web Application Firewall">WAF</abbr> logging documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>CloudWatch pricing</strong></p>
+<hr />
+<p>Pricing for metrics, alarms, logs ingestion, and Logs Insights queries that drive the cost of real-time monitoring.</p>
+<p><a href="https://aws.amazon.com/cloudwatch/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> CloudWatch pricing</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong><abbr title="Network Address Translation">NAT</abbr> Gateway monitoring</strong></p>
+<hr />
+<p>CloudWatch metrics available for <abbr title="Network Address Translation">NAT</abbr> Gateways, including dimensions, statistics, and recommended alarms.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Network Address Translation">NAT</abbr> Gateway CloudWatch metrics</a></p>
+</li>
+</ul>
+</div>
+<h2 id="related-pages">Related pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
+<p><strong>Relationship to other Observability topics:</strong></p>
+<ul>
+<li><strong><a href="../internal-traffic/">Internal Traffic Monitoring</a></strong>: Covers east-west traffic visibility within your AWS environment. External traffic monitoring handles north-south flows crossing the internet boundary.</li>
+<li><strong><a href="../service-monitoring/">AWS Services Monitoring</a></strong>: Covers health and performance monitoring of AWS networking services themselves. External traffic monitoring uses the data those services produce.</li>
+<li><strong><a href="../notifications/">Notifications</a></strong>: Covers alerting and notification routing. External traffic monitoring generates the signals that notifications act on.</li>
+</ul>
+<p><strong>Relationship to Connectivity:</strong></p>
+<ul>
+<li><strong><a href="../../connectivity/internet/">Internet Connectivity</a></strong>: Defines the ingress and egress architecture (centralized vs. decentralized, <abbr title="Internet Protocol version 4">IPv4</abbr> vs. <abbr title="Internet Protocol version 6">IPv6</abbr>). External traffic monitoring provides visibility into how that architecture performs in production.</li>
+</ul>
+<p><strong>Relationship to Application Networking:</strong></p>
+<ul>
+<li><strong><a href="../../application-networking/load-balancing/">Load Balancing</a></strong>: <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> are both the data plane for ingress traffic and the source of access logs that drive external traffic observability.</li>
+</ul>
+<p><strong>Relationship to Security:</strong></p>
+<ul>
+<li><strong><a href="../../security/outbound/">Outbound Controls</a></strong>: Defines what egress traffic is allowed. External traffic monitoring (<abbr title="Network Address Translation">NAT</abbr> Gateway metrics, <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs) validates that those controls are working and reveals policy gaps.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../internal-traffic/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Internal Traffic">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Internal Traffic
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../community/" class="md-footer__link md-footer__link--next" aria-label="Next: Community">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Community
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

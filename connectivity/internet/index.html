@@ -1,0 +1,2773 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/connectivity/internet/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../within-aws/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Internet - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Internet - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/connectivity/internet.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/connectivity/internet/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Internet - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/connectivity/internet.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#internet-connectivity" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Internet
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ingress-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ingress connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decentralized-ingress-preferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decentralized ingress (preferred)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decentralized ingress (preferred)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#l7-traffic-cloudfront-and-aws-waf-in-front-of-each-origin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L7 traffic: CloudFront and AWS WAF in front of each origin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#l4-traffic-per-vpc-entry-points-with-edge-or-in-vpc-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L4 traffic: per-VPC entry points with edge or in-VPC protection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized ingress
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#egress-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Egress connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Egress connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-between-regional-and-zonal-nat-gateway-ipv4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose between regional and zonal NAT Gateway (IPv4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decentralized-ipv4-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decentralized IPv4 egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-ipv4-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized IPv4 egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-decentralized-vs-centralized-ipv4-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing decentralized vs centralized IPv4 egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#looking-ahead-aws-network-firewall-proxy-public-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Looking ahead: AWS Network Firewall Proxy (public preview)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-ingress-and-egress-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining ingress and egress patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-internet-connectivity-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your internet connectivity stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building your internet connectivity stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ingress-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingress connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ingress connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decentralized-ingress-preferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decentralized ingress (preferred)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decentralized ingress (preferred)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#l7-traffic-cloudfront-and-aws-waf-in-front-of-each-origin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L7 traffic: CloudFront and AWS WAF in front of each origin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#l4-traffic-per-vpc-entry-points-with-edge-or-in-vpc-protection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        L4 traffic: per-VPC entry points with edge or in-VPC protection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-ingress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized ingress
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#egress-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Egress connectivity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Egress connectivity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#choose-between-regional-and-zonal-nat-gateway-ipv4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose between regional and zonal NAT Gateway (IPv4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decentralized-ipv4-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decentralized IPv4 egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centralized-ipv4-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Centralized IPv4 egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparing-decentralized-vs-centralized-ipv4-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparing decentralized vs centralized IPv4 egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#looking-ahead-aws-network-firewall-proxy-public-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Looking ahead: AWS Network Firewall Proxy (public preview)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combining-ingress-and-egress-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining ingress and egress patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-internet-connectivity-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your internet connectivity stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building your internet connectivity stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Connectivity
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/connectivity/internet.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/connectivity/internet.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="internet-connectivity">Internet Connectivity<a class="headerlink" href="#internet-connectivity" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/subnets/">Subnets</a>, and the <a href="../within-aws/">Within AWS connectivity</a> services (AWS Transit Gateway and AWS Cloud WAN in particular). Review those topics first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Internet connectivity covers two distinct concerns, and the right pattern for each depends on different criteria. <strong>Ingress connectivity</strong> brings external clients to your AWS-hosted applications — through Amazon CloudFront's 450+ edge locations, AWS <abbr title="Web Application Firewall">WAF</abbr> evaluating requests against managed rule groups, and per-<abbr title="Virtual Private Cloud">VPC</abbr> load balancers that scale automatically. <strong>Egress connectivity</strong> lets your AWS resources reach external services — through <abbr title="Network Address Translation">NAT</abbr> Gateways processing <abbr title="Internet Protocol version 4">IPv4</abbr> traffic at up to 100 Gbps per gateway with $0.045/GB processing charges, or through egress-only internet gateways that provide free, unlimited <abbr title="Internet Protocol version 6">IPv6</abbr> outbound access. The decisions you make for one rarely apply cleanly to the other, so this page treats them separately.</p>
+<p>The cross-cutting choice in both directions is <strong>centralized vs. decentralized</strong>: do you concentrate ingress or egress through a shared <abbr title="Virtual Private Cloud">VPC</abbr> and a network team, or distribute it per workload to the teams that own each application? The right answer differs by direction. For ingress, decentralized is the preferred default and centralized is reserved for specific cases. For egress, the choice is genuinely a trade-off across cost, operational ownership, and where the inspection point sits, and there is no single right answer.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Ingress["Ingress (internet → AWS applications)"]
+        Decentralized_In["Decentralized&lt;br/&gt;(preferred)&lt;br/&gt;Each VPC owns its ingress"]
+        Centralized_In["Centralized&lt;br/&gt;Shared ingress VPC for perimeter"]
+        Edge["Edge services&lt;br/&gt;CloudFront, Global Accelerator, AWS WAF"]
+    end
+
+    subgraph Egress["Egress (AWS resources → internet)"]
+        Decentralized_Out["IPv6&lt;br/&gt;Decentralized by design&lt;br/&gt;(egress-only IGW per VPC)"]
+        Centralized_Out["IPv4&lt;br/&gt;Decentralized vs centralized&lt;br/&gt;by cost, ownership, inspection placement"]
+        Filter["Filtering&lt;br/&gt;AWS Network Firewall, GWLB + 3rd-party,&lt;br/&gt;Route 53 DNS Firewall"]
+    end
+
+    Ingress ~~~ Egress
+
+    style Ingress fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Egress fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Decentralized_In fill:#2563eb,stroke:#1e40af,color:#fff
+    style Centralized_In fill:#2563eb,stroke:#1e40af,color:#fff
+    style Edge fill:#2563eb,stroke:#1e40af,color:#fff
+    style Decentralized_Out fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Centralized_Out fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Filter fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<p>For ingress, the decentralized pattern keeps each application's internet entry point in the <abbr title="Virtual Private Cloud">VPC</abbr> and account that owns the workload. Application teams manage their own load balancers, certificates, and scaling decisions; failure of one team's ingress does not affect others. Centralized protection is still applied uniformly through CloudFront, AWS <abbr title="Web Application Firewall">WAF</abbr>, and per-<abbr title="Virtual Private Cloud">VPC</abbr> layer-3/4 inspection (AWS Network Firewall, or <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html">Gateway Load Balancer</a> with third-party firewall appliances) — all managed centrally through <a href="https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html">AWS Firewall Manager</a>. The AWS edge effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress <abbr title="Virtual Private Cloud">VPC</abbr>. Centralized ingress through a shared <abbr title="Virtual Private Cloud">VPC</abbr> remains an option, but it adds load-balancer chaining, extra traffic processing cost, and shared-<abbr title="Virtual Private Cloud">VPC</abbr> blast radius without delivering protection that the cloud-native decentralized pattern doesn't already provide.</p>
+<p>For egress, the choice is more nuanced and splits by IP version. <strong><abbr title="Internet Protocol version 6">IPv6</abbr> egress is decentralized by design</strong>: each <abbr title="Virtual Private Cloud">VPC</abbr> reaches the internet through its own egress-only internet gateway, and there is no managed NAT66 to centralize. <strong><abbr title="Internet Protocol version 4">IPv4</abbr> egress</strong> is the genuine 50-50 choice. Centralizing <abbr title="Internet Protocol version 4">IPv4</abbr> collapses per-<abbr title="Virtual Private Cloud">VPC</abbr> <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html"><abbr title="Network Address Translation">NAT</abbr> Gateways</a> and inspection endpoints into one shared egress <abbr title="Virtual Private Cloud">VPC</abbr>, but adds Transit Gateway or AWS Cloud WAN data-processing charges on every flow and concentrates operational ownership on a central team. Decentralizing <abbr title="Internet Protocol version 4">IPv4</abbr> keeps each <abbr title="Virtual Private Cloud">VPC</abbr> self-contained with no transit-network charges, but each <abbr title="Virtual Private Cloud">VPC</abbr> pays for its own <abbr title="Network Address Translation">NAT</abbr> Gateway and (where required) per-<abbr title="Virtual Private Cloud">VPC</abbr> inspection. Uniform policy is achievable in either pattern.</p>
+<h2 id="ingress-connectivity">Ingress connectivity<a class="headerlink" href="#ingress-connectivity" title="Permanent link">&para;</a></h2>
+<p>Ingress is how external clients reach applications you host in AWS. The two architectural patterns are <strong>decentralized</strong> (each application owns its own internet entry point) and <strong>centralized</strong> (a shared ingress <abbr title="Virtual Private Cloud">VPC</abbr> fronts multiple applications). For most environments, decentralized is the right default. Centralized ingress is justified for specific cases, not as a generic best practice.</p>
+<p>The patterns are largely independent of the protocol, but the services that implement each pattern differ for <strong>L7 traffic</strong> (HTTP, HTTPS, and gRPC web applications, REST APIs, and other application-layer workloads) versus <strong>L4 traffic</strong> (<abbr title="Transmission Control Protocol">TCP</abbr> and <abbr title="User Datagram Protocol">UDP</abbr> services where the load balancer must forward without HTTP-aware decoding, including gaming, financial trading, custom protocols, and services that must preserve client IPs end-to-end). Each subsection that follows calls out the relevant services for both traffic classes.</p>
+<div class="admonition note">
+<p class="admonition-title">Baseline <abbr title="Distributed Denial of Service">DDoS</abbr> protection</p>
+<p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html">AWS Shield</a> Standard is automatically applied at no charge to every public-facing AWS endpoint (CloudFront distributions, Global Accelerator, ALBs, NLBs, Route 53, AWS API endpoints), regardless of whether you adopt a decentralized or centralized ingress pattern. The patterns below focus on application-layer protection and traffic shaping; baseline volumetric <abbr title="Distributed Denial of Service">DDoS</abbr> defense is already in place.</p>
+</div>
+<h3 id="decentralized-ingress-preferred">Decentralized ingress (preferred)<a class="headerlink" href="#decentralized-ingress-preferred" title="Permanent link">&para;</a></h3>
+<p>In a decentralized model, each <abbr title="Virtual Private Cloud">VPC</abbr> that hosts an internet-facing application also owns its ingress. Application teams choose the load balancer or API endpoint that fits their workload, manage their own <abbr title="Transport Layer Security">TLS</abbr> certificates through AWS Certificate Manager, and scale ingress independently of every other workload. The blast radius of any ingress misconfiguration is bounded to that application.</p>
+<p>A common concern with decentralized ingress is whether per-team ownership creates a security gap. It does not. Central, uniform protection still applies in front of every workload, but it does so at the AWS edge rather than through a shared ingress <abbr title="Virtual Private Cloud">VPC</abbr>:</p>
+<ul>
+<li>For L7 traffic, <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html">Amazon CloudFront</a> and <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html">AWS <abbr title="Web Application Firewall">WAF</abbr></a> apply a consistent rule baseline at every distribution.</li>
+<li>For L4 traffic, <strong>per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints</strong> in each workload <abbr title="Virtual Private Cloud">VPC</abbr> inspect ingress traffic between the internet gateway and the workload's entry point. The two options are <a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html">AWS Network Firewall</a> for an AWS-managed firewall, or Gateway Load Balancer fronting a fleet of third-party firewall appliances. In either case, the rule sets are centrally defined.</li>
+</ul>
+<p>In both cases, the protection is centrally defined and centrally managed; the data plane is what's distributed. The AWS edge and the per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints together act as a fully distributed, centrally managed perimeter (the role a DMZ plays in a traditional network) without the operational cost of routing every flow through a shared regional <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
+<p><strong>Why decentralized is recommended</strong>:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>Bounded failure domain</strong></p>
+<hr />
+<p>A misconfigured listener, an exhausted target group, or an expired certificate affects one application, not every internet-facing workload in the organization.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg></span> <strong>Team autonomy and ownership</strong></p>
+<hr />
+<p>The application team that builds the workload also operates its ingress, with no cross-team dependency to coordinate routine changes.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m16 6 2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></span> <strong>Independent scaling</strong></p>
+<hr />
+<p>Each application's ingress scales to its own traffic profile, without one team's traffic spike degrading another's.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 17v2h6v-2zM3 5v2h10V5zm10 16v-2h8v-2h-8v-2h-2v6zM7 9v2H3v2h4v2h2V9zm14 4v-2H11v2zm-6-4h2V7h4V5h-4V3h-2z"/></svg></span> <strong>Per-workload tuning, central protection</strong></p>
+<hr />
+<p>Certificates, listener policies, and target groups are tuned per application, while CloudFront, AWS <abbr title="Web Application Firewall">WAF</abbr>, and per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall inspection deliver consistent edge-and-<abbr title="Virtual Private Cloud">VPC</abbr> protection across the organization.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 10H5L3 8l2-2h6V3l1-1 1 1v1h6l2 2-2 2h-6v2h6l2 2-2 2h-6v6a2 2 0 0 1 2 2H9a2 2 0 0 1 2-2z"/></svg></span> <strong>Simpler routing</strong></p>
+<hr />
+<p>Clients reach the application through CloudFront or directly through <abbr title="Domain Name System">DNS</abbr>; no transit hop, no shared <abbr title="Virtual Private Cloud">VPC</abbr> dependency, no traffic-flow complexity to debug.</p>
+</li>
+</ul>
+</div>
+<h4 id="l7-traffic-cloudfront-and-aws-waf-in-front-of-each-origin">L7 traffic: CloudFront and AWS <abbr title="Web Application Firewall">WAF</abbr> in front of each origin<a class="headerlink" href="#l7-traffic-cloudfront-and-aws-waf-in-front-of-each-origin" title="Permanent link">&para;</a></h4>
+<p>For L7 traffic, the recommended pattern is <strong>Amazon CloudFront and AWS <abbr title="Web Application Firewall">WAF</abbr> in front of each origin</strong>. Each application team owns its origin, which CloudFront supports through three origin types: an Amazon <abbr title="Simple Storage Service">S3</abbr> bucket (for static content); a <strong><abbr title="Virtual Private Cloud">VPC</abbr> origin</strong> pointing at a private (non-internet-facing) <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">Application Load Balancer</a> (<abbr title="Application Load Balancer">ALB</abbr>), <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html">Network Load Balancer</a> (<abbr title="Network Load Balancer">NLB</abbr>), or <abbr title="Elastic Compute Cloud">EC2</abbr> instance inside the workload's <abbr title="Virtual Private Cloud">VPC</abbr>; or a <strong>custom origin</strong> for any HTTP/HTTPS public endpoint. CloudFront and <abbr title="Web Application Firewall">WAF</abbr> are managed centrally and applied uniformly across distributions: CloudFront terminates <abbr title="Transport Layer Security">TLS</abbr> at the edge and concentrates protection (<abbr title="Web Application Firewall">WAF</abbr>, HTTP/3, edge <abbr title="Transport Layer Security">TLS</abbr>) close to the user, while AWS <abbr title="Web Application Firewall">WAF</abbr> evaluates each request against managed rule groups, custom rules, and rate limits before traffic ever reaches the origin <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
+<p><strong>L7 ingress best practices</strong>:</p>
+<ul>
+<li><strong>Use <a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-vpc-origins.html">CloudFront <abbr title="Virtual Private Cloud">VPC</abbr> Origins</a> as the default for <abbr title="Virtual Private Cloud">VPC</abbr>-hosted workloads</strong>. <abbr title="Virtual Private Cloud">VPC</abbr> Origins lets CloudFront connect to a private <abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>, or <abbr title="Elastic Compute Cloud">EC2</abbr> instance with no public IP and no public-subnet hosting; CloudFront becomes the only path in. Cross-account <abbr title="Virtual Private Cloud">VPC</abbr> origins are supported through AWS Resource Access Manager (RAM). Use this for any new <abbr title="Virtual Private Cloud">VPC</abbr>-hosted L7 workload fronted by CloudFront, and consider migrating existing public origins.</li>
+<li><strong>Terminate <abbr title="Transport Layer Security">TLS</abbr> at CloudFront and at the origin load balancer</strong>, not at the application. ACM-issued certificates are free, auto-renewing, and centrally auditable. Re-encrypt CloudFront-to-origin only when the workload's compliance baseline requires end-to-end <abbr title="Transport Layer Security">TLS</abbr>.</li>
+<li><strong>Manage AWS <abbr title="Web Application Firewall">WAF</abbr> centrally with AWS Firewall Manager</strong>. A single Firewall Manager policy applies a consistent baseline across every CloudFront distribution and <abbr title="Application Load Balancer">ALB</abbr> in the organization, while application teams can layer their own per-workload rules on top.</li>
+<li><strong>Pick the right backend service for the workload</strong>. <abbr title="Application Load Balancer">ALB</abbr> suits most HTTP/HTTPS web applications, REST APIs, and gRPC services; <a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html">Amazon API Gateway</a> suits API-first workloads that benefit from request validation, throttling, and authorization built into the ingress layer.</li>
+</ul>
+<h4 id="l4-traffic-per-vpc-entry-points-with-edge-or-in-vpc-protection">L4 traffic: per-<abbr title="Virtual Private Cloud">VPC</abbr> entry points with edge or in-<abbr title="Virtual Private Cloud">VPC</abbr> protection<a class="headerlink" href="#l4-traffic-per-vpc-entry-points-with-edge-or-in-vpc-protection" title="Permanent link">&para;</a></h4>
+<p>Some workloads cannot use HTTP-aware ingress and need a layer-4 entry point that preserves the client's source IP and protocol exactly: real-time gaming, voice, video, and trading workloads where adding an HTTP layer adds latency or breaks the protocol; workloads that authenticate the client by source IP end-to-end; services using protocols other than HTTP/HTTPS (custom binary protocols, MQTT, SMTP, database protocols exposed to authorized clients); and high-throughput <abbr title="Transmission Control Protocol">TCP</abbr> or <abbr title="User Datagram Protocol">UDP</abbr> that must forward without protocol decoding.</p>
+<p>The default building blocks are <abbr title="Network Load Balancer">NLB</abbr> for layer-4 <abbr title="Transmission Control Protocol">TCP</abbr>, <abbr title="User Datagram Protocol">UDP</abbr>, and <abbr title="Transport Layer Security">TLS</abbr> termination at very high throughput with client-source-IP preservation by default, and <a href="https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html">AWS Global Accelerator</a> for <abbr title="Transmission Control Protocol">TCP</abbr> and <abbr title="User Datagram Protocol">UDP</abbr> workloads that benefit from anycast static IPs and the AWS global edge network for clients distributed across continents.</p>
+<p>The same goal as L7 (per-workload ownership with central protection) applies, but the security mechanisms differ depending on which entry point is in front:</p>
+<ul>
+<li><strong>Internet-facing <abbr title="Network Load Balancer">NLB</abbr> (traffic enters the <abbr title="Virtual Private Cloud">VPC</abbr> through the internet gateway)</strong>: deploy per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints in dedicated firewall subnets and insert them between the internet gateway and the <abbr title="Network Load Balancer">NLB</abbr> through <abbr title="Virtual Private Cloud">VPC</abbr> ingress routing. The IGW edge route table directs incoming traffic to the firewall endpoints first, then to the <abbr title="Network Load Balancer">NLB</abbr> and workload subnets. The firewall layer is either AWS Network Firewall or Gateway Load Balancer fronting a fleet of third-party firewall appliances, with rule sets managed centrally.</li>
+<li><strong>AWS Global Accelerator in front of an internal <abbr title="Network Load Balancer">NLB</abbr>, <abbr title="Application Load Balancer">ALB</abbr>, or <abbr title="Elastic Compute Cloud">EC2</abbr> endpoint</strong>: traffic from Global Accelerator is delivered to the endpoint over the AWS internal network rather than through the customer's internet gateway, so the IGW + ingress-routing pattern above does not apply. The protections that apply are AWS Shield Standard (built into Global Accelerator), client-IP preservation (which lets you write security group rules using real client IPs at the <abbr title="Network Load Balancer">NLB</abbr> or <abbr title="Elastic Compute Cloud">EC2</abbr> endpoint), security groups directly on the <abbr title="Network Load Balancer">NLB</abbr>, and AWS <abbr title="Web Application Firewall">WAF</abbr> when the endpoint is an <abbr title="Application Load Balancer">ALB</abbr>. If deeper stateful inspection is required, place the inspection layer inside the <abbr title="Virtual Private Cloud">VPC</abbr> between the load-balancer subnets and the workload subnets through subnet-level routing, rather than at the IGW.</li>
+</ul>
+<p>In both cases, what's centralized is the policy and what's distributed is the data plane.</p>
+<p><strong>L4 ingress best practices</strong>:</p>
+<ul>
+<li><strong>Deploy NLBs across multiple Availability Zones</strong> with cross-zone load balancing turned on (it is off by default for <abbr title="Network Load Balancer">NLB</abbr>). Cross-zone evens out the load when client distribution is uneven across zones.</li>
+<li><strong>Use <abbr title="Transport Layer Security">TLS</abbr> listeners on <abbr title="Network Load Balancer">NLB</abbr> only when the workload genuinely needs <abbr title="Transmission Control Protocol">TCP</abbr>-level <abbr title="Transport Layer Security">TLS</abbr></strong>. For HTTPS workloads, <abbr title="Application Load Balancer">ALB</abbr>'s HTTP-aware termination (typically behind CloudFront) is operationally simpler.</li>
+<li><strong>Be deliberate about source IP preservation</strong>. <abbr title="Network Load Balancer">NLB</abbr> preserves client IP by default, which means backend security groups must permit the client IP range, not just the load balancer's address. Choose the load balancer that matches what the application needs.</li>
+<li><strong>Front NLBs with Global Accelerator for global L4 audiences</strong>. Global Accelerator's anycast IPs reduce the impact of internet path variability for distant clients, in the same way CloudFront does for L7 traffic. When you use Global Accelerator, enable client IP preservation on the endpoint so that security groups can apply IP-based rules using real client IPs.</li>
+<li><strong>Match the inspection pattern to the entry point</strong>. Per-<abbr title="Virtual Private Cloud">VPC</abbr> AWS Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr>-with-third-party-firewall endpoints work when traffic enters through the internet gateway (<abbr title="Network Load Balancer">NLB</abbr>-direct ingress). When Global Accelerator is the entry point, rely on edge protections (Shield Standard, client IP preservation, security groups, <abbr title="Web Application Firewall">WAF</abbr> on <abbr title="Application Load Balancer">ALB</abbr> endpoints) and place any deeper inspection inside the <abbr title="Virtual Private Cloud">VPC</abbr> between the load-balancer and workload subnets.</li>
+</ul>
+<h3 id="centralized-ingress">Centralized ingress<a class="headerlink" href="#centralized-ingress" title="Permanent link">&para;</a></h3>
+<p>Centralized ingress sends external traffic into a shared ingress <abbr title="Virtual Private Cloud">VPC</abbr> first, where it passes through inspection or shared <abbr title="Transport Layer Security">TLS</abbr> termination, and is then forwarded into the correct application <abbr title="Virtual Private Cloud">VPC</abbr> over the internal network (Transit Gateway or AWS Cloud WAN). The two common implementations are a shared <abbr title="Application Load Balancer">ALB</abbr> or <abbr title="Network Load Balancer">NLB</abbr> in an ingress <abbr title="Virtual Private Cloud">VPC</abbr> with backend targets in the workload VPCs, or Gateway Load Balancer with third-party firewalls in front of that shared load balancer.</p>
+<div class="admonition danger">
+<p class="admonition-title">Rarely the right pattern in AWS</p>
+<p>Centralized ingress is an on-premises mental model (a perimeter DMZ that all inbound traffic must traverse) applied to a cloud environment where the same security goals are better met by the decentralized + CloudFront + <abbr title="Web Application Firewall">WAF</abbr> + <abbr title="Virtual Private Cloud">VPC</abbr> Origins pattern described above. Per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints (AWS Network Firewall or Gateway Load Balancer with third-party firewall appliances) managed centrally through Firewall Manager achieve the same outcome at L4. In both cases, the protection is centrally defined and centrally managed; what's distributed is the data plane, which is exactly what makes the cloud-native pattern work.</p>
+</div>
+<p>The trade-offs of centralized ingress in AWS are real:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.98 2.98 0 0 0 0-4.24 2.98 2.98 0 0 0-4.24 0l-3.53 3.53a2.98 2.98 0 0 0 0 4.24m2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.98 2.98 0 0 0 0 4.24 2.98 2.98 0 0 0 4.24 0l3.53-3.53a2.98 2.98 0 0 0 0-4.24.973.973 0 0 1 0-1.42"/></svg></span> <strong>Load-balancer chaining</strong></p>
+<hr />
+<p>Cross-<abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Elastic Load Balancer">ELB</abbr> target groups are <strong>IP target only</strong> (the instance and <abbr title="Application Load Balancer">ALB</abbr> target types are same-<abbr title="Virtual Private Cloud">VPC</abbr>). To deliver traffic from the shared ingress <abbr title="Virtual Private Cloud">VPC</abbr> to dynamic workload backends, each workload <abbr title="Virtual Private Cloud">VPC</abbr> typically runs its own internal <abbr title="Network Load Balancer">NLB</abbr> (and <abbr title="Application Load Balancer">ALB</abbr> for L7 traffic) to give the shared LB a stable IP target. The traffic path becomes client → edge → ingress <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr> → IP target across Transit Gateway or AWS Cloud WAN → workload <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Network Load Balancer">NLB</abbr> → <abbr title="Application Load Balancer">ALB</abbr> (if L7) → workload compute. Each hop is another component to size, another failure mode to debug, and another place where target groups, listener rules, and certificates have to stay in sync.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 6h18v12H5zm9 3a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3M9 8a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2v-4a2 2 0 0 1-2-2zm-8 2h2v10h16v2H1z"/></svg></span> <strong>Extra traffic processing cost</strong></p>
+<hr />
+<p>Traffic is processed by the ingress load balancer, by the inspection layer, and by Transit Gateway or AWS Cloud WAN data processing on top of the workload-side load balancer. The decentralized pattern processes the same flow once at CloudFront and once at the origin.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-1.16-.21-2.31-.61-3.39l-1.6 1.6c.14.59.21 1.19.21 1.79a8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8c.6 0 1.2.07 1.79.21L15.4 2.6C14.31 2.21 13.16 2 12 2m7 0-4 4v1.5l-2.55 2.55C12.3 10 12.15 10 12 10a2 2 0 0 0-2 2 2 2 0 0 0 2 2 2 2 0 0 0 2-2c0-.15 0-.3-.05-.45L16.5 9H18l4-4h-3zm-7 4a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6h-2a4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4z"/></svg></span> <strong>Shared-<abbr title="Virtual Private Cloud">VPC</abbr> blast radius</strong></p>
+<hr />
+<p>A change in the ingress <abbr title="Virtual Private Cloud">VPC</abbr> affects every consuming application. Maintenance windows, change management, and rollback procedures all become organization-wide rather than per-team.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 4a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m7 8a.26.26 0 0 0-.26.21l-.19 1.32c-.3.13-.59.29-.85.47l-1.24-.5c-.11 0-.24 0-.31.13l-1 1.73c-.06.11-.04.24.06.32l1.06.82a4.2 4.2 0 0 0 0 1l-1.06.82a.26.26 0 0 0-.06.32l1 1.73c.06.13.19.13.31.13l1.24-.5c.26.18.54.35.85.47l.19 1.32c.02.12.12.21.26.21h2c.11 0 .22-.09.24-.21l.19-1.32c.3-.13.57-.29.84-.47l1.23.5c.13 0 .26 0 .33-.13l1-1.73a.26.26 0 0 0-.06-.32l-1.07-.82c.02-.17.04-.33.04-.5s-.01-.33-.04-.5l1.06-.82a.26.26 0 0 0 .06-.32l-1-1.73c-.06-.13-.19-.13-.32-.13l-1.23.5c-.27-.18-.54-.35-.85-.47l-.19-1.32A.236.236 0 0 0 19 12zm-7 2c-4.42 0-8 1.79-8 4v2h9.68a7 7 0 0 1-.68-3 7 7 0 0 1 .64-2.91c-.53-.06-1.08-.09-1.64-.09m8 1.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5c-.84 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5"/></svg></span> <strong>Operational ownership concentration</strong></p>
+<hr />
+<p>The network team that runs the ingress <abbr title="Virtual Private Cloud">VPC</abbr> becomes a coordination bottleneck for every application that wants to expose something to the internet, which works against application team velocity.</p>
+</li>
+</ul>
+</div>
+<p>These trade-offs are not theoretical; they're the most common reasons centralized ingress deployments are eventually broken back up.</p>
+<div class="admonition info">
+<p class="admonition-title">When centralized ingress is justified</p>
+<p>Before adopting it, confirm that one of these specific drivers genuinely applies and that the decentralized pattern does not satisfy it:</p>
+<ul>
+<li><strong>A specific compliance baseline mandates a particular proxy layer</strong> that is not available natively in front of CloudFront, or it does not allow the per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall architecture.</li>
+<li><strong>Centralized <abbr title="Transport Layer Security">TLS</abbr> termination with a private CA</strong> is required across all internet-facing services, and re-issuing per-application certificates is not acceptable.</li>
+<li><strong>A single, audited internet-exposed surface</strong> is mandated as a policy choice, independent of the technical security outcome.</li>
+</ul>
+<p>When none of these apply, decentralized ingress is the right choice. It delivers the central protection that motivates the centralized pattern in the first place, without the operational cost of a shared ingress <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">If you do adopt centralized ingress</p>
+<ul>
+<li><strong>Apply the inspection at the centralized layer, not again downstream</strong>. <abbr title="Web Application Firewall">WAF</abbr> on the shared <abbr title="Application Load Balancer">ALB</abbr>, or firewall insertion (AWS Network Firewall or Gateway Load Balancer with third-party firewall appliances) between the internet gateway and the shared <abbr title="Network Load Balancer">NLB</abbr>, gives you the central protection that motivates the centralized pattern. Inspecting a second time as traffic crosses Transit Gateway or AWS Cloud WAN into the workload VPCs does not add real security (the traffic has already been inspected) and it adds another inspection layer's cost and operational surface for every flow.</li>
+<li><strong>Watch <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> quotas at the shared layer</strong>. The load balancers themselves scale automatically, but their per-LB quotas are now consumed by every application sharing the ingress, and a single application onboarding can push the shared LB past a limit. Track quota usage per ingress LB in CloudWatch and request limit increases proactively rather than at the moment a workload onboarding fails.</li>
+<li><strong>Treat changes to the ingress <abbr title="Virtual Private Cloud">VPC</abbr> with strict change control</strong>. The ingress <abbr title="Virtual Private Cloud">VPC</abbr> is now the single internet entry point for many applications, so any change that affects routing, listener rules, certificates, or inspection policy has organization-wide blast radius. Use peer review, staged releases (lower-environment ingress first, production last), canary or weighted-target deployments where the ingress LB allows it, and automated rollback paths. The goal is to keep the centralized layer dynamic enough for routine onboarding while still preventing a single change from becoming a multi-application incident.</li>
+</ul>
+</div>
+<h2 id="egress-connectivity">Egress connectivity<a class="headerlink" href="#egress-connectivity" title="Permanent link">&para;</a></h2>
+<p>Egress is how AWS resources reach external services on the internet. The shape of the egress decision depends on which IP version the workload uses, because <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> have fundamentally different egress paths in AWS:</p>
+<ul>
+<li><strong>For <abbr title="Internet Protocol version 6">IPv6</abbr>, egress is naturally decentralized</strong>. Each <abbr title="Virtual Private Cloud">VPC</abbr> reaches the internet through its own <a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">egress-only internet gateway</a>, which is the <abbr title="Internet Protocol version 6">IPv6</abbr> equivalent of "private subnet plus <abbr title="Network Address Translation">NAT</abbr>": outbound-only, free of per-gigabyte charges, with no <abbr title="Network Address Translation">NAT</abbr> in the data path. There is no AWS managed <abbr title="Network Address Translation">NAT</abbr> for <abbr title="Internet Protocol version 6">IPv6</abbr>, and the egress-only internet gateway is local to its own <abbr title="Virtual Private Cloud">VPC</abbr> (a workload in <abbr title="Virtual Private Cloud">VPC</abbr> A cannot route <abbr title="Internet Protocol version 6">IPv6</abbr> traffic through <abbr title="Virtual Private Cloud">VPC</abbr> B's egress-only internet gateway). The decentralized vs centralized debate that follows applies almost entirely to <abbr title="Internet Protocol version 4">IPv4</abbr>.</li>
+<li><strong>For <abbr title="Internet Protocol version 4">IPv4</abbr>, egress requires <abbr title="Network Address Translation">NAT</abbr></strong>, and that opens a real architectural choice: run a <abbr title="Network Address Translation">NAT</abbr> Gateway in each workload <abbr title="Virtual Private Cloud">VPC</abbr> (decentralized) or send <abbr title="Internet Protocol version 4">IPv4</abbr> egress through a shared egress <abbr title="Virtual Private Cloud">VPC</abbr> over Transit Gateway or AWS Cloud WAN (centralized). This is a genuine 50-50 trade-off across three dimensions, and there is no single right answer for every organization.</li>
+</ul>
+<p>The <abbr title="Internet Protocol version 4">IPv4</abbr> trade-offs:</p>
+<ul>
+<li><strong>Cost</strong>: every flow has a cost shape. In a decentralized model, each workload <abbr title="Virtual Private Cloud">VPC</abbr> runs its own <abbr title="Network Address Translation">NAT</abbr> Gateway and (if used) its own AWS Network Firewall or Gateway Load Balancer endpoints, so per-<abbr title="Virtual Private Cloud">VPC</abbr> hourly fees and processing charges accumulate. Centralizing collapses those into a single egress <abbr title="Virtual Private Cloud">VPC</abbr>, but every flow now also incurs Transit Gateway or AWS Cloud WAN data-processing charges on the way to that <abbr title="Virtual Private Cloud">VPC</abbr>. Which pattern is cheaper depends on how many VPCs you run and how much they egress.</li>
+<li><strong>Operational ownership</strong>: who runs the <abbr title="Network Address Translation">NAT</abbr> Gateways, who pays the bill, who handles tickets when egress is broken. Centralizing concentrates this on a network or platform team; decentralizing pushes it to each application team.</li>
+<li><strong>Where the inspection point sits</strong>: a decentralized data plane can still enforce one uniform policy through the use of multiple AWS Network Firewall or Gateway Load Balancer endpoints (a single firewall fleet) and Route 53 <abbr title="Domain Name System">DNS</abbr> Firewall (for outbound domain rules). Centralizing collapses that into one physical inspection layer in one <abbr title="Virtual Private Cloud">VPC</abbr>. Both deliver consistent policy; they differ in whether the inspection point is logical (one set of managed rule sets distributed across VPCs) or physical (one shared appliance fleet that every flow traverses).</li>
+</ul>
+<p>The right answer depends on which of these dimensions matters most for your organization. The subsections that follow walk through each pattern and the design choices that come with it.</p>
+<p>The first decision in any egress strategy, regardless of IP version or pattern, is to <strong>reduce egress volume before deciding where to <abbr title="Network Address Translation">NAT</abbr> it</strong>. AWS API traffic that goes through a <abbr title="Network Address Translation">NAT</abbr> Gateway to reach a public AWS endpoint is the most common avoidable cost: gateway <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html"><abbr title="Virtual Private Cloud">VPC</abbr> endpoints (AWS PrivateLink)</a> for Amazon <abbr title="Simple Storage Service">S3</abbr> and Amazon DynamoDB are free, and interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for the AWS services your workloads use most (STS, KMS, ECR, Systems Manager, CloudWatch Logs, and others) keep that traffic private. This applies whether you choose centralized or decentralized egress; it removes traffic from the egress path entirely.</p>
+<h3 id="choose-between-regional-and-zonal-nat-gateway-ipv4">Choose between regional and zonal <abbr title="Network Address Translation">NAT</abbr> Gateway (<abbr title="Internet Protocol version 4">IPv4</abbr>)<a class="headerlink" href="#choose-between-regional-and-zonal-nat-gateway-ipv4" title="Permanent link">&para;</a></h3>
+<p>For <abbr title="Internet Protocol version 4">IPv4</abbr> egress, before choosing decentralized vs centralized, decide which <abbr title="Network Address Translation">NAT</abbr> Gateway availability mode to use. AWS <abbr title="Network Address Translation">NAT</abbr> Gateway has two modes: the <strong>zonal</strong> mode (one <abbr title="Network Address Translation">NAT</abbr> Gateway per <abbr title="Availability Zone">AZ</abbr>, in a public subnet, with route table entries directing each <abbr title="Availability Zone">AZ</abbr>'s private subnets through its local <abbr title="Network Address Translation">NAT</abbr> Gateway), and the newer <strong>regional</strong> mode (a single <abbr title="Network Address Translation">NAT</abbr> Gateway ID that automatically expands and contracts across AZs based on workload presence, with no public subnet required and higher per-<abbr title="Availability Zone">AZ</abbr> IP and port limits).</p>
+<p>The recommendation is straightforward:</p>
+<ul>
+<li><strong>For greenfield deployments, default to regional <abbr title="Network Address Translation">NAT</abbr> Gateway</strong>. A single <abbr title="Network Address Translation">NAT</abbr> Gateway ID across all AZs simplifies route table design, removes the requirement to maintain a public subnet per <abbr title="Availability Zone">AZ</abbr> (which removes a class of accidental-exposure risks), and scales IP allocation per <abbr title="Availability Zone">AZ</abbr> without manual re-provisioning. Regional <abbr title="Network Address Translation">NAT</abbr> Gateway is the recommended option for new VPCs.</li>
+<li><strong>For existing deployments running zonal <abbr title="Network Address Translation">NAT</abbr> Gateways, there's no compelling reason to migrate</strong>. Zonal <abbr title="Network Address Translation">NAT</abbr> Gateways continue to be fully supported, and the operational benefit of switching is small for an environment that already has the routing and public subnets in place. Pick up regional <abbr title="Network Address Translation">NAT</abbr> Gateway for new VPCs as you create them and let the existing ones run.</li>
+<li><strong>For private <abbr title="Network Address Translation">NAT</abbr> (<abbr title="Network Address Translation">NAT</abbr> Gateway in a private subnet for hybrid use cases), keep using zonal mode</strong>. Regional <abbr title="Network Address Translation">NAT</abbr> Gateway is recommended for general egress; private connectivity scenarios still rely on the zonal model.</li>
+</ul>
+<p>This choice is independent of whether you run <abbr title="Internet Protocol version 4">IPv4</abbr> egress decentralized or centralized; it's a <abbr title="Network Address Translation">NAT</abbr> Gateway availability-mode decision that applies in either pattern.</p>
+<h3 id="decentralized-ipv4-egress">Decentralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress<a class="headerlink" href="#decentralized-ipv4-egress" title="Permanent link">&para;</a></h3>
+<p>In a decentralized <abbr title="Internet Protocol version 4">IPv4</abbr> model, each <abbr title="Virtual Private Cloud">VPC</abbr> that needs internet egress runs its own <abbr title="Network Address Translation">NAT</abbr> Gateway and its own egress policy. Traffic from private subnets reaches the public internet through that <abbr title="Virtual Private Cloud">VPC</abbr>'s internet gateway directly, with no transit hop and no shared dependency. This is the same shape as the <abbr title="Internet Protocol version 6">IPv6</abbr> path (per-<abbr title="Virtual Private Cloud">VPC</abbr> egress, no transit-network processing), which means a dual-stack workload can use a single <abbr title="Virtual Private Cloud">VPC</abbr>-local pattern for both IP versions.</p>
+<p>Best practices:</p>
+<ul>
+<li><strong>Deploy <abbr title="Availability Zone">AZ</abbr>-redundant <abbr title="Network Address Translation">NAT</abbr> capacity</strong>. With regional <abbr title="Network Address Translation">NAT</abbr> Gateway, this is automatic. With zonal <abbr title="Network Address Translation">NAT</abbr> Gateways, deploy one per <abbr title="Availability Zone">AZ</abbr> and route each <abbr title="Availability Zone">AZ</abbr>'s private subnets through its local <abbr title="Network Address Translation">NAT</abbr> Gateway. A single zonal <abbr title="Network Address Translation">NAT</abbr> Gateway is a single point of failure for egress in that <abbr title="Virtual Private Cloud">VPC</abbr>; an <abbr title="Availability Zone">AZ</abbr>-aware zonal design removes that risk and keeps cross-zone data transfer to a minimum.</li>
+<li><strong>Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints to reduce <abbr title="Network Address Translation">NAT</abbr> Gateway traffic</strong>. Gateway endpoints for <abbr title="Simple Storage Service">S3</abbr> and DynamoDB cost nothing and remove that traffic from the <abbr title="Network Address Translation">NAT</abbr> path entirely. Interface endpoints for high-traffic AWS services often pay for themselves in <abbr title="Network Address Translation">NAT</abbr> processing fees.</li>
+<li><strong>Apply egress policy at the <abbr title="Virtual Private Cloud">VPC</abbr> layer</strong>. Security groups on the workload, route tables that direct only required CIDRs to the <abbr title="Network Address Translation">NAT</abbr> path, and NACLs as a coarse second layer. For destination-based filtering (specific domains or IPs), use Route 53 <abbr title="Domain Name System">DNS</abbr> Firewall, AWS Network Firewall, or Gateway Load Balancer with a third-party firewall in the workload <abbr title="Virtual Private Cloud">VPC</abbr>, with rule sets managed centrally through AWS Firewall Manager.</li>
+</ul>
+<h3 id="centralized-ipv4-egress">Centralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress<a class="headerlink" href="#centralized-ipv4-egress" title="Permanent link">&para;</a></h3>
+<p>In a centralized <abbr title="Internet Protocol version 4">IPv4</abbr> model, a shared egress <abbr title="Virtual Private Cloud">VPC</abbr> fronts internet egress for many workload VPCs. <abbr title="Internet Protocol version 4">IPv4</abbr> traffic from a workload <abbr title="Virtual Private Cloud">VPC</abbr> routes through Transit Gateway or AWS Cloud WAN to the egress <abbr title="Virtual Private Cloud">VPC</abbr>, then through a <abbr title="Network Address Translation">NAT</abbr> Gateway to the internet. The egress <abbr title="Virtual Private Cloud">VPC</abbr> typically also hosts shared filtering (AWS Network Firewall, Gateway Load Balancer with a third-party firewall) so that a single egress policy is enforced for every workload. Note that this pattern applies to <abbr title="Internet Protocol version 4">IPv4</abbr> only — <abbr title="Internet Protocol version 6">IPv6</abbr> egress remains decentralized in every consuming <abbr title="Virtual Private Cloud">VPC</abbr> because the egress-only internet gateway is per-<abbr title="Virtual Private Cloud">VPC</abbr> and AWS does not offer a managed NAT66 alternative.</p>
+<p>Best practices:</p>
+<ul>
+<li><strong>Run the egress <abbr title="Virtual Private Cloud">VPC</abbr> as a shared service</strong> owned by the network or platform team. Application teams don't modify the egress <abbr title="Virtual Private Cloud">VPC</abbr>; they consume it through Transit Gateway or AWS Cloud WAN attachments.</li>
+<li><strong>Use one egress <abbr title="Virtual Private Cloud">VPC</abbr> per AWS Region</strong> at minimum. Routing egress across Regions to a single global egress <abbr title="Virtual Private Cloud">VPC</abbr> is rarely worth the cost and latency. With AWS Cloud WAN, the per-Region egress VPCs can still be governed by a single network policy.</li>
+<li><strong>Place the inspection layer before <abbr title="Network Address Translation">NAT</abbr> in the egress path</strong>. The typical layout is: workload <abbr title="Virtual Private Cloud">VPC</abbr> → Transit Gateway or AWS Cloud WAN → AWS Network Firewall or Gateway Load Balancer with a third-party firewall in the egress <abbr title="Virtual Private Cloud">VPC</abbr> → <abbr title="Network Address Translation">NAT</abbr> Gateway → internet gateway. Inspecting before <abbr title="Network Address Translation">NAT</abbr> preserves the original <abbr title="Virtual Private Cloud">VPC</abbr> source IP, which matters for per-<abbr title="Virtual Private Cloud">VPC</abbr> policy and forensic analysis.</li>
+<li><strong>Deploy the shared inspection layer <abbr title="Availability Zone">AZ</abbr>-redundantly</strong>. Both AWS Network Firewall and a <abbr title="Gateway Load Balancer">GWLB</abbr>-fronted third-party firewall fleet support multi-<abbr title="Availability Zone">AZ</abbr> deployment; use it. A single-<abbr title="Availability Zone">AZ</abbr> inspection layer is a single point of failure for every workload that consumes the egress <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
+<li><strong>Alarm on the inspection layer's drop and pass counts</strong> in addition to throughput. A surge in drops often signals that a consuming workload changed its egress profile, and noticing that quickly is the difference between fixing a misconfigured policy and chasing a confused application team.</li>
+<li><strong>Document the operational ownership boundary</strong>. Application teams should know what egress operations they own (their workload's outbound traffic profile, the allow-list they request) versus what the central team owns (inspection rules, policy enforcement).</li>
+</ul>
+<h3 id="comparing-decentralized-vs-centralized-ipv4-egress">Comparing decentralized vs centralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress<a class="headerlink" href="#comparing-decentralized-vs-centralized-ipv4-egress" title="Permanent link">&para;</a></h3>
+<p>Unlike ingress, where decentralized is almost always the right default, <abbr title="Internet Protocol version 4">IPv4</abbr> egress is a genuine 50-50 decision driven by organizational factors as much as technical ones. The table below summarizes how each pattern handles the dimensions that usually decide the choice. Remember that the decision is <abbr title="Internet Protocol version 4">IPv4</abbr>-only — <abbr title="Internet Protocol version 6">IPv6</abbr> egress is decentralized in either case.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Decentralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress</th>
+<th>Centralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Per-<abbr title="Virtual Private Cloud">VPC</abbr> cost overhead</strong></td>
+<td>Each <abbr title="Virtual Private Cloud">VPC</abbr> pays for its own <abbr title="Network Address Translation">NAT</abbr> Gateway and (if used) its own AWS Network Firewall or Gateway Load Balancer endpoints. Direct IGW exit means no transit-network data-processing charges</td>
+<td>One shared egress <abbr title="Virtual Private Cloud">VPC</abbr> absorbs <abbr title="Network Address Translation">NAT</abbr> and inspection-endpoint costs regardless of how many workloads consume it, but every flow now also incurs Transit Gateway or AWS Cloud WAN data-processing charges on the way to the egress <abbr title="Virtual Private Cloud">VPC</abbr></td>
+</tr>
+<tr>
+<td><strong>Operational ownership</strong></td>
+<td>Each application team owns its own egress path, allow-list, and bill</td>
+<td>Network or platform team owns the egress <abbr title="Virtual Private Cloud">VPC</abbr>; application teams consume it as a shared service</td>
+</tr>
+<tr>
+<td><strong>Inspection-point placement</strong></td>
+<td>Centralized by management plane, distributed in the data plane: AWS Network Firewall and Gateway Load Balancer rule sets are managed centrally, and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html">Route 53 <abbr title="Domain Name System">DNS</abbr> Firewall</a> applies a single set of domain rules across every <abbr title="Virtual Private Cloud">VPC</abbr>. The same uniform policy can be enforced without forcing every flow through one egress <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td>Centralized in both planes: one inspection layer in one egress <abbr title="Virtual Private Cloud">VPC</abbr> sees every flow. Useful when the security baseline mandates a single physical inspection point rather than a logical one</td>
+</tr>
+<tr>
+<td><strong>Failure domain</strong></td>
+<td>An egress issue affects one <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td>An egress issue or change in the shared egress <abbr title="Virtual Private Cloud">VPC</abbr> affects every consuming workload</td>
+</tr>
+<tr>
+<td><strong>Inspection coverage</strong></td>
+<td>Per-<abbr title="Virtual Private Cloud">VPC</abbr> AWS Network Firewall or Gateway Load Balancer with third-party firewall, only where the workload requires it</td>
+<td>One shared inspection layer in the egress <abbr title="Virtual Private Cloud">VPC</abbr>, applied uniformly to every flow</td>
+</tr>
+<tr>
+<td><strong>Dual-stack consistency</strong></td>
+<td><abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> both exit per-<abbr title="Virtual Private Cloud">VPC</abbr>, so the egress shape is identical for both protocols and the workload <abbr title="Virtual Private Cloud">VPC</abbr> owns both paths</td>
+<td><abbr title="Internet Protocol version 4">IPv4</abbr> traverses Transit Gateway or AWS Cloud WAN to the shared egress <abbr title="Virtual Private Cloud">VPC</abbr>; <abbr title="Internet Protocol version 6">IPv6</abbr> still exits per-<abbr title="Virtual Private Cloud">VPC</abbr> through the egress-only internet gateway. Operators run two different egress patterns at once for a dual-stack workload</td>
+</tr>
+<tr>
+<td><strong>Latency overhead</strong></td>
+<td>Direct IGW exit, no transit hop</td>
+<td>Adds a Transit Gateway or AWS Cloud WAN hop and inspection processing on every <abbr title="Internet Protocol version 4">IPv4</abbr> flow</td>
+</tr>
+<tr>
+<td><strong>Best fit</strong></td>
+<td>Smaller environments, team-autonomy organizations, latency- or throughput-sensitive workloads, <abbr title="Internet Protocol version 6">IPv6</abbr>-first or dual-stack workloads where a single egress shape is preferred, applications that need fundamentally different egress policies from each other</td>
+<td>Cost pressure at scale (dozens or hundreds of VPCs) for <abbr title="Internet Protocol version 4">IPv4</abbr> traffic, mandatory single physical inspection point for <abbr title="Internet Protocol version 4">IPv4</abbr>, central security ownership, organizations where <abbr title="Internet Protocol version 4">IPv4</abbr> egress is run as a shared platform service</td>
+</tr>
+</tbody>
+</table>
+<h3 id="looking-ahead-aws-network-firewall-proxy-public-preview">Looking ahead: AWS Network Firewall Proxy (public preview)<a class="headerlink" href="#looking-ahead-aws-network-firewall-proxy-public-preview" title="Permanent link">&para;</a></h3>
+<p><a href="https://aws.amazon.com/about-aws/whats-new/2025/11/aws-network-firewall-proxy-preview/">AWS Network Firewall Proxy</a> is a managed <strong>explicit forward proxy</strong> for outbound web traffic, currently in public preview. It is not a peer alternative to AWS Network Firewall or Gateway Load Balancer with a third-party firewall (which sit transparently in the data path); it operates at a different abstraction level. The proxy explicitly proxies HTTP CONNECT requests to internet or on-premises destinations, and evaluates rules at three phases of each request — PreDNS, PreRequest, and PostResponse — giving you fine-grained, request-level control over what each workload is allowed to reach.</p>
+<p>The pattern it replaces is the <strong>self-hosted forward-proxy fleet</strong> (Squid clusters on <abbr title="Elastic Compute Cloud">EC2</abbr> or container-based proxy fleets that organizations have historically operated for explicit egress filtering). Where AWS Network Firewall and <abbr title="Gateway Load Balancer">GWLB</abbr>-with-third-party-firewall give you packet-level inspection in the egress path, the proxy gives you application-aware proxying with request-level rules.</p>
+<p>Because the service is in public preview, capabilities, supported configurations, and Region availability are limited as of this writing. Treat AWS Network Firewall Proxy as a pattern to start evaluating now if explicit forward-proxy semantics are a requirement in your organization, with a view to broader adoption when the service reaches general availability.</p>
+<h3 id="combining-ingress-and-egress-patterns">Combining ingress and egress patterns<a class="headerlink" href="#combining-ingress-and-egress-patterns" title="Permanent link">&para;</a></h3>
+<p>Ingress and egress are independent decisions. A workload can use decentralized ingress with centralized egress, or the other way around. The combinations that come up most often:</p>
+<ul>
+<li><strong>Decentralized ingress + decentralized egress</strong> is the simplest pattern and the typical default for smaller environments and for application teams that want full ownership.</li>
+<li><strong>Decentralized ingress + centralized egress</strong> is common in larger organizations: each application owns its public-facing entry, but <abbr title="Internet Protocol version 4">IPv4</abbr> egress consolidates to absorb per-<abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Network Address Translation">NAT</abbr> and inspection costs into one shared egress <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
+<li><strong>Centralized ingress + centralized egress</strong> appears in compliance-driven environments where both perimeter inspection and a single physical inspection point on outbound traffic are mandated. Both directions then share the same operational dependencies and ownership model.</li>
+<li><strong>Centralized ingress + decentralized egress</strong> is rare. If perimeter inspection on inbound traffic justifies centralization, the same drivers usually apply to outbound traffic; pure asymmetry is unusual.</li>
+</ul>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<p>The services this page references, grouped by where they appear:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Role on this page</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon CloudFront</td>
+<td>Ingress: L7 edge for every workload</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html">Documentation</a></td>
+</tr>
+<tr>
+<td>CloudFront <abbr title="Virtual Private Cloud">VPC</abbr> Origins</td>
+<td>Ingress: private <abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>, or <abbr title="Elastic Compute Cloud">EC2</abbr> origin behind CloudFront</td>
+<td><a href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-vpc-origins.html">Documentation</a></td>
+</tr>
+<tr>
+<td>AWS <abbr title="Web Application Firewall">WAF</abbr></td>
+<td>Ingress: managed L7 protection on CloudFront, <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway</td>
+<td><a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html">Documentation</a></td>
+</tr>
+<tr>
+<td>Application Load Balancer</td>
+<td>Ingress: L7 entry point in the workload <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">Documentation</a></td>
+</tr>
+<tr>
+<td>Network Load Balancer</td>
+<td>Ingress: L4 entry point in the workload <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html">Documentation</a></td>
+</tr>
+<tr>
+<td>Amazon API Gateway</td>
+<td>Ingress: managed L7 ingress for API-first workloads</td>
+<td><a href="https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html">Documentation</a></td>
+</tr>
+<tr>
+<td>AWS Global Accelerator</td>
+<td>Ingress: anycast static IPs for L4 workloads with global clients</td>
+<td><a href="https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html">Documentation</a></td>
+</tr>
+<tr>
+<td><abbr title="Network Address Translation">NAT</abbr> Gateway</td>
+<td>Egress (<abbr title="Internet Protocol version 4">IPv4</abbr>): managed <abbr title="Network Address Translation">NAT</abbr>, regional or zonal mode</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html">Documentation</a></td>
+</tr>
+<tr>
+<td>Egress-only internet gateway</td>
+<td>Egress (<abbr title="Internet Protocol version 6">IPv6</abbr>): per-<abbr title="Virtual Private Cloud">VPC</abbr> outbound <abbr title="Internet Protocol version 6">IPv6</abbr> path</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">Documentation</a></td>
+</tr>
+<tr>
+<td>Route 53 <abbr title="Domain Name System">DNS</abbr> Firewall</td>
+<td>Egress: domain-based outbound filtering across VPCs</td>
+<td><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html">Documentation</a></td>
+</tr>
+<tr>
+<td>AWS Network Firewall Proxy <em>(preview)</em></td>
+<td>Egress: managed explicit forward proxy</td>
+<td><a href="https://aws.amazon.com/about-aws/whats-new/2025/11/aws-network-firewall-proxy-preview/">Announcement</a></td>
+</tr>
+<tr>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> endpoints (AWS PrivateLink)</td>
+<td>Egress: keeps AWS service traffic off the egress path</td>
+<td><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html">Documentation</a></td>
+</tr>
+<tr>
+<td>AWS Network Firewall</td>
+<td>Ingress + egress: managed stateful firewall</td>
+<td><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html">Documentation</a></td>
+</tr>
+<tr>
+<td>Gateway Load Balancer</td>
+<td>Ingress + egress: transparent insertion point for third-party firewalls</td>
+<td><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html">Documentation</a></td>
+</tr>
+<tr>
+<td>AWS Firewall Manager</td>
+<td>Ingress + egress: central rule-set management for <abbr title="Web Application Firewall">WAF</abbr>, Network Firewall, <abbr title="Gateway Load Balancer">GWLB</abbr></td>
+<td><a href="https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html">Documentation</a></td>
+</tr>
+<tr>
+<td>AWS Shield</td>
+<td>Baseline: Shield Standard automatic on every public AWS endpoint; Shield Advanced for higher-tier <abbr title="Distributed Denial of Service">DDoS</abbr></td>
+<td><a href="https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html">Documentation</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="building-your-internet-connectivity-stack">Building your internet connectivity stack<a class="headerlink" href="#building-your-internet-connectivity-stack" title="Permanent link">&para;</a></h2>
+<p>Real-world internet connectivity strategies combine choices across two largely independent dimensions: ingress (decentralized vs centralized, per workload) and egress (<abbr title="Internet Protocol version 6">IPv6</abbr> stays decentralized; <abbr title="Internet Protocol version 4">IPv4</abbr> is decentralized vs centralized by trade-off). Each decision is made on its own merits.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Stack["Internet Connectivity Stack"]
+        direction TB
+
+        subgraph Ingress2["Ingress (preferred: decentralized)"]
+            Edge2["Edge layer&lt;br/&gt;Amazon CloudFront, AWS WAF,&lt;br/&gt;AWS Global Accelerator"]
+            Entry2["Per-VPC entry point&lt;br/&gt;ALB / NLB / API Gateway&lt;br/&gt;CloudFront VPC Origins"]
+            InspIn2["Per-VPC L4 inspection&lt;br/&gt;AWS Network Firewall or&lt;br/&gt;GWLB + 3rd-party firewall"]
+        end
+
+        subgraph Egress2["Egress"]
+            V6["IPv6 (decentralized by design)&lt;br/&gt;Egress-only IGW per VPC&lt;br/&gt;No managed NAT66"]
+            V4["IPv4 (choose pattern)&lt;br/&gt;Decentralized vs centralized&lt;br/&gt;by cost, ownership,&lt;br/&gt;inspection-point placement"]
+            Reduce["Reduce volume first&lt;br/&gt;Gateway + interface VPC endpoints"]
+        end
+
+        subgraph Filter3["Filtering layer (both directions)"]
+            Mgmt["Centrally managed&lt;br/&gt;AWS Firewall Manager,&lt;br/&gt;Route 53 DNS Firewall"]
+            DataPlane["Data-plane options&lt;br/&gt;AWS Network Firewall,&lt;br/&gt;GWLB + 3rd-party firewall,&lt;br/&gt;AWS Network Firewall Proxy (preview)"]
+        end
+    end
+
+    Ingress2 ~~~ Egress2 ~~~ Filter3
+
+    style Stack fill:none,stroke:none
+    style Ingress2 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Egress2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Filter3 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style Edge2 fill:#2563eb,stroke:#1e40af,color:#fff
+    style Entry2 fill:#2563eb,stroke:#1e40af,color:#fff
+    style InspIn2 fill:#2563eb,stroke:#1e40af,color:#fff
+    style V6 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style V4 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Reduce fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Mgmt fill:#059669,stroke:#047857,color:#fff
+    style DataPlane fill:#059669,stroke:#047857,color:#fff</code></pre>
+<h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
+<p>Organizations building internet connectivity from a clean slate can start with the patterns that scale and stay honest to the cloud-native model:</p>
+<ol>
+<li><strong>Decentralized ingress as the default</strong>. Each application team owns its public-facing entry point. Use Amazon CloudFront and AWS <abbr title="Web Application Firewall">WAF</abbr> in front of L7 workloads (with CloudFront <abbr title="Virtual Private Cloud">VPC</abbr> Origins for <abbr title="Virtual Private Cloud">VPC</abbr>-hosted backends), and <abbr title="Network Load Balancer">NLB</abbr> or AWS Global Accelerator in front of L4 workloads. Apply per-<abbr title="Virtual Private Cloud">VPC</abbr> AWS Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr>-with-third-party-firewall endpoints where L4 inspection is required, with rule sets managed centrally through AWS Firewall Manager.</li>
+<li><strong><abbr title="Internet Protocol version 6">IPv6</abbr>-first egress where the workload supports it</strong>. Each <abbr title="Virtual Private Cloud">VPC</abbr> reaches the internet through its own egress-only internet gateway. There is no managed NAT66, so plan for <abbr title="Internet Protocol version 6">IPv6</abbr> egress to be decentralized everywhere — and let that simplicity drive the <abbr title="Internet Protocol version 6">IPv6</abbr> adoption decision.</li>
+<li><strong>Regional <abbr title="Network Address Translation">NAT</abbr> Gateway for <abbr title="Internet Protocol version 4">IPv4</abbr> egress in every new <abbr title="Virtual Private Cloud">VPC</abbr></strong>. Single <abbr title="Network Address Translation">NAT</abbr> Gateway ID per <abbr title="Virtual Private Cloud">VPC</abbr>, no public subnet required, simpler routing.</li>
+<li><strong>Reduce <abbr title="Internet Protocol version 4">IPv4</abbr> egress volume from day one</strong>. Gateway <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for <abbr title="Simple Storage Service">S3</abbr> and DynamoDB in every <abbr title="Virtual Private Cloud">VPC</abbr> at no charge. Interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for the AWS services your workloads call most.</li>
+<li><strong>Choose the <abbr title="Internet Protocol version 4">IPv4</abbr> egress pattern based on organizational fit</strong>. Decentralized for team autonomy, dual-stack symmetry, or latency sensitivity. Centralized for cost pressure at scale or a single physical inspection point. Both deliver uniform policy — through AWS Firewall Manager and Route 53 <abbr title="Domain Name System">DNS</abbr> Firewall in the decentralized case, and through the shared inspection layer in the centralized case.</li>
+</ol>
+<h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
+<p>Organizations running established internet connectivity have working patterns that don't need to be replaced:</p>
+<ol>
+<li><strong>Existing decentralized ingress</strong> continues to work without change. The CloudFront + AWS <abbr title="Web Application Firewall">WAF</abbr> + AWS Firewall Manager pattern fits any account topology. Adopt CloudFront <abbr title="Virtual Private Cloud">VPC</abbr> Origins on new <abbr title="Virtual Private Cloud">VPC</abbr>-hosted L7 workloads as you create them, and consider migrating existing public origins behind CloudFront where the operational windows allow.</li>
+<li><strong>Existing centralized ingress through a shared <abbr title="Virtual Private Cloud">VPC</abbr></strong> can keep running where it was adopted for a specific compliance reason. New workloads default to decentralized; centralized stays in place for the workloads that originally required it.</li>
+<li><strong>Existing zonal <abbr title="Network Address Translation">NAT</abbr> Gateways</strong> are fully supported and don't need to be migrated to regional mode. Adopt regional <abbr title="Network Address Translation">NAT</abbr> Gateway as the default for new VPCs as they're created, and let the existing zonal deployments run.</li>
+<li><strong>Existing centralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress VPCs</strong> keep their role. Add Route 53 <abbr title="Domain Name System">DNS</abbr> Firewall and AWS Firewall Manager-managed rule sets across the consuming VPCs to extend uniform policy enforcement to traffic that doesn't need to traverse the centralized inspection layer (<abbr title="Domain Name System">DNS</abbr>-based filtering, per-workload rules).</li>
+<li><strong>Plan <abbr title="Internet Protocol version 6">IPv6</abbr> adoption deliberately</strong>. <abbr title="Internet Protocol version 6">IPv6</abbr> egress is decentralized by design and cannot be retrofitted into a centralized model without self-hosted NAT66 — factor that into when and how each application starts dual-stacking.</li>
+</ol>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:29:16 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Connectivity">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Connectivity
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../within-aws/" class="md-footer__link md-footer__link--next" aria-label="Next: Within AWS">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Within AWS
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

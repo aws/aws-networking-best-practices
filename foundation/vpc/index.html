@@ -1,0 +1,3083 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/foundation/vpc/">
+      
+      
+        <link rel="prev" href="../organizations/">
+      
+      
+        <link rel="next" href="../regions-azs/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Amazon VPC - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Amazon VPC - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/vpc.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/foundation/vpc/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Amazon VPC - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/vpc.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#amazon-vpc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Amazon VPC
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-design-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC design patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC design patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vpc-per-workload-one-vpc-per-application-per-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC per workload (one VPC per application per environment)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-vpcs-via-aws-ram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared VPCs via AWS RAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-vpc-per-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-VPC per account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cidr-sizing-and-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIDR sizing and planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CIDR sizing and planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#start-with-16-for-production-vpcs-and-never-go-smaller-than-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start with /16 for production VPCs and never go smaller than /20
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-secondary-cidrs-strategically-not-as-a-band-aid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use secondary CIDRs strategically, not as a band-aid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reserve-cidr-space-for-future-vpcs-in-the-same-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserve CIDR space for future VPCs in the same Region
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-adoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 adoption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 adoption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-dual-stack-from-day-one-on-new-vpcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable dual-stack from day one on new VPCs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-ipv6-for-east-west-traffic-to-reduce-nat-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use IPv6 for east-west traffic to reduce NAT dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Flow Logs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC Flow Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-flow-logs-at-the-vpc-level-not-the-subnet-or-eni-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Flow Logs at the VPC level, not the subnet or ENI level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-flow-logs-for-security-not-just-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Flow Logs for security, not just troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-dns-hostnames-and-dns-resolution-on-every-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable DNS hostnames and DNS resolution on every VPC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-route-53-resolver-endpoints-for-hybrid-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Route 53 Resolver endpoints for hybrid DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-design-and-account-strategy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC design and account strategy alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC design and account strategy alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-vpc-per-workload-account-is-the-default-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One VPC per workload account is the default pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-shared-vpcs-ram-when-centralized-control-outweighs-team-autonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use shared VPCs (RAM) when centralized control outweighs team autonomy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-isolation-and-security-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network isolation and security boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network isolation and security boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treat-vpcs-as-trust-boundaries-not-just-address-spaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat VPCs as trust boundaries, not just address spaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-multiple-subnet-tiers-but-keep-the-number-manageable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use multiple subnet tiers but keep the number manageable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-custom-vpcs-vs-default-vpcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use custom VPCs vs default VPCs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-amazon-vpc-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining Amazon VPC with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-limits-and-quotas-to-plan-around" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC limits and quotas to plan around
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-vpc-relates-to-the-rest-of-the-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How VPC relates to the rest of the Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-design-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC design patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC design patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vpc-per-workload-one-vpc-per-application-per-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC per workload (one VPC per application per environment)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-vpcs-via-aws-ram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared VPCs via AWS RAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-vpc-per-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-VPC per account
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cidr-sizing-and-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CIDR sizing and planning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CIDR sizing and planning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#start-with-16-for-production-vpcs-and-never-go-smaller-than-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Start with /16 for production VPCs and never go smaller than /20
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-secondary-cidrs-strategically-not-as-a-band-aid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use secondary CIDRs strategically, not as a band-aid
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reserve-cidr-space-for-future-vpcs-in-the-same-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reserve CIDR space for future VPCs in the same Region
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-adoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 adoption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 adoption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-dual-stack-from-day-one-on-new-vpcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable dual-stack from day one on new VPCs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-ipv6-for-east-west-traffic-to-reduce-nat-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use IPv6 for east-west traffic to reduce NAT dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Flow Logs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC Flow Logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-flow-logs-at-the-vpc-level-not-the-subnet-or-eni-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable Flow Logs at the VPC level, not the subnet or ENI level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-flow-logs-for-security-not-just-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Flow Logs for security, not just troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-dns-hostnames-and-dns-resolution-on-every-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable DNS hostnames and DNS resolution on every VPC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-route-53-resolver-endpoints-for-hybrid-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Route 53 Resolver endpoints for hybrid DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vpc-design-and-account-strategy-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC design and account strategy alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VPC design and account strategy alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#one-vpc-per-workload-account-is-the-default-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One VPC per workload account is the default pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-shared-vpcs-ram-when-centralized-control-outweighs-team-autonomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use shared VPCs (RAM) when centralized control outweighs team autonomy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-isolation-and-security-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network isolation and security boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network isolation and security boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#treat-vpcs-as-trust-boundaries-not-just-address-spaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat VPCs as trust boundaries, not just address spaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-multiple-subnet-tiers-but-keep-the-number-manageable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use multiple subnet tiers but keep the number manageable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-custom-vpcs-vs-default-vpcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use custom VPCs vs default VPCs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-amazon-vpc-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining Amazon VPC with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-limits-and-quotas-to-plan-around" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC limits and quotas to plan around
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-vpc-relates-to-the-rest-of-the-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How VPC relates to the rest of the Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Foundation
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/foundation/vpc.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/foundation/vpc.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="amazon-vpc">Amazon <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#amazon-vpc" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../aws-prerequisites/">Before You Start</a> and <a href="../organizations/">AWS Organizations</a>. Review those pages first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Amazon Virtual Private Cloud (<abbr title="Virtual Private Cloud">VPC</abbr>) is your logically isolated network within AWS. Every compute resource, database, container, and Lambda function that needs network connectivity runs inside a <abbr title="Virtual Private Cloud">VPC</abbr>. The <abbr title="Virtual Private Cloud">VPC</abbr> is not just a container for subnets — it is the foundational security boundary, the IP address domain, and the routing context that shapes every networking decision above it. Get <abbr title="Virtual Private Cloud">VPC</abbr> design wrong and you'll spend years working around <abbr title="Classless Inter-Domain Routing">CIDR</abbr> conflicts, connectivity limitations, and operational friction that could have been avoided with upfront planning.</p>
+<p>A <abbr title="Virtual Private Cloud">VPC</abbr> spans all Availability Zones in a Region, provides complete control over IP addressing, routing, and network gateways, and serves as the attachment point for every connectivity service (Transit Gateway, Cloud WAN, <abbr title="Virtual Private Cloud">VPC</abbr> Peering, PrivateLink, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice). Your <abbr title="Virtual Private Cloud">VPC</abbr> design directly determines what connectivity patterns are possible, what address space is available for growth, and how cleanly workloads can be isolated from each other.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph AWS["AWS Region: us-east-1"]
+        subgraph VPC["VPC: 10.0.0.0/16 - IPv6: 2001:db8::/56"]
+            subgraph AZ1["Availability Zone A"]
+                Subnet1["Subnet: 10.0.1.0/24&lt;br/&gt;IPv6: 2001:db8:0:1::/64"]
+            end
+            subgraph AZ2["Availability Zone B"]
+                Subnet2["Subnet: 10.0.2.0/24&lt;br/&gt;IPv6: 2001:db8:0:2::/64"]
+            end
+            subgraph AZ3["Availability Zone C"]
+                Subnet3["Subnet: 10.0.3.0/24&lt;br/&gt;IPv6: 2001:db8:0:3::/64"]
+            end
+        end
+    end
+
+    Subnet1 ~~~ Subnet2 ~~~ Subnet3
+
+    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
+    style VPC fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
+    style AZ1 fill:#dbeafe,stroke:#3b82f6,color:#000
+    style AZ2 fill:#dbeafe,stroke:#3b82f6,color:#000
+    style AZ3 fill:#dbeafe,stroke:#3b82f6,color:#000
+    style Subnet1 fill:#fef3c7,stroke:#f59e0b,color:#000
+    style Subnet2 fill:#fef3c7,stroke:#f59e0b,color:#000
+    style Subnet3 fill:#fef3c7,stroke:#f59e0b,color:#000</code></pre>
+<h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong><abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> addressing</strong></p>
+<hr />
+<p>Define a primary <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block (<code>/16</code> to <code>/28</code>), add up to 4 secondary CIDRs, and optionally assign a <code>/56</code> <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> for dual-stack operation.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm0 6c1.4 0 2.8 1.1 2.8 2.5V11c.6 0 1.2.6 1.2 1.3v3.5c0 .6-.6 1.2-1.3 1.2H9.2c-.6 0-1.2-.6-1.2-1.3v-3.5c0-.6.6-1.2 1.2-1.2V9.5C9.2 8.1 10.6 7 12 7m0 1.2c-.8 0-1.5.5-1.5 1.3V11h3V9.5c0-.8-.7-1.3-1.5-1.3"/></svg></span> <strong>Network isolation</strong></p>
+<hr />
+<p>Each <abbr title="Virtual Private Cloud">VPC</abbr> is a hard isolation boundary. Traffic between VPCs requires explicit connectivity (peering, Transit Gateway, Cloud WAN, or <abbr title="Virtual Private Cloud">VPC</abbr> Lattice). No implicit cross-<abbr title="Virtual Private Cloud">VPC</abbr> routing exists.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 10H5L3 8l2-2h6V3l1-1 1 1v1h6l2 2-2 2h-6v2h6l2 2-2 2h-6v6a2 2 0 0 1 2 2H9a2 2 0 0 1 2-2z"/></svg></span> <strong>Route tables and gateways</strong></p>
+<hr />
+<p>Per-subnet route tables control traffic flow. Internet Gateways, <abbr title="Network Address Translation">NAT</abbr> Gateways, Transit Gateway attachments, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints provide connectivity to different destinations.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m3 14 .5.07L8.07 9.5a1.95 1.95 0 0 1 .52-1.91c.78-.79 2.04-.79 2.82 0 .53.52.7 1.26.52 1.91l2.57 2.57.5-.07c.18 0 .35 0 .5.07l3.57-3.57C19 8.35 19 8.18 19 8a2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2c-.18 0-.35 0-.5-.07l-3.57 3.57c.07.15.07.32.07.5a2 2 0 0 1-2 2 2 2 0 0 1-2-2l.07-.5-2.57-2.57c-.32.07-.68.07-1 0L4.93 15.5 5 16a2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></p>
+<hr />
+<p>Capture metadata about IP traffic at the <abbr title="Virtual Private Cloud">VPC</abbr>, subnet, or ENI level. Essential for security analysis, troubleshooting, and compliance auditing.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M7 19a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/></svg></span> <strong><abbr title="Domain Name System">DNS</abbr> resolution</strong></p>
+<hr />
+<p>Amazon-provided <abbr title="Domain Name System">DNS</abbr> (Route 53 Resolver) at the <abbr title="Virtual Private Cloud">VPC</abbr>+2 address. Private hosted zones, Resolver endpoints, and forwarding rules enable hybrid <abbr title="Domain Name System">DNS</abbr> architectures.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> sharing (AWS RAM)</strong></p>
+<hr />
+<p>Share subnets across accounts within your Organization. Multiple accounts deploy resources into the same <abbr title="Virtual Private Cloud">VPC</abbr> without duplicating network infrastructure.</p>
+</li>
+</ul>
+</div>
+<h2 id="vpc-design-patterns"><abbr title="Virtual Private Cloud">VPC</abbr> design patterns<a class="headerlink" href="#vpc-design-patterns" title="Permanent link">&para;</a></h2>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> design is not a one-size-fits-all decision. The right pattern depends on your organization's account strategy, team autonomy requirements, compliance boundaries, and operational maturity. Three primary patterns dominate production AWS environments, and most organizations use a combination.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Pattern1["Pattern: VPC per workload"]
+        direction TB
+        AcctA["Account A"]
+        AcctB["Account B"]
+        VPCA["VPC: App A&lt;br/&gt;10.1.0.0/16"]
+        VPCB["VPC: App B&lt;br/&gt;10.2.0.0/16"]
+        AcctA --&gt; VPCA
+        AcctB --&gt; VPCB
+    end
+
+    subgraph Pattern2["Pattern: Shared VPC (RAM)"]
+        direction TB
+        NetAcct["Networking Account"]
+        SharedVPC["Shared VPC&lt;br/&gt;10.0.0.0/16"]
+        WL1["Workload Acct 1&lt;br/&gt;(uses shared subnet)"]
+        WL2["Workload Acct 2&lt;br/&gt;(uses shared subnet)"]
+        NetAcct --&gt; SharedVPC
+        SharedVPC --&gt; WL1
+        SharedVPC --&gt; WL2
+    end
+
+    subgraph Pattern3["Pattern: Multi-VPC per account"]
+        direction TB
+        SingleAcct["Single Account"]
+        VPC1["VPC: Prod&lt;br/&gt;10.10.0.0/16"]
+        VPC2["VPC: Dev&lt;br/&gt;10.20.0.0/16"]
+        SingleAcct --&gt; VPC1
+        SingleAcct --&gt; VPC2
+    end
+
+    style Pattern1 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Pattern2 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style Pattern3 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style VPCA fill:#2563eb,stroke:#1e40af,color:#fff
+    style VPCB fill:#2563eb,stroke:#1e40af,color:#fff
+    style SharedVPC fill:#059669,stroke:#065f46,color:#fff
+    style VPC1 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style VPC2 fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style AcctA fill:#dbeafe,stroke:#3b82f6,color:#000
+    style AcctB fill:#dbeafe,stroke:#3b82f6,color:#000
+    style NetAcct fill:#d1fae5,stroke:#059669,color:#000
+    style WL1 fill:#d1fae5,stroke:#059669,color:#000
+    style WL2 fill:#d1fae5,stroke:#059669,color:#000
+    style SingleAcct fill:#ede9fe,stroke:#7c3aed,color:#000</code></pre>
+<h3 id="vpc-per-workload-one-vpc-per-application-per-environment"><abbr title="Virtual Private Cloud">VPC</abbr> per workload (one <abbr title="Virtual Private Cloud">VPC</abbr> per application per environment)<a class="headerlink" href="#vpc-per-workload-one-vpc-per-application-per-environment" title="Permanent link">&para;</a></h3>
+<p>The most common pattern in mature multi-account environments. Each application team owns a dedicated <abbr title="Virtual Private Cloud">VPC</abbr> in their account, sized for their workload. Connectivity to shared services happens through Transit Gateway or Cloud WAN attachments.</p>
+<p><strong>When to use:</strong> Teams need autonomy over their network configuration (security groups, NACLs, route tables). Workloads have different compliance requirements. You want blast radius isolation — a misconfiguration in one <abbr title="Virtual Private Cloud">VPC</abbr> cannot affect another.</p>
+<p><strong>Trade-off:</strong> More VPCs means more Transit Gateway or Cloud WAN attachments, more <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocations to coordinate, and more route table entries. This is manageable with <abbr title="IP Address Manager">IPAM</abbr> and automated provisioning, but it requires upfront investment in tooling.</p>
+<h3 id="shared-vpcs-via-aws-ram">Shared VPCs via AWS RAM<a class="headerlink" href="#shared-vpcs-via-aws-ram" title="Permanent link">&para;</a></h3>
+<p>The networking team creates VPCs and shares specific subnets with workload accounts via <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">AWS Resource Access Manager</a>. Workload accounts deploy resources (<abbr title="Elastic Compute Cloud">EC2</abbr>, <abbr title="Relational Database Service">RDS</abbr>, Lambda) into shared subnets without managing the <abbr title="Virtual Private Cloud">VPC</abbr> itself.</p>
+<p><strong>When to use:</strong> You want centralized network management with minimal per-account networking overhead. Teams don't need to manage route tables or gateways. You have a small number of large VPCs rather than many small ones. Common in organizations where a central platform team owns all networking.</p>
+<p><strong>Trade-off:</strong> Less isolation between workloads sharing the same <abbr title="Virtual Private Cloud">VPC</abbr>. Security group management becomes more critical since resources from different accounts share the same network. Subnet-level NACLs are the coarsest isolation boundary within the <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
+<h3 id="multi-vpc-per-account">Multi-<abbr title="Virtual Private Cloud">VPC</abbr> per account<a class="headerlink" href="#multi-vpc-per-account" title="Permanent link">&para;</a></h3>
+<p>A single account contains multiple VPCs for different purposes (production, staging, isolated workloads). Less common in mature environments because it conflates account-level isolation with network-level isolation.</p>
+<p><strong>When to use:</strong> Small organizations not yet using a multi-account strategy. Proof-of-concept environments. Situations where account proliferation is constrained by organizational policy.</p>
+<p><strong>Trade-off:</strong> You lose the security and billing isolation that separate accounts provide. All VPCs share the same <abbr title="Identity and Access Management">IAM</abbr> boundary, which means a compromised credential in one <abbr title="Virtual Private Cloud">VPC</abbr>'s workload has potential access to resources in other VPCs within the same account.</p>
+<p><strong><em>Key insight:</em></strong> <em>Your <abbr title="Virtual Private Cloud">VPC</abbr> design pattern should follow your account strategy, not the other way around. If you use one account per workload per environment (the AWS recommended approach), then one <abbr title="Virtual Private Cloud">VPC</abbr> per account is the natural default. If you centralize networking in a platform account, shared VPCs via RAM reduce duplication. The <abbr title="Virtual Private Cloud">VPC</abbr> pattern is a consequence of your organizational model.</em></p>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="cidr-sizing-and-planning"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizing and planning<a class="headerlink" href="#cidr-sizing-and-planning" title="Permanent link">&para;</a></h3>
+<h4 id="start-with-16-for-production-vpcs-and-never-go-smaller-than-20">Start with /16 for production VPCs and never go smaller than /20<a class="headerlink" href="#start-with-16-for-production-vpcs-and-never-go-smaller-than-20" title="Permanent link">&para;</a></h4>
+<p>A <code>/16</code> gives you 65,536 addresses — enough to accommodate growth, multiple subnet tiers across all AZs, and services that consume IPs aggressively (EKS pods with <abbr title="Virtual Private Cloud">VPC</abbr> CNI, Lambda ENIs, ECS tasks in awsvpc mode). Starting smaller feels efficient but creates painful expansion scenarios later.</p>
+<p>The cost of a <code>/16</code> is address space consumption from your private range, not dollars. If you're using <a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a> with a well-planned top-level pool (e.g., <code>10.0.0.0/8</code>), you have 256 <code>/16</code> blocks available. That's enough for most organizations. If you're constrained on RFC 1918 space due to on-premises overlap, use <code>/20</code> as the minimum for production and plan secondary CIDRs from the start.</p>
+<h4 id="use-secondary-cidrs-strategically-not-as-a-band-aid">Use secondary CIDRs strategically, not as a band-aid<a class="headerlink" href="#use-secondary-cidrs-strategically-not-as-a-band-aid" title="Permanent link">&para;</a></h4>
+<p>Secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks let you expand a <abbr title="Virtual Private Cloud">VPC</abbr>'s address space without recreating it. This is valuable for planned growth (adding a new subnet tier, supporting a new <abbr title="Availability Zone">AZ</abbr>) but should not become a pattern for fixing undersized initial allocations. Each secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> adds routing complexity — route tables, security groups, and NACLs must account for the additional ranges.</p>
+<p>The best use of secondary CIDRs is for non-RFC 1918 ranges (100.64.0.0/10 for EKS pod networking) or for adding <abbr title="Internet Protocol version 6">IPv6</abbr> alongside an existing <abbr title="Internet Protocol version 4">IPv4</abbr>-only <abbr title="Virtual Private Cloud">VPC</abbr>. Avoid accumulating secondary CIDRs because the primary was too small — that's a signal to create a new, properly-sized <abbr title="Virtual Private Cloud">VPC</abbr> and migrate.</p>
+<h4 id="reserve-cidr-space-for-future-vpcs-in-the-same-region">Reserve <abbr title="Classless Inter-Domain Routing">CIDR</abbr> space for future VPCs in the same Region<a class="headerlink" href="#reserve-cidr-space-for-future-vpcs-in-the-same-region" title="Permanent link">&para;</a></h4>
+<p>When allocating CIDRs, don't just plan for the current <abbr title="Virtual Private Cloud">VPC</abbr>. Reserve contiguous blocks for future VPCs in the same Region so that route summarization remains possible. If your production <abbr title="Virtual Private Cloud">VPC</abbr> is <code>10.1.0.0/16</code> and your staging <abbr title="Virtual Private Cloud">VPC</abbr> is <code>10.2.0.0/16</code>, you can advertise <code>10.1.0.0/15</code> as a summary route to on-premises. Random <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation across your <code>/8</code> makes summarization impossible and inflates route tables everywhere.</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning is not a <abbr title="Virtual Private Cloud">VPC</abbr>-level decision — it's an organization-level decision. Use <a href="../ipam/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="IP Address Manager">IPAM</abbr></a> to enforce allocation rules, prevent overlaps, and maintain a single source of truth for your entire address space. Manual spreadsheet tracking breaks down past 10 VPCs.</em></p>
+<h3 id="ipv6-adoption"><abbr title="Internet Protocol version 6">IPv6</abbr> adoption<a class="headerlink" href="#ipv6-adoption" title="Permanent link">&para;</a></h3>
+<h4 id="enable-dual-stack-from-day-one-on-new-vpcs">Enable dual-stack from day one on new VPCs<a class="headerlink" href="#enable-dual-stack-from-day-one-on-new-vpcs" title="Permanent link">&para;</a></h4>
+<p>Every new <abbr title="Virtual Private Cloud">VPC</abbr> should be created with both an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> and an Amazon-provided <code>/56</code> <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>. The incremental cost is zero (<abbr title="Internet Protocol version 6">IPv6</abbr> addressing is free), and retrofitting <abbr title="Internet Protocol version 6">IPv6</abbr> into an existing <abbr title="Virtual Private Cloud">VPC</abbr> requires updating every subnet, security group, route table, and <abbr title="Network Access Control List">NACL</abbr> — work that compounds with the age of the <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
+<p>Dual-stack doesn't mean you must use <abbr title="Internet Protocol version 6">IPv6</abbr> immediately. It means the option is available when workloads are ready, without a migration project. Services like EKS, Lambda, and <abbr title="Application Load Balancer">ALB</abbr> already support <abbr title="Internet Protocol version 6">IPv6</abbr> natively. The trend is clear: <abbr title="Internet Protocol version 6">IPv6</abbr> adoption is accelerating, and VPCs created today without it will need it within their lifetime.</p>
+<h4 id="use-ipv6-for-east-west-traffic-to-reduce-nat-dependency">Use <abbr title="Internet Protocol version 6">IPv6</abbr> for east-west traffic to reduce <abbr title="Network Address Translation">NAT</abbr> dependency<a class="headerlink" href="#use-ipv6-for-east-west-traffic-to-reduce-nat-dependency" title="Permanent link">&para;</a></h4>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr> addresses are globally unique and publicly routable by design, but that doesn't mean they're publicly accessible. Egress-only internet gateways allow outbound <abbr title="Internet Protocol version 6">IPv6</abbr> traffic while blocking inbound. For service-to-service communication within AWS, <abbr title="Internet Protocol version 6">IPv6</abbr> eliminates the need for <abbr title="Network Address Translation">NAT</abbr> Gateway (and its per-GB cost) for traffic that doesn't need <abbr title="Internet Protocol version 4">IPv4</abbr> translation.</p>
+<h3 id="vpc-flow-logs"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs<a class="headerlink" href="#vpc-flow-logs" title="Permanent link">&para;</a></h3>
+<h4 id="enable-flow-logs-at-the-vpc-level-not-the-subnet-or-eni-level">Enable Flow Logs at the <abbr title="Virtual Private Cloud">VPC</abbr> level, not the subnet or ENI level<a class="headerlink" href="#enable-flow-logs-at-the-vpc-level-not-the-subnet-or-eni-level" title="Permanent link">&para;</a></h4>
+<p><abbr title="Virtual Private Cloud">VPC</abbr>-level Flow Logs capture all traffic within the <abbr title="Virtual Private Cloud">VPC</abbr> with a single configuration. Subnet-level or ENI-level logs are useful for targeted troubleshooting but should not be your primary observability mechanism — they create gaps in visibility and require per-resource management.</p>
+<p>Send Flow Logs to <abbr title="Simple Storage Service">S3</abbr> for long-term retention and cost-effective querying with Athena, and optionally to CloudWatch Logs for real-time alerting. The custom log format lets you include fields like <code>vpc-id</code>, <code>subnet-id</code>, <code>instance-id</code>, <code>tcp-flags</code>, and <code>traffic-path</code> that are essential for security investigation and traffic analysis.</p>
+<h4 id="use-flow-logs-for-security-not-just-troubleshooting">Use Flow Logs for security, not just troubleshooting<a class="headerlink" href="#use-flow-logs-for-security-not-just-troubleshooting" title="Permanent link">&para;</a></h4>
+<p>Flow Logs are often treated as a debugging tool. They're equally valuable as a security control: detecting unexpected traffic patterns, identifying resources communicating with known-bad IPs, validating that NACLs and security groups are working as intended, and providing audit evidence for compliance frameworks that require network traffic logging.</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are the only native mechanism for understanding what traffic actually flows in your <abbr title="Virtual Private Cloud">VPC</abbr>. Security groups and NACLs define what's allowed — Flow Logs tell you what's happening. Enable them on every <abbr title="Virtual Private Cloud">VPC</abbr>, in every account, from day one.</em></p>
+<h3 id="dns-configuration"><abbr title="Domain Name System">DNS</abbr> configuration<a class="headerlink" href="#dns-configuration" title="Permanent link">&para;</a></h3>
+<h4 id="enable-dns-hostnames-and-dns-resolution-on-every-vpc">Enable <abbr title="Domain Name System">DNS</abbr> hostnames and <abbr title="Domain Name System">DNS</abbr> resolution on every <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#enable-dns-hostnames-and-dns-resolution-on-every-vpc" title="Permanent link">&para;</a></h4>
+<p>Both <code>enableDnsHostnames</code> and <code>enableDnsSupport</code> should be <code>true</code> on every <abbr title="Virtual Private Cloud">VPC</abbr>. Without these, resources don't receive public <abbr title="Domain Name System">DNS</abbr> hostnames, Route 53 private hosted zones don't resolve, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints don't work correctly. There is no valid production reason to disable either setting.</p>
+<h4 id="use-route-53-resolver-endpoints-for-hybrid-dns">Use Route 53 Resolver endpoints for hybrid <abbr title="Domain Name System">DNS</abbr><a class="headerlink" href="#use-route-53-resolver-endpoints-for-hybrid-dns" title="Permanent link">&para;</a></h4>
+<p>If your <abbr title="Virtual Private Cloud">VPC</abbr> needs to resolve on-premises <abbr title="Domain Name System">DNS</abbr> names or your on-premises network needs to resolve AWS private hosted zone names, deploy Route 53 Resolver inbound and outbound endpoints. These replace the need for self-managed <abbr title="Domain Name System">DNS</abbr> forwarders (BIND, Unbound) running on <abbr title="Elastic Compute Cloud">EC2</abbr> and integrate natively with Route 53 Resolver rules shared via RAM across your Organization.</p>
+<h3 id="vpc-design-and-account-strategy-alignment"><abbr title="Virtual Private Cloud">VPC</abbr> design and account strategy alignment<a class="headerlink" href="#vpc-design-and-account-strategy-alignment" title="Permanent link">&para;</a></h3>
+<h4 id="one-vpc-per-workload-account-is-the-default-pattern">One <abbr title="Virtual Private Cloud">VPC</abbr> per workload account is the default pattern<a class="headerlink" href="#one-vpc-per-workload-account-is-the-default-pattern" title="Permanent link">&para;</a></h4>
+<p>In a multi-account strategy where each workload gets its own account (the AWS-recommended approach), each account should contain exactly one <abbr title="Virtual Private Cloud">VPC</abbr> for that workload's environment. This creates a clean 1:1 mapping: one account = one workload = one <abbr title="Virtual Private Cloud">VPC</abbr> = one <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation = one Transit Gateway or Cloud WAN attachment.</p>
+<p>This pattern maximizes isolation (account-level <abbr title="Identity and Access Management">IAM</abbr> boundary + <abbr title="Virtual Private Cloud">VPC</abbr>-level network boundary), simplifies <abbr title="IP Address Manager">IPAM</abbr> allocation (one pool per OU, one allocation per account), and makes connectivity governance straightforward (attachment acceptance based on account OU membership).</p>
+<h4 id="use-shared-vpcs-ram-when-centralized-control-outweighs-team-autonomy">Use shared VPCs (RAM) when centralized control outweighs team autonomy<a class="headerlink" href="#use-shared-vpcs-ram-when-centralized-control-outweighs-team-autonomy" title="Permanent link">&para;</a></h4>
+<p>Shared VPCs are appropriate when a central platform team manages all networking and workload teams should not interact with <abbr title="Virtual Private Cloud">VPC</abbr>-level constructs at all. This is common in regulated industries where network changes require change advisory board approval, or in organizations where workload teams are application developers without networking expertise.</p>
+<p>The trade-off is real: workload teams cannot modify security groups on shared subnets they don't own, cannot create custom route table entries, and cannot add <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Every network change goes through the platform team. If your organization values team autonomy and self-service, the <abbr title="Virtual Private Cloud">VPC</abbr>-per-workload pattern with automated provisioning is usually a better fit.</p>
+<p><strong><em>Key insight:</em></strong> <em>The choice between <abbr title="Virtual Private Cloud">VPC</abbr>-per-workload and shared VPCs is fundamentally an organizational design decision, not a technical one. It reflects where you want the boundary between "platform responsibility" and "team responsibility" to sit. Both patterns work technically — the question is which operational model fits your organization.</em></p>
+<h3 id="network-isolation-and-security-boundaries">Network isolation and security boundaries<a class="headerlink" href="#network-isolation-and-security-boundaries" title="Permanent link">&para;</a></h3>
+<h4 id="treat-vpcs-as-trust-boundaries-not-just-address-spaces">Treat VPCs as trust boundaries, not just address spaces<a class="headerlink" href="#treat-vpcs-as-trust-boundaries-not-just-address-spaces" title="Permanent link">&para;</a></h4>
+<p>A <abbr title="Virtual Private Cloud">VPC</abbr> is the strongest network isolation primitive AWS offers short of separate accounts. No traffic crosses a <abbr title="Virtual Private Cloud">VPC</abbr> boundary unless you explicitly create connectivity (peering, Transit Gateway attachment, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice association, PrivateLink endpoint). Design your <abbr title="Virtual Private Cloud">VPC</abbr> boundaries around trust domains: resources that trust each other at the network level belong in the same <abbr title="Virtual Private Cloud">VPC</abbr>; resources with different trust levels belong in separate VPCs.</p>
+<p>This principle means your PCI-scoped workloads should be in a dedicated <abbr title="Virtual Private Cloud">VPC</abbr> (and ideally a dedicated account), not sharing a <abbr title="Virtual Private Cloud">VPC</abbr> with non-PCI workloads. Your management plane (CI/CD, monitoring, bastion hosts) should be in a separate <abbr title="Virtual Private Cloud">VPC</abbr> from your data plane. Isolation is cheap — the cost of a <abbr title="Virtual Private Cloud">VPC</abbr> is zero; the cost of a breach that crosses a trust boundary is not.</p>
+<h4 id="use-multiple-subnet-tiers-but-keep-the-number-manageable">Use multiple subnet tiers but keep the number manageable<a class="headerlink" href="#use-multiple-subnet-tiers-but-keep-the-number-manageable" title="Permanent link">&para;</a></h4>
+<p>The classic three-tier model (public, private, data) works for most workloads. Add tiers only when you have a genuine routing or access control requirement that differs from existing tiers. Common additions include a dedicated tier for Transit Gateway or Cloud WAN attachment ENIs, a tier for <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, or a tier for firewall endpoints. Avoid creating tiers for organizational reasons (one tier per team) — that's what separate VPCs are for.</p>
+<h2 id="when-to-use-custom-vpcs-vs-default-vpcs">When to use custom VPCs vs default VPCs<a class="headerlink" href="#when-to-use-custom-vpcs-vs-default-vpcs" title="Permanent link">&para;</a></h2>
+<p>The default <abbr title="Virtual Private Cloud">VPC</abbr> exists for one purpose: letting new AWS users launch resources without understanding networking. It is pre-configured with a <code>172.31.0.0/16</code> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, public subnets in every <abbr title="Availability Zone">AZ</abbr>, an internet gateway, and a route table that sends all traffic to the internet. This configuration is the opposite of what production workloads need.</p>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Default <abbr title="Virtual Private Cloud">VPC</abbr></th>
+<th>Custom <abbr title="Virtual Private Cloud">VPC</abbr></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> control</strong></td>
+<td>Fixed at <code>172.31.0.0/16</code> — likely conflicts with other VPCs and on-premises networks</td>
+<td>You choose the <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, enabling <abbr title="IP Address Manager">IPAM</abbr>-managed, non-overlapping address space</td>
+</tr>
+<tr>
+<td><strong>Subnet configuration</strong></td>
+<td>All subnets are public (auto-assign public IP enabled)</td>
+<td>You define public, private, and isolated tiers with appropriate routing</td>
+</tr>
+<tr>
+<td><strong>Internet exposure</strong></td>
+<td>Internet gateway attached, default route to IGW in all subnets</td>
+<td>No internet gateway unless you explicitly create one</td>
+</tr>
+<tr>
+<td><strong>Connectivity</strong></td>
+<td>Cannot be meaningfully integrated into a Transit Gateway or Cloud WAN topology without <abbr title="Classless Inter-Domain Routing">CIDR</abbr> conflicts</td>
+<td>Designed to participate in your connectivity architecture from the start</td>
+</tr>
+<tr>
+<td><strong>Security posture</strong></td>
+<td>Resources get public IPs by default — violates least-privilege networking</td>
+<td>Resources are private by default — explicit action required for public exposure</td>
+</tr>
+<tr>
+<td><strong><abbr title="Domain Name System">DNS</abbr></strong></td>
+<td>Standard Amazon <abbr title="Domain Name System">DNS</abbr></td>
+<td>Full control over private hosted zones, Resolver rules, and custom <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> options</td>
+</tr>
+<tr>
+<td><strong>Compliance</strong></td>
+<td>Cannot meet most compliance frameworks (PCI DSS, HIPAA, SOC 2) that require controlled network boundaries</td>
+<td>Designed to meet compliance requirements with documented, auditable configuration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The rule is simple:</strong> use custom VPCs for everything. Delete or ignore default VPCs. If your organization uses <a href="../organizations/">AWS Organizations</a>, deploy an SCP that denies resource creation in default VPCs (<code>ec2:CreateDefaultVpc</code> deny, and deny <code>ec2:RunInstances</code> where the <abbr title="Virtual Private Cloud">VPC</abbr> is the default). This prevents accidental use of default VPCs across your entire Organization.</p>
+<p>The only acceptable use of a default <abbr title="Virtual Private Cloud">VPC</abbr> is quick experimentation in a sandbox account that has no connectivity to production networks and no compliance requirements. Even then, a custom <abbr title="Virtual Private Cloud">VPC</abbr> created by your account vending process is preferable because it establishes good habits and consistent tooling.</p>
+<p><strong><em>Key insight:</em></strong> <em>Default VPCs are a convenience for learning, not a foundation for production. Every resource launched in a default <abbr title="Virtual Private Cloud">VPC</abbr> is a resource that will eventually need to be migrated to a properly designed custom <abbr title="Virtual Private Cloud">VPC</abbr>. Start with custom VPCs and avoid the migration entirely.</em></p>
+<h2 id="combining-amazon-vpc-with-other-services">Combining Amazon <abbr title="Virtual Private Cloud">VPC</abbr> with other services<a class="headerlink" href="#combining-amazon-vpc-with-other-services" title="Permanent link">&para;</a></h2>
+<p>The <abbr title="Virtual Private Cloud">VPC</abbr> is the attachment point for every connectivity and application networking service in AWS. Understanding how <abbr title="Virtual Private Cloud">VPC</abbr> design decisions affect each service helps you avoid constraints that limit your architecture later.</p>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th><abbr title="Virtual Private Cloud">VPC</abbr> provides</th>
+<th>Other service provides</th>
+<th><abbr title="Virtual Private Cloud">VPC</abbr> design implication</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + Transit Gateway</strong></td>
+<td>Attachment ENIs in designated subnets, route table entries pointing to the <abbr title="Transit Gateway">TGW</abbr></td>
+<td>Regional hub-and-spoke routing between VPCs, <abbr title="Virtual Private Network">VPN</abbr>, and Direct Connect</td>
+<td>Dedicate a subnet tier for <abbr title="Transit Gateway">TGW</abbr> attachment ENIs. Size these subnets for the number of AZs (one ENI per <abbr title="Availability Zone">AZ</abbr>).</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + AWS Cloud WAN</strong></td>
+<td>Core network attachment ENIs, segment membership via tags</td>
+<td>Global policy-driven network management with segmentation</td>
+<td>Tag VPCs with segment metadata for automated attachment acceptance. Plan CIDRs to enable route summarization per segment.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Virtual Private Cloud">VPC</abbr> Peering</strong></td>
+<td>The two endpoints of the peering connection, route table entries for the peer <abbr title="Classless Inter-Domain Routing">CIDR</abbr></td>
+<td>Direct point-to-point connectivity without bandwidth bottleneck</td>
+<td>Ensure CIDRs don't overlap between peered VPCs. Peering doesn't support transitive routing.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</strong></td>
+<td>Service network <abbr title="Virtual Private Cloud">VPC</abbr> association (places Lattice data plane in the <abbr title="Virtual Private Cloud">VPC</abbr>)</td>
+<td>Application-layer service-to-service communication with <abbr title="Identity and Access Management">IAM</abbr> auth</td>
+<td>No <abbr title="Classless Inter-Domain Routing">CIDR</abbr> coordination required between VPCs. Lattice operates independently of IP-level routing.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + AWS PrivateLink</strong></td>
+<td>Interface endpoints (ENIs) in designated subnets consuming services, or <abbr title="Network Load Balancer">NLB</abbr>-backed endpoint services exposing them</td>
+<td>Private access to AWS services and cross-account service exposure</td>
+<td>Size endpoint subnets for the number of endpoints you'll consume. Each interface endpoint creates one ENI per <abbr title="Availability Zone">AZ</abbr>.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></td>
+<td>The traffic source being monitored</td>
+<td>Metadata capture of all IP traffic for security and troubleshooting</td>
+<td>Enable at <abbr title="Virtual Private Cloud">VPC</abbr> level for comprehensive coverage. Plan <abbr title="Simple Storage Service">S3</abbr> bucket and CloudWatch log group structure for multi-<abbr title="Virtual Private Cloud">VPC</abbr> environments.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + Route 53 Resolver</strong></td>
+<td>The <abbr title="Domain Name System">DNS</abbr> resolution context (<abbr title="Virtual Private Cloud">VPC</abbr>+2 resolver)</td>
+<td>Hybrid <abbr title="Domain Name System">DNS</abbr> forwarding, private hosted zone resolution, Resolver rules</td>
+<td>Enable <abbr title="Domain Name System">DNS</abbr> hostnames and <abbr title="Domain Name System">DNS</abbr> support. Deploy Resolver endpoints in a shared-services <abbr title="Virtual Private Cloud">VPC</abbr> and share rules via RAM.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + AWS Network Firewall</strong></td>
+<td>Firewall endpoints in dedicated subnets, route tables directing traffic through them</td>
+<td>Stateful and stateless traffic inspection and filtering</td>
+<td>Dedicate a subnet tier for firewall endpoints. Adjust route tables so traffic traverses the firewall before reaching its destination.</td>
+</tr>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Network Address Translation">NAT</abbr> Gateway</strong></td>
+<td>The elastic network interface and elastic IP in a public subnet</td>
+<td>Outbound <abbr title="Internet Protocol version 4">IPv4</abbr> internet access for private subnets</td>
+<td>Place <abbr title="Network Address Translation">NAT</abbr> Gateways in public subnets (one per <abbr title="Availability Zone">AZ</abbr> for resilience). Size the subnet to accommodate <abbr title="Network Address Translation">NAT</abbr> Gateway ENIs and any future growth.</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>Almost every connectivity service attaches to your <abbr title="Virtual Private Cloud">VPC</abbr> through ENIs in specific subnets. This means your subnet design must account for Transit Gateway ENIs, PrivateLink endpoints, firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> Gateways, and Resolver endpoints — not just your application workloads. Plan subnet tiers for infrastructure components from the start, or you'll run out of IP space in the subnets that matter most.</em></p>
+<h2 id="vpc-limits-and-quotas-to-plan-around"><abbr title="Virtual Private Cloud">VPC</abbr> limits and quotas to plan around<a class="headerlink" href="#vpc-limits-and-quotas-to-plan-around" title="Permanent link">&para;</a></h2>
+<p>Understanding <abbr title="Virtual Private Cloud">VPC</abbr> limits prevents architectural dead ends:</p>
+<ul>
+<li><strong>VPCs per Region</strong>: 5 (default), increasable to hundreds. Request increases proactively if using <abbr title="Virtual Private Cloud">VPC</abbr>-per-workload pattern.</li>
+<li><strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks per <abbr title="Virtual Private Cloud">VPC</abbr></strong>: 5 (1 primary + 4 secondary). Plan your primary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> generously — you only get 4 expansion opportunities.</li>
+<li><strong>Subnets per <abbr title="Virtual Private Cloud">VPC</abbr></strong>: 200 (default). Rarely a constraint unless you create excessive subnet tiers.</li>
+<li><strong>Route table entries</strong>: 50 per route table (default), increasable to 1,000. Becomes relevant with many <abbr title="Virtual Private Cloud">VPC</abbr> peering connections or specific routes.</li>
+<li><strong>Security groups per <abbr title="Virtual Private Cloud">VPC</abbr></strong>: 2,500 (default). Can become a constraint in shared VPCs with many workload accounts.</li>
+<li><strong>Network interfaces per Region</strong>: 5,000 (default). Relevant for VPCs with many PrivateLink endpoints, EKS pods, or ECS tasks in awsvpc mode.</li>
+<li><strong><abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block size</strong>: <code>/16</code> (largest) to <code>/28</code> (smallest). You cannot create a <abbr title="Virtual Private Cloud">VPC</abbr> larger than <code>/16</code> with a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr>.</li>
+</ul>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> User Guide</strong></p>
+<hr />
+<p>Complete service documentation including <abbr title="Virtual Private Cloud">VPC</abbr> creation, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> management, subnets, route tables, gateways, and security.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</strong></p>
+<hr />
+<p>Detailed guidance on primary and secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks, <abbr title="Internet Protocol version 6">IPv6</abbr> assignment, and address space management.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> security best practices</strong></p>
+<hr />
+<p>AWS guidance on security groups, NACLs, Flow Logs, and network isolation patterns.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Security</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3 5 7h3v7h2V7h3m3 10v-7h-2v7h-3l4 4 4-4z"/></svg></span> <strong>Migrate to <abbr title="Internet Protocol version 6">IPv6</abbr></strong></p>
+<hr />
+<p>Step-by-step guidance for adding <abbr title="Internet Protocol version 6">IPv6</abbr> to existing VPCs, updating subnets, route tables, and security groups.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-migrate-ipv6.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Internet Protocol version 6">IPv6</abbr> migration</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> sharing</strong></p>
+<hr />
+<p>How to share <abbr title="Virtual Private Cloud">VPC</abbr> subnets across accounts using AWS RAM, including permissions, limitations, and best practices.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Virtual Private Cloud">VPC</abbr> sharing</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>Designing hyperscale <abbr title="Virtual Private Cloud">VPC</abbr> networks</strong></p>
+<hr />
+<p>AWS blog post on large-scale <abbr title="Virtual Private Cloud">VPC</abbr> design patterns, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> strategies, and multi-account architectures.</p>
+<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/designing-hyperscale-amazon-vpc-networks/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog post</a></p>
+</li>
+</ul>
+</div>
+<h2 id="how-vpc-relates-to-the-rest-of-the-foundation">How <abbr title="Virtual Private Cloud">VPC</abbr> relates to the rest of the Foundation<a class="headerlink" href="#how-vpc-relates-to-the-rest-of-the-foundation" title="Permanent link">&para;</a></h2>
+<p>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> is the central construct that every other foundation component plugs into. Your <a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning</a> determines what address space the <abbr title="Virtual Private Cloud">VPC</abbr> uses. Your <a href="../subnets/">subnet strategy</a> determines how that address space is divided within the <abbr title="Virtual Private Cloud">VPC</abbr>. Your <a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr> configuration</a> governs allocation and prevents conflicts. Your <a href="../organizations/">Organizations structure</a> determines who can create VPCs and where.</p>
+<p><strong>Relationship to other Foundation topics:</strong></p>
+<ul>
+<li><strong><a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></strong>: The <abbr title="Virtual Private Cloud">VPC</abbr>'s primary and secondary CIDRs come from your <abbr title="Classless Inter-Domain Routing">CIDR</abbr> plan. Poor <abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning at the <abbr title="Virtual Private Cloud">VPC</abbr> level cascades into routing conflicts, peering limitations, and summarization failures.</li>
+<li><strong><a href="../subnets/">Subnets</a></strong>: Subnets divide the <abbr title="Virtual Private Cloud">VPC</abbr>'s <abbr title="Classless Inter-Domain Routing">CIDR</abbr> across AZs and tiers. Subnet design is constrained by the <abbr title="Virtual Private Cloud">VPC</abbr>'s <abbr title="Classless Inter-Domain Routing">CIDR</abbr> size — an undersized <abbr title="Virtual Private Cloud">VPC</abbr> limits your subnet options.</li>
+<li><strong><a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a></strong>: <abbr title="IP Address Manager">IPAM</abbr> pools allocate CIDRs to VPCs automatically, preventing overlaps and enforcing organizational standards. Every <abbr title="Virtual Private Cloud">VPC</abbr> should get its <abbr title="Classless Inter-Domain Routing">CIDR</abbr> from an <abbr title="IP Address Manager">IPAM</abbr> pool, not from manual selection.</li>
+<li><strong><a href="../regions-azs/">Regions and Availability Zones</a></strong>: A <abbr title="Virtual Private Cloud">VPC</abbr> exists in exactly one Region and spans all its AZs. Your Region strategy determines how many VPCs you need and where.</li>
+<li><strong><a href="../organizations/">AWS Organizations</a></strong>: Organizations governs who can create VPCs (SCPs), how VPCs are shared (RAM), and how VPCs attach to connectivity services (Cloud WAN attachment policies).</li>
+</ul>
+<p><strong>Relationship to Connectivity:</strong></p>
+<ul>
+<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Every Transit Gateway attachment, Cloud WAN attachment, and <abbr title="Virtual Private Cloud">VPC</abbr> peering connection terminates in a <abbr title="Virtual Private Cloud">VPC</abbr>. Your <abbr title="Virtual Private Cloud">VPC</abbr> design enables or constrains your connectivity architecture.</li>
+<li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a></strong>: Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> traffic enters AWS through a <abbr title="Virtual Private Cloud">VPC</abbr>. The <abbr title="Virtual Private Cloud">VPC</abbr> hosting these connections is typically in a centralized networking account.</li>
+<li><strong><a href="../../connectivity/internet/">Internet Connectivity</a></strong>: Internet Gateways, <abbr title="Network Address Translation">NAT</abbr> Gateways, and egress-only internet gateways are <abbr title="Virtual Private Cloud">VPC</abbr>-level constructs. Your <abbr title="Virtual Private Cloud">VPC</abbr>'s subnet tiers determine which resources can reach the internet and how.</li>
+</ul>
+<p><strong>Relationship to Application Networking:</strong></p>
+<ul>
+<li><strong><a href="../../application-networking/load-balancing/">Load Balancing</a></strong>: ALBs and NLBs deploy into <abbr title="Virtual Private Cloud">VPC</abbr> subnets. Subnet sizing and tier design must account for load balancer ENIs and scaling behavior.</li>
+<li><strong><a href="../../application-networking/service-to-service/">Service to Service</a></strong>: <abbr title="Virtual Private Cloud">VPC</abbr> Lattice associates with VPCs through service network associations. PrivateLink endpoints consume IP addresses in <abbr title="Virtual Private Cloud">VPC</abbr> subnets.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../organizations/" class="md-footer__link md-footer__link--prev" aria-label="Previous: AWS Organizations">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                AWS Organizations
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../regions-azs/" class="md-footer__link md-footer__link--next" aria-label="Next: Regions &amp; Availability Zones">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Regions & Availability Zones
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

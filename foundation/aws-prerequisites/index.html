@@ -1,0 +1,2358 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/foundation/aws-prerequisites/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../organizations/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Before You Start - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Before You Start - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/aws-prerequisites.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/foundation/aws-prerequisites/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Before You Start - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/aws-prerequisites.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#before-you-start" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Before You Start
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#identity-and-access-management-iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity and Access Management (IAM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-as-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure as Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-quotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Quotas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ipv6-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 Readiness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tagging-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tagging Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-well-architected-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Well-Architected Framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#identity-and-access-management-iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity and Access Management (IAM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#infrastructure-as-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure as Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-quotas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Quotas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ipv6-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 Readiness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tagging-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tagging Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-well-architected-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Well-Architected Framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Foundation
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/foundation/aws-prerequisites.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/foundation/aws-prerequisites.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="before-you-start">Before You Start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h1>
+<p>AWS networking does not exist in isolation. Every <abbr title="Virtual Private Cloud">VPC</abbr>, route table, and Transit Gateway attachment lives inside an account, is governed by <abbr title="Identity and Access Management">IAM</abbr> policies, is subject to service quotas, and should be deployed through code. Getting these non-networking foundations right before you touch a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block prevents the class of problems that are hardest to fix later: permission errors that block cross-account sharing, quota exhaustion during production deployments, untagged resources that make cost attribution impossible, and manual configurations that drift silently.</p>
+<p>This page covers the prerequisites that sit underneath the networking layer. None of them are networking-specific, but all of them shape how your network architecture operates in practice.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Prerequisites["Non-Networking Foundations"]
+        IAM["IAM&lt;br/&gt;Permissions, cross-account roles,&lt;br/&gt;service-linked roles"]
+        IaC["Infrastructure as Code&lt;br/&gt;CloudFormation, Terraform, CDK"]
+        Quotas["Service Quotas&lt;br/&gt;Limits that gate deployment"]
+        Tagging["Tagging Strategy&lt;br/&gt;Cost allocation, automation,&lt;br/&gt;policy enforcement"]
+        WA["Well-Architected&lt;br/&gt;Security and Reliability pillars"]
+    end
+
+    subgraph Networking["AWS Networking Layer"]
+        VPC["VPCs, Subnets, Route Tables"]
+        Connectivity["Transit Gateway, Cloud WAN, VPC Lattice"]
+        Security["Security Groups, NACLs, Network Firewall"]
+    end
+
+    IAM --&gt; VPC
+    IaC --&gt; VPC
+    Quotas --&gt; Connectivity
+    Tagging --&gt; Connectivity
+    WA --&gt; Security
+
+    style Prerequisites fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Networking fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style IAM fill:#2563eb,stroke:#1e40af,color:#fff
+    style IaC fill:#2563eb,stroke:#1e40af,color:#fff
+    style Quotas fill:#2563eb,stroke:#1e40af,color:#fff
+    style Tagging fill:#2563eb,stroke:#1e40af,color:#fff
+    style WA fill:#2563eb,stroke:#1e40af,color:#fff
+    style VPC fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Connectivity fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Security fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<h2 id="identity-and-access-management-iam">Identity and Access Management (<abbr title="Identity and Access Management">IAM</abbr>)<a class="headerlink" href="#identity-and-access-management-iam" title="Permanent link">&para;</a></h2>
+<p><abbr title="Identity and Access Management">IAM</abbr> is the control plane for everything in AWS. Every API call — creating a <abbr title="Virtual Private Cloud">VPC</abbr>, attaching a Transit Gateway, sharing a resource through AWS RAM — is an <abbr title="Identity and Access Management">IAM</abbr>-authorized action. If your <abbr title="Identity and Access Management">IAM</abbr> foundation is weak, your networking automation will fail in ways that are difficult to diagnose: cross-account resource sharing silently denied, service-linked roles missing permissions, or deployment pipelines blocked by overly restrictive SCPs.</p>
+<p><strong>What matters for networking specifically:</strong></p>
+<ul>
+<li><strong>Cross-account roles and trust policies</strong> — Multi-account networking is the norm, not the exception. Transit Gateway sharing, Route 53 Resolver rule associations, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service networks, and AWS RAM shares all require cross-account <abbr title="Identity and Access Management">IAM</abbr> trust. Design your role trust policies to support the resource-sharing patterns you'll use, not just the account you're currently working in.</li>
+<li><strong>Service-linked roles</strong> — Services like AWS Transit Gateway, Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, and AWS Network Firewall create service-linked roles automatically. These roles have specific permissions that the service needs to operate. Understand that they exist, that they're created on first use, and that SCPs or permission boundaries that block <code>iam:CreateServiceLinkedRole</code> will break service provisioning.</li>
+<li><strong>Service Control Policies (SCPs)</strong> — In an AWS Organizations environment, SCPs set the maximum permissions boundary for every account. A common mistake is deploying an SCP that restricts <code>ec2:*</code> actions without realizing that <abbr title="Virtual Private Cloud">VPC</abbr>, subnet, route table, security group, and ENI operations all live under the <code>ec2:</code> namespace. Test SCPs against networking actions explicitly.</li>
+<li><strong>Condition keys for network resources</strong> — <abbr title="Identity and Access Management">IAM</abbr> supports condition keys like <code>ec2:Vpc</code>, <code>ec2:Subnet</code>, and <code>aws:RequestedRegion</code> that let you scope permissions to specific network boundaries. Use them to prevent accidental resource creation in the wrong <abbr title="Virtual Private Cloud">VPC</abbr> or Region.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>The most common <abbr title="Identity and Access Management">IAM</abbr> failure in networking is not "permission denied on a single resource" — it's a cross-account trust relationship that works in development (same account) and breaks in production (different account, different Organization). Test cross-account <abbr title="Identity and Access Management">IAM</abbr> paths early.</em></p>
+<h2 id="infrastructure-as-code">Infrastructure as Code<a class="headerlink" href="#infrastructure-as-code" title="Permanent link">&para;</a></h2>
+<p>Networking infrastructure is almost always managed as code, and for good reason: network resources are long-lived, interdependent, and shared across teams. A <abbr title="Virtual Private Cloud">VPC</abbr> created manually in the console becomes a liability the moment someone needs to replicate it, audit it, or understand why a route exists. The three primary tools for AWS infrastructure as code are <strong>AWS CloudFormation</strong>, <strong>Terraform</strong>, and <strong>AWS CDK</strong>, and each has a different operational model.</p>
+<p><strong>Choosing your tool:</strong></p>
+<ul>
+<li><strong>AWS CloudFormation</strong> — Native AWS service, tightly integrated with AWS Organizations (StackSets for multi-account deployment), drift detection, and change sets. Best when your environment is AWS-only and you want deployment orchestration managed by AWS. Networking resources are well-supported, including custom resources for operations CloudFormation doesn't cover natively.</li>
+<li><strong>Terraform</strong> — Provider-based, state-file-driven, supports multi-cloud. The AWS provider covers networking resources comprehensively. Best when your team already uses Terraform, when you need to manage resources across multiple clouds, or when you prefer HCL's declarative style. Requires managing state files (use remote backends like <abbr title="Simple Storage Service">S3</abbr> + DynamoDB locking).</li>
+<li><strong>AWS CDK</strong> — Generates CloudFormation under the hood, but lets you define infrastructure in TypeScript, Python, Java, Go, or C#. Best when your team prefers general-purpose programming languages and wants to build reusable constructs. The <code>aws-ec2</code> module provides L2 constructs for VPCs, subnets, and routing that handle common patterns with sensible defaults.</li>
+</ul>
+<p><strong>Patterns that matter for networking IaC:</strong></p>
+<ul>
+<li><strong>Separate network infrastructure from workload infrastructure</strong> — Network resources (VPCs, Transit Gateway attachments, route tables) change on a different cadence than application resources. Deploy them in separate stacks or state files so that a workload deployment cannot accidentally modify shared network infrastructure.</li>
+<li><strong>Use outputs and cross-stack references</strong> — Networking stacks produce values (<abbr title="Virtual Private Cloud">VPC</abbr> IDs, subnet IDs, route table IDs) that workload stacks consume. Export these cleanly through CloudFormation exports, Terraform remote state data sources, or SSM Parameter Store.</li>
+<li><strong>Parameterize <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</strong> — Never hardcode <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges. Pass them as parameters or look them up from <abbr title="IP Address Manager">IPAM</abbr>. This is what makes your templates reusable across environments.</li>
+<li><strong>Test with ephemeral environments</strong> — Spin up a complete network stack in a test account, validate connectivity, and tear it down. This catches quota issues, <abbr title="Identity and Access Management">IAM</abbr> trust failures, and routing errors before they reach production.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>The tool matters less than the discipline. Pick one, use it consistently, and never allow manual console changes to network resources in production accounts. Drift between code and reality is the single largest source of networking incidents in mature AWS environments.</em></p>
+<h2 id="service-quotas">Service Quotas<a class="headerlink" href="#service-quotas" title="Permanent link">&para;</a></h2>
+<p>AWS imposes default limits on networking resources, and many of them are lower than you'd expect. A default of 5 VPCs per Region sounds generous until you're running a multi-account landing zone where each account needs at least one <abbr title="Virtual Private Cloud">VPC</abbr>. A default of 50 routes per route table sounds fine until you peer with 60 VPCs. Quota exhaustion during a production deployment is an avoidable incident.</p>
+<p><strong>Quotas that catch networking teams most often:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th style="text-align: center;">Default Limit</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPCs per Region</td>
+<td style="text-align: center;">5</td>
+<td>Multi-account environments hit this quickly in shared-services accounts</td>
+</tr>
+<tr>
+<td>Subnets per <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td style="text-align: center;">200</td>
+<td>Rarely an issue, but large multi-<abbr title="Availability Zone">AZ</abbr> designs with many tiers can approach it</td>
+</tr>
+<tr>
+<td>Routes per route table</td>
+<td style="text-align: center;">50</td>
+<td>Transit Gateway and <abbr title="Virtual Private Cloud">VPC</abbr> peering each consume a route entry per destination</td>
+</tr>
+<tr>
+<td>Security groups per ENI</td>
+<td style="text-align: center;">5</td>
+<td>Microservice architectures with fine-grained <abbr title="Security Group">SG</abbr> rules hit this</td>
+</tr>
+<tr>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> peering connections per <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td style="text-align: center;">50</td>
+<td>Mesh topologies exhaust this; Transit Gateway is the answer</td>
+</tr>
+<tr>
+<td>Transit Gateway attachments</td>
+<td style="text-align: center;">5,000</td>
+<td>Large organizations with hundreds of accounts approach this</td>
+</tr>
+<tr>
+<td>Participants per RAM share</td>
+<td style="text-align: center;">5,000</td>
+<td>Relevant for Transit Gateway and <abbr title="Virtual Private Cloud">VPC</abbr> Lattice sharing at scale</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Best practices for quota management:</strong></p>
+<ul>
+<li><strong>Audit quotas before designing</strong> — Run <code>aws service-quotas list-service-quotas --service-code ec2</code> and <code>--service-code vpc</code> in every Region you plan to use. Compare defaults against your architecture's resource count.</li>
+<li><strong>Request increases proactively</strong> — Quota increase requests can take hours to days. Submit them as part of your environment provisioning, not when a deployment fails.</li>
+<li><strong>Monitor applied quotas in CloudWatch</strong> — Service Quotas publishes utilization metrics. Set alarms at 80% utilization so you have time to request increases before hitting the wall.</li>
+<li><strong>Account for quotas in your IaC</strong> — If your Terraform or CloudFormation template creates resources that approach a quota, document it. Better yet, add a pre-deployment check.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Quotas are not bugs — they're guardrails. But the default values assume a single-workload account, not a shared-services or networking account. Treat quota planning as part of architecture design, not as an afterthought.</em></p>
+<h2 id="ipv6-readiness"><abbr title="Internet Protocol version 6">IPv6</abbr> Readiness<a class="headerlink" href="#ipv6-readiness" title="Permanent link">&para;</a></h2>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr> is not a future consideration — it's a current requirement for modern AWS networking. Every new <abbr title="Virtual Private Cloud">VPC</abbr> should be dual-stack from day one, and your non-networking foundations must be ready to support that. <abbr title="Internet Protocol version 6">IPv6</abbr> readiness failures are subtle: a <abbr title="Virtual Private Cloud">VPC</abbr> with <abbr title="Internet Protocol version 6">IPv6</abbr> enabled but security groups that only have <abbr title="Internet Protocol version 4">IPv4</abbr> rules, or IaC templates that create route tables without <code>::/0</code> entries, or NACLs that block <abbr title="Internet Protocol version 6">IPv6</abbr> traffic silently.</p>
+<p><strong>What <abbr title="Internet Protocol version 6">IPv6</abbr> readiness means for your prerequisites:</strong></p>
+<ul>
+<li><strong>Security groups need explicit <abbr title="Internet Protocol version 6">IPv6</abbr> rules</strong> — <abbr title="Internet Protocol version 4">IPv4</abbr> rules do not automatically apply to <abbr title="Internet Protocol version 6">IPv6</abbr> traffic. A security group that allows <code>0.0.0.0/0</code> on port 443 does not allow <code>[::]/0</code> on port 443. Every security group in your IaC templates must include both protocol families.</li>
+<li><strong>NACLs must permit <abbr title="Internet Protocol version 6">IPv6</abbr></strong> — The default <abbr title="Network Access Control List">NACL</abbr> allows all traffic (<abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>), but custom NACLs need explicit <abbr title="Internet Protocol version 6">IPv6</abbr> entries. A custom <abbr title="Network Access Control List">NACL</abbr> that allows <code>0.0.0.0/0</code> inbound does not allow <abbr title="Internet Protocol version 6">IPv6</abbr> inbound.</li>
+<li><strong>IaC templates must include dual-stack from the start</strong> — <abbr title="Virtual Private Cloud">VPC</abbr> templates should allocate both an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> and an Amazon-provided <abbr title="Internet Protocol version 6">IPv6</abbr> <code>/56</code>. Subnet templates should assign both an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> and an <abbr title="Internet Protocol version 6">IPv6</abbr> <code>/64</code>. Route tables need both <code>0.0.0.0/0</code> and <code>::/0</code> entries. Retrofitting <abbr title="Internet Protocol version 6">IPv6</abbr> into existing templates is significantly more work than including it from the beginning.</li>
+<li><strong><abbr title="Identity and Access Management">IAM</abbr> policies referencing <code>ec2:</code> actions</strong> — <abbr title="Internet Protocol version 6">IPv6</abbr>-specific actions (like <code>ec2:AssignIpv6Addresses</code>) must not be inadvertently blocked by SCPs or permission boundaries that restrict <code>ec2:*</code> actions.</li>
+<li><strong><abbr title="Domain Name System">DNS</abbr> resolution</strong> — Applications must handle dual-stack <abbr title="Domain Name System">DNS</abbr> responses (AAAA records alongside A records). Test that your application code, health checks, and monitoring tools work correctly when <abbr title="Domain Name System">DNS</abbr> returns <abbr title="Internet Protocol version 6">IPv6</abbr> addresses.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>The most common <abbr title="Internet Protocol version 6">IPv6</abbr> failure is not "the <abbr title="Virtual Private Cloud">VPC</abbr> doesn't support it" — it's "the security group only has <abbr title="Internet Protocol version 4">IPv4</abbr> rules." Build <abbr title="Internet Protocol version 6">IPv6</abbr> into your IaC templates, security group modules, and <abbr title="Network Access Control List">NACL</abbr> baselines from the start, and this entire class of problems disappears.</em></p>
+<h2 id="tagging-strategy">Tagging Strategy<a class="headerlink" href="#tagging-strategy" title="Permanent link">&para;</a></h2>
+<p>Tags are metadata, but in AWS networking they're also the mechanism for cost allocation, automation targeting, and policy enforcement. An untagged <abbr title="Virtual Private Cloud">VPC</abbr> is a <abbr title="Virtual Private Cloud">VPC</abbr> that no one can attribute cost to, no automation can reliably target, and no compliance rule can evaluate. In a multi-account networking environment with hundreds of VPCs and thousands of subnets, consistent tagging is the difference between operational visibility and chaos.</p>
+<p><strong>A minimum viable tagging standard for network resources:</strong></p>
+<ul>
+<li><strong><code>Environment</code></strong> — <code>production</code>, <code>staging</code>, <code>development</code>. Gates automation behavior (e.g., don't auto-delete production resources).</li>
+<li><strong><code>Owner</code></strong> — The team responsible for the resource. Critical when a Transit Gateway attachment is consuming capacity and you need to know who to contact.</li>
+<li><strong><code>CostCenter</code></strong> — For billing allocation. Network resources (<abbr title="Network Address Translation">NAT</abbr> Gateways, Transit Gateway attachments, <abbr title="Virtual Private Cloud">VPC</abbr> endpoints) generate significant cost that must be attributed.</li>
+<li><strong><code>ManagedBy</code></strong> — <code>cloudformation</code>, <code>terraform</code>, <code>cdk</code>, or <code>manual</code>. Identifies how the resource is managed and whether it's safe to modify.</li>
+<li><strong><code>Name</code></strong> — Descriptive and consistent. Use a naming convention like <code>{env}-{region}-{purpose}-{type}</code> (e.g., <code>prod-use1-shared-tgw</code>).</li>
+</ul>
+<p><strong>Enforcement mechanisms:</strong></p>
+<ul>
+<li><strong>AWS Organizations Tag Policies</strong> — Define required tags and allowed values at the Organization level. Non-compliant resources are flagged (or blocked, depending on enforcement mode).</li>
+<li><strong>SCP-based enforcement</strong> — Deny <code>ec2:CreateVpc</code>, <code>ec2:CreateSubnet</code>, and other networking actions unless required tags are present in the request.</li>
+<li><strong>AWS Config rules</strong> — <code>required-tags</code> rule evaluates existing resources and flags non-compliance for remediation.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Enforce tagging at creation time, not after the fact. Retroactively tagging hundreds of network resources is painful and error-prone. An SCP or <abbr title="Identity and Access Management">IAM</abbr> policy condition that requires tags on resource creation is far cheaper than a quarterly tagging remediation effort.</em></p>
+<h2 id="aws-well-architected-framework">AWS Well-Architected Framework<a class="headerlink" href="#aws-well-architected-framework" title="Permanent link">&para;</a></h2>
+<p>The Well-Architected Framework provides the architectural principles that networking decisions should align with. Two pillars are directly relevant to network architecture: <strong>Security</strong> and <strong>Reliability</strong>. A third — <strong>Cost Optimization</strong> — becomes critical once you're running Transit Gateway, <abbr title="Network Address Translation">NAT</abbr> Gateways, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints at scale.</p>
+<p><strong>Security Pillar — what applies to networking:</strong></p>
+<ul>
+<li><strong>Defense in depth</strong> — Layer security controls: security groups at the ENI, NACLs at the subnet, Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr> at the <abbr title="Virtual Private Cloud">VPC</abbr> perimeter, and AWS <abbr title="Web Application Firewall">WAF</abbr> at the application edge. No single layer is sufficient alone.</li>
+<li><strong>Least privilege for network access</strong> — Default-deny security groups, explicit route table entries, and PrivateLink instead of public endpoints wherever possible.</li>
+<li><strong>Reduce attack surface</strong> — Private subnets by default, <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for AWS service access, no public IPs unless explicitly required.</li>
+</ul>
+<p><strong>Reliability Pillar — what applies to networking:</strong></p>
+<ul>
+<li><strong>Multi-<abbr title="Availability Zone">AZ</abbr> by default</strong> — Every networking component (<abbr title="Network Address Translation">NAT</abbr> Gateway, Network Firewall endpoints, load balancers) should be deployed across multiple Availability Zones. Single-<abbr title="Availability Zone">AZ</abbr> networking is a single point of failure for everything above it.</li>
+<li><strong>Limit blast radius</strong> — Use multiple VPCs and accounts to contain failures. A routing misconfiguration in one <abbr title="Virtual Private Cloud">VPC</abbr> should not propagate to others.</li>
+<li><strong>Test failure modes</strong> — Simulate <abbr title="Availability Zone">AZ</abbr> failure, Transit Gateway attachment loss, and <abbr title="Domain Name System">DNS</abbr> resolution failure. Know what breaks and how it recovers.</li>
+</ul>
+<p><strong>Cost Optimization Pillar — what applies to networking:</strong></p>
+<ul>
+<li><strong>Understand data transfer pricing</strong> — Cross-<abbr title="Availability Zone">AZ</abbr>, cross-Region, Transit Gateway processing, <abbr title="Network Address Translation">NAT</abbr> Gateway processing, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoint hourly charges all add up. Architect to minimize unnecessary data movement.</li>
+<li><strong>Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints to avoid <abbr title="Network Address Translation">NAT</abbr> costs</strong> — Traffic to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, and other AWS services through <abbr title="Virtual Private Cloud">VPC</abbr> endpoints avoids <abbr title="Network Address Translation">NAT</abbr> Gateway processing charges entirely.</li>
+<li><strong>Right-size your connectivity</strong> — Don't deploy Transit Gateway when <abbr title="Virtual Private Cloud">VPC</abbr> peering suffices for two VPCs. Don't deploy AWS Cloud WAN when a single-Region Transit Gateway covers your topology.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Well-Architected is not a checklist to complete after building — it's a set of principles to apply during design. Review the Security and Reliability pillars before you draw your first network diagram, not after.</em></p>
+<hr />
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm0 4a3 3 0 0 1 3 3 3 3 0 0 1-3 3 3 3 0 0 1-3-3 3 3 0 0 1 3-3m5.13 12A9.7 9.7 0 0 1 12 20.92 9.7 9.7 0 0 1 6.87 17c-.34-.5-.63-1-.87-1.53 0-1.65 2.71-3 6-3s6 1.32 6 3c-.24.53-.53 1.03-.87 1.53"/></svg></span> <strong><abbr title="Identity and Access Management">IAM</abbr> User Guide</strong></p>
+<hr />
+<p>Identity and access management fundamentals, policies, roles, and cross-account access patterns.</p>
+<p><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Identity and Access Management">IAM</abbr> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H3v2h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h2v-2H8v-5a2 2 0 0 0-2-2 2 2 0 0 0 2-2V5h2V3m6 0a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1v2h-1a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-2v-2h2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5h-2V3z"/></svg></span> <strong>AWS CloudFormation</strong></p>
+<hr />
+<p>AWS-native infrastructure as code with StackSets, drift detection, and change sets.</p>
+<p><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> CloudFormation Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 5.4v6.4L15.4 15V8.7zm-6.2 3.3V15l-5.6-3.2V5.4zm0 7v6.4l-5.6-3.2v-6.4zM8.6 5.1v6.4L3 8.3V1.9z"/></svg></span> <strong>Terraform AWS Provider</strong></p>
+<hr />
+<p>HashiCorp's AWS provider documentation covering all networking resources.</p>
+<p><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Terraform AWS Provider</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2m0 2a8 8 0 0 1 8 8c0 2.4-1 4.5-2.7 6-1.4-1.3-3.3-2-5.3-2s-3.8.7-5.3 2C5 16.5 4 14.4 4 12a8 8 0 0 1 8-8m2 1.89c-.38.01-.74.26-.9.65l-1.29 3.23-.1.23c-.71.13-1.3.6-1.57 1.26-.41 1.03.09 2.19 1.12 2.6s2.19-.09 2.6-1.12c.26-.66.14-1.42-.29-1.98l.1-.26 1.29-3.21.01-.03c.2-.51-.05-1.09-.56-1.3-.13-.05-.26-.07-.41-.07M10 6a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1M7 9a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1m10 0a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1"/></svg></span> <strong>Service Quotas</strong></p>
+<hr />
+<p>View, manage, and request increases for AWS service limits.</p>
+<p><a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Service Quotas Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.5 9A1.5 1.5 0 0 0 7 7.5 1.5 1.5 0 0 0 5.5 6 1.5 1.5 0 0 0 4 7.5 1.5 1.5 0 0 0 5.5 9m11.91 2.58c.36.36.59.86.59 1.42 0 .55-.22 1.05-.59 1.41l-5 5a1.996 1.996 0 0 1-2.83 0l-6.99-6.99C2.22 12.05 2 11.55 2 11V6c0-1.11.89-2 2-2h5c.55 0 1.05.22 1.41.58zm-3.87-5.87 1-1 6.87 6.87c.37.36.59.87.59 1.42s-.22 1.05-.58 1.41l-5.38 5.38-1-1L20.75 13z"/></svg></span> <strong>Tagging Best Practices</strong></p>
+<hr />
+<p>AWS tagging strategies, tag policies, and enforcement mechanisms.</p>
+<p><a href="https://docs.aws.amazon.com/tag-editor/latest/userguide/tagging.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Tagging Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m23 12-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68zm-13 5-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9z"/></svg></span> <strong>Well-Architected Framework</strong></p>
+<hr />
+<p>Architectural best practices across Security, Reliability, Performance, Cost, and Operational Excellence.</p>
+<p><a href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Well-Architected Framework</a></p>
+</li>
+</ul>
+</div>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>With these foundations in place, work through the Foundation topics in this order:</p>
+<ol>
+<li><strong><a href="../organizations/">AWS Organizations</a></strong> — Multi-account structure that governs how network resources are shared and isolated</li>
+<li><strong><a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong> — The isolated virtual network that everything else builds on</li>
+<li><strong><a href="../regions-azs/">Regions and Availability Zones</a></strong> — Geographic distribution and the multi-<abbr title="Availability Zone">AZ</abbr> patterns that drive reliability</li>
+<li><strong><a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></strong> — IP address allocation strategy that prevents conflicts at scale</li>
+<li><strong><a href="../subnets/">Subnets</a></strong> — Network segmentation within a <abbr title="Virtual Private Cloud">VPC</abbr></li>
+<li><strong><a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a></strong> — Centralized IP address management for multi-account environments</li>
+</ol>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 03:16:27 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Foundation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Foundation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../organizations/" class="md-footer__link md-footer__link--next" aria-label="Next: AWS Organizations">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                AWS Organizations
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

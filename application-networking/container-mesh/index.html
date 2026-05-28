@@ -1,0 +1,2842 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/application-networking/container-mesh/">
+      
+      
+        <link rel="prev" href="../service-to-service/">
+      
+      
+        <link rel="next" href="../../security/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Container Mesh - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Container Mesh - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/application-networking/container-mesh.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/application-networking/container-mesh/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Container Mesh - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/application-networking/container-mesh.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#container-mesh" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Container Mesh
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-service-mesh-is-and-whether-you-need-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a service mesh is, and whether you need one
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-cluster-container-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-cluster container networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="In-cluster container networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-eks-in-cluster-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon EKS in-cluster networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon EKS in-cluster networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-eks-in-cluster-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon EKS in-cluster best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-eks-in-cluster-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon EKS in-cluster documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ecs-in-cluster-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon ECS in-cluster networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon ECS in-cluster networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ecs-in-cluster-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon ECS in-cluster best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ecs-in-cluster-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon ECS in-cluster documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-vpc-lattice-as-the-alternative-to-a-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC Lattice as the alternative to a mesh
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon VPC Lattice as the alternative to a mesh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-vpc-lattice-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC Lattice best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-vpc-lattice-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC Lattice documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-managed-service-mesh-on-top-of-aws-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed service mesh on top of AWS networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-managed service mesh on top of AWS networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-the-mesh-on-top-of-amazon-vpc-lattice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the mesh on top of Amazon VPC Lattice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-mesh-on-top-of-other-aws-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the mesh on top of other AWS networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-managed-mesh-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed mesh best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-managed-mesh-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed mesh documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-container-mesh-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your container mesh stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building your container mesh stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-service-mesh-is-and-whether-you-need-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a service mesh is, and whether you need one
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#in-cluster-container-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-cluster container networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="In-cluster container networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-eks-in-cluster-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon EKS in-cluster networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon EKS in-cluster networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-eks-in-cluster-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon EKS in-cluster best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-eks-in-cluster-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon EKS in-cluster documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ecs-in-cluster-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon ECS in-cluster networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon ECS in-cluster networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ecs-in-cluster-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon ECS in-cluster best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-ecs-in-cluster-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon ECS in-cluster documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-vpc-lattice-as-the-alternative-to-a-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC Lattice as the alternative to a mesh
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Amazon VPC Lattice as the alternative to a mesh">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#amazon-vpc-lattice-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC Lattice best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#amazon-vpc-lattice-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon VPC Lattice documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-managed-service-mesh-on-top-of-aws-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed service mesh on top of AWS networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-managed service mesh on top of AWS networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#running-the-mesh-on-top-of-amazon-vpc-lattice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the mesh on top of Amazon VPC Lattice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-the-mesh-on-top-of-other-aws-networking-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the mesh on top of other AWS networking services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-managed-mesh-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed mesh best practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-managed-mesh-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-managed mesh documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#building-your-container-mesh-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building your container mesh stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Building your container mesh stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Application Networking
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/application-networking/container-mesh.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/application-networking/container-mesh.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="container-mesh">Container Mesh<a class="headerlink" href="#container-mesh" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/subnets/">Subnets</a>, the connectivity patterns in the <a href="../../connectivity/within-aws/">Within AWS</a> page (especially Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice), the <a href="../service-to-service/">Service to Service</a> page, and the <a href="../load-balancing/">Load Balancing</a> page. Container mesh patterns reuse all of those primitives; this page covers the container-specific mechanics on top of them.</p>
+</div>
+<h2 id="what-a-service-mesh-is-and-whether-you-need-one">What a service mesh is, and whether you need one<a class="headerlink" href="#what-a-service-mesh-is-and-whether-you-need-one" title="Permanent link">&para;</a></h2>
+<p>A service mesh is, in the <a href="https://glossary.cncf.io/service-mesh/">CNCF glossary's framing</a>, a dedicated infrastructure layer that manages traffic between microservices and adds reliability, observability, and security uniformly across them without requiring application code changes. The classic implementation is a per-pod sidecar proxy (the data plane) configured by a control plane; sidecar-free variants push the same logic into the kernel through eBPF. The term is broad: every mesh project draws the line in a slightly different place, so "do I need a service mesh?" is really "which specific capabilities do I need, and where should each one live?".</p>
+<p>Most of the capabilities people adopt a service mesh for are already covered natively by AWS-managed services in a cloud-native AWS environment. The table below breaks the mesh promise into the specific features and shows where each lands.</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>What it does</th>
+<th>Native AWS coverage</th>
+<th>Mesh-specific gap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Service discovery</strong></td>
+<td>Resolve a stable service name to current targets</td>
+<td>Amazon Route 53, AWS Cloud Map</td>
+<td>None for typical workloads.</td>
+</tr>
+<tr>
+<td><strong>Service-to-service authentication</strong></td>
+<td>Cryptographic identity per caller, evaluated at the service</td>
+<td><abbr title="Identity and Access Management">IAM</abbr> + AWS SigV4 (Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice auth policies), Amazon API Gateway <abbr title="Identity and Access Management">IAM</abbr> authorizers cover end-to-end identity-based auth without shared secrets.</td>
+<td>None for AWS-native callers.</td>
+</tr>
+<tr>
+<td><strong>Mutual <abbr title="Transport Layer Security">TLS</abbr></strong></td>
+<td>Both sides present a certificate during handshake</td>
+<td><abbr title="Application Load Balancer">ALB</abbr> mTLS and Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice <abbr title="Transport Layer Security">TLS</abbr> passthrough (with the sidecar or backend terminating mTLS) cover the listener side.</td>
+<td>Mesh-managed mTLS lifecycle (auto-issuance, auto-rotation, auto-revocation per-pod) is sidecar-mesh territory.</td>
+</tr>
+<tr>
+<td><strong>Traffic management</strong></td>
+<td>Weighted routing, blue/green, canary deployments</td>
+<td>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice weighted routing, <abbr title="Application Load Balancer">ALB</abbr> weighted target groups</td>
+<td>Mesh-native CRDs (<code>VirtualService</code>, <code>DestinationRule</code>, <code>ServiceProfile</code>) and per-request fault injection are sidecar-mesh-only.</td>
+</tr>
+<tr>
+<td><strong>Resilience policies</strong></td>
+<td>Per-request retries, timeouts, outlier detection, circuit breaking</td>
+<td>Application-level or AWS SDK retries; Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice and load-balancer health checks.</td>
+<td>Sidecar-enforced <strong>per-request</strong> policies as data-plane configuration are sidecar-mesh-only.</td>
+</tr>
+<tr>
+<td><strong>Observability</strong></td>
+<td>Per-request access logs and distributed traces</td>
+<td>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs (identity-aware), <abbr title="Application Load Balancer">ALB</abbr> access logs, AWS X-Ray, Amazon CloudWatch Application Signals.</td>
+<td>Sidecar-emitted golden-signal metrics with no application changes are sidecar-mesh-only.</td>
+</tr>
+<tr>
+<td><strong>Network policy</strong></td>
+<td>Which workload can reach which other workload</td>
+<td>Security groups (per-task, per-pod), Kubernetes NetworkPolicy via Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI, Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice auth policies.</td>
+<td>Mesh-CRD-based policy is sidecar-mesh-only.</td>
+</tr>
+<tr>
+<td><strong>Multi-cluster service connectivity</strong></td>
+<td>Service in cluster A reachable as a local service in cluster B, with team and cluster ownership decoupled</td>
+<td>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice gives multi-cluster, multi-account reach with independent team boundaries.</td>
+<td>Mesh-native cluster-mesh control planes (Istio multi-primary, Cilium Cluster Mesh) when the multi-cluster glue has to live inside the mesh.</td>
+</tr>
+</tbody>
+</table>
+<p>In a cloud-native AWS environment, <strong>discovery, identity-based authentication, traffic management, observability, network policy, and multi-cluster reach are already covered by managed services</strong>. What's left for a sidecar mesh are mesh-managed mTLS lifecycle, mesh-CRD-based traffic and resilience policies, and certain cluster-mesh control-plane patterns. None of these are bad reasons to adopt a mesh, they're real requirements for some workloads, but they should be <strong>named contracts</strong>, not the default starting point.</p>
+<p>The multi-cluster row is the one most worth challenging deliberately. Teams reach for cluster-mesh patterns to let independent teams operate their own clusters and still expose services across them. Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice solves the same scaling problem at the network layer: each team owns its own cluster, exports its services to a shared service network, and consumers in other clusters reach them as a Route 53 alias backed by the Lattice service. The team boundaries stay intact without a mesh control plane bridging them.</p>
+<p>If the workload genuinely needs one or more of the mesh-specific gap items, a self-managed mesh is the right call. The rest of this page covers the three shapes container service-to-service architecture takes on AWS: in-cluster primitives, Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice as the alternative to a mesh, and a self-managed mesh on top of AWS networking.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Mesh["Container mesh shapes"]
+        direction TB
+
+        subgraph Shape1["In-cluster container networking"]
+            direction TB
+            EKS1["Amazon EKS&lt;br/&gt;VPC CNI, Pod Identity / IRSA,&lt;br/&gt;SG for pods, NetworkPolicy"]
+            ECS1["Amazon ECS&lt;br/&gt;awsvpc, ECS service connect,&lt;br/&gt;task roles"]
+        end
+
+        subgraph Shape2["Amazon VPC Lattice (alternative to a mesh)"]
+            direction TB
+            GAPI["AWS Gateway API Controller&lt;br/&gt;Kubernetes Gateway, HTTPRoute,&lt;br/&gt;GRPCRoute, ServiceImport"]
+            Cross["Cross-cluster, cross-VPC,&lt;br/&gt;cross-account through&lt;br/&gt;Lattice service network&lt;br/&gt;shared via AWS RAM"]
+        end
+
+        subgraph Shape3["Self-managed mesh on AWS networking"]
+            direction TB
+            OnLattice["Mesh on top of&lt;br/&gt;Amazon VPC Lattice"]
+            OnConnectivity["Mesh on top of&lt;br/&gt;peering, AWS Transit Gateway,&lt;br/&gt;AWS Cloud WAN"]
+        end
+    end
+
+    Shape1 ~~~ Shape2 ~~~ Shape3
+
+    style Mesh fill:none,stroke:none
+    style Shape1 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style Shape2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style Shape3 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style EKS1 fill:#2563eb,stroke:#1e40af,color:#fff
+    style ECS1 fill:#2563eb,stroke:#1e40af,color:#fff
+    style GAPI fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Cross fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style OnLattice fill:#059669,stroke:#047857,color:#fff
+    style OnConnectivity fill:#059669,stroke:#047857,color:#fff</code></pre>
+<h2 id="in-cluster-container-networking">In-cluster container networking<a class="headerlink" href="#in-cluster-container-networking" title="Permanent link">&para;</a></h2>
+<p>The first shape isn't really "mesh" at all: it's the in-cluster primitives Amazon ECS and Amazon EKS already give you. Used well, they cover most "I want a mesh inside one cluster" requirements without running a mesh.</p>
+<h3 id="amazon-eks-in-cluster-networking">Amazon EKS in-cluster networking<a class="headerlink" href="#amazon-eks-in-cluster-networking" title="Permanent link">&para;</a></h3>
+<p>Amazon EKS pods use the <a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI</a> by default: each pod gets a routable <abbr title="Virtual Private Cloud">VPC</abbr> IP from the cluster's subnets, secondary ENIs are attached to nodes to provide IP capacity, and pod-to-pod traffic flows directly inside the <abbr title="Virtual Private Cloud">VPC</abbr> without an overlay. Prefix delegation increases per-node IP density when needed; <abbr title="Internet Protocol version 6">IPv6</abbr> mode (<code>enableIPv6: true</code> on the cluster) gives every pod an <abbr title="Internet Protocol version 6">IPv6</abbr> address and removes the <abbr title="Internet Protocol version 4">IPv4</abbr>-exhaustion question entirely for net-new clusters. Alternative CNIs (Cilium, Calico) are valid choices for richer policy semantics or eBPF-based data planes, but Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI is the AWS-supported default and the only one with first-class <strong>security groups for pods</strong>.</p>
+<p>In-cluster discovery works through Kubernetes Services and CoreDNS: ClusterIP for stable virtual IPs, headless services for direct pod-IP <abbr title="Domain Name System">DNS</abbr>, ExternalName for service-name aliasing. <code>kube-proxy</code> (in <code>iptables</code> or <code>IPVS</code> mode) or its Cilium replacement handles the ClusterIP-to-pod-IP load balancing. None of this requires a mesh.</p>
+<p>Identity for pods is the lever that makes cross-service auth work without a mesh:</p>
+<ul>
+<li><strong><a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html">Amazon EKS Pod Identity</a></strong> is the recommended pattern for new clusters. The pod identity agent runs as a DaemonSet, intercepts AWS SDK credential lookups, and returns short-lived credentials for the pod's <abbr title="Identity and Access Management">IAM</abbr> role. Setup is a single API call per association, no OIDC trust relationship per role.</li>
+<li><strong><a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html"><abbr title="Identity and Access Management">IAM</abbr> Roles for Service Accounts (IRSA)</a></strong> is the older pattern, still fully supported. Use it in existing clusters that already rely on the OIDC-based trust model; new clusters should default to Pod Identity.</li>
+</ul>
+<p>Network policy at the AWS layer comes through <strong><a href="https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html">security groups for pods</a></strong> (per-pod <abbr title="Virtual Private Cloud">VPC</abbr> security group identifiers, the same SGs you'd use for any other ENI). Layer <strong><a href="https://docs.aws.amazon.com/eks/latest/userguide/cni-network-policy.html"><abbr title="Virtual Private Cloud">VPC</abbr> CNI network policies</a></strong> (or Cilium / Calico if you've adopted them) on top for label-based, in-cluster network policy. The two layers complement each other: SGs control AWS-side reach, NetworkPolicy controls cluster-side reach.</p>
+<h4 id="amazon-eks-in-cluster-best-practices">Amazon EKS in-cluster best practices<a class="headerlink" href="#amazon-eks-in-cluster-best-practices" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Default to Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI on new clusters</strong>. Reach for Cilium or Calico only for concrete requirements <abbr title="Virtual Private Cloud">VPC</abbr> CNI doesn't cover (eBPF data plane, richer NetworkPolicy semantics, kube-proxy replacement).</li>
+<li><strong>Use Amazon EKS Pod Identity for new clusters; keep IRSA for existing</strong>.</li>
+<li><strong>Layer security groups for pods with Kubernetes NetworkPolicy</strong>. SGs answer "which AWS source can reach this pod"; NetworkPolicy answers "which workload labels can reach this pod".</li>
+<li><strong>Adopt <abbr title="Internet Protocol version 6">IPv6</abbr> mode for net-new clusters</strong>. The <abbr title="Internet Protocol version 4">IPv4</abbr>-exhaustion question disappears, and the cluster gets routable v6 addressing without prefix-delegation tuning.</li>
+</ul>
+<h4 id="amazon-eks-in-cluster-documentation">Amazon EKS in-cluster documentation<a class="headerlink" href="#amazon-eks-in-cluster-documentation" title="Permanent link">&para;</a></h4>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI</strong></p>
+<hr />
+<p>Default Amazon EKS pod networking with <abbr title="Virtual Private Cloud">VPC</abbr>-routable pod IPs, prefix delegation, and <abbr title="Internet Protocol version 6">IPv6</abbr> support.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-networking.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon EKS Pod Identity</strong></p>
+<hr />
+<p>Recommended pattern for assigning <abbr title="Identity and Access Management">IAM</abbr> roles to pods on new clusters; no OIDC trust relationship per role.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong><abbr title="Identity and Access Management">IAM</abbr> Roles for Service Accounts (IRSA)</strong></p>
+<hr />
+<p>OIDC-based pattern for assigning <abbr title="Identity and Access Management">IAM</abbr> roles to pods, retained for existing environments.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Security groups for pods</strong></p>
+<hr />
+<p>Per-pod <abbr title="Virtual Private Cloud">VPC</abbr> security groups for identity-shaped network policy at the AWS layer.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI network policies</strong></p>
+<hr />
+<p>AWS-native Kubernetes NetworkPolicy implementation for in-cluster, label-based traffic control.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/cni-network-policy.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+</ul>
+</div>
+<h3 id="amazon-ecs-in-cluster-networking">Amazon ECS in-cluster networking<a class="headerlink" href="#amazon-ecs-in-cluster-networking" title="Permanent link">&para;</a></h3>
+<p>Amazon ECS tasks in <strong><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking-awsvpc.html">awsvpc network mode</a></strong> each get their own ENI, their own <abbr title="Virtual Private Cloud">VPC</abbr> IP, and their own security group. That gives you per-task identity at the AWS layer for free; the same security-group-shaped network policy that works for ENIs works for tasks. <code>awsvpc</code> is the default for Fargate and the recommended mode for <abbr title="Elastic Compute Cloud">EC2</abbr>-launched tasks.</p>
+<p>Inside a single Amazon ECS cluster, the closest thing AWS ships to a managed mesh is <strong><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html">Amazon ECS service connect</a></strong>: an AWS-managed Envoy sidecar injected by Amazon ECS, namespace-based service addressing through AWS Cloud Map, automatic per-task service discovery, and built-in traffic metrics. You don't operate a mesh control plane, and applications resolve other services by their friendly namespace name. For new container-to-container traffic in a single ECS cluster, this is the AWS-native pattern. <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html">Amazon ECS service discovery via AWS Cloud Map</a> is the older pattern. It still has a place for attribute-filtered discovery (ECS task instances exposing custom attributes that consumers filter on) and for non-Service-Connect-enabled workloads, but Service Connect is the preferred path for new in-cluster service-to-service traffic.</p>
+<p>Identity for tasks runs through <strong><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html">Amazon ECS task roles</a></strong>: each task definition references the <abbr title="Identity and Access Management">IAM</abbr> role the AWS SDK uses to sign requests.</p>
+<h4 id="amazon-ecs-in-cluster-best-practices">Amazon ECS in-cluster best practices<a class="headerlink" href="#amazon-ecs-in-cluster-best-practices" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Default to <code>awsvpc</code> network mode for Amazon ECS tasks</strong>. Per-task ENI gives you per-task <abbr title="Security Group">SG</abbr> identity, IP, and observability for free.</li>
+<li><strong>Use Amazon ECS service connect for in-cluster container-to-container traffic</strong>. The namespace abstraction, AWS-managed Envoy sidecar, and traffic metrics replace what most teams reach for a mesh to get.</li>
+<li><strong>Reserve AWS Cloud Map service discovery for attribute-filtered cases</strong>. Service Connect covers the simple cases more cleanly.</li>
+<li><strong>Assign per-task <abbr title="Identity and Access Management">IAM</abbr> roles for AWS API access</strong>. Per-task identity is what makes audit and access-log signal usable.</li>
+</ul>
+<h4 id="amazon-ecs-in-cluster-documentation">Amazon ECS in-cluster documentation<a class="headerlink" href="#amazon-ecs-in-cluster-documentation" title="Permanent link">&para;</a></h4>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon ECS <code>awsvpc</code> network mode</strong></p>
+<hr />
+<p>Per-task ENI, per-task IP, and per-task security group; the recommended Amazon ECS network mode.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking-awsvpc.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon ECS service connect</strong></p>
+<hr />
+<p>AWS-managed Envoy sidecar for in-cluster service-to-service: namespace addressing, service discovery, traffic metrics.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon ECS service discovery via AWS Cloud Map</strong></p>
+<hr />
+<p>Attribute-filtered service discovery for Amazon ECS, complementary to Service Connect for specific workloads.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon ECS task <abbr title="Identity and Access Management">IAM</abbr> roles</strong></p>
+<hr />
+<p>Per-task <abbr title="Identity and Access Management">IAM</abbr> roles that the AWS SDK uses to sign requests with SigV4.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+</ul>
+</div>
+<h2 id="amazon-vpc-lattice-as-the-alternative-to-a-mesh">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice as the alternative to a mesh<a class="headerlink" href="#amazon-vpc-lattice-as-the-alternative-to-a-mesh" title="Permanent link">&para;</a></h2>
+<p><a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</a> absorbs the part of the mesh use case that hits once traffic leaves a single cluster: cross-cluster discovery without a service-mirror or cluster-mesh control plane, <abbr title="Identity and Access Management">IAM</abbr>-based auth at the service or service-network level, weighted routing, identity-aware access logs, and the L3 / L4 connectivity folded in (no peering, AWS Transit Gateway, or AWS Cloud WAN underneath). The full service treatment lives in the <a href="../../connectivity/within-aws/">Within AWS</a> page (connectivity-side) and the <a href="../service-to-service/">Service to Service</a> page (application-team-side); this section covers the container-specific mechanics.</p>
+<p>The native Kubernetes integration is the <strong><a href="https://www.gateway-api-controller.eks.aws.dev/">AWS Gateway API Controller</a></strong>: it watches Kubernetes Gateway API resources (<code>Gateway</code>, <code>HTTPRoute</code>, <code>GRPCRoute</code>, <code>TLSRoute</code>, <code>ServiceImport</code>, <code>ServiceExport</code>) in your cluster and creates the corresponding Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service network associations, services, target groups, and listener rules. Application teams describe routing as Gateway API resources (the standard); the controller handles <abbr title="Virtual Private Cloud">VPC</abbr> Lattice provisioning.</p>
+<p>Amazon ECS attaches to <abbr title="Virtual Private Cloud">VPC</abbr> Lattice through the <a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/vpc-lattice.html">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice with Amazon ECS</a> integration: ECS service definitions register tasks as <abbr title="Virtual Private Cloud">VPC</abbr> Lattice target group targets directly. The per-task <abbr title="Security Group">SG</abbr> model from <code>awsvpc</code> carries through cleanly.</p>
+<p>Multi-cluster, cross-account: Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service network(s) shared via AWS RAM across the organization (covered in the <a href="../../connectivity/within-aws/">Within AWS</a> page). Each cluster exports its services to that network; consumers in other clusters import them as Kubernetes <code>ServiceImport</code> (Amazon EKS) or call the Route 53 alias backed by the <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service <abbr title="Domain Name System">DNS</abbr> name (Amazon ECS, generic clients, on-premises workloads reaching in through hybrid connectivity). The connectivity is bundled with the service: no peering or AWS Transit Gateway attachments per consumer cluster.</p>
+<p>The honest framing: <strong>do you still need a sidecar mesh once Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice is in place?</strong> Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice operates at L7 (HTTP and HTTPS) and L4 (<abbr title="Transport Layer Security">TLS</abbr> passthrough on SNI). It does not provide per-pod mTLS lifecycle managed by a mesh control plane, mesh-native traffic-management CRDs (<code>VirtualService</code>, <code>DestinationRule</code>, <code>ServiceProfile</code>), or rich client-side load-balancing semantics like outlier detection and circuit-breaker policies as data-plane configuration. Most workloads don't need those; for the ones that do, the self-managed service mesh shape below is the right answer.</p>
+<h3 id="amazon-vpc-lattice-best-practices">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice best practices<a class="headerlink" href="#amazon-vpc-lattice-best-practices" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Use the AWS Gateway API Controller as the in-cluster contract for <abbr title="Virtual Private Cloud">VPC</abbr> Lattice in Amazon EKS</strong>. Application teams describe routing through <code>Gateway</code> and <code>HTTPRoute</code> (the Kubernetes standard); the controller handles the Lattice service-network and service provisioning underneath.</li>
+<li><strong>Front <abbr title="Virtual Private Cloud">VPC</abbr> Lattice services with Route 53 aliases</strong>, not the <abbr title="Virtual Private Cloud">VPC</abbr> Lattice managed <abbr title="Domain Name System">DNS</abbr> name. The indirection is what makes future implementation changes invisible to consumers.</li>
+<li><strong>For Amazon ECS-only environments, use <abbr title="Virtual Private Cloud">VPC</abbr> Lattice for cross-<abbr title="Virtual Private Cloud">VPC</abbr> and cross-account reach</strong>, with Service Connect inside each cluster. The two coexist cleanly: Service Connect for local container-to-container, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice for everything that crosses cluster, <abbr title="Virtual Private Cloud">VPC</abbr>, or account boundaries.</li>
+<li><strong>Match the service-network sharing model to your account structure</strong>. One organization-wide service network is the simplest; per-OU or per-environment networks reduce blast radius if that matches workload boundaries.</li>
+<li><strong>Reach for a self-managed service mesh only when a specific sidecar-mesh feature is the genuine requirement</strong>. "Everyone uses a mesh" isn't enough; mesh CRDs, in-pod mTLS lifecycle, and mesh-native traffic-management semantics are.</li>
+</ul>
+<h3 id="amazon-vpc-lattice-documentation">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice documentation<a class="headerlink" href="#amazon-vpc-lattice-documentation" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice with Amazon EKS</strong></p>
+<hr />
+<p>Cross-cluster connectivity for Amazon EKS workloads through Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice and the AWS Gateway API Controller.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/integration-vpc-lattice.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Gateway API Controller</strong></p>
+<hr />
+<p>Kubernetes Gateway API implementation that provisions Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service networks, services, target groups, and rules.</p>
+<p><a href="https://www.gateway-api-controller.eks.aws.dev/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice with Amazon ECS</strong></p>
+<hr />
+<p>Native attachment of Amazon ECS services as Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice target group targets.</p>
+<p><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/vpc-lattice.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service networks and AWS RAM sharing</strong></p>
+<hr />
+<p>Cross-account sharing of service networks for multi-account, multi-cluster service-to-service.</p>
+<p><a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/service-networks.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Kubernetes Gateway API</strong></p>
+<hr />
+<p>The Kubernetes specification implemented by the AWS Gateway API Controller for Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice and AWS load balancers.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/best-practices/gateway-api-controller.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+</ul>
+</div>
+<h2 id="self-managed-service-mesh-on-top-of-aws-networking">Self-managed service mesh on top of AWS networking<a class="headerlink" href="#self-managed-service-mesh-on-top-of-aws-networking" title="Permanent link">&para;</a></h2>
+<p>When the workload genuinely needs sidecar-mesh features AWS doesn't ship (mesh-managed mTLS lifecycle, mesh CRDs for traffic policy, multi-cluster mesh patterns already in production), the mesh runs on top of AWS networking. The decision that shapes operational cost is <strong>what AWS service carries cross-cluster and cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic underneath the mesh</strong>. Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice can take a lot of that load when the mesh's protocol set is compatible; <abbr title="Virtual Private Cloud">VPC</abbr> peering, AWS Transit Gateway, and AWS Cloud WAN are the alternatives where it isn't.</p>
+<h3 id="running-the-mesh-on-top-of-amazon-vpc-lattice">Running the mesh on top of Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice<a class="headerlink" href="#running-the-mesh-on-top-of-amazon-vpc-lattice" title="Permanent link">&para;</a></h3>
+<p>The mesh control plane and data-plane sidecars run inside clusters; cross-cluster and cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic flows through Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice. The mesh sees friendly <abbr title="Domain Name System">DNS</abbr> names (Route 53 aliases to <abbr title="Virtual Private Cloud">VPC</abbr> Lattice services or resource configurations custom domain names) and treats the other cluster as an upstream. <strong>What this saves</strong>: no peering, no AWS Transit Gateway, no AWS Cloud WAN, no <abbr title="Classless Inter-Domain Routing">CIDR</abbr> coordination, no cross-<abbr title="Virtual Private Cloud">VPC</abbr> security-group authorization, no shared connectivity construct to operate.</p>
+<p>The same <abbr title="Virtual Private Cloud">VPC</abbr> Lattice network carries different mesh traffic shapes through different <abbr title="Virtual Private Cloud">VPC</abbr> Lattice constructs:</p>
+<table>
+<thead>
+<tr>
+<th>Mesh traffic shape</th>
+<th><abbr title="Virtual Private Cloud">VPC</abbr> Lattice construct</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP / HTTPS / gRPC application traffic</td>
+<td>Service with HTTPS listener</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Lattice terminates <abbr title="Transport Layer Security">TLS</abbr>; the mesh sidecar receives plaintext or re-encrypts.</td>
+</tr>
+<tr>
+<td>Sidecar-to-sidecar mTLS</td>
+<td>Service with <abbr title="Transport Layer Security">TLS</abbr> passthrough listener</td>
+<td>Routes on SNI; the sidecar terminates mTLS. The 10-minute connection cap applies, so long-lived gRPC control-plane streams over this path need watching.</td>
+</tr>
+<tr>
+<td><abbr title="Transmission Control Protocol">TCP</abbr>-only mesh traffic (xDS, identity, cluster-mesh control plane)</td>
+<td><a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-configuration.html">Resource configuration</a> through a resource gateway</td>
+<td><abbr title="Transmission Control Protocol">TCP</abbr>, configurable port ranges, custom domain name supported. The 10-minute listener cap and listener-level auth-policy restrictions don't apply.</td>
+</tr>
+<tr>
+<td><abbr title="User Datagram Protocol">UDP</abbr>, multi-protocol, fundamentally non-<abbr title="Transmission Control Protocol">TCP</abbr> traffic</td>
+<td>Falls back to peering / AWS Transit Gateway / AWS Cloud WAN</td>
+<td>The residual after the above three are placed. Mixed routing is a valid pattern.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="running-the-mesh-on-top-of-other-aws-networking-services">Running the mesh on top of other AWS networking services<a class="headerlink" href="#running-the-mesh-on-top-of-other-aws-networking-services" title="Permanent link">&para;</a></h3>
+<p>When Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice's model doesn't fit, cross-cluster traffic runs over <strong><abbr title="Virtual Private Cloud">VPC</abbr> peering, AWS Transit Gateway, or AWS Cloud WAN</strong>. These are the connectivity primitives covered in the <a href="../../connectivity/within-aws/">Within AWS</a> page; the mesh treats other clusters as IP-reachable subnets and handles the rest.</p>
+<p>The cost of this shape is real: full L3 connectivity to operate, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning across all participating VPCs, security groups and route tables for the mesh's traffic patterns, and the connectivity construct itself (peering scales poorly with N clusters, AWS Transit Gateway and AWS Cloud WAN scale but adds an attachment per <abbr title="Virtual Private Cloud">VPC</abbr> and per region). The mesh team and the network team end up coordinating on every new cluster.</p>
+<p>The <abbr title="Classless Inter-Domain Routing">CIDR</abbr>-overlap question is the one that bites Kubernetes shops the hardest. Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI in <abbr title="Internet Protocol version 4">IPv4</abbr> mode allocates pod IPs from the cluster's <abbr title="Virtual Private Cloud">VPC</abbr> CIDRs, so multi-cluster environments often end up with overlapping pod ranges across clusters. <abbr title="Virtual Private Cloud">VPC</abbr> peering, AWS Transit Gateway, and AWS Cloud WAN all require non-overlapping CIDRs between connected sides; the standard remediation is <strong><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#private-nat-gateway-overview">private <abbr title="Network Address Translation">NAT</abbr> gateways</a></strong> translating each cluster's pod range into a non-overlapping range used only on the cross-cluster path. That works, but it adds an hourly + per-GB cost per private <abbr title="Network Address Translation">NAT</abbr> gateway, an IP rewrite that bites distributed tracing and audit logs, and one more piece of plumbing the network team has to operate. <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice avoids the question entirely</strong>: it terminates connections at the consumer side and re-originates at the provider side, so <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap is invisible. Adopting <strong><abbr title="Internet Protocol version 6">IPv6</abbr> mode in Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI</strong> for net-new clusters also removes the problem at the source (every pod gets a globally unique <abbr title="Internet Protocol version 6">IPv6</abbr> address).</p>
+<p>What you still get from AWS underneath either variant of the self-managed service mesh shape:</p>
+<ul>
+<li><strong>Ingress to the mesh from outside the cluster</strong> runs through ALBs or NLBs created by the AWS Load Balancer Controller (covered in the <a href="../load-balancing/">Load Balancing</a> page). The load balancer hits the mesh ingress gateway (Istio Gateway, Linkerd ingress, etc.); the mesh handles routing past that point.</li>
+<li><strong>Egress to AWS services</strong> runs through <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/concepts.html"><abbr title="Virtual Private Cloud">VPC</abbr> endpoints</a> (interface and gateway). The mesh egress gateway, or pods directly, reach Amazon <abbr title="Simple Storage Service">S3</abbr>, Amazon DynamoDB, Amazon SQS, Amazon Kinesis, and other AWS services through endpoints.</li>
+<li><strong>Telemetry from the mesh</strong> flows through <a href="https://aws-otel.github.io/">AWS Distro for OpenTelemetry</a> into Amazon CloudWatch Application Signals, AWS X-Ray, and Amazon Managed Service for Prometheus / Amazon Managed Grafana, alongside Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs and <abbr title="Application Load Balancer">ALB</abbr> access logs at the AWS-managed boundaries.</li>
+</ul>
+<p>Multi-cluster mesh patterns (Istio multi-primary, Cilium Cluster Mesh, and similar) live inside the mesh control plane; from the AWS networking perspective they are just additional cross-cluster traffic that has to be carried by one of the two variants above.</p>
+<h3 id="self-managed-mesh-best-practices">Self-managed mesh best practices<a class="headerlink" href="#self-managed-mesh-best-practices" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>If you've decided to run a self-managed mesh, default to running it on top of Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</strong>. Map each mesh traffic shape to the right <abbr title="Virtual Private Cloud">VPC</abbr> Lattice construct (see the table above): HTTPS listener for HTTP / HTTPS / gRPC application traffic, <abbr title="Transport Layer Security">TLS</abbr> passthrough for sidecar mTLS, resource configuration for <abbr title="Transmission Control Protocol">TCP</abbr>-only mesh traffic. Watch the 10-minute connection cap on <abbr title="Transport Layer Security">TLS</abbr> passthrough listeners for long-lived gRPC control-plane streams; resource configurations don't have it.</li>
+<li><strong>Fall back to peering, AWS Transit Gateway, or AWS Cloud WAN under the mesh</strong> only for the residual <abbr title="Virtual Private Cloud">VPC</abbr> Lattice doesn't cover (<abbr title="User Datagram Protocol">UDP</abbr>, multi-protocol), or when an existing connectivity construct already serves the workload.</li>
+<li><strong>Use the AWS Load Balancer Controller for ingress into the mesh</strong>. Don't reinvent ingress in mesh CRDs when the AWS-managed load balancer is available.</li>
+<li><strong>Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for mesh egress to AWS services</strong>. Reach Amazon <abbr title="Simple Storage Service">S3</abbr>, Amazon DynamoDB, Amazon SQS, etc. through interface or gateway endpoints, not the public internet.</li>
+<li><strong>Keep <abbr title="Identity and Access Management">IAM</abbr>-for-AWS-API-access on Pod Identity, IRSA, or task roles</strong>, not on mesh-issued certificates. The mesh handles in-cluster service identity; AWS handles AWS-service identity.</li>
+</ul>
+<h3 id="self-managed-mesh-documentation">Self-managed mesh documentation<a class="headerlink" href="#self-managed-mesh-documentation" title="Permanent link">&para;</a></h3>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Load Balancer Controller</strong></p>
+<hr />
+<p>Kubernetes controller that provisions ALBs and NLBs; the AWS-native ingress to a mesh ingress gateway.</p>
+<p><a href="https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS PrivateLink and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints</strong></p>
+<hr />
+<p>Private connectivity from cluster workloads to AWS services for mesh egress without traversing the public internet.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/concepts.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Distro for OpenTelemetry</strong></p>
+<hr />
+<p>AWS-supported OpenTelemetry distribution for shipping mesh telemetry to Amazon CloudWatch, AWS X-Ray, and Amazon Managed Service for Prometheus.</p>
+<p><a href="https://aws-otel.github.io/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+</ul>
+</div>
+<h2 id="building-your-container-mesh-stack">Building your container mesh stack<a class="headerlink" href="#building-your-container-mesh-stack" title="Permanent link">&para;</a></h2>
+<p>Container mesh architecture is the layer between connectivity (covered in the <a href="../../connectivity/within-aws/">Within AWS</a> page) and the workload's application logic. The three shapes above are not mutually exclusive: most environments combine in-cluster container networking inside each cluster with Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice across clusters, and adopt a self-managed service mesh only for the workloads where a sidecar mesh is the genuine requirement.</p>
+<pre class="mermaid"><code>graph TB
+    subgraph Stack["Container mesh stack"]
+        direction TB
+
+        subgraph InCluster["In-cluster container networking"]
+            direction TB
+            EKSStack["Amazon EKS&lt;br/&gt;Amazon VPC CNI,&lt;br/&gt;Pod Identity / IRSA,&lt;br/&gt;Security groups for pods,&lt;br/&gt;NetworkPolicy"]
+            ECSStack["Amazon ECS&lt;br/&gt;awsvpc,&lt;br/&gt;Service Connect,&lt;br/&gt;Task IAM roles"]
+        end
+
+        subgraph CrossCluster["Amazon VPC Lattice (across clusters and VPCs)"]
+            direction TB
+            LatticeStack["Amazon VPC Lattice service network&lt;br/&gt;shared via AWS RAM"]
+            ControllerStack["AWS Gateway API Controller&lt;br/&gt;(EKS) /&lt;br/&gt;Amazon VPC Lattice with Amazon ECS"]
+            DNSStack["Route 53 alias records&lt;br/&gt;(consumer-facing names)"]
+        end
+
+        subgraph SelfMesh["Self-managed service mesh (when needed)"]
+            direction TB
+            OnLat["Mesh data plane on&lt;br/&gt;VPC Lattice listeners&lt;br/&gt;(HTTP / HTTPS / gRPC / TLS-on-SNI)"]
+            OnRes["Mesh TCP control plane on&lt;br/&gt;VPC Lattice resource configurations&lt;br/&gt;(same service network)"]
+            OnConn["Residual (UDP, multi-protocol) on&lt;br/&gt;peering / AWS Transit Gateway /&lt;br/&gt;AWS Cloud WAN"]
+            Ingress["AWS Load Balancer Controller&lt;br/&gt;(ingress to mesh)"]
+            Egress["VPC endpoints&lt;br/&gt;(egress from mesh to AWS services)"]
+        end
+    end
+
+    InCluster ~~~ CrossCluster ~~~ SelfMesh
+
+    style Stack fill:none,stroke:none
+    style InCluster fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
+    style CrossCluster fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
+    style SelfMesh fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
+    style EKSStack fill:#2563eb,stroke:#1e40af,color:#fff
+    style ECSStack fill:#2563eb,stroke:#1e40af,color:#fff
+    style LatticeStack fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style ControllerStack fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style DNSStack fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style OnLat fill:#059669,stroke:#047857,color:#fff
+    style OnRes fill:#059669,stroke:#047857,color:#fff
+    style OnConn fill:#059669,stroke:#047857,color:#fff
+    style Ingress fill:#059669,stroke:#047857,color:#fff
+    style Egress fill:#059669,stroke:#047857,color:#fff</code></pre>
+<h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
+<p>Organizations building container service-to-service communication on a clean slate can start with a coherent stack from day one:</p>
+<ol>
+<li><strong>Inside each cluster, lean on the AWS-native primitives</strong>. Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI (with <abbr title="Internet Protocol version 6">IPv6</abbr> mode for net-new clusters, which removes the <abbr title="Internet Protocol version 4">IPv4</abbr>-exhaustion and <abbr title="Classless Inter-Domain Routing">CIDR</abbr>-overlap questions at the source), Amazon EKS Pod Identity, security groups for pods, and Kubernetes NetworkPolicy on the EKS side; <code>awsvpc</code> mode, Amazon ECS service connect, and per-task <abbr title="Identity and Access Management">IAM</abbr> roles on the ECS side. This in-cluster container networking shape covers most of what teams reach for a mesh to get inside one cluster.</li>
+<li><strong>Use Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice for everything that crosses cluster, <abbr title="Virtual Private Cloud">VPC</abbr>, or account boundaries</strong>. AWS Gateway API Controller in Amazon EKS, native Lattice attachment in Amazon ECS. One service network shared through AWS RAM at the OU level so new clusters and accounts inherit reach automatically. This removes the cross-cluster connectivity question from the mesh decision.</li>
+<li><strong>Front Lattice services with Route 53 aliases distributed by Amazon Route 53 Profiles</strong>. Same pattern as the <a href="../service-to-service/">Service to Service</a> page; consumer-facing names stay stable as the implementation behind them changes.</li>
+<li><strong>Adopt a self-managed mesh only when a specific sidecar-mesh requirement justifies the cost</strong>. When that point arrives, default to running the mesh on top of <abbr title="Virtual Private Cloud">VPC</abbr> Lattice using the protocol-fit table above (HTTPS listener / <abbr title="Transport Layer Security">TLS</abbr> passthrough / resource configurations); reserve peering / AWS Transit Gateway / AWS Cloud WAN for the residual.</li>
+<li><strong>Centralize observability from day one</strong>: Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs (identity-aware) at the AWS-managed boundary, <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> access logs where load balancers are in the path, and AWS Distro for OpenTelemetry shipping mesh and application telemetry into Amazon CloudWatch Application Signals, AWS X-Ray, and Amazon Managed Service for Prometheus.</li>
+</ol>
+<h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
+<p>Organizations running existing container service-to-service patterns have working architectures that don't all need to change at once:</p>
+<ol>
+<li><strong>Existing in-cluster patterns stay</strong>. Amazon ECS service discovery via AWS Cloud Map, IRSA on Amazon EKS, and any in-cluster mesh you're already operating continue to work. Migrate per workload as you touch the calling code, not on a fixed timeline.</li>
+<li><strong>Add Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice for new cross-cluster requirements first</strong>. New service-to-service traffic that crosses cluster, <abbr title="Virtual Private Cloud">VPC</abbr>, or account boundaries should use Lattice through the AWS Gateway API Controller (EKS) or Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice with Amazon ECS, rather than extending an existing peering or AWS Transit Gateway-based mesh. The <abbr title="Classless Inter-Domain Routing">CIDR</abbr>-overlap and private-<abbr title="Network Address Translation">NAT</abbr>-gateway tax of the L3 path goes away.</li>
+<li><strong>For existing self-managed meshes, layer Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice underneath opportunistically</strong>. When the mesh is upgraded, when a new cluster joins, or when the connectivity layer is being re-architected, move inter-cluster application traffic to <abbr title="Virtual Private Cloud">VPC</abbr> Lattice listeners and <abbr title="Transmission Control Protocol">TCP</abbr> control-plane traffic to resource configurations. Only the residual (<abbr title="User Datagram Protocol">UDP</abbr>, multi-protocol) stays on peering / AWS Transit Gateway / AWS Cloud WAN. Don't rip out a working mesh to migrate everything at once.</li>
+<li><strong>Front existing internal load balancers with Route 53 aliases as you touch them</strong>. Hard-coded <abbr title="Application Load Balancer">ALB</abbr> / <abbr title="Network Load Balancer">NLB</abbr> <abbr title="Domain Name System">DNS</abbr> names in application code, and direct Lattice managed <abbr title="Domain Name System">DNS</abbr> names, both bind consumers to a specific instance of the provider. The Route 53 alias indirection is what makes future implementation changes invisible.</li>
+</ol>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 00:28:48 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../service-to-service/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Service to Service">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Service to Service
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../security/" class="md-footer__link md-footer__link--next" aria-label="Next: Security">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Security
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

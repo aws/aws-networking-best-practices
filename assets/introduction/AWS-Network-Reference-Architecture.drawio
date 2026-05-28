@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="wztsO-RhdWm5exlWq4YQ">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2563eb;strokeColor=#1e40af;fontColor=#ffffff;fontSize=24;fontStyle=1;verticalAlign=middle;textDirection=vertical-lr;" value="Security" vertex="1">
+          <mxGeometry height="380" width="120" x="20" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2563eb;strokeColor=#1e40af;fontColor=#ffffff;fontSize=24;fontStyle=1;verticalAlign=middle;textDirection=vertical-lr;" value="Observability" vertex="1">
+          <mxGeometry height="380" width="120" x="700" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2563eb;strokeColor=#1e40af;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="120" width="540" x="150" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-4" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=24;fontStyle=1;" value="Application Networking" vertex="1">
+          <mxGeometry height="40" width="540" x="150" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#64748b;strokeWidth=2;dashed=1;fontColor=#0f172a;fontSize=14;" value="Load Balancing" vertex="1">
+          <mxGeometry height="60" width="150" x="165" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#64748b;strokeWidth=2;dashed=1;fontColor=#0f172a;fontSize=14;" value="Service to Service" vertex="1">
+          <mxGeometry height="60" width="150" x="345" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#64748b;strokeWidth=2;dashed=1;fontColor=#0f172a;fontSize=14;" value="Container Mesh" vertex="1">
+          <mxGeometry height="60" width="150" x="525" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2563eb;strokeColor=#1e40af;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="120" width="540" x="150" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-9" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#ffffff;fontSize=24;fontStyle=1;" value="Connectivity" vertex="1">
+          <mxGeometry height="40" width="540" x="150" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#64748b;strokeWidth=2;dashed=1;fontColor=#0f172a;fontSize=14;" value="Internet" vertex="1">
+          <mxGeometry height="60" width="150" x="165" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#64748b;strokeWidth=2;dashed=1;fontColor=#0f172a;fontSize=14;" value="Within AWS" vertex="1">
+          <mxGeometry height="60" width="150" x="345" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f1f5f9;strokeColor=#64748b;strokeWidth=2;dashed=1;fontColor=#0f172a;fontSize=14;" value="Hybrid &amp; Multi-Cloud" vertex="1">
+          <mxGeometry height="60" width="150" x="525" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="m_adxJCGj-d_iY8P8QiQ-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#2563eb;strokeColor=#1e40af;fontColor=#ffffff;fontSize=24;fontStyle=1;verticalAlign=middle;" value="Foundation" vertex="1">
+          <mxGeometry height="120" width="540" x="150" y="280" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

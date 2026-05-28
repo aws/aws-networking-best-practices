@@ -1,0 +1,3434 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/foundation/ipam/">
+      
+      
+        <link rel="prev" href="../subnets/">
+      
+      
+        <link rel="next" href="../../connectivity/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>IPAM - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="IPAM - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/ipam.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/foundation/ipam/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="IPAM - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/ipam.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ip-address-management-ipam" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              IPAM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-aws-ipam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS IPAM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pool-hierarchy-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool hierarchy design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pool hierarchy design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-pools-top-down-organization-region-environment-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design pools top-down: Organization → Region → Environment → Workload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size-regional-pools-generously-address-space-is-not-a-scarce-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size regional pools generously — address space is not a scarce resource
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-separate-pool-branches-for-production-and-non-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create separate pool branches for production and non-production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allocation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allocation rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Allocation rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-minimum-and-maximum-cidr-sizes-on-every-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set minimum and maximum CIDR sizes on every pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#require-tags-on-every-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require tags on every allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-locale-restrictions-to-prevent-cross-region-allocation-mistakes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use locale restrictions to prevent cross-Region allocation mistakes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scopes-private-vs-public" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scopes: private vs. public
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scopes: private vs. public">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-the-private-scope-for-all-rfc-1918-and-rfc-6598-address-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the private scope for all RFC 1918 and RFC 6598 address management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-public-scope-only-when-you-bring-your-own-ip-addresses-byoip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the public scope only when you bring your own IP addresses (BYOIP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-pool-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 pool management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 pool management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#include-ipv6-pools-in-your-ipam-hierarchy-from-day-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include IPv6 pools in your IPAM hierarchy from day one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-ipv6-pools-parallel-to-your-ipv4-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure IPv6 pools parallel to your IPv4 hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-ipam-to-enforce-dual-stack-adoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use IPAM to enforce dual-stack adoption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delegated-administration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delegated administration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Delegated administration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delegate-ipam-to-your-centralized-networking-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delegate IPAM to your centralized networking account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#share-pools-at-the-ou-level-not-individual-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Share pools at the OU level, not individual accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-ipam-compliance-monitoring-across-your-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable IPAM compliance monitoring across your Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#treat-compliance-violations-as-high-priority-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat compliance violations as high-priority findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-existing-cidrs-into-ipam-before-they-cause-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import existing CIDRs into IPAM before they cause problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-infrastructure-as-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Infrastructure as Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Infrastructure as Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference IPAM pools in CloudFormation using Ipv4IpamPoolId
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-aws_vpc_ipam_pool_cidr_allocation-resource-in-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the aws_vpc_ipam_pool_cidr_allocation resource in Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-pool-ids-in-ssm-parameter-store-or-terraform-remote-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store pool IDs in SSM Parameter Store or Terraform remote state
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-connectivity-and-on-premises-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid connectivity and on-premises integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hybrid connectivity and on-premises integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#import-on-premises-cidr-ranges-into-ipam-as-non-allocatable-reservations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import on-premises CIDR ranges into IPAM as non-allocatable reservations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-your-pool-hierarchy-to-accommodate-hybrid-summarization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design your pool hierarchy to accommodate hybrid summarization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-mistakes-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common mistakes to avoid
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common mistakes to avoid">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mistake-creating-pools-that-are-too-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: Creating pools that are too small
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-no-regional-hierarchy-flat-pool-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: No regional hierarchy (flat pool structure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-no-allocation-rules-on-leaf-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: No allocation rules on leaf pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-not-importing-existing-vpcs-before-enabling-compliance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: Not importing existing VPCs before enabling compliance monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-sharing-pools-too-broadly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: Sharing pools too broadly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-ipam-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining IPAM with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ipam-pricing-and-cost-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPAM pricing and cost considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-ipam-relates-to-the-rest-of-the-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How IPAM relates to the rest of the Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-aws-ipam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS IPAM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pool-hierarchy-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool hierarchy design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pool hierarchy design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#design-pools-top-down-organization-region-environment-workload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design pools top-down: Organization → Region → Environment → Workload
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#size-regional-pools-generously-address-space-is-not-a-scarce-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Size regional pools generously — address space is not a scarce resource
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-separate-pool-branches-for-production-and-non-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create separate pool branches for production and non-production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allocation-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allocation rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Allocation rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#set-minimum-and-maximum-cidr-sizes-on-every-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set minimum and maximum CIDR sizes on every pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#require-tags-on-every-allocation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require tags on every allocation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-locale-restrictions-to-prevent-cross-region-allocation-mistakes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use locale restrictions to prevent cross-Region allocation mistakes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scopes-private-vs-public" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scopes: private vs. public
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scopes: private vs. public">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-the-private-scope-for-all-rfc-1918-and-rfc-6598-address-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the private scope for all RFC 1918 and RFC 6598 address management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-public-scope-only-when-you-bring-your-own-ip-addresses-byoip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the public scope only when you bring your own IP addresses (BYOIP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-pool-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 pool management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPv6 pool management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#include-ipv6-pools-in-your-ipam-hierarchy-from-day-one" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Include IPv6 pools in your IPAM hierarchy from day one
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structure-ipv6-pools-parallel-to-your-ipv4-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structure IPv6 pools parallel to your IPv4 hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-ipam-to-enforce-dual-stack-adoption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use IPAM to enforce dual-stack adoption
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delegated-administration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delegated administration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Delegated administration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#delegate-ipam-to-your-centralized-networking-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delegate IPAM to your centralized networking account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#share-pools-at-the-ou-level-not-individual-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Share pools at the OU level, not individual accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compliance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enable-ipam-compliance-monitoring-across-your-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable IPAM compliance monitoring across your Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#treat-compliance-violations-as-high-priority-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Treat compliance violations as high-priority findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-existing-cidrs-into-ipam-before-they-cause-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import existing CIDRs into IPAM before they cause problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-infrastructure-as-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Infrastructure as Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Infrastructure as Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference IPAM pools in CloudFormation using Ipv4IpamPoolId
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-aws_vpc_ipam_pool_cidr_allocation-resource-in-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the aws_vpc_ipam_pool_cidr_allocation resource in Terraform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#store-pool-ids-in-ssm-parameter-store-or-terraform-remote-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Store pool IDs in SSM Parameter Store or Terraform remote state
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-connectivity-and-on-premises-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hybrid connectivity and on-premises integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hybrid connectivity and on-premises integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#import-on-premises-cidr-ranges-into-ipam-as-non-allocatable-reservations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import on-premises CIDR ranges into IPAM as non-allocatable reservations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-your-pool-hierarchy-to-accommodate-hybrid-summarization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design your pool hierarchy to accommodate hybrid summarization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-mistakes-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common mistakes to avoid
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common mistakes to avoid">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mistake-creating-pools-that-are-too-small" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: Creating pools that are too small
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-no-regional-hierarchy-flat-pool-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: No regional hierarchy (flat pool structure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-no-allocation-rules-on-leaf-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: No allocation rules on leaf pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-not-importing-existing-vpcs-before-enabling-compliance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: Not importing existing VPCs before enabling compliance monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-sharing-pools-too-broadly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake: Sharing pools too broadly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-ipam-with-other-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining IPAM with other services
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ipam-pricing-and-cost-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPAM pricing and cost considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-ipam-relates-to-the-rest-of-the-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How IPAM relates to the rest of the Foundation
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Foundation
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/foundation/ipam.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/foundation/ipam.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="ip-address-management-ipam">IP Address Management (<abbr title="IP Address Manager">IPAM</abbr>)<a class="headerlink" href="#ip-address-management-ipam" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../aws-prerequisites/">Before You Start</a>, <a href="../organizations/">AWS Organizations</a>, <a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, and <a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>. Review those pages first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>AWS <abbr title="IP Address Manager">IPAM</abbr> (IP Address Management) is the control plane for your organization's IP address space. It replaces spreadsheets, Confluence pages, and tribal knowledge with a centralized, policy-driven system that plans, allocates, tracks, and monitors IP addresses across every account and Region in your AWS Organization. Without <abbr title="IP Address Manager">IPAM</abbr>, IP address management degrades into a coordination bottleneck: teams file tickets for <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks, networking engineers manually check for overlaps, and nobody has confidence that the next <abbr title="Virtual Private Cloud">VPC</abbr> won't conflict with an existing one. <abbr title="IP Address Manager">IPAM</abbr> eliminates that friction by making allocation automatic, overlap-free, and auditable.</p>
+<p>The service operates through a hierarchy of pools — collections of <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges organized by Region, environment, or business unit — with allocation rules that enforce sizing, tagging, and locality constraints. When a team creates a <abbr title="Virtual Private Cloud">VPC</abbr>, they request a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> from the appropriate pool, and <abbr title="IP Address Manager">IPAM</abbr> guarantees a non-overlapping allocation that complies with your organizational standards. No tickets, no manual checks, no spreadsheet updates.</p>
+<pre class="mermaid"><code>graph TB
+    IPAM["AWS IPAM&lt;br/&gt;Centralized IP Management"]
+
+    IPAM --&gt; PrivScope["Private Scope"]
+    IPAM --&gt; PubScope["Public Scope&lt;br/&gt;(BYOIP)"]
+
+    PrivScope --&gt; TopPool["Top-Level Pool&lt;br/&gt;10.0.0.0/8"]
+
+    TopPool --&gt; RegionEast["Regional Pool&lt;br/&gt;10.0.0.0/12&lt;br/&gt;us-east-1"]
+    TopPool --&gt; RegionWest["Regional Pool&lt;br/&gt;10.16.0.0/12&lt;br/&gt;us-west-2"]
+    TopPool --&gt; RegionEU["Regional Pool&lt;br/&gt;10.32.0.0/12&lt;br/&gt;eu-west-1"]
+
+    RegionEast --&gt; ProdEast["Production Pool&lt;br/&gt;10.0.0.0/13"]
+    RegionEast --&gt; NonProdEast["Non-Production Pool&lt;br/&gt;10.8.0.0/13"]
+
+    ProdEast --&gt; VPC1["VPC: 10.0.0.0/16&lt;br/&gt;Account: prod-app-1"]
+    ProdEast --&gt; VPC2["VPC: 10.1.0.0/16&lt;br/&gt;Account: prod-app-2"]
+
+    NonProdEast --&gt; VPC3["VPC: 10.8.0.0/20&lt;br/&gt;Account: dev-app-1"]
+    NonProdEast --&gt; VPC4["VPC: 10.8.16.0/20&lt;br/&gt;Account: dev-app-2"]
+
+    style IPAM fill:#2563eb,stroke:#1e40af,color:#fff
+    style PrivScope fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style PubScope fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style TopPool fill:#059669,stroke:#047857,color:#fff
+    style RegionEast fill:#f59e0b,stroke:#d97706,color:#fff
+    style RegionWest fill:#f59e0b,stroke:#d97706,color:#fff
+    style RegionEU fill:#f59e0b,stroke:#d97706,color:#fff
+    style ProdEast fill:#dc2626,stroke:#b91c1c,color:#fff
+    style NonProdEast fill:#ea580c,stroke:#c2410c,color:#fff
+    style VPC1 fill:#dbeafe,stroke:#3b82f6,color:#000
+    style VPC2 fill:#dbeafe,stroke:#3b82f6,color:#000
+    style VPC3 fill:#fef3c7,stroke:#f59e0b,color:#000
+    style VPC4 fill:#fef3c7,stroke:#f59e0b,color:#000</code></pre>
+<h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Hierarchical pool management</strong></p>
+<hr />
+<p>Organize IP address space into nested pools by Region, environment, and workload type. Pools inherit constraints from parents and enforce allocation rules at every level.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-8L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></span> <strong>Overlap prevention</strong></p>
+<hr />
+<p>Every allocation is validated against the entire pool hierarchy. <abbr title="IP Address Manager">IPAM</abbr> guarantees that no two VPCs receive conflicting <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks, eliminating the most common networking mistake in multi-account environments.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 2v20c-5.1-.5-9-4.8-9-10s3.9-9.5 9-10m2 0v9h9c-.5-4.8-4.2-8.5-9-9m0 11v9c4.7-.5 8.5-4.2 9-9z"/></svg></span> <strong>Utilization monitoring</strong></p>
+<hr />
+<p>Real-time visibility into how much address space is allocated, used, and available across every pool, Region, and account. Alerts when pools approach exhaustion.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21.41 11.58-9-9C12.04 2.21 11.53 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .53.21 1.04.59 1.41l.41.4c.9-.54 1.94-.81 3-.81 3.31 0 6 2.69 6 6 0 1.06-.28 2.09-.82 3l.4.4c.37.38.89.6 1.42.6s1.04-.21 1.41-.59l7-7c.38-.37.59-.88.59-1.41s-.21-1.04-.59-1.42M5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7m3.13 7.27-3.87 3.9-1.35-1.37L2 18.22 4.75 21l5.28-5.32z"/></svg></span> <strong>Allocation rules</strong></p>
+<hr />
+<p>Enforce minimum and maximum <abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizes, required tags, and locale restrictions on every allocation. Rules prevent teams from requesting inappropriately sized blocks or deploying in unauthorized Regions.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 17v2H2v-2s0-4 7-4 7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59 5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7"/></svg></span> <strong>Organizations integration</strong></p>
+<hr />
+<p>Delegate <abbr title="IP Address Manager">IPAM</abbr> administration to a networking account, share pools across the Organization via RAM, and monitor compliance across all member accounts automatically.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m10 17-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9m-6-6a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1m7 0h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2"/></svg></span> <strong>Compliance auditing</strong></p>
+<hr />
+<p>Continuous monitoring detects VPCs with manually assigned CIDRs that violate your allocation rules, overlap with managed pools, or lack required tags.</p>
+</li>
+</ul>
+</div>
+<h2 id="when-to-use-aws-ipam">When to use AWS <abbr title="IP Address Manager">IPAM</abbr><a class="headerlink" href="#when-to-use-aws-ipam" title="Permanent link">&para;</a></h2>
+<p><abbr title="IP Address Manager">IPAM</abbr> becomes essential the moment your AWS environment grows beyond what a single engineer can track mentally. The threshold is lower than most teams expect.</p>
+<p><strong>Use <abbr title="IP Address Manager">IPAM</abbr> when:</strong></p>
+<ul>
+<li>You operate more than 5-10 VPCs across any number of accounts. Manual tracking breaks down quickly, and the cost of a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap (which requires <abbr title="Virtual Private Cloud">VPC</abbr> recreation to fix) exceeds the cost of <abbr title="IP Address Manager">IPAM</abbr> for years.</li>
+<li>Multiple teams create VPCs independently. Without centralized allocation, teams will choose CIDRs that conflict with each other or with on-premises networks.</li>
+<li>You need to connect VPCs to each other or to on-premises networks. Overlapping CIDRs make Transit Gateway, Cloud WAN, and <abbr title="Virtual Private Cloud">VPC</abbr> Peering impossible between the affected VPCs.</li>
+<li>Compliance frameworks require you to demonstrate IP address governance and audit trails.</li>
+<li>You plan to use Infrastructure as Code for <abbr title="Virtual Private Cloud">VPC</abbr> provisioning. <abbr title="IP Address Manager">IPAM</abbr> pools integrate directly with CloudFormation and Terraform, enabling fully automated, conflict-free <abbr title="Virtual Private Cloud">VPC</abbr> creation.</li>
+</ul>
+<p><strong>You can defer <abbr title="IP Address Manager">IPAM</abbr> when:</strong></p>
+<ul>
+<li>You have a single account with 1-2 VPCs and no hybrid connectivity. Even here, setting up <abbr title="IP Address Manager">IPAM</abbr> early avoids retrofitting later.</li>
+<li>You're running isolated sandbox accounts that will never connect to production networks.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>The cost of not using <abbr title="IP Address Manager">IPAM</abbr> is invisible until it's catastrophic. <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlaps are discovered when you try to peer VPCs, attach them to Transit Gateway, or establish hybrid connectivity — at which point the only fix is recreating VPCs and migrating workloads. <abbr title="IP Address Manager">IPAM</abbr> is insurance that costs pennies compared to the operational disruption of an overlap.</em></p>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="pool-hierarchy-design">Pool hierarchy design<a class="headerlink" href="#pool-hierarchy-design" title="Permanent link">&para;</a></h3>
+<h4 id="design-pools-top-down-organization-region-environment-workload">Design pools top-down: Organization → Region → Environment → Workload<a class="headerlink" href="#design-pools-top-down-organization-region-environment-workload" title="Permanent link">&para;</a></h4>
+<p>The pool hierarchy should mirror your organizational structure and reflect how you want to govern address space. Start with your entire private range at the top, subdivide by Region (to enable route summarization), then by environment (to enforce isolation), and optionally by workload type (to apply different sizing rules).</p>
+<p>A well-designed hierarchy for a typical enterprise:</p>
+<ul>
+<li><strong>Top-level pool</strong>: <code>10.0.0.0/8</code> — your entire private address space</li>
+<li><strong>Regional pools</strong>: <code>/12</code> per Region — gives each Region 1,048,576 addresses (enough for thousands of VPCs)</li>
+<li><strong>Environment pools</strong>: <code>/13</code> or <code>/14</code> per environment within a Region — separates production from non-production</li>
+<li><strong>Workload pools</strong> (optional): <code>/16</code> or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs</li>
+</ul>
+<p>This structure enables route summarization at every level. Your on-premises network can route to <code>10.0.0.0/12</code> for all of us-east-1, rather than maintaining individual routes for every <abbr title="Virtual Private Cloud">VPC</abbr>. That summarization reduces route table size on your on-premises routers and simplifies firewall rules.</p>
+<h4 id="size-regional-pools-generously-address-space-is-not-a-scarce-resource">Size regional pools generously — address space is not a scarce resource<a class="headerlink" href="#size-regional-pools-generously-address-space-is-not-a-scarce-resource" title="Permanent link">&para;</a></h4>
+<p>The most common <abbr title="IP Address Manager">IPAM</abbr> mistake is creating regional pools that are too small. A <code>/16</code> regional pool gives you only 256 <code>/24</code> VPCs or 16 <code>/20</code> VPCs. That sounds like enough until you account for production, staging, development, and sandbox environments across dozens of accounts.</p>
+<p>Use <code>/12</code> for regional pools if your top-level pool is a <code>/8</code>. This gives each Region 16 <code>/16</code> blocks or 256 <code>/20</code> blocks — enough for years of growth. If you're constrained to a smaller top-level range (e.g., <code>10.0.0.0/10</code> because the rest is used on-premises), allocate at least a <code>/14</code> per Region.</p>
+<p>The cost of oversizing a pool is zero — unused address space in a pool costs nothing. The cost of undersizing is a pool restructuring that requires reallocating every <abbr title="Virtual Private Cloud">VPC</abbr> beneath it.</p>
+<h4 id="create-separate-pool-branches-for-production-and-non-production">Create separate pool branches for production and non-production<a class="headerlink" href="#create-separate-pool-branches-for-production-and-non-production" title="Permanent link">&para;</a></h4>
+<p>Production and non-production workloads should draw from different pool branches, not different allocations within the same pool. This separation enables:</p>
+<ul>
+<li>Different allocation rules (production VPCs get <code>/16</code>, development VPCs get <code>/20</code>)</li>
+<li>Different sharing policies (production pools shared only with production OUs)</li>
+<li>Independent utilization monitoring (production pool exhaustion is a different severity than dev pool exhaustion)</li>
+<li>Route summarization by environment (useful for firewall rules that treat production traffic differently)</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Your pool hierarchy is your IP governance model expressed as infrastructure. A flat hierarchy with one pool per Region gives you overlap prevention but nothing else. A deep hierarchy gives you governance, summarization, environment isolation, and differentiated allocation rules — all enforced automatically.</em></p>
+<h3 id="allocation-rules">Allocation rules<a class="headerlink" href="#allocation-rules" title="Permanent link">&para;</a></h3>
+<h4 id="set-minimum-and-maximum-cidr-sizes-on-every-pool">Set minimum and maximum <abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizes on every pool<a class="headerlink" href="#set-minimum-and-maximum-cidr-sizes-on-every-pool" title="Permanent link">&para;</a></h4>
+<p>Every pool that teams allocate from should have explicit size constraints. Without them, a team can request a <code>/16</code> from a development pool (wasting address space) or a <code>/28</code> for a production workload (creating expansion problems immediately).</p>
+<p>Recommended sizing rules:</p>
+<table>
+<thead>
+<tr>
+<th>Pool type</th>
+<th>Min <abbr title="Classless Inter-Domain Routing">CIDR</abbr></th>
+<th>Max <abbr title="Classless Inter-Domain Routing">CIDR</abbr></th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production</td>
+<td><code>/20</code></td>
+<td><code>/16</code></td>
+<td>Production VPCs need room for growth, multiple subnet tiers, and IP-hungry services (EKS, ECS)</td>
+</tr>
+<tr>
+<td>Non-production</td>
+<td><code>/24</code></td>
+<td><code>/20</code></td>
+<td>Dev/test VPCs need less space but should still accommodate basic subnet tiers</td>
+</tr>
+<tr>
+<td>Sandbox</td>
+<td><code>/26</code></td>
+<td><code>/24</code></td>
+<td>Sandbox VPCs are ephemeral and small; conserve address space</td>
+</tr>
+<tr>
+<td>EKS workloads</td>
+<td><code>/16</code></td>
+<td><code>/16</code></td>
+<td>EKS with <abbr title="Virtual Private Cloud">VPC</abbr> CNI consumes IPs aggressively; undersizing causes pod scheduling failures</td>
+</tr>
+</tbody>
+</table>
+<h4 id="require-tags-on-every-allocation">Require tags on every allocation<a class="headerlink" href="#require-tags-on-every-allocation" title="Permanent link">&para;</a></h4>
+<p>Allocation rules can mandate specific tags before a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> is granted. At minimum, require:</p>
+<ul>
+<li><code>Environment</code> (production, staging, development, sandbox)</li>
+<li><code>Team</code> or <code>CostCenter</code> (for accountability)</li>
+<li><code>Application</code> (for traceability)</li>
+</ul>
+<p>Required tags serve two purposes: they enforce governance at allocation time (teams must classify their VPCs before getting address space), and they enable <abbr title="IP Address Manager">IPAM</abbr>'s compliance monitoring to identify untagged or mistagged resources later.</p>
+<h4 id="use-locale-restrictions-to-prevent-cross-region-allocation-mistakes">Use locale restrictions to prevent cross-Region allocation mistakes<a class="headerlink" href="#use-locale-restrictions-to-prevent-cross-region-allocation-mistakes" title="Permanent link">&para;</a></h4>
+<p>Each pool can be restricted to a specific AWS Region. A pool designated for <code>us-east-1</code> will reject allocation requests from <code>us-west-2</code>. This prevents a common mistake where teams accidentally allocate from the wrong regional pool, consuming address space intended for a different Region and breaking your summarization strategy.</p>
+<p>Set the locale on every pool below the top level. The top-level pool spans all Regions; regional pools and below should always have a locale set.</p>
+<p><strong><em>Key insight:</em></strong> <em>Allocation rules are not bureaucracy — they're guardrails that prevent the three most expensive <abbr title="IP Address Manager">IPAM</abbr> mistakes: oversized allocations that waste space, undersized allocations that require <abbr title="Virtual Private Cloud">VPC</abbr> recreation, and cross-Region allocations that break route summarization.</em></p>
+<h3 id="scopes-private-vs-public">Scopes: private vs. public<a class="headerlink" href="#scopes-private-vs-public" title="Permanent link">&para;</a></h3>
+<h4 id="use-the-private-scope-for-all-rfc-1918-and-rfc-6598-address-management">Use the private scope for all RFC 1918 and RFC 6598 address management<a class="headerlink" href="#use-the-private-scope-for-all-rfc-1918-and-rfc-6598-address-management" title="Permanent link">&para;</a></h4>
+<p>The private scope is where you manage your internal IP address space: RFC 1918 ranges (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>) and RFC 6598 shared address space (<code>100.64.0.0/10</code>, commonly used for EKS pod networking). Every organization needs the private scope; it's the core <abbr title="IP Address Manager">IPAM</abbr> use case.</p>
+<h4 id="use-the-public-scope-only-when-you-bring-your-own-ip-addresses-byoip">Use the public scope only when you bring your own IP addresses (BYOIP)<a class="headerlink" href="#use-the-public-scope-only-when-you-bring-your-own-ip-addresses-byoip" title="Permanent link">&para;</a></h4>
+<p>The public scope manages publicly routable <abbr title="Internet Protocol version 4">IPv4</abbr> addresses that you own and have registered with AWS through the BYOIP process. Most organizations don't need this — AWS-assigned public IPs and Elastic IPs are managed outside <abbr title="IP Address Manager">IPAM</abbr>. The public scope becomes relevant when you:</p>
+<ul>
+<li>Own portable <abbr title="Internet Protocol version 4">IPv4</abbr> address blocks (from ARIN, RIPE, etc.) and want to use them in AWS</li>
+<li>Need to maintain consistent public IP addresses across cloud providers</li>
+<li>Have compliance requirements that mandate using organization-owned public address space</li>
+</ul>
+<p>If you don't own public <abbr title="Internet Protocol version 4">IPv4</abbr> blocks, ignore the public scope entirely. It adds no value for AWS-assigned addresses.</p>
+<h3 id="ipv6-pool-management"><abbr title="Internet Protocol version 6">IPv6</abbr> pool management<a class="headerlink" href="#ipv6-pool-management" title="Permanent link">&para;</a></h3>
+<h4 id="include-ipv6-pools-in-your-ipam-hierarchy-from-day-one">Include <abbr title="Internet Protocol version 6">IPv6</abbr> pools in your <abbr title="IP Address Manager">IPAM</abbr> hierarchy from day one<a class="headerlink" href="#include-ipv6-pools-in-your-ipam-hierarchy-from-day-one" title="Permanent link">&para;</a></h4>
+<p><abbr title="IP Address Manager">IPAM</abbr> supports <abbr title="Internet Protocol version 6">IPv6</abbr> pool management alongside <abbr title="Internet Protocol version 4">IPv4</abbr>, and your pool hierarchy should include both address families. <abbr title="Internet Protocol version 6">IPv6</abbr> pools work differently from <abbr title="Internet Protocol version 4">IPv4</abbr> pools because the address space is vast (no exhaustion concern) and the allocation model is simpler (Amazon-provided <code>/56</code> per <abbr title="Virtual Private Cloud">VPC</abbr>, <code>/48</code> for BYOIP), but governance still matters: you need to track which VPCs have <abbr title="Internet Protocol version 6">IPv6</abbr> enabled, ensure consistent allocation sources, and maintain visibility across your Organization.</p>
+<p><strong><abbr title="Internet Protocol version 6">IPv6</abbr> pool sources:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>How it works in <abbr title="IP Address Manager">IPAM</abbr></th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Amazon-provided <abbr title="Internet Protocol version 6">IPv6</abbr></strong></td>
+<td><abbr title="IP Address Manager">IPAM</abbr> allocates from Amazon's <abbr title="Internet Protocol version 6">IPv6</abbr> pool. Each <abbr title="Virtual Private Cloud">VPC</abbr> gets a <code>/56</code>. The addresses are Amazon-owned and change if you disassociate.</td>
+<td>Default for most organizations. No RIR registration needed.</td>
+</tr>
+<tr>
+<td><strong>BYOIP <abbr title="Internet Protocol version 6">IPv6</abbr></strong></td>
+<td>You provision your own <abbr title="Internet Protocol version 6">IPv6</abbr> block (from ARIN, RIPE, APNIC) into <abbr title="IP Address Manager">IPAM</abbr>'s public scope, then create pools from it. Each <abbr title="Virtual Private Cloud">VPC</abbr> gets a <code>/56</code> from your block.</td>
+<td>Organizations with existing <abbr title="Internet Protocol version 6">IPv6</abbr> allocations that want address portability or consistent prefixes across environments.</td>
+</tr>
+<tr>
+<td><strong>Amazon-provided via <abbr title="IP Address Manager">IPAM</abbr> pool</strong></td>
+<td>Create an <abbr title="IP Address Manager">IPAM</abbr> pool with <code>amazon</code> as the source. <abbr title="IP Address Manager">IPAM</abbr> manages the allocation from Amazon's pool but gives you governance (allocation rules, tagging, compliance monitoring).</td>
+<td>Best of both worlds: Amazon-provided addresses with <abbr title="IP Address Manager">IPAM</abbr> governance. Recommended for organizations that don't own <abbr title="Internet Protocol version 6">IPv6</abbr> blocks but want centralized tracking.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="structure-ipv6-pools-parallel-to-your-ipv4-hierarchy">Structure <abbr title="Internet Protocol version 6">IPv6</abbr> pools parallel to your <abbr title="Internet Protocol version 4">IPv4</abbr> hierarchy<a class="headerlink" href="#structure-ipv6-pools-parallel-to-your-ipv4-hierarchy" title="Permanent link">&para;</a></h4>
+<p>Create <abbr title="Internet Protocol version 6">IPv6</abbr> pools that mirror your <abbr title="Internet Protocol version 4">IPv4</abbr> pool structure: top-level → regional → environment. Even though <abbr title="Internet Protocol version 6">IPv6</abbr> exhaustion is not a concern, the parallel structure gives you:</p>
+<ul>
+<li>Consistent governance (same allocation rules, same required tags)</li>
+<li>Unified compliance monitoring (one view of both address families per <abbr title="Virtual Private Cloud">VPC</abbr>)</li>
+<li>Clear audit trail (which VPCs have <abbr title="Internet Protocol version 6">IPv6</abbr>, when it was enabled, from which pool)</li>
+</ul>
+<h4 id="use-ipam-to-enforce-dual-stack-adoption">Use <abbr title="IP Address Manager">IPAM</abbr> to enforce dual-stack adoption<a class="headerlink" href="#use-ipam-to-enforce-dual-stack-adoption" title="Permanent link">&para;</a></h4>
+<p><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring can identify VPCs that have <abbr title="Internet Protocol version 4">IPv4</abbr> allocations but no <abbr title="Internet Protocol version 6">IPv6</abbr> allocation — useful for tracking your dual-stack adoption progress. As your organization moves toward <abbr title="Internet Protocol version 6">IPv6</abbr>-first, <abbr title="IP Address Manager">IPAM</abbr> provides the visibility to know which VPCs still need <abbr title="Internet Protocol version 6">IPv6</abbr> enablement.</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Internet Protocol version 6">IPv6</abbr> pool management in <abbr title="IP Address Manager">IPAM</abbr> is not about preventing exhaustion (that's an <abbr title="Internet Protocol version 4">IPv4</abbr> problem). It's about governance and visibility: knowing which VPCs have <abbr title="Internet Protocol version 6">IPv6</abbr>, ensuring consistent allocation sources across your Organization, and tracking dual-stack adoption progress. The governance value is the same even though the scarcity concern is gone.</em></p>
+<h3 id="delegated-administration">Delegated administration<a class="headerlink" href="#delegated-administration" title="Permanent link">&para;</a></h3>
+<h4 id="delegate-ipam-to-your-centralized-networking-account">Delegate <abbr title="IP Address Manager">IPAM</abbr> to your centralized networking account<a class="headerlink" href="#delegate-ipam-to-your-centralized-networking-account" title="Permanent link">&para;</a></h4>
+<p><abbr title="IP Address Manager">IPAM</abbr> should be administered from a dedicated networking account (or shared-services account), not the Organization management account. Delegated administration keeps the management account clean (it should only handle Organizations, billing, and SCPs) while giving the networking team full <abbr title="IP Address Manager">IPAM</abbr> control.</p>
+<p>The delegated administrator account can:</p>
+<ul>
+<li>Create and manage all <abbr title="IP Address Manager">IPAM</abbr> pools and allocation rules</li>
+<li>Monitor compliance across the entire Organization</li>
+<li>Share pools with other accounts via RAM</li>
+<li>View IP address usage in all member accounts</li>
+</ul>
+<h4 id="share-pools-at-the-ou-level-not-individual-accounts">Share pools at the OU level, not individual accounts<a class="headerlink" href="#share-pools-at-the-ou-level-not-individual-accounts" title="Permanent link">&para;</a></h4>
+<p>When sharing <abbr title="IP Address Manager">IPAM</abbr> pools via AWS RAM, share with Organizational Units rather than specific accounts. This ensures that new accounts added to an OU automatically gain access to the appropriate pools without manual intervention. Your account vending process creates an account in the correct OU, and <abbr title="IP Address Manager">IPAM</abbr> pool access follows automatically.</p>
+<p>Structure your sharing to match your pool hierarchy:</p>
+<ul>
+<li>Production OU → access to production pools</li>
+<li>Development OU → access to non-production pools</li>
+<li>Sandbox OU → access to sandbox pools</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Delegated administration + OU-level sharing creates a self-service model where teams get the right address space automatically. The networking team defines the rules once; every subsequent <abbr title="Virtual Private Cloud">VPC</abbr> creation follows those rules without human intervention.</em></p>
+<h3 id="compliance-monitoring">Compliance monitoring<a class="headerlink" href="#compliance-monitoring" title="Permanent link">&para;</a></h3>
+<h4 id="enable-ipam-compliance-monitoring-across-your-organization">Enable <abbr title="IP Address Manager">IPAM</abbr> compliance monitoring across your Organization<a class="headerlink" href="#enable-ipam-compliance-monitoring-across-your-organization" title="Permanent link">&para;</a></h4>
+<p><abbr title="IP Address Manager">IPAM</abbr> continuously monitors all VPCs in your Organization and flags those that:</p>
+<ul>
+<li>Have CIDRs that overlap with managed pool allocations</li>
+<li>Were created with manually assigned CIDRs outside any <abbr title="IP Address Manager">IPAM</abbr> pool</li>
+<li>Lack required tags defined in allocation rules</li>
+<li>Violate locale restrictions</li>
+</ul>
+<p>This monitoring catches VPCs created before <abbr title="IP Address Manager">IPAM</abbr> was deployed, VPCs created by teams that bypassed <abbr title="IP Address Manager">IPAM</abbr> (using hardcoded CIDRs in their templates), and VPCs in accounts that were recently added to the Organization.</p>
+<h4 id="treat-compliance-violations-as-high-priority-findings">Treat compliance violations as high-priority findings<a class="headerlink" href="#treat-compliance-violations-as-high-priority-findings" title="Permanent link">&para;</a></h4>
+<p>A non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> is a ticking time bomb. It might work fine in isolation, but the moment you try to connect it to your network (Transit Gateway, Cloud WAN, peering), an overlap will surface. Address compliance violations proactively:</p>
+<ol>
+<li>Identify the non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> and its owner</li>
+<li>Determine if the <abbr title="Classless Inter-Domain Routing">CIDR</abbr> actually conflicts with your managed space</li>
+<li>If it conflicts, plan a migration to a compliant <abbr title="Classless Inter-Domain Routing">CIDR</abbr> (this requires <abbr title="Virtual Private Cloud">VPC</abbr> recreation)</li>
+<li>If it doesn't conflict, import the <abbr title="Classless Inter-Domain Routing">CIDR</abbr> into <abbr title="IP Address Manager">IPAM</abbr> to bring it under management</li>
+</ol>
+<h4 id="import-existing-cidrs-into-ipam-before-they-cause-problems">Import existing CIDRs into <abbr title="IP Address Manager">IPAM</abbr> before they cause problems<a class="headerlink" href="#import-existing-cidrs-into-ipam-before-they-cause-problems" title="Permanent link">&para;</a></h4>
+<p>If you're adopting <abbr title="IP Address Manager">IPAM</abbr> in an environment with existing VPCs, import their CIDRs into your pool hierarchy. This registers them as known allocations, preventing future allocations from overlapping with them. Importing doesn't change the <abbr title="Virtual Private Cloud">VPC</abbr> — it just tells <abbr title="IP Address Manager">IPAM</abbr> "this space is taken."</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring is your early warning system. Every non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> is a potential connectivity failure waiting to happen. The monitoring is free (included with <abbr title="IP Address Manager">IPAM</abbr>) — the cost of ignoring it is a production incident when you discover an overlap during a connectivity change.</em></p>
+<h3 id="integration-with-infrastructure-as-code">Integration with Infrastructure as Code<a class="headerlink" href="#integration-with-infrastructure-as-code" title="Permanent link">&para;</a></h3>
+<h4 id="reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid">Reference <abbr title="IP Address Manager">IPAM</abbr> pools in CloudFormation using <code>Ipv4IpamPoolId</code><a class="headerlink" href="#reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid" title="Permanent link">&para;</a></h4>
+<p>CloudFormation supports <abbr title="IP Address Manager">IPAM</abbr>-allocated CIDRs natively. Instead of hardcoding a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> in your <abbr title="Virtual Private Cloud">VPC</abbr> template, reference the <abbr title="IP Address Manager">IPAM</abbr> pool and let <abbr title="IP Address Manager">IPAM</abbr> assign a non-overlapping block:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">Resources</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">MyVPC</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::EC2::VPC</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">Properties</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">Ipv4IpamPoolId</span><span class="p">:</span><span class="w"> </span><span class="kt">!Ref</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IpamPoolId</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">Ipv4NetmaskLength</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">Tags</span><span class="p">:</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Environment</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">          </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">production</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">          </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-app</span>
+</span></code></pre></div>
+<p>This approach means your <abbr title="Virtual Private Cloud">VPC</abbr> template is reusable across accounts and Regions — the <abbr title="Classless Inter-Domain Routing">CIDR</abbr> is determined at deployment time based on which pool is available in that context.</p>
+<h4 id="use-the-aws_vpc_ipam_pool_cidr_allocation-resource-in-terraform">Use the <code>aws_vpc_ipam_pool_cidr_allocation</code> resource in Terraform<a class="headerlink" href="#use-the-aws_vpc_ipam_pool_cidr_allocation-resource-in-terraform" title="Permanent link">&para;</a></h4>
+<p>Terraform's AWS provider supports <abbr title="IP Address Manager">IPAM</abbr> through the <code>aws_vpc_ipam_pool_cidr_allocation</code> data source and the <code>ipv4_ipam_pool_id</code> argument on <code>aws_vpc</code>:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">&quot;aws_vpc&quot;</span><span class="w"> </span><span class="nv">&quot;main&quot;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="na">ipv4_ipam_pool_id</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">var.ipam_pool_id</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="na">ipv4_netmask_length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">16</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nb">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="na">Environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;production&quot;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="na">Application</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my-app&quot;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Both approaches eliminate hardcoded CIDRs from your IaC templates, which is the single most impactful change you can make for IP address governance. Hardcoded CIDRs in templates are the primary source of overlaps in organizations that use IaC — teams copy templates, forget to change the <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, and create conflicting VPCs.</p>
+<h4 id="store-pool-ids-in-ssm-parameter-store-or-terraform-remote-state">Store pool IDs in SSM Parameter Store or Terraform remote state<a class="headerlink" href="#store-pool-ids-in-ssm-parameter-store-or-terraform-remote-state" title="Permanent link">&para;</a></h4>
+<p><abbr title="IP Address Manager">IPAM</abbr> pool IDs are the bridge between your IaC templates and your address space governance. Store them in AWS Systems Manager Parameter Store (accessible cross-account via RAM) or in Terraform remote state so that templates can reference the correct pool without hardcoding pool IDs.</p>
+<p><strong><em>Key insight:</em></strong> <em>The combination of <abbr title="IP Address Manager">IPAM</abbr> pools + IaC templates that reference those pools is what transforms IP address management from a manual coordination problem into an automated, self-service capability. Teams deploy VPCs without knowing or caring what <abbr title="Classless Inter-Domain Routing">CIDR</abbr> they'll get — they just know it will be correct, non-overlapping, and compliant.</em></p>
+<h3 id="hybrid-connectivity-and-on-premises-integration">Hybrid connectivity and on-premises integration<a class="headerlink" href="#hybrid-connectivity-and-on-premises-integration" title="Permanent link">&para;</a></h3>
+<h4 id="import-on-premises-cidr-ranges-into-ipam-as-non-allocatable-reservations">Import on-premises <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges into <abbr title="IP Address Manager">IPAM</abbr> as non-allocatable reservations<a class="headerlink" href="#import-on-premises-cidr-ranges-into-ipam-as-non-allocatable-reservations" title="Permanent link">&para;</a></h4>
+<p>Your on-premises networks occupy address space that AWS <abbr title="IP Address Manager">IPAM</abbr> must know about to prevent overlaps. Import these ranges into your top-level pool as manual allocations (or into a dedicated "on-premises" pool) so that <abbr title="IP Address Manager">IPAM</abbr>'s overlap detection accounts for them.</p>
+<p>This is critical for organizations using RFC 1918 space on-premises. If your data center uses <code>10.0.0.0/16</code> through <code>10.15.0.0/16</code>, those ranges must be reserved in <abbr title="IP Address Manager">IPAM</abbr> before any AWS pool can allocate from the same space. Without this reservation, <abbr title="IP Address Manager">IPAM</abbr> might allocate <code>10.5.0.0/16</code> to a new <abbr title="Virtual Private Cloud">VPC</abbr> — which will fail the moment you try to route between that <abbr title="Virtual Private Cloud">VPC</abbr> and on-premises.</p>
+<h4 id="design-your-pool-hierarchy-to-accommodate-hybrid-summarization">Design your pool hierarchy to accommodate hybrid summarization<a class="headerlink" href="#design-your-pool-hierarchy-to-accommodate-hybrid-summarization" title="Permanent link">&para;</a></h4>
+<p>When advertising routes between AWS and on-premises (via Direct Connect or <abbr title="Virtual Private Network">VPN</abbr>), route summarization keeps your on-premises route tables manageable. Design your <abbr title="IP Address Manager">IPAM</abbr> pool hierarchy so that each regional pool's <abbr title="Classless Inter-Domain Routing">CIDR</abbr> can be advertised as a single summary route.</p>
+<p>For example, if your us-east-1 regional pool is <code>10.0.0.0/12</code>, you advertise a single <code>/12</code> route to on-premises that covers all VPCs in that Region. This works only if all us-east-1 VPCs allocate from within that <code>/12</code> — which <abbr title="IP Address Manager">IPAM</abbr>'s locale restrictions guarantee.</p>
+<h3 id="common-mistakes-to-avoid">Common mistakes to avoid<a class="headerlink" href="#common-mistakes-to-avoid" title="Permanent link">&para;</a></h3>
+<h4 id="mistake-creating-pools-that-are-too-small">Mistake: Creating pools that are too small<a class="headerlink" href="#mistake-creating-pools-that-are-too-small" title="Permanent link">&para;</a></h4>
+<p>A <code>/16</code> regional pool seems large until you realize it supports only 16 <code>/20</code> VPCs or a single <code>/16</code> <abbr title="Virtual Private Cloud">VPC</abbr>. Organizations that start with small pools hit exhaustion within months and face a painful restructuring. Always size pools for 5-10 years of growth.</p>
+<h4 id="mistake-no-regional-hierarchy-flat-pool-structure">Mistake: No regional hierarchy (flat pool structure)<a class="headerlink" href="#mistake-no-regional-hierarchy-flat-pool-structure" title="Permanent link">&para;</a></h4>
+<p>A single pool for all Regions prevents route summarization and makes locale-based governance impossible. Even if you operate in one Region today, create a regional pool beneath your top-level pool. Adding a second Region later is trivial with the hierarchy in place; retrofitting it requires reallocating existing VPCs.</p>
+<h4 id="mistake-no-allocation-rules-on-leaf-pools">Mistake: No allocation rules on leaf pools<a class="headerlink" href="#mistake-no-allocation-rules-on-leaf-pools" title="Permanent link">&para;</a></h4>
+<p>Pools without allocation rules are just <abbr title="Classless Inter-Domain Routing">CIDR</abbr> containers — they prevent overlaps but don't enforce governance. Teams can request any size, skip tags, and deploy in any Region. Add rules to every pool that teams allocate from directly.</p>
+<h4 id="mistake-not-importing-existing-vpcs-before-enabling-compliance-monitoring">Mistake: Not importing existing VPCs before enabling compliance monitoring<a class="headerlink" href="#mistake-not-importing-existing-vpcs-before-enabling-compliance-monitoring" title="Permanent link">&para;</a></h4>
+<p>If you enable compliance monitoring without first importing existing <abbr title="Virtual Private Cloud">VPC</abbr> CIDRs, every pre-existing <abbr title="Virtual Private Cloud">VPC</abbr> will appear as non-compliant. This creates alert fatigue and makes it impossible to distinguish genuinely problematic VPCs from legacy ones. Import first, then enable monitoring.</p>
+<h4 id="mistake-sharing-pools-too-broadly">Mistake: Sharing pools too broadly<a class="headerlink" href="#mistake-sharing-pools-too-broadly" title="Permanent link">&para;</a></h4>
+<p>Sharing your production pool with all accounts (including development and sandbox) means any account can consume production address space. Share pools only with the OUs that should use them. This is governance, not restriction — it ensures the right teams get the right address space.</p>
+<p><strong><em>Key insight:</em></strong> <em>Every <abbr title="IP Address Manager">IPAM</abbr> mistake has the same root cause: treating IP address management as a one-time setup rather than an ongoing governance system. <abbr title="IP Address Manager">IPAM</abbr> works best when the pool hierarchy, allocation rules, and sharing policies are designed together as a coherent system — not bolted on incrementally as problems arise.</em></p>
+<h2 id="combining-ipam-with-other-services">Combining <abbr title="IP Address Manager">IPAM</abbr> with other services<a class="headerlink" href="#combining-ipam-with-other-services" title="Permanent link">&para;</a></h2>
+<p><abbr title="IP Address Manager">IPAM</abbr> is a governance layer that integrates with every service that consumes or manages IP address space. Understanding these integrations helps you build a coherent address management strategy.</p>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th><abbr title="IP Address Manager">IPAM</abbr> provides</th>
+<th>Other service provides</th>
+<th>Integration pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="IP Address Manager">IPAM</abbr> + Organizations</strong></td>
+<td>Centralized IP governance across all member accounts</td>
+<td>Account structure, OUs, SCPs, delegated administration</td>
+<td>Delegate <abbr title="IP Address Manager">IPAM</abbr> admin to networking account; share pools at OU level; monitor compliance org-wide</td>
+</tr>
+<tr>
+<td><strong><abbr title="IP Address Manager">IPAM</abbr> + RAM</strong></td>
+<td>Pool definitions and allocation rules</td>
+<td>Cross-account resource sharing</td>
+<td>Share <abbr title="IP Address Manager">IPAM</abbr> pools with OUs so member accounts can allocate CIDRs without networking team involvement</td>
+</tr>
+<tr>
+<td><strong><abbr title="IP Address Manager">IPAM</abbr> + Transit Gateway</strong></td>
+<td>Non-overlapping CIDRs across all connected VPCs</td>
+<td>Regional hub-and-spoke routing</td>
+<td><abbr title="IP Address Manager">IPAM</abbr> guarantees every <abbr title="Virtual Private Cloud">VPC</abbr> attached to <abbr title="Transit Gateway">TGW</abbr> has a unique <abbr title="Classless Inter-Domain Routing">CIDR</abbr>; enables route summarization in <abbr title="Transit Gateway">TGW</abbr> route tables</td>
+</tr>
+<tr>
+<td><strong><abbr title="IP Address Manager">IPAM</abbr> + Cloud WAN</strong></td>
+<td>Conflict-free address space with regional summarization</td>
+<td>Global policy-driven network backbone</td>
+<td>Regional pools align with Cloud WAN segments; summarized routes advertised per segment</td>
+</tr>
+<tr>
+<td><strong><abbr title="IP Address Manager">IPAM</abbr> + <abbr title="Virtual Private Cloud">VPC</abbr></strong></td>
+<td>Automated <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation at <abbr title="Virtual Private Cloud">VPC</abbr> creation time</td>
+<td>The network construct that consumes the allocated <abbr title="Classless Inter-Domain Routing">CIDR</abbr></td>
+<td>VPCs reference <abbr title="IP Address Manager">IPAM</abbr> pool IDs instead of hardcoded CIDRs; <abbr title="IP Address Manager">IPAM</abbr> assigns the next available block</td>
+</tr>
+<tr>
+<td><strong><abbr title="IP Address Manager">IPAM</abbr> + CloudFormation / Terraform</strong></td>
+<td>Pool IDs and allocation APIs</td>
+<td>Infrastructure deployment automation</td>
+<td>IaC templates reference pool IDs; CIDRs are determined at deploy time, not authoring time</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> is not a standalone service — it's the address governance layer that makes every other networking service work correctly at scale. Transit Gateway requires non-overlapping CIDRs. Cloud WAN benefits from summarizable address space. <abbr title="Virtual Private Cloud">VPC</abbr> Peering fails with overlaps. <abbr title="IP Address Manager">IPAM</abbr> is the service that guarantees these preconditions are met before you discover a problem in production.</em></p>
+<h2 id="ipam-pricing-and-cost-considerations"><abbr title="IP Address Manager">IPAM</abbr> pricing and cost considerations<a class="headerlink" href="#ipam-pricing-and-cost-considerations" title="Permanent link">&para;</a></h2>
+<p><abbr title="IP Address Manager">IPAM</abbr> pricing is based on two dimensions:</p>
+<ul>
+<li><strong>Active IP address monitoring</strong>: Per public IP address monitored per hour. This applies to the public scope and BYOIP addresses. Private IP monitoring within your Organization is included at no additional per-IP charge with an active <abbr title="IP Address Manager">IPAM</abbr>.</li>
+<li><strong><abbr title="IP Address Manager">IPAM</abbr> instance</strong>: There is no separate charge for the <abbr title="IP Address Manager">IPAM</abbr> instance itself. You pay for the monitoring and auditing capabilities.</li>
+</ul>
+<p>For most organizations using only private address space (RFC 1918), <abbr title="IP Address Manager">IPAM</abbr> costs are minimal — significantly less than the operational cost of a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap incident. The pricing model means <abbr title="IP Address Manager">IPAM</abbr> is effectively free for private IP governance in organizations that don't use BYOIP.</p>
+<p>Check the <a href="https://aws.amazon.com/vpc/pricing/">current pricing page</a> for exact rates, as pricing may change. The key takeaway: <abbr title="IP Address Manager">IPAM</abbr>'s cost is negligible compared to the engineering time it saves and the incidents it prevents.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>What is <abbr title="IP Address Manager">IPAM</abbr>?</strong></p>
+<hr />
+<p>Complete service documentation covering concepts, pool management, allocation rules, scopes, and compliance monitoring.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1s.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></svg></span> <strong>How <abbr title="IP Address Manager">IPAM</abbr> works</strong></p>
+<hr />
+<p>Detailed explanation of <abbr title="IP Address Manager">IPAM</abbr> architecture, pool hierarchies, allocation mechanics, and monitoring behavior.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/ipam/how-ipam-works.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> How it works</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3 1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg></span> <strong><abbr title="IP Address Manager">IPAM</abbr> tutorials</strong></p>
+<hr />
+<p>Step-by-step guides for creating pools, setting allocation rules, sharing with Organizations, and monitoring compliance.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/ipam/ipam-tutorials.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Tutorials</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 17v2H2v-2s0-4 7-4 7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.4 3.4 0 0 0-1.93.59 5 5 0 0 1 0 5.82A3.4 3.4 0 0 0 15 11a3.5 3.5 0 0 0 0-7"/></svg></span> <strong><abbr title="IP Address Manager">IPAM</abbr> with AWS Organizations</strong></p>
+<hr />
+<p>How to configure delegated administration, cross-account monitoring, and Organization-wide compliance.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/ipam/choose-single-user-or-orgs-ipam.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Organizations integration</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>BYOIP with <abbr title="IP Address Manager">IPAM</abbr></strong></p>
+<hr />
+<p>Managing your own public <abbr title="Internet Protocol version 4">IPv4</abbr> address blocks through <abbr title="IP Address Manager">IPAM</abbr>'s public scope.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/ipam/tutorials-byoip-ipam.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> BYOIP guide</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong><abbr title="IP Address Manager">IPAM</abbr> launch blog post</strong></p>
+<hr />
+<p>Architecture overview and use cases from the original service announcement.</p>
+<p><a href="https://aws.amazon.com/blogs/aws/network-address-management-and-auditing-at-scale-with-amazon-vpc-ip-address-manager/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog post</a></p>
+</li>
+</ul>
+</div>
+<h2 id="how-ipam-relates-to-the-rest-of-the-foundation">How <abbr title="IP Address Manager">IPAM</abbr> relates to the rest of the Foundation<a class="headerlink" href="#how-ipam-relates-to-the-rest-of-the-foundation" title="Permanent link">&para;</a></h2>
+<p><abbr title="IP Address Manager">IPAM</abbr> is the governance layer that sits between your <a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning</a> strategy and the actual <a href="../vpc/"><abbr title="Virtual Private Cloud">VPC</abbr></a> deployments across your Organization. It enforces the addressing decisions you've made and prevents the drift that inevitably occurs when multiple teams manage infrastructure independently.</p>
+<p><strong>Relationship to other Foundation topics:</strong></p>
+<ul>
+<li><strong><a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></strong>: <abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning defines your addressing strategy — which ranges to use, how to subdivide them, and how to enable summarization. <abbr title="IP Address Manager">IPAM</abbr> implements and enforces that strategy through pools and allocation rules. Without <abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning, <abbr title="IP Address Manager">IPAM</abbr> has no coherent structure to enforce. Without <abbr title="IP Address Manager">IPAM</abbr>, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> plans exist only on paper.</li>
+<li><strong><a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: VPCs are the primary consumers of <abbr title="IP Address Manager">IPAM</abbr> allocations. Every <abbr title="Virtual Private Cloud">VPC</abbr> should get its <abbr title="Classless Inter-Domain Routing">CIDR</abbr> from an <abbr title="IP Address Manager">IPAM</abbr> pool rather than a hardcoded value. <abbr title="IP Address Manager">IPAM</abbr>'s allocation rules determine what sizes and tags are acceptable for <abbr title="Virtual Private Cloud">VPC</abbr> CIDRs.</li>
+<li><strong><a href="../subnets/">Subnets</a></strong>: While <abbr title="IP Address Manager">IPAM</abbr> manages <abbr title="Virtual Private Cloud">VPC</abbr>-level <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation, subnet design within the <abbr title="Virtual Private Cloud">VPC</abbr> is a separate concern. <abbr title="IP Address Manager">IPAM</abbr> ensures the <abbr title="Virtual Private Cloud">VPC</abbr> has enough address space; your subnet strategy determines how that space is divided.</li>
+<li><strong><a href="../organizations/">AWS Organizations</a></strong>: Organizations provides the account structure that <abbr title="IP Address Manager">IPAM</abbr> governs. Delegated administration, OU-level pool sharing, and cross-account compliance monitoring all depend on a well-structured Organization.</li>
+<li><strong><a href="../regions-azs/">Regions and Availability Zones</a></strong>: Your Region strategy determines how many regional pools you need and how address space is distributed geographically. <abbr title="IP Address Manager">IPAM</abbr>'s locale restrictions enforce that distribution.</li>
+</ul>
+<p><strong>Relationship to Connectivity:</strong></p>
+<ul>
+<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Transit Gateway and Cloud WAN require non-overlapping CIDRs across all connected VPCs. <abbr title="IP Address Manager">IPAM</abbr> is the service that guarantees this precondition.</li>
+<li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a></strong>: On-premises <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges must be imported into <abbr title="IP Address Manager">IPAM</abbr> to prevent AWS allocations from conflicting with existing networks. <abbr title="IP Address Manager">IPAM</abbr>'s hybrid awareness is essential for any organization with Direct Connect or <abbr title="Virtual Private Network">VPN</abbr> connectivity.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../subnets/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Subnets">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Subnets
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../connectivity/" class="md-footer__link md-footer__link--next" aria-label="Next: Connectivity">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Connectivity
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
