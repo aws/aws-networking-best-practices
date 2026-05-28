@@ -1,11 +1,27 @@
 # Introduction
 
-Comprehensive AWS networking guidance developed by the user community and
-validated by AWS Networking Specialists.
+A reference architecture for AWS networking best practices.
+
+Enterprise AWS networks are built on five interconnected pillars:
+
+* **Foundation** - Core infrastructure (AWS Organizations, VPCs, subnets, IPAM) that everything else depends on
+* **Connectivity** - Communication through internet gateways, Transit Gateway, Direct Connect, and VPN services
+* **Application Networking** - Traffic distribution via Elastic Load Balancing, service-to-service communication through VPC Lattice, and container networking
+* **Security** - Protection through Network Firewall, PrivateLink, and Verified Access
+* **Observability** - Monitoring and troubleshooting capabilities
+
+![AWS Network Reference Architecture](assets/introduction/AWS-Network-Reference-Architecture.png)
+/// caption
+AWS Network Reference Architecture
+///
+
+## Architecture Overview
+
+Start with Foundation to understand the basics, then explore each pillar based on your specific networking requirements.
 
 <div class="grid cards" markdown>
 
-*   :material-network: **Foundation & Core Concepts**
+*   :material-network: **Foundation**
 
     ---
 
@@ -14,42 +30,31 @@ validated by AWS Networking Specialists.
 
     ---
 
-    [:octicons-arrow-right-24: Networking Basics](basics/)
+    [:octicons-arrow-right-24: Foundation](foundation/)
 
-*   :material-lan-connect: **Internal Connectivity**
-
-    ---
-
-    Inter-service communication across regions, availability zones, and VPCs
-    within your AWS environment.
+*   :material-lan-connect: **Connectivity**
 
     ---
 
-    [:octicons-arrow-right-24: Connectivity within AWS](internal-connectivity/)
-
-*   :material-web: **External Network Access**
-
-    ---
-
-    Enable scalable internet access for your AWS workloads with optimized
-    routing and traffic management.
+    Internet access, connectivity within AWS, and hybrid & multi-cloud
+    networking solutions.
 
     ---
 
-    [:octicons-arrow-right-24: Internet Connectivity](internet-connectivity/)
+    [:octicons-arrow-right-24: Connectivity](connectivity/)
 
-*   :material-cloud-sync: **Multi-Environment Connectivity**
-
-    ---
-
-    Establish secure connectivity between AWS, on-premises data centers, and
-    multi-cloud environments.
+*   :material-application: **Application Networking**
 
     ---
 
-    [:octicons-arrow-right-24: Hybrid and multi-cloud](hybrid-connectivity/)
+    Load balancing, service-to-service communication, and container mesh
+    networking for modern applications.
 
-*   :material-lock-outline: **Security & Access Control**
+    ---
+
+    [:octicons-arrow-right-24: Application Networking](application-networking/)
+
+*   :material-lock-outline: **Security**
 
     ---
 
@@ -58,9 +63,9 @@ validated by AWS Networking Specialists.
 
     ---
 
-    [:octicons-arrow-right-24: Network Security](security/)
+    [:octicons-arrow-right-24: Security](security/)
 
-*   :material-monitor-eye: **Visibility & Troubleshooting**
+*   :material-monitor-eye: **Observability**
 
     ---
 
@@ -69,7 +74,7 @@ validated by AWS Networking Specialists.
 
     ---
 
-    [:octicons-arrow-right-24: Monitoring, Logging & Observability](monitoring-observability/)
+    [:octicons-arrow-right-24: Observability](observability/)
 
 </div>
 
