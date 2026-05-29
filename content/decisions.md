@@ -7,7 +7,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 | I need to... | Recommended service | Key trade-off | Learn more |
 | --- | --- | --- | --- |
 | Connect many VPCs across multiple Regions with centralized policy | **AWS Cloud WAN** — declarative network policy, automated attachment acceptance, segment-based isolation, global dynamic routing | Higher per-attachment cost than TGW, but policy-driven management eliminates per-Region manual configuration | [Connectivity Within AWS](connectivity/within-aws.md) |
-| Connect VPCs in a single Region through a hub | **AWS Transit Gateway** — regional hub for thousends attachments, route table segmentation | Simpler than Cloud WAN for single-Region; becomes complex to manage across Regions | [Connectivity Within AWS](connectivity/within-aws.md) |
+| Connect VPCs in a single Region through a hub | **AWS Transit Gateway** — regional hub for thousands attachments, route table segmentation | Simpler than Cloud WAN for single-Region; becomes complex to manage across Regions | [Connectivity Within AWS](connectivity/within-aws.md) |
 | Connect exactly two VPCs with high throughput and zero same-AZ data processing/transfer cost | **VPC Peering** — lowest latency, no bandwidth limit, no per-GB charge for same-AZ traffic, non-transitive | Doesn't scale past a handful of pairs; CIDRs cannot overlap | [Connectivity Within AWS](connectivity/within-aws.md) |
 | Expose an HTTP/gRPC service to other VPCs and accounts | **VPC Lattice Services** — cross-VPC without peering or TGW, IAM auth policies, weighted routing, overlapping CIDRs | Operates at L7 only (HTTP/HTTPS/gRPC) | [Connectivity Within AWS](connectivity/within-aws.md) |
 | Give another account private TCP access to a database or on-prem endpoint | **VPC Lattice VPC Resources** — resource configurations with custom domain names and DNS as target without NLB required, overlapping CIDRs, expose range of ports | Unidirectional (consumer → resource only); TCP only | [Connectivity Within AWS](connectivity/within-aws.md) |
@@ -17,7 +17,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 
 | I need to... | Recommended pattern | Key trade-off | Learn more |
 | --- | --- | --- | --- |
-| Let private IPv4 resources reach the internet | **NAT Gateway** - Zonal or Regional, resilent and scales automatiaclly | Data processing and hourly cost if not centralized | [Internet Connectivity](connectivity/internet.md) |
+| Let private IPv4 resources reach the internet | **NAT Gateway** - Zonal or Regional, resilient and scales automatically | Data processing and hourly cost if not centralized | [Internet Connectivity](connectivity/internet.md) |
 | Let private IPv6 resources reach the internet | **Egress-only Internet Gateway** — no data process (data transfer still applies), per-VPC, outbound-only | Cannot be centralized; doesn't support NAT66/NPTv6  | [Internet Connectivity](connectivity/internet.md) |
 | Expose an HTTP/HTTPS application to the internet | **CloudFront + AWS WAF + ALB** (decentralized ingress) — edge caching, L7 protection, VPC Origins for private backends | Centralized ingress through a shared VPC adds load-balancer chaining and blast radius; avoid unless compliance mandates it | [Internet Connectivity](connectivity/internet.md) |
 | Expose a TCP/UDP service to the internet | **NLB** internet-facing, per-VPC, can preserve client IP | Combine with security groups or Next Generation Firewall for additional security| [Internet Connectivity](connectivity/internet.md) |
