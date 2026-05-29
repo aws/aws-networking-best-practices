@@ -4,11 +4,11 @@ A reference architecture for AWS networking best practices.
 
 Enterprise AWS networks are built on five interconnected pillars:
 
-* **Foundation** - Core infrastructure (AWS Organizations, VPCs, subnets, IPAM) that everything else depends on
-* **Connectivity** - Communication through internet gateways, Transit Gateway, Direct Connect, and VPN services
-* **Application Networking** - Traffic distribution via Elastic Load Balancing, service-to-service communication through VPC Lattice, and container networking
-* **Security** - Protection through Network Firewall, PrivateLink, and Verified Access
-* **Observability** - Monitoring and troubleshooting capabilities
+* **Foundation** - Core infrastructure build using AWS Organizations, Amazon VPCs, subnets, Amazon VPC IP Address Manager that everything else depends on
+* **Connectivity** - Communication through internet gateways, AWS Transit Gateway, AWS Direct Connect, and VPN services
+* **Application Networking** - Traffic distribution via Elastic Load Balancing, service-to-service communication through Amazon VPC Lattice, and container networking
+* **Security** - Protection & network isolation through AWS Network Firewall, AWS PrivateLink, Amazon Route 53 Resolver DNS Firewall
+* **Observability** - Monitoring and troubleshooting capabilities across all services
 
 ![AWS Network Reference Architecture](assets/introduction/AWS-Network-Reference-Architecture.png)
 /// caption
