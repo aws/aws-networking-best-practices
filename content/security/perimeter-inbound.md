@@ -147,7 +147,7 @@ NACLs are evaluated in rule-number order, and the first match wins. Complex NACL
 
 #### Deploy AWS WAF on every internet-facing L7 endpoint
 
-AWS WAF should be attached to every CloudFront distribution, public-facing ALB, and API Gateway stage. The cost of a AWS WAF WebACL (starting at $5/month plus $0.60 per million requests) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.
+AWS WAF should be attached to every CloudFront distribution, public-facing ALB, and API Gateway stage. The cost of a AWS WAF WebACL (per-WebACL-month plus per-million-requests — see [AWS WAF pricing](https://aws.amazon.com/waf/pricing/)) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.
 
 #### Start with AWS Managed Rule Groups, then layer custom rules
 
@@ -173,7 +173,7 @@ Shield Standard is enabled on every AWS account at no cost. It protects all publ
 
 #### Upgrade to Shield Advanced for business-critical internet-facing workloads
 
-Shield Advanced ($3,000/month per organization, plus data transfer fees during attacks) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS DDoS Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy AWS WAF rules on your behalf during an active incident.
+Shield Advanced (per-organization monthly subscription plus data transfer fees during attacks — see [Shield pricing](https://aws.amazon.com/shield/pricing/)) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS DDoS Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy AWS WAF rules on your behalf during an active incident.
 
 Shield Advanced is justified when the cost of downtime exceeds the subscription cost — typically for revenue-generating web applications, financial services APIs, and SaaS platforms where minutes of unavailability have measurable business impact.
 
@@ -243,7 +243,7 @@ This creates a layered ownership model: the security team owns the baseline (man
 
 #### Account for Firewall Manager costs in your security budget
 
-Firewall Manager charges per policy per Region ($100/month per policy per Region). If you have 5 policies across 4 Regions, that's $2,000/month for Firewall Manager alone, before the cost of the underlying services (AWS WAF WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.
+Firewall Manager charges per-policy per-Region (see [Firewall Manager pricing](https://aws.amazon.com/firewall-manager/pricing/)). If you have 5 policies across 4 Regions, that compounds significantly for Firewall Manager alone, before the cost of the underlying services (AWS WAF WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.
 
 ### IPv6 perimeter considerations
 
@@ -334,14 +334,14 @@ Perimeter controls vary significantly in cost, and understanding the cost model 
 
 | Service | Cost model | Typical monthly cost (per Region) | Cost optimization lever |
 | --- | --- | --- | --- |
-| **Security Groups** | Free | $0 | None needed — always use |
-| **Network ACLs** | Free | $0 | None needed — always use where appropriate |
-| **AWS WAF** | $5/WebACL + $1/rule + $0.60/million requests | $50-500 for typical workloads | Consolidate rules; use managed rule groups (flat fee) over many custom rules |
-| **AWS Shield Standard** | Free (automatic) | $0 | None needed — always active |
-| **AWS Shield Advanced** | $3,000/month/org + data transfer during attacks | $3,000+ | Single subscription covers all accounts in the Organization |
-| **AWS Network Firewall** | $0.395/endpoint/hour + $0.065/GB processed | $300-2,000+ per VPC | Use stateless rules for high-volume simple filtering; minimize endpoints by using multi-AZ efficiently |
-| **Gateway Load Balancer** | $0.0125/hour/endpoint + $0.004/GB processed + appliance costs | $500-5,000+ per deployment | Right-size appliance fleet; use auto-scaling groups for the target appliances |
-| **AWS Firewall Manager** | $100/policy/Region | $100-2,000 depending on policy count and Regions | Consolidate policies where possible; evaluate whether manual management is cheaper for small orgs |
+| **Security Groups** | Free | Free | None needed — always use |
+| **Network ACLs** | Free | Free | None needed — always use where appropriate |
+| **AWS WAF** | Per-WebACL + per-rule + per-million-requests ([pricing](https://aws.amazon.com/waf/pricing/)) | Low-moderate for typical workloads | Consolidate rules; use managed rule groups (flat fee) over many custom rules |
+| **AWS Shield Standard** | Free (automatic) | Free | None needed — always active |
+| **AWS Shield Advanced** | Per-organization monthly subscription + data transfer during attacks ([pricing](https://aws.amazon.com/shield/pricing/)) | Significant fixed cost | Single subscription covers all accounts in the Organization |
+| **AWS Network Firewall** | Per-endpoint-hour + per-GB processed ([pricing](https://aws.amazon.com/network-firewall/pricing/)) | Moderate-high per VPC | Use stateless rules for high-volume simple filtering; minimize endpoints by using multi-AZ efficiently |
+| **Gateway Load Balancer** | Per-endpoint-hour + per-GB processed + appliance costs ([pricing](https://aws.amazon.com/elasticloadbalancing/pricing/)) | High per deployment | Right-size appliance fleet; use auto-scaling groups for the target appliances |
+| **AWS Firewall Manager** | Per-policy per-Region ([pricing](https://aws.amazon.com/firewall-manager/pricing/)) | Scales with policy count and Regions | Consolidate policies where possible; evaluate whether manual management is cheaper for small orgs |
 
 ***Key insight:*** *Security groups and NACLs are free. AWS WAF is cheap relative to the protection it provides. Network Firewall and GWLB are the expensive layers — deploy them where the inspection value justifies the per-GB processing cost, not as a blanket "inspect everything" approach. Use AWS WAF for L7 and security groups for L3/L4 as your cost-effective baseline, and add Network Firewall or GWLB only where deeper inspection is required.*
 

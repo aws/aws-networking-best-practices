@@ -125,7 +125,7 @@ A dedicated networking account hosts shared connectivity infrastructure. This is
 * IPAM administrator delegation (including IPv6 pool management)
 * VPN connections and Customer Gateways
 
-**Cost visibility note:** The networking account concentrates costs that scale with the number of consuming accounts: Transit Gateway attachment hours ($0.05/hr per attachment), Cloud WAN attachment hours, data processing charges per GB through Transit Gateway or Cloud WAN, and NAT gateway hourly + per-GB charges for centralized egress. Use Organizations consolidated billing with cost allocation tags to attribute these shared costs back to the workload accounts that generate the traffic. Without this attribution, the networking account's bill grows opaquely as the organization scales.
+**Cost visibility note:** The networking account concentrates costs that scale with the number of consuming accounts: Transit Gateway per-attachment-hour charges (see [Transit Gateway pricing](https://aws.amazon.com/transit-gateway/pricing/)), Cloud WAN attachment hours, data processing charges per-GB through Transit Gateway or Cloud WAN, and NAT gateway hourly + per-GB charges for centralized egress. Use Organizations consolidated billing with cost allocation tags to attribute these shared costs back to the workload accounts that generate the traffic. Without this attribution, the networking account's bill grows opaquely as the organization scales.
 
 **What does NOT belong in the networking account:**
 

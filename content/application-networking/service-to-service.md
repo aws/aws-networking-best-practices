@@ -426,11 +426,11 @@ The choice between service-to-service connectivity options has significant cost 
 
 | Pattern | Fixed cost | Per-GB cost | Cost scales with |
 | --- | --- | --- | --- |
-| **Amazon VPC Lattice** | No hourly charge for the service network or service | $0.025/GB data processed | Request volume and payload size |
-| **AWS PrivateLink endpoint services** | $0.01/hr per AZ per interface endpoint (~$7.20/month per AZ) | $0.01/GB data processed | Number of consumer VPCs × AZs, plus traffic volume |
-| **Transit Gateway + internal ALB/NLB** | $0.05/hr per TGW attachment (~$36/month per VPC) | $0.02/GB TGW data processing | Number of attached VPCs, plus all traffic through TGW (not just service traffic) |
-| **VPC Peering + internal ALB/NLB** | Free (no hourly charge, no data processing) | Standard cross-AZ charges only ($0.01/GB if cross-AZ) | Only cross-AZ traffic; same-AZ is free |
-| **VPC Lattice + IPv6 (no NAT)** | No hourly charge | $0.025/GB Lattice processing (no NAT processing) | Request volume; eliminates the $0.045/GB NAT gateway charge on the consumer side |
+| **Amazon VPC Lattice** | No hourly charge for the service network or service | Per-GB data processed ([Lattice pricing](https://aws.amazon.com/vpc/lattice/pricing/)) | Request volume and payload size |
+| **AWS PrivateLink endpoint services** | Per-AZ per-endpoint-hour charge | Per-GB data processed ([PrivateLink pricing](https://aws.amazon.com/privatelink/pricing/)) | Number of consumer VPCs × AZs, plus traffic volume |
+| **Transit Gateway + internal ALB/NLB** | Per-attachment-hour charge ([TGW pricing](https://aws.amazon.com/transit-gateway/pricing/)) | Per-GB TGW data processing | Number of attached VPCs, plus all traffic through TGW (not just service traffic) |
+| **VPC Peering + internal ALB/NLB** | Free (no hourly charge, no data processing) | Standard cross-AZ per-GB charges only (if cross-AZ) | Only cross-AZ traffic; same-AZ is free |
+| **VPC Lattice + IPv6 (no NAT)** | No hourly charge | Per-GB Lattice processing (no NAT processing) | Request volume; eliminates the NAT gateway per-GB charge on the consumer side |
 
 **When cost drives the decision:**
 

@@ -134,9 +134,9 @@ Amazon Application Recovery Controller's zonal shift removes an impaired AZ from
 
 #### Understand the cost model
 
-Cross-AZ data transfer within a Region is charged at $0.01/GB in each direction ($0.02/GB round-trip) in most Regions. This applies to both IPv4 and IPv6 traffic — dual-stack does not change the cross-AZ cost model. This sounds small, but at scale it dominates networking costs:
+Cross-AZ data transfer within a Region is charged per-GB in each direction (doubled for round-trip) in most Regions — see [VPC pricing](https://aws.amazon.com/vpc/pricing/) for current rates. This applies to both IPv4 and IPv6 traffic — dual-stack does not change the cross-AZ cost model. The per-GB charge sounds small, but at scale it dominates networking costs:
 
-* A service making 10,000 requests/second with 1 KB payloads across AZs generates ~1.7 TB/month of cross-AZ traffic — roughly $34/month for that single service pair.
+* A service making 10,000 requests/second with 1 KB payloads across AZs generates ~1.7 TB/month of cross-AZ traffic — costs compound significantly at scale for that single service pair.
 * A chatty microservices architecture with dozens of service-to-service calls can easily generate hundreds of TB/month in cross-AZ traffic.
 
 #### Minimize cross-AZ traffic without sacrificing availability

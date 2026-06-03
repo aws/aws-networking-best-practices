@@ -51,7 +51,7 @@ Every VPC, route table, and Transit Gateway attachment lives inside an account, 
 *   **Region selection** — Latency, Direct Connect locations, service availability, compliance, and cost
 *   **AZ IDs vs AZ names** — AZ names are mapped randomly per account; use AZ IDs for cross-account coordination
 *   **Multi-AZ patterns** — Deploy every stateful networking resource per-AZ; size for N-1 AZ capacity
-*   **Cross-AZ cost** — $0.01/GB in each direction; minimize unnecessary cross-AZ traffic without sacrificing availability
+*   **Cross-AZ cost** — per-GB charge in each direction (see [VPC pricing](https://aws.amazon.com/vpc/pricing/)); minimize unnecessary cross-AZ traffic without sacrificing availability
 
 ***Best Practice:*** *Deploy production workloads across at least 3 AZs. Size per-AZ capacity so that losing one AZ doesn't overwhelm the remaining two.*
 

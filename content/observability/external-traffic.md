@@ -213,14 +213,14 @@ External traffic monitoring costs vary by orders of magnitude depending on which
 
 | Data source | Generation cost | Storage/delivery cost | Analysis cost |
 | --- | --- | --- | --- |
-| **ALB access logs** | Free | S3 storage only (~$0.023/GB/month standard) | Athena per-query scanning |
+| **ALB access logs** | Free | S3 storage only (per-GB/month) | Athena per-query scanning |
 | **NLB access logs** | Free | S3 storage only | Athena per-query scanning |
 | **CloudFront standard logs** | Free | S3 storage only | Athena per-query scanning |
 | **CloudFront real-time logs** | Free | Kinesis Data Streams shard-hours + per-record | Consumer compute (Lambda, KDA) |
 | **AWS WAF logs (S3)** | Free | S3 storage only | Athena per-query scanning |
-| **AWS WAF logs (CloudWatch)** | Free | CloudWatch Logs ingestion ($0.50/GB) + storage | CloudWatch Insights queries |
+| **AWS WAF logs (CloudWatch)** | Free | CloudWatch Logs per-GB ingestion + storage | CloudWatch Insights queries |
 | **NAT gateway metrics** | Free (included) | N/A (CloudWatch default retention) | CloudWatch dashboard/alarm cost |
-| **VPC Flow Logs (S3)** | $0.25/GB (first 10 TB) | S3 storage | Athena per-query scanning |
+| **VPC Flow Logs (S3)** | Per-GB tiered ingestion ([pricing](https://aws.amazon.com/cloudwatch/pricing/)) | S3 storage | Athena per-query scanning |
 | **Route 53 query logs** | Free | CloudWatch Logs ingestion + storage | CloudWatch Insights queries |
 
 The highest-cost items are VPC Flow Logs at volume (generation charge) and CloudFront real-time logs (Kinesis charges). For VPC Flow Logs, use custom formats that capture only the fields you need, and filter to capture only rejected traffic or traffic to/from specific ENIs when full capture is not required.
