@@ -50,7 +50,7 @@ Synchronous service-to-service communication (a service makes a request, waits f
 
 ### Service discovery and addressing
 
-Hard-coded IPs don't survive contact with a real environment. Targets scale, instances replace, AZs fail, and the service backing a name might migrate. Service discovery answers two questions: given a service name, what address(es) should the consumer use right now, and how do you keep that name stable as the implementation behind it changes?
+Hard-coded IPs don't survive contact with a real environment. Targets scale, instances replace, Availability Zones fail, and the service backing a name might migrate. Service discovery answers two questions: given a service name, what address(es) should the consumer use right now, and how do you keep that name stable as the implementation behind it changes?
 
 The right pattern in AWS, regardless of which option below you choose, is **always abstract the consumer-facing name with an Amazon Route 53 record**. The application calls `payments.internal.example.com`, never a bare load-balancer DNS name and never an Amazon VPC Lattice managed DNS name. Route 53 alias records resolve the friendly name to whatever's actually backing the service today (an internal ALB, an NLB, an Amazon VPC Lattice service, an EC2 instance), and changing the implementation becomes a Route 53 record change rather than a consumer-side coordination exercise.
 
@@ -427,7 +427,7 @@ The choice between service-to-service connectivity options has significant cost 
 | Pattern | Fixed cost | Per-GB cost | Cost scales with |
 | --- | --- | --- | --- |
 | **Amazon VPC Lattice** | No hourly charge for the service network or service | Per-GB data processed ([Lattice pricing](https://aws.amazon.com/vpc/lattice/pricing/)) | Request volume and payload size |
-| **AWS PrivateLink endpoint services** | Per-AZ per-endpoint-hour charge | Per-GB data processed ([PrivateLink pricing](https://aws.amazon.com/privatelink/pricing/)) | Number of consumer VPCs × AZs, plus traffic volume |
+| **AWS PrivateLink endpoint services** | Per-AZ per-endpoint-hour charge | Per-GB data processed ([PrivateLink pricing](https://aws.amazon.com/privatelink/pricing/)) | Number of consumer VPCs × Availability Zones, plus traffic volume |
 | **Transit Gateway + internal ALB/NLB** | Per-attachment-hour charge ([TGW pricing](https://aws.amazon.com/transit-gateway/pricing/)) | Per-GB TGW data processing | Number of attached VPCs, plus all traffic through TGW (not just service traffic) |
 | **VPC Peering + internal ALB/NLB** | Free (no hourly charge, no data processing) | Standard cross-AZ per-GB charges only (if cross-AZ) | Only cross-AZ traffic; same-AZ is free |
 | **VPC Lattice + IPv6 (no NAT)** | No hourly charge | Per-GB Lattice processing (no NAT processing) | Request volume; eliminates the NAT gateway per-GB charge on the consumer side |

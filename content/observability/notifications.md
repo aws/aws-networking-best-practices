@@ -296,7 +296,7 @@ The real cost risk is not the notification services themselves — it's creating
 ## Related Observability Pages
 
 * **[AWS Services Monitoring](service-monitoring.md)** — The metrics and health checks that feed into the notification pipeline covered on this page
-* **[Internal Traffic Monitoring](internal-traffic.md)** — Flow logs and traffic mirroring that provide the raw data for anomaly-based network alarms
+* **[Internal Traffic Monitoring](internal-traffic.md)** — VPC Flow Logs and traffic mirroring that provide the raw data for anomaly-based network alarms
 * **[External Traffic Monitoring](external-traffic.md)** — Internet-facing traffic visibility that drives DDoS and abuse notifications
 
 **Relationship to Foundation:**

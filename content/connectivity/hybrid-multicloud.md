@@ -631,7 +631,7 @@ Operational considerations:
 
 * **Split-tunnel by default**. Unless a specific compliance requirement justifies full-tunnel, use split-tunnel so only AWS-destined traffic goes through Client VPN and general internet traffic exits the client's local network directly. Full-tunnel multiplies egress cost and concentrates load on the VPN endpoint.
 * **Authorization rules, not route tables alone**. Client VPN authorization rules control which users can reach which destinations. Route tables alone allow traffic to flow; without matching authorization rules, users can still be blocked from destinations that their role shouldn't reach.
-* **Scale by endpoint, not by AZ alone**. A Client VPN endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.
+* **Scale by endpoint, not by Availability Zone alone**. A Client VPN endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.
 
 ### AWS Verified Access
 

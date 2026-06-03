@@ -142,7 +142,7 @@ You have three delivery options: S3, CloudWatch Logs, and Kinesis Data Firehose.
 
 For a VPC generating 100 GB/month of Flow Log data, S3 delivery costs roughly half what CloudWatch Logs charges for the same data. At scale across dozens of VPCs, this difference compounds significantly.
 
-Use CloudWatch Logs as a *secondary* destination only when you need real-time alerting on specific traffic patterns (e.g., rejected flows to sensitive subnets). Keep the retention short (7-14 days) to control costs.
+Use CloudWatch Logs as a *secondary* destination only when you need real-time alerting on specific traffic patterns (for example, rejected flows to sensitive subnets). Keep the retention short (7-14 days) to control costs.
 
 #### Partition Flow Log data in S3 for efficient Athena queries
 
@@ -211,7 +211,7 @@ This is particularly valuable in multi-account environments where you may not ha
 
 Transit Gateway route tables and attachments define what *can* communicate. Transit Gateway Flow Logs show what *does* communicate. Compare the two to identify:
 
-* Traffic between VPCs that should be isolated (e.g., production to development)
+* Traffic between VPCs that should be isolated (for example, production to development)
 * Unexpected traffic volumes between specific VPC pairs (potential data exfiltration)
 * Traffic patterns that indicate misconfigured route tables (traffic taking unexpected paths)
 
@@ -306,7 +306,7 @@ Each internal traffic monitoring tool answers different questions. Using the wro
 | "Is traffic flowing between VPC A and VPC B?" | Transit Gateway Flow Logs | Centralized cross-VPC view without per-VPC configuration |
 | "Why is Service A getting 500 errors from Service B?" | VPC Lattice Access Logs | Per-request detail with response codes, latency, and identity |
 | "What did the firewall block in the last hour?" | Network Firewall Alert Logs | Records every drop/alert action with rule attribution |
-| "How much cross-AZ traffic is this VPC generating?" | VPC Flow Logs + `az-id` field | The `az-id` field identifies which AZ each flow originates from |
+| "How much cross-AZ traffic is this VPC generating?" | VPC Flow Logs + `az-id` field | The `az-id` field identifies which Availability Zone each flow originates from |
 | "Which accounts are generating the most inter-VPC traffic?" | Transit Gateway Flow Logs | Account-level attribution for all Transit Gateway traffic |
 | "Was this request authorized by the auth policy?" | VPC Lattice Access Logs | Logs include auth policy decision (allow/deny) and principal |
 | "What's the total network throughput for this instance?" | CloudWatch Metrics (NetworkIn/Out) | Pre-aggregated metrics without log parsing |

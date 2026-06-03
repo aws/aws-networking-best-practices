@@ -189,7 +189,7 @@ Shield Advanced protection is per-resource. If your application uses CloudFront 
 
 AWS Network Firewall provides managed stateful and stateless inspection between your internet gateway and your workload subnets. It supports Suricata-compatible IPS/IDS rules, domain-based filtering (allow/deny traffic to specific FQDNs), TLS Server Name Indication (SNI) inspection, and protocol detection. Deploy firewall endpoints in dedicated subnets and use VPC ingress routing to direct traffic through them.
 
-The typical deployment for inbound inspection places firewall endpoints between the internet gateway and the public subnets hosting your load balancers. The IGW edge route table directs incoming traffic to the firewall endpoint in the same AZ, and the firewall endpoint's subnet route table forwards inspected traffic to the workload subnets.
+The typical deployment for inbound inspection places firewall endpoints between the internet gateway and the public subnets hosting your load balancers. The IGW edge route table directs incoming traffic to the firewall endpoint in the same Availability Zone, and the firewall endpoint's subnet route table forwards inspected traffic to the workload subnets.
 
 #### Choose between centralized and per-VPC inspection deliberately
 
@@ -237,7 +237,7 @@ Firewall Manager requires AWS Organizations with all features enabled and a dele
 
 #### Define baseline policies that application teams cannot weaken
 
-Firewall Manager supports two enforcement modes for security groups: **audit** (report non-compliant groups but don't change them) and **auto-remediate** (bring non-compliant groups into compliance automatically). For baseline rules (e.g., "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For AWS WAF, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.
+Firewall Manager supports two enforcement modes for security groups: **audit** (report non-compliant groups but don't change them) and **auto-remediate** (bring non-compliant groups into compliance automatically). For baseline rules (for example, "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For AWS WAF, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.
 
 This creates a layered ownership model: the security team owns the baseline (managed through Firewall Manager), and application teams own workload-specific rules within the guardrails the baseline establishes.
 

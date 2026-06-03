@@ -115,11 +115,11 @@ Tags are metadata, but in AWS networking they're also the mechanism for cost all
 
 **A minimum viable tagging standard for network resources:**
 
-* **`Environment`** — `production`, `staging`, `development`. Gates automation behavior (e.g., don't auto-delete production resources).
+* **`Environment`** — `production`, `staging`, `development`. Gates automation behavior (for example, don't auto-delete production resources).
 * **`Owner`** — The team responsible for the resource. Critical when a Transit Gateway attachment is consuming capacity and you need to know who to contact.
 * **`CostCenter`** — For billing allocation. Network resources (NAT gateways, Transit Gateway attachments, VPC endpoints) generate significant cost that must be attributed.
 * **`ManagedBy`** — `cloudformation`, `terraform`, `cdk`, or `manual`. Identifies how the resource is managed and whether it's safe to modify.
-* **`Name`** — Descriptive and consistent. Use a naming convention like `{env}-{region}-{purpose}-{type}` (e.g., `prod-use1-shared-tgw`).
+* **`Name`** — Descriptive and consistent. Use a naming convention like `{env}-{region}-{purpose}-{type}` (for example, `prod-use1-shared-tgw`).
 
 **Enforcement mechanisms:**
 
@@ -143,7 +143,7 @@ The Well-Architected Framework provides the architectural principles that networ
 
 * **Multi-AZ by default** — Every networking component (NAT gateway, Network Firewall endpoints, load balancers) should be deployed across multiple Availability Zones. Single-AZ networking is a single point of failure for everything above it.
 * **Limit blast radius** — Use multiple VPCs and accounts to contain failures. A routing misconfiguration in one VPC should not propagate to others.
-* **Test failure modes** — Simulate AZ failure, Transit Gateway attachment loss, and DNS resolution failure. Know what breaks and how it recovers.
+* **Test failure modes** — Simulate Availability Zone failure, Transit Gateway attachment loss, and DNS resolution failure. Know what breaks and how it recovers.
 
 **Cost Optimization Pillar — what applies to networking:**
 

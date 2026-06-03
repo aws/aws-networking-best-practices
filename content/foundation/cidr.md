@@ -111,7 +111,7 @@ The most important property of a good CIDR plan is that allocations within the s
 
 #### Start with /16 for production VPCs
 
-A `/16` gives you 65,536 addresses and room to create 256 `/24` subnets. This sounds excessive until you account for multi-AZ deployments (3+ AZs × multiple subnet tiers), EKS pod density, future growth, and the fact that you cannot shrink a VPC CIDR after creation. The cost of a `/16` is zero (IP addresses in a VPC are free until you use Elastic IPs or public IPv4), but the cost of running out of space is a painful migration.
+A `/16` gives you 65,536 addresses and room to create 256 `/24` subnets. This sounds excessive until you account for multi-AZ deployments (3+ Availability Zones × multiple subnet tiers), EKS pod density, future growth, and the fact that you cannot shrink a VPC CIDR after creation. The cost of a `/16` is zero (IP addresses in a VPC are free until you use Elastic IPs or public IPv4), but the cost of running out of space is a painful migration.
 
 For non-production workloads where you're confident about scale, `/20` (4,096 addresses) is a reasonable choice. For isolated single-purpose VPCs (inspection VPCs, Transit Gateway attachment VPCs), `/24` or even `/28` may suffice.
 
@@ -132,7 +132,7 @@ If there is any chance your AWS environment will connect to on-premises networks
 This means:
 
 1. **Document every on-premises IP range** before allocating AWS CIDRs. Include branch offices, partner networks, acquired company networks, and remote access VPN pools. The range you don't know about is the one that will overlap.
-2. **Reserve non-overlapping space** for AWS that will never conflict with on-premises allocations. A clean split (e.g., on-premises owns `10.128.0.0/9`, AWS owns `10.0.0.0/9`) eliminates ambiguity.
+2. **Reserve non-overlapping space** for AWS that will never conflict with on-premises allocations. A clean split (for example, on-premises owns `10.128.0.0/9`, AWS owns `10.0.0.0/9`) eliminates ambiguity.
 3. **Coordinate with network teams** who manage on-premises addressing. A unilateral AWS CIDR decision that overlaps with the data center range discovered six months later forces a VPC recreation.
 4. **Account for VPN client pools**. Remote access VPN clients need IP ranges that don't overlap with either AWS or on-premises networks. Many organizations use `172.16.0.0/12` for client VPN pools.
 5. **Plan for acquisitions**. When your company acquires another organization, their network ranges become your problem. Reserve space that's unlikely to conflict with typical enterprise allocations.
@@ -157,7 +157,7 @@ Assign each Region a dedicated block within your organizational allocation. This
 
 Each `/12` gives you 1,048,576 addresses per Region — enough for 16 `/16` VPCs or 256 `/20` VPCs. The reserved block ensures you can expand to new Regions without restructuring existing allocations.
 
-When advertising routes to on-premises via Direct Connect or VPN, a per-Region allocation lets you advertise a single summary route per Region (e.g., `10.0.0.0/12` for all of us-east-1) rather than individual VPC prefixes. This keeps your on-premises route tables small and your BGP sessions stable.
+When advertising routes to on-premises via Direct Connect or VPN, a per-Region allocation lets you advertise a single summary route per Region (for example, `10.0.0.0/12` for all of us-east-1) rather than individual VPC prefixes. This keeps your on-premises route tables small and your BGP sessions stable.
 
 ***Key insight:*** *Reserve at least 50% of your total address space for future growth. Organizations consistently underestimate how many VPCs, accounts, and Regions they'll need in 3-5 years. Address space is free; running out of it is not.*
 
@@ -237,7 +237,7 @@ Within a VPC, subnet design determines how workloads are isolated, how many reso
 
 Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addresses in each subnet: the network address, the VPC router (`.1`), the DNS server (`.2`), one reserved for future use (`.3`), and the broadcast address (last IP). A `/24` subnet therefore provides 251 usable addresses, not 256.
 
-**Recommended subnet layout for a `/16` VPC across 3 AZs:**
+**Recommended subnet layout for a `/16` VPC across 3 Availability Zones:**
 
 | Subnet Tier | AZ-A | AZ-B | AZ-C | Size | Purpose |
 |-------------|------|------|------|------|---------|
@@ -249,17 +249,17 @@ Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addre
 
 **Subnet sizing guidance:**
 
-* `/24` is the standard subnet size for most workloads. It provides 251 usable addresses per AZ, which handles most application tiers comfortably.
+* `/24` is the standard subnet size for most workloads. It provides 251 usable addresses per Availability Zone, which handles most application tiers comfortably.
 * `/20` or larger for EKS worker node subnets if pods use the primary CIDR (each node consumes IPs proportional to its pod capacity).
 * `/28` for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, NAT gateways).
 * Leave gaps in your numbering scheme (notice the jump from `.2.0` to `.10.0` above) to allow inserting new subnet tiers without renumbering.
 
 **Subnet design principles:**
 
-* **Consistent across AZs**: Every AZ should have the same subnet tiers with the same sizes. This ensures workloads can fail over between AZs without capacity differences.
+* **Consistent across Availability Zones**: Every Availability Zone should have the same subnet tiers with the same sizes. This ensures workloads can fail over between Availability Zones without capacity differences.
 * **Separate route tables per tier**: Public subnets route to an internet gateway; private subnets route through NAT or stay internal. Mixing tiers in a single route table creates security risks.
-* **Plan for at least 3 AZs**: Even if you start with 2, design your subnet scheme for 3 AZs from the beginning. Adding a third AZ later with a consistent scheme is trivial if you planned for it.
-* **Reserve space for infrastructure subnets**: Transit Gateway attachments, Network Firewall endpoints, and Gateway Load Balancer endpoints each need a subnet per AZ. These only need `/28` but must exist in every AZ.
+* **Plan for at least 3 Availability Zones**: Even if you start with 2, design your subnet scheme for 3 Availability Zones from the beginning. Adding a third Availability Zone later with a consistent scheme is trivial if you planned for it.
+* **Reserve space for infrastructure subnets**: Transit Gateway attachments, Network Firewall endpoints, and Gateway Load Balancer endpoints each need a subnet per Availability Zone. These only need `/28` but must exist in every Availability Zone.
 
 ***Key insight:*** *The numbering gaps in your subnet scheme are not wasted space — they are future-proofing. A VPC that uses 10.0.0.0/24, 10.0.1.0/24, 10.0.2.0/24 for its first three tiers has no room to insert a new tier between them. A scheme with gaps (0, 10, 20, 30) lets you add tiers at 5, 15, 25 without disrupting existing subnets.*
 

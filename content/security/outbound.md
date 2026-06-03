@@ -100,7 +100,7 @@ This is the single highest-value egress control for the cost. DNS Firewall prici
 
 **What DNS Firewall catches**: resolution of known-malicious domains, DNS tunneling (via managed threat intelligence domain lists), resolution of any domain not on your allow list (when running in allow-list mode).
 
-**What DNS Firewall misses**: traffic to hardcoded IPs (no DNS resolution involved), DNS-over-HTTPS that bypasses the VPC resolver, and legitimate domains used as exfiltration channels (e.g., uploading data to an attacker-controlled S3 bucket via the legitimate `s3.amazonaws.com` endpoint).
+**What DNS Firewall misses**: traffic to hardcoded IPs (no DNS resolution involved), DNS-over-HTTPS that bypasses the VPC resolver, and legitimate domains used as exfiltration channels (for example, uploading data to an attacker-controlled S3 bucket via the legitimate `s3.amazonaws.com` endpoint).
 
 ***Key insight:*** *DNS Firewall is the first egress control you should deploy in every VPC — it covers the widest threat surface at the lowest cost, and it works regardless of whether your egress is centralized or decentralized.*
 

@@ -198,11 +198,11 @@ The first decision in any egress strategy, regardless of IP version or pattern, 
 
 ### Choose between regional and zonal NAT gateway (IPv4)
 
-For IPv4 egress, before choosing decentralized vs centralized, decide which NAT gateway availability mode to use. AWS NAT gateway has two modes: the **zonal** mode (one NAT gateway per AZ, in a public subnet, with route table entries directing each AZ's private subnets through its local NAT gateway), and the newer **regional** mode (a single NAT gateway ID that automatically expands and contracts across AZs based on workload presence, with no public subnet required and higher per-AZ IP and port limits).
+For IPv4 egress, before choosing decentralized vs centralized, decide which NAT gateway availability mode to use. AWS NAT gateway has two modes: the **zonal** mode (one NAT gateway per Availability Zone, in a public subnet, with route table entries directing each Availability Zone's private subnets through its local NAT gateway), and the newer **regional** mode (a single NAT gateway ID that automatically expands and contracts across Availability Zones based on workload presence, with no public subnet required and higher per-AZ IP and port limits).
 
 The recommendation is straightforward:
 
-* **For greenfield deployments, default to regional NAT gateway**. A single NAT gateway ID across all AZs simplifies route table design, removes the requirement to maintain a public subnet per AZ (which removes a class of accidental-exposure risks), and scales IP allocation per AZ without manual re-provisioning. Regional NAT gateway is the recommended option for new VPCs.
+* **For greenfield deployments, default to regional NAT gateway**. A single NAT gateway ID across all Availability Zones simplifies route table design, removes the requirement to maintain a public subnet per Availability Zone (which removes a class of accidental-exposure risks), and scales IP allocation per Availability Zone without manual re-provisioning. Regional NAT gateway is the recommended option for new VPCs.
 * **For existing deployments running zonal NAT gateways, there's no compelling reason to migrate**. Zonal NAT gateways continue to be fully supported, and the operational benefit of switching is small for an environment that already has the routing and public subnets in place. Pick up regional NAT gateway for new VPCs as you create them and let the existing ones run.
 * **For private NAT (NAT gateway in a private subnet for hybrid use cases), keep using zonal mode**. Regional NAT gateway is recommended for general egress; private connectivity scenarios still rely on the zonal model.
 
@@ -214,13 +214,13 @@ In a decentralized IPv4 model, each VPC that needs internet egress runs its own 
 
 Best practices:
 
-* **Deploy AZ-redundant NAT capacity**. With regional NAT gateway, this is automatic. With zonal NAT gateways, deploy one per AZ and route each AZ's private subnets through its local NAT gateway. A single zonal NAT gateway is a single point of failure for egress in that VPC; an AZ-aware zonal design removes that risk and keeps cross-zone data transfer to a minimum.
+* **Deploy AZ-redundant NAT capacity**. With regional NAT gateway, this is automatic. With zonal NAT gateways, deploy one per Availability Zone and route each Availability Zone's private subnets through its local NAT gateway. A single zonal NAT gateway is a single point of failure for egress in that VPC; an AZ-aware zonal design removes that risk and keeps cross-zone data transfer to a minimum.
 * **Use VPC endpoints to reduce NAT gateway traffic**. Gateway endpoints for S3 and DynamoDB cost nothing and remove that traffic from the NAT path entirely. Interface endpoints for high-traffic AWS services often pay for themselves in NAT processing fees.
 * **Apply egress policy at the VPC layer**. Security groups on the workload, route tables that direct only required CIDRs to the NAT path, and NACLs as a coarse second layer. For destination-based filtering (specific domains or IPs), use Route 53 DNS Firewall, AWS Network Firewall, or Gateway Load Balancer with a third-party firewall in the workload VPC, with rule sets managed centrally through AWS Firewall Manager.
 
 ### Centralized IPv4 egress
 
-In a centralized IPv4 model, a shared egress VPC fronts internet egress for many workload VPCs. IPv4 traffic from a workload VPC routes through Transit Gateway or AWS Cloud WAN to the egress VPC, then through a NAT gateway to the internet. The egress VPC typically also hosts shared filtering (AWS Network Firewall, Gateway Load Balancer with a third-party firewall) so that a single egress policy is enforced for every workload. Note that this pattern applies to IPv4 only — IPv6 egress remains decentralized in every consuming VPC because the egress-only internet gateway is per-VPC and AWS does not offer a managed NAT66 alternative.
+In a centralized IPv4 model, a shared egress VPC fronts internet egress for many workload VPCs. IPv4 traffic from a workload VPC routes through Transit Gateway or AWS Cloud WAN to the egress VPC, then through a NAT gateway to the internet. The egress VPC typically also hosts shared filtering (AWS Network Firewall, Gateway Load Balancer with a third-party firewall) so that a single egress policy is enforced for every workload. This pattern applies to IPv4 only — IPv6 egress remains decentralized in every consuming VPC because the egress-only internet gateway is per-VPC and AWS does not offer a managed NAT66 alternative.
 
 Best practices:
 
