@@ -136,11 +136,11 @@ You have three delivery options: S3, CloudWatch Logs, and Kinesis Data Firehose.
 
 | Delivery destination | Ingestion cost | Storage cost | Query method |
 | --- | --- | --- | --- |
-| **S3** | $0.25 per GB (first 10 TB/month) | S3 storage rates (~$0.023/GB/month) | Athena ($5 per TB scanned) |
-| **CloudWatch Logs** | $0.50 per GB | $0.03 per GB/month | Logs Insights ($0.005 per GB scanned) |
-| **Kinesis Data Firehose** | $0.029 per GB + destination costs | Depends on destination | Depends on destination |
+| **S3** | Per-GB ingestion (tiered, see [VPC Flow Logs pricing](https://aws.amazon.com/cloudwatch/pricing/)) | S3 storage rates (per-GB/month) | Athena (per-TB scanned) |
+| **CloudWatch Logs** | Per-GB ingestion (roughly 2× S3 rate) | Per-GB/month retention | Logs Insights (per-GB scanned) |
+| **Kinesis Data Firehose** | Per-GB delivery + destination costs | Depends on destination | Depends on destination |
 
-For a VPC generating 100 GB/month of Flow Log data, S3 delivery costs roughly $25/month for ingestion. CloudWatch Logs costs $50/month for the same data. At scale across dozens of VPCs, this difference compounds into thousands of dollars monthly.
+For a VPC generating 100 GB/month of Flow Log data, S3 delivery costs roughly half what CloudWatch Logs charges for the same data. At scale across dozens of VPCs, this difference compounds significantly.
 
 Use CloudWatch Logs as a *secondary* destination only when you need real-time alerting on specific traffic patterns (e.g., rejected flows to sensitive subnets). Keep the retention short (7-14 days) to control costs.
 
@@ -280,11 +280,11 @@ When using dual-stack VPCs, include `pkt-srcaddr` and `pkt-dstaddr` in your cust
 
 Flow Log costs have three components: ingestion, storage, and analysis. At scale, these add up:
 
-* **Ingestion**: The per-GB charge for delivering logs to the destination. S3 is cheapest ($0.25/GB for first 10 TB), CloudWatch Logs is 2x ($0.50/GB).
-* **Storage**: S3 Standard is $0.023/GB/month. Use S3 Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.
-* **Analysis**: Athena charges $5 per TB scanned. Partitioning and columnar formats (Parquet via Firehose) reduce scan volume dramatically.
+* **Ingestion**: The per-GB charge for delivering logs to the destination. S3 is cheapest (tiered per-GB rate), CloudWatch Logs is roughly 2× the S3 rate. See [CloudWatch pricing](https://aws.amazon.com/cloudwatch/pricing/) for current values.
+* **Storage**: S3 Standard charges per-GB/month. Use S3 Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.
+* **Analysis**: Athena charges per-TB scanned. Partitioning and columnar formats (Parquet via Firehose) reduce scan volume dramatically.
 
-For a 100-VPC environment generating 1 TB/month of Flow Logs, the baseline cost is approximately $250/month for S3 ingestion + $23/month for storage. CloudWatch Logs for the same volume would be $500/month for ingestion + $30/month for storage. Over a year, the S3 approach saves roughly $3,000 — and the gap widens as you retain more history.
+For a 100-VPC environment generating 1 TB/month of Flow Logs, S3 delivery costs roughly half what CloudWatch Logs charges for ingestion. Over a year, the S3 approach saves significantly — and the gap widens as you retain more history.
 
 #### Use aggregation intervals to reduce volume without losing visibility
 

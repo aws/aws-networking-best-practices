@@ -220,9 +220,9 @@ Individual notification costs are negligible, but they compound in large Organiz
 
 | Component | Cost | Scale consideration |
 | --- | --- | --- |
-| CloudWatch Alarm | ~$0.10/alarm/month (standard), ~$0.30/alarm/month (anomaly detection) | 100 alarms across 50 accounts = $500-1,500/month |
-| EventBridge rule | $1.00 per million events matched | Typically negligible for networking events |
-| SNS notification | $0.50 per million email deliveries, $0.75 per 100 SMS | Email is essentially free; SMS adds up for large on-call rotations |
+| CloudWatch Alarm | Per-alarm/month (standard) or per-alarm/month (anomaly detection) — see [CloudWatch pricing](https://aws.amazon.com/cloudwatch/pricing/) | Costs scale linearly with alarm count across accounts |
+| EventBridge rule | Per-million events matched | Typically negligible for networking events |
+| SNS notification | Per-million email deliveries, per-100 SMS | Email is essentially free; SMS adds up for large on-call rotations |
 | AWS Chatbot | No additional charge | Free delivery to Slack/Teams |
 
 The real cost risk is not the notification services themselves — it's creating hundreds of alarms that nobody looks at. Each unused alarm costs money and, worse, dilutes the signal from alarms that matter. Audit your alarms quarterly: if an alarm hasn't fired in 6 months, either the threshold is wrong or the alarm isn't needed.

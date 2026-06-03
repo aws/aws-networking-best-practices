@@ -262,19 +262,19 @@ This reduces alarm count (and cost) while maintaining coverage. Create per-resou
 | CloudWatch component | Pricing consideration |
 | --- | --- |
 | Standard metrics | Free (included with the service) |
-| Custom metrics | $0.30/metric/month (first 10,000) |
-| Alarms (standard) | $0.10/alarm/month |
-| Alarms (high-resolution) | $0.30/alarm/month |
-| Anomaly detection alarms | $0.30/alarm/month |
-| Composite alarms | $0.50/alarm/month |
-| Dashboards | $3.00/dashboard/month (first 3 free) |
+| Custom metrics | Per-metric/month (tiered — see [CloudWatch pricing](https://aws.amazon.com/cloudwatch/pricing/)) |
+| Alarms (standard) | Per-alarm/month |
+| Alarms (high-resolution) | Per-alarm/month (higher than standard) |
+| Anomaly detection alarms | Per-alarm/month |
+| Composite alarms | Per-alarm/month (highest alarm tier) |
+| Dashboards | Per-dashboard/month (first 3 free) |
 | Cross-account observability | No additional charge for metrics |
 
-For a typical multi-account networking setup with 50 alarms, 5 dashboards, and 10 anomaly detection alarms, expect approximately $20–30/month in CloudWatch costs — negligible compared to the networking services themselves, but worth understanding to avoid surprise bills from over-instrumentation with custom metrics.
+For a typical multi-account networking setup with dozens of alarms, several dashboards, and anomaly detection alarms, CloudWatch costs are negligible compared to the networking services themselves — but worth understanding to avoid surprise bills from over-instrumentation with custom metrics.
 
 #### Prefer built-in metrics over custom metrics
 
-Every networking service publishes metrics to CloudWatch at no additional cost. Before building custom metrics with Lambda functions or CloudWatch agents, verify the built-in metrics don't already cover your need. Custom metrics at $0.30/metric/month add up quickly when you're monitoring hundreds of resources across multiple accounts.
+Every networking service publishes metrics to CloudWatch at no additional cost. Before building custom metrics with Lambda functions or CloudWatch agents, verify the built-in metrics don't already cover your need. Custom metrics charge per-metric/month and add up quickly when you're monitoring hundreds of resources across multiple accounts.
 
 ### Automated remediation
 
