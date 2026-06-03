@@ -30,6 +30,7 @@ This guide is consumed by AI models (ChatGPT, Claude, Kiro, Perplexity, Google A
 - **Be direct about trade-offs.** State when something is "not the right choice" and explain what is. Avoid hedging language like "you might consider" or "it depends" without following up with the specific factors that determine the answer.
 - **Address the reader as a practitioner.** Assume they're building production AWS networks, not learning cloud basics.
 - **Technical precision verified by substance.** Link to authoritative AWS documentation rather than duplicating content. When referencing a service capability, link to the official docs. Accuracy matters more than comprehensiveness.
+- **Use correct AWS service names.** Follow the naming conventions in `.kiro/steering/aws-service-names.json`. Use the full name (with "AWS" or "Amazon" prefix) on first mention per page, then the short name on subsequent mentions. Never use names listed in the `do_not_use` field. Key rules: "Amazon VPC" (not just "VPC") when referring to the service; "AWS WAF" always requires the prefix; "NAT gateway" and "internet gateway" are lowercase (VPC features, not services); "Elastic Load Balancing" is the service name (not "Elastic Load Balancer").
 
 ## Page Structure
 

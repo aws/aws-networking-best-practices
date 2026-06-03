@@ -116,7 +116,7 @@ graph LR
 
 Every alarm that fires without requiring action trains your team to ignore alarms. Before creating an alarm, answer: "If this fires at 3 AM, what will someone do?" If the answer is "look at it tomorrow," it's not a P1 alarm — it's a dashboard metric or a daily report item.
 
-For networking, the alarms that matter are the ones that indicate traffic is affected or about to be affected: tunnel down, BGP session lost, NAT Gateway ErrorPortAllocation spiking, Network Firewall dropping legitimate traffic, Transit Gateway blackholing packets. Metrics like "VPN tunnel bytes in" are useful for dashboards but rarely warrant an alarm unless they drop to zero (which means the tunnel is effectively dead even if the state shows "UP").
+For networking, the alarms that matter are the ones that indicate traffic is affected or about to be affected: tunnel down, BGP session lost, NAT gateway ErrorPortAllocation spiking, Network Firewall dropping legitimate traffic, Transit Gateway blackholing packets. Metrics like "VPN tunnel bytes in" are useful for dashboards but rarely warrant an alarm unless they drop to zero (which means the tunnel is effectively dead even if the state shows "UP").
 
 ***Key insight:*** *If your team routinely ignores alarms, you don't have a monitoring problem — you have an alarm design problem. Every alarm must have a clear owner and a defined response action.*
 
@@ -145,7 +145,7 @@ A single metric crossing a threshold is often not a problem. A VPN tunnel briefl
 Networking patterns that benefit from composite alarms:
 
 * **Both VPN tunnels down** on the same connection (single tunnel down is P2; both down is P1)
-* **NAT Gateway errors AND increased packet drops** (errors alone might be transient; combined with drops confirms impact)
+* **NAT gateway errors AND increased packet drops** (errors alone might be transient; combined with drops confirms impact)
 * **BGP session down AND no traffic on the backup path** (BGP down alone might mean traffic shifted to backup successfully)
 * **Multiple Transit Gateway attachments unhealthy** (one attachment flapping is isolated; multiple suggests a broader issue)
 
@@ -204,7 +204,7 @@ Application teams should receive notifications about *their* workload's network 
 Some network events have well-defined, safe automated responses:
 
 * **VPN tunnel down** → Lambda triggers a CloudFormation stack update to rotate pre-shared keys and re-establish the tunnel
-* **NAT Gateway ErrorPortAllocation** → Lambda provisions an additional NAT Gateway and updates route tables
+* **NAT gateway ErrorPortAllocation** → Lambda provisions an additional NAT gateway and updates route tables
 * **Direct Connect connection down** → Lambda verifies backup VPN path is active and creates a ticket if it isn't
 * **Network Firewall rule group update failed** → Lambda rolls back to the previous rule group version
 
@@ -231,7 +231,7 @@ The real cost risk is not the notification services themselves — it's creating
 
 | Combination | Notifications provide | Other service provides |
 | --- | --- | --- |
-| **CloudWatch Alarms + CloudWatch Metrics** | Threshold evaluation, state management, notification triggering | The underlying metric data from networking services (VPN, Direct Connect, NAT Gateway, Transit Gateway) |
+| **CloudWatch Alarms + CloudWatch Metrics** | Threshold evaluation, state management, notification triggering | The underlying metric data from networking services (VPN, Direct Connect, NAT gateway, Transit Gateway) |
 | **EventBridge + AWS Health** | Rule matching and routing to notification targets | Proactive service event information (maintenance, degradation, advisories) |
 | **SNS + PagerDuty/Opsgenie** | Fan-out delivery to HTTPS endpoints | On-call rotation, escalation policies, incident management workflow |
 | **AWS Chatbot + Slack/Teams** | Formatted alarm delivery with interactive actions | Team communication, acknowledgment, runbook execution from chat |

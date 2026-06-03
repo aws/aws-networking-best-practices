@@ -5,7 +5,7 @@
 
 External traffic monitoring covers visibility into every flow that crosses the boundary between your AWS environment and the public internet — both ingress from clients reaching your applications and egress from your workloads reaching external services. This is the observability layer that answers questions no internal monitoring can: how are real clients experiencing your application, what is the actual latency at the edge, which external destinations are your workloads calling, and where is your egress spend going?
 
-The challenge is not a lack of data sources — AWS provides logging at every layer from the CDN edge to the NAT Gateway. The challenge is knowing which data source answers which question, when real-time analysis justifies its cost over batch processing, and how to correlate signals across layers to build a complete picture of a single external flow. This page is organized by observability layer, from the edge inward, and covers the architectural decisions that determine which combination of logs and metrics you need.
+The challenge is not a lack of data sources — AWS provides logging at every layer from the CDN edge to the NAT gateway. The challenge is knowing which data source answers which question, when real-time analysis justifies its cost over batch processing, and how to correlate signals across layers to build a complete picture of a single external flow. This page is organized by observability layer, from the edge inward, and covers the architectural decisions that determine which combination of logs and metrics you need.
 
 The organizing principle is **layered external observability**: each layer captures what the layers above and below cannot see, and the combination gives you full-path visibility without redundant collection.
 
@@ -14,27 +14,27 @@ graph TB
     subgraph External["External Traffic Observability Layers"]
         direction TB
         Edge["CloudFront access logs / real-time logs<br/>+ Route 53 query logs<br/>(edge-level: client IP, latency, cache, DNS patterns)"]
-        WAF["AWS WAF logs<br/>(security evaluation: rule matches, allow/block/count)"]
+        AWSWAF["AWS WAF logs<br/>(security evaluation: rule matches, allow/block/count)"]
         LB["ALB access logs / NLB access logs<br/>(per-request/connection: target latency, response codes, TLS details)"]
-        VPC["NAT Gateway CloudWatch metrics<br/>+ VPC Flow Logs<br/>(egress volume, connection counts, packet drops)"]
+        VPC["NAT gateway CloudWatch metrics<br/>+ VPC Flow Logs<br/>(egress volume, connection counts, packet drops)"]
     end
 
     Client["Internet clients"] --> Edge
-    Edge --> WAF
-    WAF --> LB
+    Edge --> AWSWAF
+    AWSWAF --> LB
     LB --> VPC
     VPC --> Destination["External destinations"]
 
     style External fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
     style Edge fill:#2563eb,stroke:#1e40af,color:#fff
-    style WAF fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style AWSWAF fill:#7c3aed,stroke:#6d28d9,color:#fff
     style LB fill:#2563eb,stroke:#1e40af,color:#fff
     style VPC fill:#059669,stroke:#047857,color:#fff
     style Client fill:#ff9900,stroke:#cc7a00,color:#fff
     style Destination fill:#ff9900,stroke:#cc7a00,color:#fff
 ```
 
-Each layer captures distinct information: CloudFront logs show what the client experienced at the edge (cache hit or miss, edge latency, protocol version). WAF logs show which requests were evaluated and what security decisions were made. ALB/NLB logs show what happened between the load balancer and your targets (target response time, backend errors). NAT Gateway metrics and VPC Flow Logs show what your workloads sent outbound and how much it cost. No single layer gives you the full picture — the combination does.
+Each layer captures distinct information: CloudFront logs show what the client experienced at the edge (cache hit or miss, edge latency, protocol version). AWS WAF logs show which requests were evaluated and what security decisions were made. ALB/NLB logs show what happened between the load balancer and your targets (target response time, backend errors). NAT gateway metrics and VPC Flow Logs show what your workloads sent outbound and how much it cost. No single layer gives you the full picture — the combination does.
 
 ## Key capabilities
 
@@ -56,9 +56,9 @@ Each layer captures distinct information: CloudFront logs show what the client e
 
     ---
 
-    Per-request evaluation results showing which rules matched, the action taken (allow, block, count, CAPTCHA), and the request attributes that triggered the match. Essential for security investigation and tuning WAF rules without blind spots.
+    Per-request evaluation results showing which rules matched, the action taken (allow, block, count, CAPTCHA), and the request attributes that triggered the match. Essential for security investigation and tuning AWS WAF rules without blind spots.
 
-*   :material-upload-network: **NAT Gateway CloudWatch metrics**
+*   :material-upload-network: **NAT gateway CloudWatch metrics**
 
     ---
 
@@ -127,17 +127,17 @@ NLB access logs similarly capture IPv6 client addresses for dual-stack or IPv6-o
 
 ### Security observability
 
-#### Enable WAF logging for every web ACL — not just during incidents
+#### Enable AWS WAF logging for every web ACL — not just during incidents
 
 AWS WAF logs capture the full evaluation result for every request: which rules were evaluated, which matched, what action was taken, and the request attributes (headers, URI, query string) that triggered the match. This data is essential for three purposes: tuning rules to reduce false positives, investigating attack patterns after the fact, and validating that new rules behave as expected before switching from Count to Block.
 
-WAF logs can be delivered to S3, CloudWatch Logs, or Kinesis Data Firehose. For most environments, deliver to S3 in the centralized logging account for cost-effective long-term storage and Athena-based analysis. Use CloudWatch Logs only when you need real-time metric filters and alarms on specific rule matches (the per-GB ingestion cost is significantly higher than S3).
+AWS WAF logs can be delivered to S3, CloudWatch Logs, or Kinesis Data Firehose. For most environments, deliver to S3 in the centralized logging account for cost-effective long-term storage and Athena-based analysis. Use CloudWatch Logs only when you need real-time metric filters and alarms on specific rule matches (the per-GB ingestion cost is significantly higher than S3).
 
 #### Detect DDoS patterns before Shield Advanced triggers
 
 CloudFront and ALB access logs contain the raw signal that precedes a DDoS event: sudden spikes in request rate from concentrated IP ranges, unusual geographic distribution shifts, or abnormal request patterns (identical User-Agent strings, repeated paths). By monitoring these patterns in near-real-time, you can detect application-layer attacks before they reach the threshold where Shield Advanced's automatic mitigation activates.
 
-Build CloudWatch alarms on ALB request count and 4xx/5xx rates with short evaluation periods (1-minute intervals). For CloudFront, use real-time logs with a Kinesis consumer that tracks request rate by client IP prefix and triggers alerts on anomalous concentration. These early-warning signals give your operations team time to tighten WAF rate limits or engage AWS Shield Response Team before the attack fully develops.
+Build CloudWatch alarms on ALB request count and 4xx/5xx rates with short evaluation periods (1-minute intervals). For CloudFront, use real-time logs with a Kinesis consumer that tracks request rate by client IP prefix and triggers alerts on anomalous concentration. These early-warning signals give your operations team time to tighten AWS WAF rate limits or engage AWS Shield Response Team before the attack fully develops.
 
 #### Use Route 53 query logs to detect reconnaissance and validate failover
 
@@ -147,9 +147,9 @@ Query logs are delivered to CloudWatch Logs in the us-east-1 Region (regardless 
 
 ### Egress observability
 
-#### Monitor NAT Gateway metrics for egress cost visibility
+#### Monitor NAT gateway metrics for egress cost visibility
 
-NAT Gateway CloudWatch metrics are the primary tool for understanding and controlling egress costs. The key metrics:
+NAT gateway CloudWatch metrics are the primary tool for understanding and controlling egress costs. The key metrics:
 
 | Metric | What it reveals | Alert threshold guidance |
 | --- | --- | --- |
@@ -157,7 +157,7 @@ NAT Gateway CloudWatch metrics are the primary tool for understanding and contro
 | `BytesOutToSource` | Total bytes returned to your workloads (response traffic) | Unusual ratio to BytesOut suggests data download patterns |
 | `ConnectionAttemptCount` | New connections initiated per period | Spike indicates new workload behavior or compromise |
 | `ActiveConnectionCount` | Concurrent active connections | Approaching 55,000 per-AZ limit signals scaling need |
-| `PacketsDropCount` | Packets dropped due to NAT Gateway limits | Any non-zero value requires investigation |
+| `PacketsDropCount` | Packets dropped due to NAT gateway limits | Any non-zero value requires investigation |
 | `ErrorPortAllocation` | Port allocation failures (source port exhaustion) | Any non-zero value — workload is exceeding connection limits |
 | `IdleTimeoutCount` | Connections closed due to idle timeout | High values suggest connection pooling issues |
 
@@ -165,9 +165,9 @@ Set CloudWatch alarms on `PacketsDropCount` and `ErrorPortAllocation` with a thr
 
 #### Use VPC Flow Logs to identify unexpected egress destinations
 
-VPC Flow Logs capture source and destination IPs for every flow, including egress traffic. When combined with NAT Gateway metrics showing unexpected egress volume, Flow Logs answer the critical follow-up question: *where is that traffic going?*
+VPC Flow Logs capture source and destination IPs for every flow, including egress traffic. When combined with NAT gateway metrics showing unexpected egress volume, Flow Logs answer the critical follow-up question: *where is that traffic going?*
 
-Configure Flow Logs on the NAT Gateway's ENI or on the subnets that route through it. Use the `dstaddr` field to identify external destination IPs, and correlate with DNS query logs to map IPs back to domain names. This combination reveals which workloads are calling which external services and how much data they're transferring — essential for both cost attribution and security investigation.
+Configure Flow Logs on the NAT gateway's ENI or on the subnets that route through it. Use the `dstaddr` field to identify external destination IPs, and correlate with DNS query logs to map IPs back to domain names. This combination reveals which workloads are calling which external services and how much data they're transferring — essential for both cost attribution and security investigation.
 
 #### Track Global Accelerator flow logs for L4 ingress patterns
 
@@ -188,7 +188,7 @@ Configure cross-account delivery for each log type:
 | **ALB/NLB access logs** | S3 bucket policy allowing the ELB service principal for each Region |
 | **CloudFront standard logs** | S3 bucket policy allowing the CloudFront service principal |
 | **CloudFront real-time logs** | Kinesis Data Streams in the logging account (or same account with cross-account IAM) |
-| **WAF logs** | Kinesis Data Firehose to S3 in the logging account, or direct S3 delivery |
+| **AWS WAF logs** | Kinesis Data Firehose to S3 in the logging account, or direct S3 delivery |
 | **VPC Flow Logs** | Cross-account delivery to S3 or CloudWatch Logs with resource policies |
 | **Route 53 query logs** | CloudWatch Logs cross-account subscription filters to centralized destination |
 | **Global Accelerator flow logs** | S3 bucket policy allowing the Global Accelerator service principal |
@@ -217,9 +217,9 @@ External traffic monitoring costs vary by orders of magnitude depending on which
 | **NLB access logs** | Free | S3 storage only | Athena per-query scanning |
 | **CloudFront standard logs** | Free | S3 storage only | Athena per-query scanning |
 | **CloudFront real-time logs** | Free | Kinesis Data Streams shard-hours + per-record | Consumer compute (Lambda, KDA) |
-| **WAF logs (S3)** | Free | S3 storage only | Athena per-query scanning |
-| **WAF logs (CloudWatch)** | Free | CloudWatch Logs ingestion ($0.50/GB) + storage | CloudWatch Insights queries |
-| **NAT Gateway metrics** | Free (included) | N/A (CloudWatch default retention) | CloudWatch dashboard/alarm cost |
+| **AWS WAF logs (S3)** | Free | S3 storage only | Athena per-query scanning |
+| **AWS WAF logs (CloudWatch)** | Free | CloudWatch Logs ingestion ($0.50/GB) + storage | CloudWatch Insights queries |
+| **NAT gateway metrics** | Free (included) | N/A (CloudWatch default retention) | CloudWatch dashboard/alarm cost |
 | **VPC Flow Logs (S3)** | $0.25/GB (first 10 TB) | S3 storage | Athena per-query scanning |
 | **Route 53 query logs** | Free | CloudWatch Logs ingestion + storage | CloudWatch Insights queries |
 
@@ -227,7 +227,7 @@ The highest-cost items are VPC Flow Logs at volume (generation charge) and Cloud
 
 #### Use batch analysis as the default, real-time only where justified
 
-Real-time log analysis (CloudFront real-time logs → Kinesis → Lambda/KDA, or WAF logs → CloudWatch Logs → metric filters) costs significantly more than batch analysis (logs → S3 → Athena on demand). Default to batch analysis for:
+Real-time log analysis (CloudFront real-time logs → Kinesis → Lambda/KDA, or AWS WAF logs → CloudWatch Logs → metric filters) costs significantly more than batch analysis (logs → S3 → Athena on demand). Default to batch analysis for:
 
 * Post-incident investigation
 * Weekly/monthly trend reporting
@@ -268,11 +268,11 @@ Each data source answers different questions. The right combination depends on w
 **AWS WAF logs** are the right choice when:
 
 * You're investigating blocked requests to determine if they're legitimate (false positives)
-* You need to tune WAF rules based on actual match data
+* You need to tune AWS WAF rules based on actual match data
 * You're correlating attack patterns across time to identify persistent threats
 * You need audit evidence of security decisions made on each request
 
-**NAT Gateway metrics** are the right choice when:
+**NAT gateway metrics** are the right choice when:
 
 * You need egress cost visibility and trending
 * You're detecting unexpected outbound traffic volume
@@ -298,8 +298,8 @@ Each data source answers different questions. The right combination depends on w
 | --- | --- | --- |
 | **ALB access logs + Amazon Athena** | Per-request log data in S3 | SQL-based ad-hoc querying with partition pruning for cost-efficient analysis |
 | **CloudFront real-time logs + Kinesis Data Streams + Lambda** | Per-request edge data in real time | Stream processing for live dashboards, anomaly detection, and automated response |
-| **WAF logs + Amazon OpenSearch Service** | Per-request security evaluation data | Full-text search, visualization, and correlation for security investigation |
-| **NAT Gateway metrics + CloudWatch Alarms + SNS** | Egress volume and connection metrics | Threshold-based alerting and notification routing to operations teams |
+| **AWS WAF logs + Amazon OpenSearch Service** | Per-request security evaluation data | Full-text search, visualization, and correlation for security investigation |
+| **NAT gateway metrics + CloudWatch Alarms + SNS** | Egress volume and connection metrics | Threshold-based alerting and notification routing to operations teams |
 | **VPC Flow Logs + Amazon Athena** | Per-flow network data including egress destinations | Destination analysis, cost attribution, and security investigation queries |
 | **Route 53 query logs + CloudWatch Logs Insights** | DNS query patterns for public zones | Pattern analysis, anomaly detection, and failover validation queries |
 | **ALB access logs + AWS Security Hub** | Request-level evidence of attacks | Centralized security findings aggregation and compliance reporting |
@@ -358,9 +358,9 @@ CloudFront and ALB logs both record the client's IP version. Track the percentag
 
     ---
 
-    Per-request WAF evaluation logging to S3, CloudWatch Logs, or Kinesis Data Firehose, including log field reference and filtering.
+    Per-request AWS WAF evaluation logging to S3, CloudWatch Logs, or Kinesis Data Firehose, including log field reference and filtering.
 
-    [:octicons-arrow-right-24: WAF logging documentation](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html)
+    [:octicons-arrow-right-24: AWS WAF logging documentation](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html)
 
 *   :material-currency-usd: **CloudWatch pricing**
 
@@ -370,13 +370,13 @@ CloudFront and ALB logs both record the client's IP version. Track the percentag
 
     [:octicons-arrow-right-24: CloudWatch pricing](https://aws.amazon.com/cloudwatch/pricing/)
 
-*   :material-file-document: **NAT Gateway monitoring**
+*   :material-file-document: **NAT gateway monitoring**
 
     ---
 
-    CloudWatch metrics available for NAT Gateways, including dimensions, statistics, and recommended alarms.
+    CloudWatch metrics available for NAT gateways, including dimensions, statistics, and recommended alarms.
 
-    [:octicons-arrow-right-24: NAT Gateway CloudWatch metrics](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html)
+    [:octicons-arrow-right-24: NAT gateway CloudWatch metrics](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway-cloudwatch.html)
 
 </div>
 
@@ -398,4 +398,4 @@ CloudFront and ALB logs both record the client's IP version. Track the percentag
 
 **Relationship to Security:**
 
-* **[Outbound Controls](../security/outbound.md)**: Defines what egress traffic is allowed. External traffic monitoring (NAT Gateway metrics, VPC Flow Logs) validates that those controls are working and reveals policy gaps.
+* **[Outbound Controls](../security/outbound.md)**: Defines what egress traffic is allowed. External traffic monitoring (NAT gateway metrics, VPC Flow Logs) validates that those controls are working and reveals policy gaps.

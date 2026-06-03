@@ -1,0 +1,355 @@
+{
+  "_usage": "Use 'first_use' on first mention per page, 'subsequent_use' on second and later mentions. Never use names listed in 'do_not_use'. See .kiro/steering/content-conventions.md for full guidance.",
+  "services": {
+    "vpc": {
+      "first_use": "Amazon Virtual Private Cloud (Amazon VPC)",
+      "subsequent_use": "Amazon VPC",
+      "extra_short": "VPC",
+      "do_not_use": [],
+      "notes": "Use 'Amazon VPC' when referring to the service. Use lowercase 'VPC' only when referring to the generic resource (a VPC, your VPC). Never use plain 'VPC' to mean the service itself on second mention."
+    },
+    "vpc_lattice": {
+      "first_use": "Amazon VPC Lattice",
+      "subsequent_use": "VPC Lattice",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "transit_gateway": {
+      "first_use": "AWS Transit Gateway",
+      "subsequent_use": "Transit Gateway",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "When referring to the resource, use lowercase 'transit gateway' or 'transit gateways'."
+    },
+    "cloud_wan": {
+      "first_use": "AWS Cloud WAN",
+      "subsequent_use": "Cloud WAN",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "Prefix 'AWS' is required."
+    },
+    "direct_connect": {
+      "first_use": "AWS Direct Connect",
+      "subsequent_use": "Direct Connect",
+      "extra_short": "DX",
+      "do_not_use": [],
+      "notes": "Convention is to always use 'AWS Direct Connect'. 'Direct Connect' is allowed on subsequent use, but not preferred. 'DX' only where space is severely limited."
+    },
+    "site_to_site_vpn": {
+      "first_use": "AWS Site-to-Site VPN",
+      "subsequent_use": "Site-to-Site VPN",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "It is permissible to refer collectively to AWS Site-to-Site VPN and AWS Client VPN as 'AWS VPN' or 'AWS VPN services'."
+    },
+    "client_vpn": {
+      "first_use": "AWS Client VPN",
+      "subsequent_use": "Client VPN",
+      "extra_short": "CVPN",
+      "do_not_use": [],
+      "notes": "It is permissible to refer collectively to AWS Site-to-Site VPN and AWS Client VPN as 'AWS VPN' or 'AWS VPN services'."
+    },
+    "privatelink": {
+      "first_use": "AWS PrivateLink",
+      "subsequent_use": "PrivateLink",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "Feature of Amazon VPC."
+    },
+    "cloudfront": {
+      "first_use": "Amazon CloudFront",
+      "subsequent_use": "CloudFront",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "route_53": {
+      "first_use": "Amazon Route 53",
+      "subsequent_use": "Route 53",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "global_accelerator": {
+      "first_use": "AWS Global Accelerator",
+      "subsequent_use": "Global Accelerator",
+      "extra_short": "AGA",
+      "do_not_use": [],
+      "notes": null
+    },
+    "elastic_load_balancing": {
+      "first_use": "Elastic Load Balancing (ELB)",
+      "subsequent_use": "ELB",
+      "extra_short": null,
+      "do_not_use": ["Elastic Load Balancer"],
+      "notes": "Elastic Load Balancing is the service name. Individual types: Application Load Balancer, Network Load Balancer, Gateway Load Balancer, Classic Load Balancer."
+    },
+    "network_firewall": {
+      "first_use": "AWS Network Firewall",
+      "subsequent_use": "Network Firewall",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "waf": {
+      "first_use": "AWS WAF",
+      "subsequent_use": "AWS WAF",
+      "extra_short": null,
+      "do_not_use": ["WAF", "AWS Web Application Firewall (AWS WAF)"],
+      "notes": "Prefix 'AWS' is required on every use."
+    },
+    "shield": {
+      "first_use": "AWS Shield",
+      "subsequent_use": "Shield",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "Two plans: AWS Shield Standard and AWS Shield Advanced."
+    },
+    "firewall_manager": {
+      "first_use": "AWS Firewall Manager",
+      "subsequent_use": "Firewall Manager",
+      "extra_short": null,
+      "do_not_use": ["AFM", "FM"],
+      "notes": null
+    },
+    "verified_access": {
+      "first_use": "AWS Verified Access",
+      "subsequent_use": "Verified Access",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "cloud_map": {
+      "first_use": "AWS Cloud Map",
+      "subsequent_use": "Cloud Map",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "Prefix 'AWS' is required."
+    },
+    "organizations": {
+      "first_use": "AWS Organizations",
+      "subsequent_use": "Organizations",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "ram": {
+      "first_use": "AWS Resource Access Manager (AWS RAM)",
+      "subsequent_use": "AWS RAM",
+      "extra_short": "RAM",
+      "do_not_use": [],
+      "notes": null
+    },
+    "iam": {
+      "first_use": "AWS Identity and Access Management (IAM)",
+      "subsequent_use": "IAM",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "cloudwatch": {
+      "first_use": "Amazon CloudWatch",
+      "subsequent_use": "CloudWatch",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "eventbridge": {
+      "first_use": "Amazon EventBridge",
+      "subsequent_use": "EventBridge",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "sns": {
+      "first_use": "Amazon Simple Notification Service (Amazon SNS)",
+      "subsequent_use": "Amazon SNS",
+      "extra_short": "SNS",
+      "do_not_use": [],
+      "notes": null
+    },
+    "ipam": {
+      "first_use": "Amazon VPC IP Address Manager (IPAM)",
+      "subsequent_use": "IPAM",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "IPAM is a feature of Amazon VPC."
+    },
+    "cloudformation": {
+      "first_use": "AWS CloudFormation",
+      "subsequent_use": "CloudFormation",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "lambda": {
+      "first_use": "AWS Lambda",
+      "subsequent_use": "Lambda",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "eks": {
+      "first_use": "Amazon Elastic Kubernetes Service (Amazon EKS)",
+      "subsequent_use": "Amazon EKS",
+      "extra_short": "EKS",
+      "do_not_use": [],
+      "notes": null
+    },
+    "ecs": {
+      "first_use": "Amazon Elastic Container Service (Amazon ECS)",
+      "subsequent_use": "Amazon ECS",
+      "extra_short": "ECS",
+      "do_not_use": [],
+      "notes": null
+    },
+    "ec2": {
+      "first_use": "Amazon Elastic Compute Cloud (Amazon EC2)",
+      "subsequent_use": "Amazon EC2",
+      "extra_short": "EC2",
+      "do_not_use": [],
+      "notes": null
+    },
+    "s3": {
+      "first_use": "Amazon Simple Storage Service (Amazon S3)",
+      "subsequent_use": "Amazon S3",
+      "extra_short": "S3",
+      "do_not_use": [],
+      "notes": null
+    },
+    "dynamodb": {
+      "first_use": "Amazon DynamoDB",
+      "subsequent_use": "DynamoDB",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "nat_gateway": {
+      "first_use": "NAT gateway",
+      "subsequent_use": "NAT gateway",
+      "extra_short": null,
+      "do_not_use": ["NAT Gateway"],
+      "notes": "NAT gateway is a VPC feature, not a standalone service. Use lowercase 'gateway'."
+    },
+    "internet_gateway": {
+      "first_use": "internet gateway",
+      "subsequent_use": "internet gateway",
+      "extra_short": "IGW",
+      "do_not_use": ["Internet Gateway"],
+      "notes": "VPC feature, not a standalone service. Use lowercase."
+    },
+    "api_gateway": {
+      "first_use": "Amazon API Gateway",
+      "subsequent_use": "API Gateway",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "control_tower": {
+      "first_use": "AWS Control Tower",
+      "subsequent_use": "Control Tower",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "Prefix 'AWS' is required."
+    },
+    "guardduty": {
+      "first_use": "Amazon GuardDuty",
+      "subsequent_use": "GuardDuty",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "security_hub": {
+      "first_use": "AWS Security Hub",
+      "subsequent_use": "Security Hub",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "x_ray": {
+      "first_use": "AWS X-Ray",
+      "subsequent_use": "X-Ray",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "step_functions": {
+      "first_use": "AWS Step Functions",
+      "subsequent_use": "Step Functions",
+      "extra_short": null,
+      "do_not_use": ["step function"],
+      "notes": "Do not use 'step function' (singular, lowercase)."
+    },
+    "interconnect": {
+      "first_use": "AWS Interconnect",
+      "subsequent_use": "Interconnect",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "certificate_manager": {
+      "first_use": "AWS Certificate Manager (ACM)",
+      "subsequent_use": "ACM",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "kms": {
+      "first_use": "AWS Key Management Service (AWS KMS)",
+      "subsequent_use": "AWS KMS",
+      "extra_short": "KMS",
+      "do_not_use": ["CMK"],
+      "notes": null
+    },
+    "application_recovery_controller": {
+      "first_use": "Amazon Application Recovery Controller",
+      "subsequent_use": "AWS ARC",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": "Formerly Amazon Route 53 Application Recovery Controller."
+    },
+    "config": {
+      "first_use": "AWS Config",
+      "subsequent_use": "AWS Config",
+      "extra_short": null,
+      "do_not_use": ["Config"],
+      "notes": "Prefix 'AWS' is required on every use."
+    },
+    "health": {
+      "first_use": "AWS Health Dashboard",
+      "subsequent_use": "Health Dashboard",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "chatbot": {
+      "first_use": "Amazon Q Developer in chat applications",
+      "subsequent_use": "Amazon Q Developer in chat applications",
+      "extra_short": null,
+      "do_not_use": ["AWS Chatbot"],
+      "notes": "AWS Chatbot was rebranded under Amazon Q Developer in February 2025. OK to use on first mention: Amazon Q Developer in chat applications (previously AWS Chatbot)."
+    },
+    "athena": {
+      "first_use": "Amazon Athena",
+      "subsequent_use": "Athena",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "distro_for_opentelemetry": {
+      "first_use": "AWS Distro for OpenTelemetry",
+      "subsequent_use": "Distro for OpenTelemetry",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    },
+    "network_manager": {
+      "first_use": "AWS Network Manager",
+      "subsequent_use": "Network Manager",
+      "extra_short": null,
+      "do_not_use": [],
+      "notes": null
+    }
+  }
+}

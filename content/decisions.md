@@ -17,11 +17,11 @@ This page maps common AWS networking questions to the right service, pattern, an
 
 | I need to... | Recommended pattern | Key trade-off | Learn more |
 | --- | --- | --- | --- |
-| Let private IPv4 resources reach the internet | **NAT Gateway** - Zonal or Regional, resilient and scales automatically | Data processing and hourly cost if not centralized | [Internet Connectivity](connectivity/internet.md) |
-| Let private IPv6 resources reach the internet | **Egress-only Internet Gateway** — no data process (data transfer still applies), per-VPC, outbound-only | Cannot be centralized; doesn't support NAT66/NPTv6  | [Internet Connectivity](connectivity/internet.md) |
+| Let private IPv4 resources reach the internet | **NAT gateway** - Zonal or Regional, resilient and scales automatically | Data processing and hourly cost if not centralized | [Internet Connectivity](connectivity/internet.md) |
+| Let private IPv6 resources reach the internet | **Egress-only internet gateway** — no data process (data transfer still applies), per-VPC, outbound-only | Cannot be centralized; doesn't support NAT66/NPTv6  | [Internet Connectivity](connectivity/internet.md) |
 | Expose an HTTP/HTTPS application to the internet | **CloudFront + AWS WAF + ALB** (decentralized ingress) — edge caching, L7 protection, VPC Origins for private backends | Centralized ingress through a shared VPC adds load-balancer chaining and blast radius; avoid unless compliance mandates it | [Internet Connectivity](connectivity/internet.md) |
 | Expose a TCP/UDP service to the internet | **NLB** internet-facing, per-VPC, can preserve client IP | Combine with security groups or Next Generation Firewall for additional security| [Internet Connectivity](connectivity/internet.md) |
-| Reduce NAT Gateway costs for traffic to AWS Services | **VPC Endpoints** — gateway endpoints for S3/DynamoDB (free), interface endpoints for other services | Interface endpoints have hourly and data processing charges; | [Internet Connectivity](connectivity/internet.md) |
+| Reduce NAT gateway costs for traffic to AWS Services | **VPC Endpoints** — gateway endpoints for S3/DynamoDB (free), interface endpoints for other services | Interface endpoints have hourly and data processing charges; | [Internet Connectivity](connectivity/internet.md) |
 
 ## Connecting to on-premises and other clouds
 
@@ -38,7 +38,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 | I need to... | Recommended service | Key trade-off | Learn more |
 | --- | --- | --- | --- |
 | Control which resources can communicate at network layer | **Security groups** — stateful, per-ENI, reference-based rules. The primary access control for every workload | Cannot deny (allow-only); use NACLs for explicit deny rules at the subnet level | [Perimeter Controls](security/perimeter-inbound.md) |
-| Protect web applications from L7 attacks | **AWS WAF** on CloudFront or ALB — managed rule groups, rate limiting, bot control, geo-blocking | WAF is HTTP-only; use Network Firewall for non-HTTP inspection | [Perimeter Controls](security/perimeter-inbound.md) |
+| Protect web applications from L7 attacks | **AWS WAF** on CloudFront or ALB — managed rule groups, rate limiting, bot control, geo-blocking | AWS WAF is HTTP-only; use Network Firewall for non-HTTP inspection | [Perimeter Controls](security/perimeter-inbound.md) |
 | Inspect traffic at the VPC boundary including internet egress or VPC to VPC (L3-L7) | **AWS Network Firewall** — managed stateful/stateless inspection, Suricata IPS rules, domain filtering | Consider costs - per-endpoint-hour + per-GB processing;  | [Perimeter Controls](security/perimeter-inbound.md) |
 | Insert third-party firewall appliances | **Gateway Load Balancer** — Maintains session affinity to 3rd party firewall appliances using GENEVE encapsulation, transparent insertion, preserves original headers | You manage the appliance fleet (patching, scaling, licensing); more expensive than Network Firewall to operate. Some vendors offer a fully managed GWLB based solution | [Perimeter Controls](security/perimeter-inbound.md) |
 | Block workloads from reaching unauthorized domains | **Route 53 DNS Firewall** — domain-based filtering at DNS resolution, fractions of a cent per million queries | Bypassed by hardcoded IPs or DNS-over-HTTPS; layer with Network Firewall for full coverage | [Outbound Controls](security/outbound.md) |
@@ -63,7 +63,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 
 | Traffic type | Use this | Not this | Why |
 | --- | --- | --- | --- |
-| HTTP, HTTPS, gRPC | **ALB** | NLB (can handle but has not app layer visibility) | ALB provides content-based routing, TLS termination, WAF integration, mTLS, and Automatic Target Weights |
+| HTTP, HTTPS, gRPC | **ALB** | NLB (can handle but has not app layer visibility) | ALB provides content-based routing, TLS termination, AWS WAF integration, mTLS, and Automatic Target Weights |
 | TCP, UDP, TLS, QUIC (non-HTTP) | **NLB** | ALB | NLB forwards without HTTP decoding; preserves client IP; provides static IPs per AZ |
 | Need static IPs AND HTTP routing | **NLB with ALB-as-target** | ALB alone | NLB provides the static IPs; ALB provides the L7 routing behind it |
 | Third-party firewall insertion | **GWLB** | Network Firewall | GWLB is for your own appliance fleet; Network Firewall is the AWS-managed alternative |

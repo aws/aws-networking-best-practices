@@ -60,7 +60,7 @@ The prefix length determines how many addresses the block contains: a `/16` has 
 | /16  | 65,536    | 65,531            | Large VPC for enterprise environments, gives maximum room for subnets |
 | /20  | 4,096     | 4,091             | Medium VPC, departmental or single-workload VPCs |
 | /24  | 256       | 251               | Standard subnet size, balances density with manageability |
-| /26  | 64        | 59                | Smaller subnets for firewall endpoints, NAT Gateway, or TGW attachments |
+| /26  | 64        | 59                | Smaller subnets for firewall endpoints, NAT gateway, or TGW attachments |
 | /28  | 16        | 11                | Minimum VPC or subnet size, used for specific services only |
 
 *AWS reserves 5 IP addresses in each subnet (first four and last one).
@@ -241,7 +241,7 @@ Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addre
 
 | Subnet Tier | AZ-A | AZ-B | AZ-C | Size | Purpose |
 |-------------|------|------|------|------|---------|
-| Public | 10.0.0.0/24 | 10.0.1.0/24 | 10.0.2.0/24 | /24 (251 usable) | Load balancers, NAT Gateways, bastion hosts |
+| Public | 10.0.0.0/24 | 10.0.1.0/24 | 10.0.2.0/24 | /24 (251 usable) | Load balancers, NAT gateways, bastion hosts |
 | Private (application) | 10.0.10.0/24 | 10.0.11.0/24 | 10.0.12.0/24 | /24 (251 usable) | Application servers, containers, Lambda |
 | Private (data) | 10.0.20.0/24 | 10.0.21.0/24 | 10.0.22.0/24 | /24 (251 usable) | RDS, ElastiCache, OpenSearch |
 | Private (spare) | 10.0.30.0/24 | 10.0.31.0/24 | 10.0.32.0/24 | /24 (251 usable) | Future use, additional tiers |
@@ -251,7 +251,7 @@ Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addre
 
 * `/24` is the standard subnet size for most workloads. It provides 251 usable addresses per AZ, which handles most application tiers comfortably.
 * `/20` or larger for EKS worker node subnets if pods use the primary CIDR (each node consumes IPs proportional to its pod capacity).
-* `/28` for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, NAT Gateways).
+* `/28` for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, NAT gateways).
 * Leave gaps in your numbering scheme (notice the jump from `.2.0` to `.10.0` above) to allow inserting new subnet tiers without renumbering.
 
 **Subnet design principles:**

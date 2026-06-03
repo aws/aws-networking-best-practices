@@ -59,7 +59,7 @@ The security controls covered here operate on top of the connectivity and applic
 
     ---
 
-    Security groups, NACLs, WAF, Shield, Network Firewall, GWLB, and Firewall Manager for inbound protection.
+    Security groups, NACLs, AWS WAF, Shield, Network Firewall, GWLB, and Firewall Manager for inbound protection.
 
     [:octicons-arrow-right-24: Perimeter Controls](perimeter-inbound.md)
 

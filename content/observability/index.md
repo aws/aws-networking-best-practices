@@ -27,18 +27,18 @@ Observability operates on top of the connectivity, application networking, and s
 *   **CloudFront access logs / real-time logs** — Edge-level client experience (latency, cache status, protocol, geographic distribution)
 *   **ALB / NLB access logs** — Per-request or per-connection detail (target latency, response codes, TLS metadata)
 *   **AWS WAF logs** — Security evaluation results (rule matches, allow/block decisions, request attributes)
-*   **NAT Gateway CloudWatch metrics** — Egress volume, connection counts, port exhaustion, packet drops
+*   **NAT gateway CloudWatch metrics** — Egress volume, connection counts, port exhaustion, packet drops
 *   **Route 53 query logs** — DNS query patterns for public hosted zones
 
 ***Key insight:*** *ALB access logs are free to generate, cost pennies to store, and are irreplaceable during incident investigation. There is no valid reason to leave them disabled on a production ALB.*
 
 ## 3. AWS Services Monitoring
 
-**AWS services monitoring** focuses on the operational health of the networking services themselves — not the traffic flowing through them, but whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a NAT Gateway exhausting its port allocation, or a Direct Connect connection flapping are service-level failures that traffic monitoring alone won't catch.
+**AWS services monitoring** focuses on the operational health of the networking services themselves — not the traffic flowing through them, but whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a NAT gateway exhausting its port allocation, or a Direct Connect connection flapping are service-level failures that traffic monitoring alone won't catch.
 
 **Key patterns:**
 
-*   **Critical metrics per service** — The specific CloudWatch metrics that signal real operational problems for Transit Gateway, NAT Gateway, Direct Connect, VPN, ALB, NLB, Network Firewall, and VPC Lattice
+*   **Critical metrics per service** — The specific CloudWatch metrics that signal real operational problems for Transit Gateway, NAT gateway, Direct Connect, VPN, ALB, NLB, Network Firewall, and VPC Lattice
 *   **Composite alarms** — Combine multiple signals to confirm real problems before paging (reduce alert fatigue)
 *   **Anomaly detection** — ML-based alerting that adapts to traffic patterns without manual threshold tuning
 *   **Quota monitoring** — Alarm at 80% utilization before hitting service limits
@@ -78,7 +78,7 @@ Observability operates on top of the connectivity, application networking, and s
 
     ---
 
-    CloudFront logs, ALB/NLB access logs, WAF logs, NAT Gateway metrics, and client experience monitoring.
+    CloudFront logs, ALB/NLB access logs, AWS WAF logs, NAT gateway metrics, and client experience monitoring.
 
     [:octicons-arrow-right-24: External Traffic Monitoring](external-traffic.md)
 

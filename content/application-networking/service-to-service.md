@@ -398,7 +398,7 @@ The two main patterns this enables:
 
 ## IPv6 for service-to-service communication
 
-Service-to-service traffic should be dual-stack from the start. All of the synchronous patterns on this page support IPv6, and adopting it for internal traffic removes NAT Gateway dependency (and its per-GB cost) for east-west communication.
+Service-to-service traffic should be dual-stack from the start. All of the synchronous patterns on this page support IPv6, and adopting it for internal traffic removes NAT gateway dependency (and its per-GB cost) for east-west communication.
 
 **IPv6 support across the service-to-service options:**
 
@@ -416,9 +416,9 @@ Service-to-service traffic should be dual-stack from the start. All of the synch
 * **Configure VPC Lattice services as dual-stack** so that consumers in IPv6-only subnets can reach them without NAT64. This is especially relevant for EKS clusters running in IPv6 mode where pods have only IPv6 addresses.
 * **Add AAAA alias records alongside A records** in Route 53 private hosted zones for every internal service. IPv6-capable consumers will prefer the AAAA record automatically.
 * **Update security groups for both address families** on every service endpoint. A common failure: the ALB's security group allows `10.0.0.0/8` on port 443 but has no IPv6 rule, so IPv6 consumers get connection refused.
-* **Use IPv6 for east-west traffic to eliminate NAT Gateway costs.** Service-to-service calls between VPCs over VPC Lattice or peering don't need NAT when both sides are IPv6-capable. This removes the per-GB NAT Gateway processing charge from internal traffic paths.
+* **Use IPv6 for east-west traffic to eliminate NAT gateway costs.** Service-to-service calls between VPCs over VPC Lattice or peering don't need NAT when both sides are IPv6-capable. This removes the per-GB NAT gateway processing charge from internal traffic paths.
 
-***Key insight:*** *IPv6 for service-to-service is primarily a cost optimization: it removes NAT Gateway from east-west traffic paths. The functionality is identical to IPv4 — the same auth policies, the same weighted routing, the same access logs. The difference is that IPv6 traffic between services doesn't incur NAT processing charges.*
+***Key insight:*** *IPv6 for service-to-service is primarily a cost optimization: it removes NAT gateway from east-west traffic paths. The functionality is identical to IPv4 — the same auth policies, the same weighted routing, the same access logs. The difference is that IPv6 traffic between services doesn't incur NAT processing charges.*
 
 ## Cost considerations for cross-VPC service access
 
@@ -430,7 +430,7 @@ The choice between service-to-service connectivity options has significant cost 
 | **AWS PrivateLink endpoint services** | $0.01/hr per AZ per interface endpoint (~$7.20/month per AZ) | $0.01/GB data processed | Number of consumer VPCs × AZs, plus traffic volume |
 | **Transit Gateway + internal ALB/NLB** | $0.05/hr per TGW attachment (~$36/month per VPC) | $0.02/GB TGW data processing | Number of attached VPCs, plus all traffic through TGW (not just service traffic) |
 | **VPC Peering + internal ALB/NLB** | Free (no hourly charge, no data processing) | Standard cross-AZ charges only ($0.01/GB if cross-AZ) | Only cross-AZ traffic; same-AZ is free |
-| **VPC Lattice + IPv6 (no NAT)** | No hourly charge | $0.025/GB Lattice processing (no NAT processing) | Request volume; eliminates the $0.045/GB NAT Gateway charge on the consumer side |
+| **VPC Lattice + IPv6 (no NAT)** | No hourly charge | $0.025/GB Lattice processing (no NAT processing) | Request volume; eliminates the $0.045/GB NAT gateway charge on the consumer side |
 
 **When cost drives the decision:**
 

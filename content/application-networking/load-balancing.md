@@ -18,7 +18,7 @@ graph TB
             direction TB
 
             subgraph AppTraffic["Application traffic distribution"]
-                ALB["Application Load Balancer (ALB)<br/>L7 — HTTP, HTTPS, gRPC<br/>Content-based routing,<br/>TLS termination, mTLS, WAF"]
+                ALB["Application Load Balancer (ALB)<br/>L7 — HTTP, HTTPS, gRPC<br/>Content-based routing,<br/>TLS termination, mTLS, AWS WAF"]
                 NLB["Network Load Balancer (NLB)<br/>L4 — TCP, UDP, TLS<br/>Ultra-high throughput,<br/>client IP preservation,<br/>static IPs per AZ"]
             end
 
@@ -504,7 +504,7 @@ GWLB supports `ipv4` and `dualstack` IP-address types. Dual-stack mode lets clie
 
 * **Pair GWLB with [AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html) (Appliance Mode enabled) or [AWS Cloud WAN](https://docs.aws.amazon.com/vpc/latest/cloudwan/what-is-cloudwan.html)** for centralized inspection of VPC-to-VPC, VPC-to-on-premises, or Internet egress traffic. The inspection VPC sits behind the TGW or Cloud WAN attachment; spoke VPCs route through TGW or Cloud WAN to reach it.
 * **Front internet ingress with GWLB and a third-party firewall** for [inbound inspection](https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/inspecting-inbound-traffic-fa.html). Traffic from the internet gateway is directed through the GWLB endpoint to the appliances, which inspect the flow before it reaches the workload's NLB or ALB.
-* **Combine with NAT Gateway in a centralized egress VPC** for inspection-then-NAT egress, where the appliance sees traffic with the original VPC source IP and NAT happens after inspection.
+* **Combine with NAT gateway in a centralized egress VPC** for inspection-then-NAT egress, where the appliance sees traffic with the original VPC source IP and NAT happens after inspection.
 
 ### Documentation
 

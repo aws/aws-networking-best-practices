@@ -145,9 +145,9 @@ NACLs are evaluated in rule-number order, and the first match wins. Complex NACL
 
 ### AWS WAF
 
-#### Deploy WAF on every internet-facing L7 endpoint
+#### Deploy AWS WAF on every internet-facing L7 endpoint
 
-AWS WAF should be attached to every CloudFront distribution, public-facing ALB, and API Gateway stage. The cost of a WAF WebACL (starting at $5/month plus $0.60 per million requests) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.
+AWS WAF should be attached to every CloudFront distribution, public-facing ALB, and API Gateway stage. The cost of a AWS WAF WebACL (starting at $5/month plus $0.60 per million requests) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.
 
 #### Start with AWS Managed Rule Groups, then layer custom rules
 
@@ -161,9 +161,9 @@ Rate-based rules throttle requests from a single IP (or other key) that exceed a
 
 Rate-based rules support custom keys beyond IP: you can rate-limit by header value, query string, cookie, or label namespace. This handles distributed attacks where a single IP stays below the threshold but the aggregate from a botnet is overwhelming.
 
-#### WAF handles both IPv4 and IPv6 transparently
+#### AWS WAF handles both IPv4 and IPv6 transparently
 
-WAF rules that match on IP addresses accept both IPv4 CIDRs and IPv6 CIDRs in IP sets. Rate-based rules track IPv4 and IPv6 sources independently. There is no separate configuration needed for IPv6 — WAF evaluates all HTTP/HTTPS traffic regardless of the underlying IP version. This is one area where IPv6 does not require additional configuration, unlike security groups and NACLs.
+AWS WAF rules that match on IP addresses accept both IPv4 CIDRs and IPv6 CIDRs in IP sets. Rate-based rules track IPv4 and IPv6 sources independently. There is no separate configuration needed for IPv6 — AWS WAF evaluates all HTTP/HTTPS traffic regardless of the underlying IP version. This is one area where IPv6 does not require additional configuration, unlike security groups and NACLs.
 
 ### AWS Shield
 
@@ -173,7 +173,7 @@ Shield Standard is enabled on every AWS account at no cost. It protects all publ
 
 #### Upgrade to Shield Advanced for business-critical internet-facing workloads
 
-Shield Advanced ($3,000/month per organization, plus data transfer fees during attacks) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS DDoS Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy WAF rules on your behalf during an active incident.
+Shield Advanced ($3,000/month per organization, plus data transfer fees during attacks) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS DDoS Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy AWS WAF rules on your behalf during an active incident.
 
 Shield Advanced is justified when the cost of downtime exceeds the subscription cost — typically for revenue-generating web applications, financial services APIs, and SaaS platforms where minutes of unavailability have measurable business impact.
 
@@ -231,19 +231,19 @@ GWLB charges per hour per endpoint plus per-GB data processing. On top of that, 
 
 #### Use Firewall Manager as the single pane for cross-account perimeter policy
 
-Firewall Manager is not a firewall — it is a policy management service that deploys and enforces security group rules, WAF WebACLs, Shield Advanced associations, Network Firewall policies, and DNS Firewall rules across every account in your Organization. Without Firewall Manager, each account team must independently configure these controls, leading to drift, gaps, and inconsistent baselines.
+Firewall Manager is not a firewall — it is a policy management service that deploys and enforces security group rules, AWS WAF WebACLs, Shield Advanced associations, Network Firewall policies, and DNS Firewall rules across every account in your Organization. Without Firewall Manager, each account team must independently configure these controls, leading to drift, gaps, and inconsistent baselines.
 
 Firewall Manager requires AWS Organizations with all features enabled and a delegated administrator account (typically your security or networking account). Once configured, policies automatically apply to new accounts and new resources as they're created — no manual onboarding step.
 
 #### Define baseline policies that application teams cannot weaken
 
-Firewall Manager supports two enforcement modes for security groups: **audit** (report non-compliant groups but don't change them) and **auto-remediate** (bring non-compliant groups into compliance automatically). For baseline rules (e.g., "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For WAF, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.
+Firewall Manager supports two enforcement modes for security groups: **audit** (report non-compliant groups but don't change them) and **auto-remediate** (bring non-compliant groups into compliance automatically). For baseline rules (e.g., "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For AWS WAF, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.
 
 This creates a layered ownership model: the security team owns the baseline (managed through Firewall Manager), and application teams own workload-specific rules within the guardrails the baseline establishes.
 
 #### Account for Firewall Manager costs in your security budget
 
-Firewall Manager charges per policy per Region ($100/month per policy per Region). If you have 5 policies across 4 Regions, that's $2,000/month for Firewall Manager alone, before the cost of the underlying services (WAF WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.
+Firewall Manager charges per policy per Region ($100/month per policy per Region). If you have 5 policies across 4 Regions, that's $2,000/month for Firewall Manager alone, before the cost of the underlying services (AWS WAF WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.
 
 ### IPv6 perimeter considerations
 
@@ -254,7 +254,7 @@ The most dangerous IPv6 security posture is accidental: a VPC is dual-stack, res
 * **Security groups**: Add explicit IPv6 rules (`::/0` for public, specific IPv6 prefixes for internal). No IPv4 rule applies to IPv6 traffic.
 * **NACLs**: Add IPv6 entries for both inbound and outbound, including ephemeral port ranges. Custom NACLs start with no IPv6 rules.
 * **Network Firewall**: Stateful rules that reference IP addresses need both IPv4 and IPv6 variants. Domain-based rules (SNI, HTTP host) work regardless of IP version.
-* **WAF**: Handles both address families transparently — no separate configuration needed.
+* **AWS WAF**: Handles both address families transparently — no separate configuration needed.
 
 #### Audit for unintended IPv6 exposure in dual-stack VPCs
 
@@ -278,7 +278,7 @@ Security Groups are **always required** — they are not optional in any archite
 * Compliance requires a second independent control layer beyond security groups
 * You need to block traffic from compromised internal resources that security groups would otherwise allow
 
-NACLs are **not the right tool** for fine-grained access control (use security groups) or for application-layer filtering (use WAF).
+NACLs are **not the right tool** for fine-grained access control (use security groups) or for application-layer filtering (use AWS WAF).
 
 **AWS WAF** is the right choice when:
 
@@ -286,7 +286,7 @@ NACLs are **not the right tool** for fine-grained access control (use security g
 * You need rate limiting, bot detection, or geo-blocking
 * Your workload is fronted by CloudFront, ALB, API Gateway, or AppSync
 
-WAF is **not the right tool** for L3/L4 traffic inspection (use Network Firewall) or for non-HTTP protocols.
+AWS WAF is **not the right tool** for L3/L4 traffic inspection (use Network Firewall) or for non-HTTP protocols.
 
 **AWS Network Firewall** is the right choice when:
 
@@ -294,7 +294,7 @@ WAF is **not the right tool** for L3/L4 traffic inspection (use Network Firewall
 * You need domain-based filtering for non-HTTP traffic (TLS SNI inspection)
 * You need protocol detection and deep packet inspection at the VPC boundary
 
-Network Firewall is **not the right tool** for HTTP-specific logic (use WAF) or when you need vendor-specific appliance features (use GWLB).
+Network Firewall is **not the right tool** for HTTP-specific logic (use AWS WAF) or when you need vendor-specific appliance features (use GWLB).
 
 **Gateway Load Balancer + third-party firewalls** is the right choice when:
 
@@ -318,11 +318,11 @@ Shield Advanced is **not needed** for workloads where Shield Standard's automati
 | Combination | Perimeter control provides | Other service provides | When to use together |
 | --- | --- | --- | --- |
 | **Security Groups + VPC Lattice** | Per-ENI access control on the target | Service-level authentication and authorization via IAM auth policies | Always — security groups remain active even when Lattice handles service-to-service auth |
-| **WAF + CloudFront** | L7 request inspection, rate limiting, geo-blocking | Global edge distribution, TLS termination, caching, origin isolation via VPC Origins | Every internet-facing L7 workload — WAF at CloudFront inspects before traffic reaches your Region |
-| **WAF + API Gateway** | Request filtering, IP blocking, rate limiting | API management, throttling, request validation, authorization | API-first workloads where API Gateway is the entry point rather than CloudFront |
+| **AWS WAF + CloudFront** | L7 request inspection, rate limiting, geo-blocking | Global edge distribution, TLS termination, caching, origin isolation via VPC Origins | Every internet-facing L7 workload — AWS WAF at CloudFront inspects before traffic reaches your Region |
+| **AWS WAF + API Gateway** | Request filtering, IP blocking, rate limiting | API management, throttling, request validation, authorization | API-first workloads where API Gateway is the entry point rather than CloudFront |
 | **Network Firewall + Transit Gateway** | Stateful/stateless VPC traffic inspection | Cross-VPC and hybrid routing | Centralized inspection model where all traffic routes through an inspection VPC |
 | **Network Firewall + VPC ingress routing** | Inbound traffic inspection before it reaches workload subnets | IGW edge route table directs traffic to firewall endpoints | Per-VPC inspection of internet-bound inbound traffic |
-| **Shield Advanced + WAF** | DDoS protection, DRT access, cost protection | Application-layer attack mitigation, automatic rate limiting | Shield Advanced can instruct WAF to deploy emergency rules during an attack via DRT |
+| **Shield Advanced + AWS WAF** | DDoS protection, DRT access, cost protection | Application-layer attack mitigation, automatic rate limiting | Shield Advanced can instruct AWS WAF to deploy emergency rules during an attack via DRT |
 | **GWLB + Network Firewall** | Third-party appliance inspection for specialized workloads | AWS-managed inspection for standard workloads | Organizations that need vendor-specific features for some traffic and AWS-native for the rest |
 | **Firewall Manager + all perimeter controls** | Centralized policy deployment and compliance monitoring | Individual control enforcement at each resource | Any multi-account environment (10+ accounts) where manual policy management creates drift |
 | **Security Groups + managed prefix lists** | Per-ENI access control | Shared, centrally-managed CIDR sets via RAM | When multiple security groups across accounts need the same source/destination CIDRs |
@@ -343,7 +343,7 @@ Perimeter controls vary significantly in cost, and understanding the cost model 
 | **Gateway Load Balancer** | $0.0125/hour/endpoint + $0.004/GB processed + appliance costs | $500-5,000+ per deployment | Right-size appliance fleet; use auto-scaling groups for the target appliances |
 | **AWS Firewall Manager** | $100/policy/Region | $100-2,000 depending on policy count and Regions | Consolidate policies where possible; evaluate whether manual management is cheaper for small orgs |
 
-***Key insight:*** *Security groups and NACLs are free. WAF is cheap relative to the protection it provides. Network Firewall and GWLB are the expensive layers — deploy them where the inspection value justifies the per-GB processing cost, not as a blanket "inspect everything" approach. Use WAF for L7 and security groups for L3/L4 as your cost-effective baseline, and add Network Firewall or GWLB only where deeper inspection is required.*
+***Key insight:*** *Security groups and NACLs are free. AWS WAF is cheap relative to the protection it provides. Network Firewall and GWLB are the expensive layers — deploy them where the inspection value justifies the per-GB processing cost, not as a blanket "inspect everything" approach. Use AWS WAF for L7 and security groups for L3/L4 as your cost-effective baseline, and add Network Firewall or GWLB only where deeper inspection is required.*
 
 ## Documentation
 
@@ -361,7 +361,7 @@ Perimeter controls vary significantly in cost, and understanding the cost model 
 
     ---
 
-    Full WAF documentation covering WebACLs, rule groups, managed rules, and integration with CloudFront, ALB, and API Gateway.
+    Full AWS WAF documentation covering WebACLs, rule groups, managed rules, and integration with CloudFront, ALB, and API Gateway.
 
     [:octicons-arrow-right-24: AWS WAF](https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html)
 
@@ -385,7 +385,7 @@ Perimeter controls vary significantly in cost, and understanding the cost model 
 
     ---
 
-    Cross-account policy management for WAF, Shield, security groups, Network Firewall, and DNS Firewall.
+    Cross-account policy management for AWS WAF, Shield, security groups, Network Firewall, and DNS Firewall.
 
     [:octicons-arrow-right-24: Firewall Manager](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html)
 
@@ -417,4 +417,4 @@ Perimeter controls vary significantly in cost, and understanding the cost model 
 
 **Relationship to Application Networking topics:**
 
-* **[Load Balancing](../application-networking/load-balancing.md)**: Load balancers are the primary targets of perimeter controls — security groups on ALBs/NLBs, WAF on ALBs, and Network Firewall inspection in front of load balancer subnets.
+* **[Load Balancing](../application-networking/load-balancing.md)**: Load balancers are the primary targets of perimeter controls — security groups on ALBs/NLBs, AWS WAF on ALBs, and Network Firewall inspection in front of load balancer subnets.

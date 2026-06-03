@@ -55,7 +55,7 @@ graph TB
 
     ---
 
-    Per-subnet route tables control traffic flow. Internet Gateways, NAT Gateways, Transit Gateway attachments, and VPC endpoints provide connectivity to different destinations.
+    Per-subnet route tables control traffic flow. internet gateways, NAT gateways, Transit Gateway attachments, and VPC endpoints provide connectivity to different destinations.
 
 *   :material-chart-timeline-variant: **VPC Flow Logs**
 
@@ -187,7 +187,7 @@ Dual-stack doesn't mean you must use IPv6 immediately. It means the option is av
 
 #### Use IPv6 for east-west traffic to reduce NAT dependency
 
-IPv6 addresses are globally unique and publicly routable by design, but that doesn't mean they're publicly accessible. Egress-only internet gateways allow outbound IPv6 traffic while blocking inbound. For service-to-service communication within AWS, IPv6 eliminates the need for NAT Gateway (and its per-GB cost) for traffic that doesn't need IPv4 translation.
+IPv6 addresses are globally unique and publicly routable by design, but that doesn't mean they're publicly accessible. Egress-only internet gateways allow outbound IPv6 traffic while blocking inbound. For service-to-service communication within AWS, IPv6 eliminates the need for NAT gateway (and its per-GB cost) for traffic that doesn't need IPv4 translation.
 
 ### VPC Flow Logs
 
@@ -275,9 +275,9 @@ The VPC is the attachment point for every connectivity and application networkin
 | **VPC + VPC Flow Logs** | The traffic source being monitored | Metadata capture of all IP traffic for security and troubleshooting | Enable at VPC level for comprehensive coverage. Plan S3 bucket and CloudWatch log group structure for multi-VPC environments. |
 | **VPC + Route 53 Resolver** | The DNS resolution context (VPC+2 resolver) | Hybrid DNS forwarding, private hosted zone resolution, Resolver rules | Enable DNS hostnames and DNS support. Deploy Resolver endpoints in a shared-services VPC and share rules via RAM. |
 | **VPC + AWS Network Firewall** | Firewall endpoints in dedicated subnets, route tables directing traffic through them | Stateful and stateless traffic inspection and filtering | Dedicate a subnet tier for firewall endpoints. Adjust route tables so traffic traverses the firewall before reaching its destination. |
-| **VPC + NAT Gateway** | The elastic network interface and elastic IP in a public subnet | Outbound IPv4 internet access for private subnets | Place NAT Gateways in public subnets (one per AZ for resilience). Size the subnet to accommodate NAT Gateway ENIs and any future growth. |
+| **VPC + NAT gateway** | The elastic network interface and elastic IP in a public subnet | Outbound IPv4 internet access for private subnets | Place NAT gateways in public subnets (one per AZ for resilience). Size the subnet to accommodate NAT gateway ENIs and any future growth. |
 
-***Key insight:*** *Almost every connectivity service attaches to your VPC through ENIs in specific subnets. This means your subnet design must account for Transit Gateway ENIs, PrivateLink endpoints, firewall endpoints, NAT Gateways, and Resolver endpoints — not just your application workloads. Plan subnet tiers for infrastructure components from the start, or you'll run out of IP space in the subnets that matter most.*
+***Key insight:*** *Almost every connectivity service attaches to your VPC through ENIs in specific subnets. This means your subnet design must account for Transit Gateway ENIs, PrivateLink endpoints, firewall endpoints, NAT gateways, and Resolver endpoints — not just your application workloads. Plan subnet tiers for infrastructure components from the start, or you'll run out of IP space in the subnets that matter most.*
 
 ## VPC limits and quotas to plan around
 
@@ -361,7 +361,7 @@ Amazon VPC is the central construct that every other foundation component plugs 
 
 * **[Connectivity Within AWS](../connectivity/within-aws.md)**: Every Transit Gateway attachment, Cloud WAN attachment, and VPC peering connection terminates in a VPC. Your VPC design enables or constrains your connectivity architecture.
 * **[Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md)**: Direct Connect and VPN traffic enters AWS through a VPC. The VPC hosting these connections is typically in a centralized networking account.
-* **[Internet Connectivity](../connectivity/internet.md)**: Internet Gateways, NAT Gateways, and egress-only internet gateways are VPC-level constructs. Your VPC's subnet tiers determine which resources can reach the internet and how.
+* **[Internet Connectivity](../connectivity/internet.md)**: internet gateways, NAT gateways, and egress-only internet gateways are VPC-level constructs. Your VPC's subnet tiers determine which resources can reach the internet and how.
 
 **Relationship to Application Networking:**
 
