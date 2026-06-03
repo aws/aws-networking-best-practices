@@ -127,8 +127,8 @@ The key segmentation patterns:
 
 | Subnet tier | Route table behavior | Use case |
 | --- | --- | --- |
-| **Public** | Route to Internet Gateway | Load balancers, bastion hosts, NAT Gateways |
-| **Private** | Route to NAT Gateway (or no internet route) | Application workloads, databases |
+| **Public** | Route to internet gateway | Load balancers, bastion hosts, NAT gateways |
+| **Private** | Route to NAT gateway (or no internet route) | Application workloads, databases |
 | **Isolated** | No route outside the VPC | Sensitive data stores, compliance-scoped resources |
 | **Firewall** | Route through Network Firewall endpoints | Inspection tier for traffic entering/leaving the VPC |
 

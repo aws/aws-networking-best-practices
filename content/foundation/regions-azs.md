@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This page assumes familiarity with the concepts covered in [Before You Start](aws-prerequisites.md). Review that page first if you're new to AWS networking fundamentals.
 
-AWS infrastructure is organized into Regions and Availability Zones (AZs). Every networking decision you make — subnet layout, NAT Gateway placement, load balancer deployment, Direct Connect termination — is shaped by how Regions and AZs work. This page covers the infrastructure context that drives those decisions: what Regions and AZs are, how they affect network design, and the patterns that produce resilient, cost-efficient architectures.
+AWS infrastructure is organized into Regions and Availability Zones (AZs). Every networking decision you make — subnet layout, NAT gateway placement, load balancer deployment, Direct Connect termination — is shaped by how Regions and AZs work. This page covers the infrastructure context that drives those decisions: what Regions and AZs are, how they affect network design, and the patterns that produce resilient, cost-efficient architectures.
 
 The most common networking mistakes aren't service misconfigurations — they're failures to account for how Region and AZ choices cascade into subnet sizing, traffic cost, and blast radius. Understanding this layer deeply prevents those mistakes.
 
@@ -60,7 +60,7 @@ graph TB
 
 An AWS Region is a cluster of data centers in a specific geographic area, operating as a fully independent instance of the AWS platform. Each Region has its own control plane, its own API endpoints, and its own set of services. Data never leaves a Region unless you explicitly configure replication or transfer.
 
-From a networking perspective, a Region is the blast radius boundary for most infrastructure failures and the unit of deployment for services like Transit Gateway, NAT Gateway, and VPC endpoints. Multi-Region architectures exist, but they require explicit cross-Region connectivity (VPC peering, Transit Gateway peering, or CloudFront/Global Accelerator at the edge).
+From a networking perspective, a Region is the blast radius boundary for most infrastructure failures and the unit of deployment for services like Transit Gateway, NAT gateway, and VPC endpoints. Multi-Region architectures exist, but they require explicit cross-Region connectivity (VPC peering, Transit Gateway peering, or CloudFront/Global Accelerator at the edge).
 
 ***Key insight:*** *Region selection is a networking decision, not just a latency or compliance decision. Your choice of Region determines which Direct Connect locations are available, which services you can use, and what your cross-Region traffic costs look like.*
 
@@ -81,7 +81,7 @@ An Availability Zone is one or more discrete data centers within a Region, each 
 
 Every Region has at least three AZs. This is the minimum needed for quorum-based systems and for maintaining availability during a single-AZ failure while still having capacity headroom.
 
-***Key insight:*** *AZs are the unit of fault isolation within a Region. Every networking resource you deploy — subnets, NAT Gateways, load balancer nodes, interface endpoints — exists in exactly one AZ. Your multi-AZ strategy is really a subnet-per-AZ strategy, and getting it wrong means either paying for unused capacity or losing availability when you need it most.*
+***Key insight:*** *AZs are the unit of fault isolation within a Region. Every networking resource you deploy — subnets, NAT gateways, load balancer nodes, interface endpoints — exists in exactly one AZ. Your multi-AZ strategy is really a subnet-per-AZ strategy, and getting it wrong means either paying for unused capacity or losing availability when you need it most.*
 
 ### AZ IDs vs AZ names
 
@@ -106,15 +106,15 @@ When you share subnets through AWS Resource Access Manager, the shared subnet's 
 
 #### Deploy every stateful networking resource per-AZ
 
-NAT Gateways, interface VPC endpoints, and load balancer nodes are AZ-scoped. If you deploy a single NAT Gateway in one AZ and route all private subnets through it, you've created a single point of failure and you're paying cross-AZ data transfer charges on every packet from the other AZs.
+NAT gateways, interface VPC endpoints, and load balancer nodes are AZ-scoped. If you deploy a single NAT gateway in one AZ and route all private subnets through it, you've created a single point of failure and you're paying cross-AZ data transfer charges on every packet from the other AZs.
 
 The correct pattern:
 
-* **One NAT Gateway per AZ** in each public subnet tier. Route tables for private subnets in each AZ point to the NAT Gateway in the same AZ.
+* **One NAT gateway per AZ** in each public subnet tier. Route tables for private subnets in each AZ point to the NAT gateway in the same AZ.
 * **Interface VPC endpoints in every AZ** where you have workloads that use the endpoint. A missing endpoint in one AZ means traffic from that AZ crosses to another AZ to reach the endpoint — adding latency and cost.
 * **Load balancers enabled in all AZs** where targets exist. An ALB or NLB with a missing AZ creates asymmetric routing and uneven target utilization.
 
-***Key insight:*** *The "per-AZ" pattern costs more in fixed resources (three NAT Gateways instead of one), but it eliminates cross-AZ data transfer charges, removes single-AZ failure modes, and keeps blast radius contained. For any production workload, the per-AZ pattern is correct.*
+***Key insight:*** *The "per-AZ" pattern costs more in fixed resources (three NAT gateways instead of one), but it eliminates cross-AZ data transfer charges, removes single-AZ failure modes, and keeps blast radius contained. For any production workload, the per-AZ pattern is correct.*
 
 #### Size for N-1 AZ capacity
 
@@ -123,7 +123,7 @@ Design your per-AZ capacity so that losing one AZ doesn't overwhelm the remainin
 This applies to:
 
 * Auto Scaling group minimum and desired counts per AZ
-* NAT Gateway throughput headroom (each NAT GW handles 100 Gbps, but your per-AZ egress patterns matter)
+* NAT gateway throughput headroom (each NAT GW handles 100 Gbps, but your per-AZ egress patterns matter)
 * Subnet IP address capacity (if one AZ fails and workloads relaunch in the remaining two, those subnets need the IP headroom)
 
 #### Use zonal shift for fast AZ evacuation
@@ -166,15 +166,15 @@ For a three-AZ, three-tier VPC, you need nine subnets minimum. Plan your CIDR al
 
 If you size each AZ's subnets for exactly the current workload, you have no headroom for AZ failure recovery. When an AZ fails and Auto Scaling launches replacement capacity in the remaining AZs, those subnets need available IP addresses. Size subnets for 2x the steady-state requirement in each AZ, or use larger CIDR blocks with secondary CIDR ranges as overflow.
 
-### NAT Gateway placement follows AZ boundaries
+### NAT gateway placement follows AZ boundaries
 
-#### One NAT Gateway per AZ is the production pattern
+#### One NAT gateway per AZ is the production pattern
 
-A NAT Gateway is an AZ-scoped resource. Deploying one per AZ and routing each AZ's private subnets to its local NAT Gateway achieves:
+A NAT gateway is an AZ-scoped resource. Deploying one per AZ and routing each AZ's private subnets to its local NAT gateway achieves:
 
-* **Fault isolation**: An AZ failure takes out only that AZ's NAT Gateway, not egress for the entire VPC.
-* **No cross-AZ charges**: Traffic from a private subnet to the internet stays within the same AZ until it hits the NAT Gateway, then exits through the internet gateway (which is Region-scoped and free of cross-AZ charges).
-* **Predictable throughput**: Each NAT Gateway handles up to 100 Gbps independently.
+* **Fault isolation**: An AZ failure takes out only that AZ's NAT gateway, not egress for the entire VPC.
+* **No cross-AZ charges**: Traffic from a private subnet to the internet stays within the same AZ until it hits the NAT gateway, then exits through the internet gateway (which is Region-scoped and free of cross-AZ charges).
+* **Predictable throughput**: Each NAT gateway handles up to 100 Gbps independently.
 
 The single-NAT-Gateway pattern (one NAT GW, all AZs route to it) is acceptable only for development and test environments where cost matters more than availability.
 
@@ -203,7 +203,7 @@ AWS Local Zones are extensions of a parent Region that place compute, storage, a
 * A Local Zone subnet is part of the parent Region's VPC but exists in the Local Zone's physical location.
 * **Internet egress from a Local Zone uses the Local Zone's own internet gateway** — traffic doesn't backhaul to the parent Region for internet access.
 * **Traffic between a Local Zone and the parent Region traverses the AWS backbone**, not the public internet, but it does incur data transfer charges similar to cross-AZ traffic.
-* **Not all networking services are available in Local Zones**. NAT Gateway, Transit Gateway attachments, and VPC endpoints may not be available — check the [Local Zones features page](https://aws.amazon.com/about-aws/global-infrastructure/localzones/features/) for your specific Local Zone.
+* **Not all networking services are available in Local Zones**. NAT gateway, Transit Gateway attachments, and VPC endpoints may not be available — check the [Local Zones features page](https://aws.amazon.com/about-aws/global-infrastructure/localzones/features/) for your specific Local Zone.
 * **Subnet design**: Create dedicated subnets in the Local Zone within your existing VPC. Route tables for Local Zone subnets are independent of the parent Region's AZ route tables.
 
 ***Key insight:*** *Local Zones are for latency-sensitive workloads that need single-digit millisecond access from a specific metro area. They are not a replacement for multi-AZ deployment in the parent Region — they complement it by placing a latency-sensitive tier closer to users while the rest of the architecture stays in the parent Region.*
@@ -214,7 +214,7 @@ AWS Wavelength embeds compute and storage within telecommunications providers' 5
 
 * Wavelength Zones have their own carrier gateway for traffic to/from the carrier network — this traffic never touches the public internet.
 * Traffic between a Wavelength Zone and the parent Region uses the AWS backbone.
-* The networking service set is limited: no NAT Gateway, no VPC endpoints, no Transit Gateway attachments within the Wavelength Zone itself.
+* The networking service set is limited: no NAT gateway, no VPC endpoints, no Transit Gateway attachments within the Wavelength Zone itself.
 * Use Wavelength for ultra-low-latency mobile/edge workloads where the 5G network hop to a Region AZ would add unacceptable latency.
 
 ## Documentation

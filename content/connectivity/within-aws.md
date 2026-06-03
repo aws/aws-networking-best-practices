@@ -760,7 +760,7 @@ Cloud WAN peers with existing Transit Gateways, so adoption is incremental rathe
 
     ---
 
-    Route table entries that direct traffic to Amazon S3 or Amazon DynamoDB through the AWS network without an ENI. Free to create, and they eliminate NAT Gateway data processing charges for those services.
+    Route table entries that direct traffic to Amazon S3 or Amazon DynamoDB through the AWS network without an ENI. Free to create, and they eliminate NAT gateway data processing charges for those services.
 
 *   :material-server-network: **Endpoint services**
 
@@ -809,11 +809,11 @@ For new HTTP/HTTPS/gRPC service-to-service communication, VPC Lattice services p
 
 #### Always deploy gateway endpoints for Amazon S3 and DynamoDB
 
-Gateway endpoints are free to create and use. Deploy them in every VPC that accesses S3 or DynamoDB, regardless of size or environment. The route table entry directs traffic through the AWS network, eliminating NAT Gateway data processing charges for these high-traffic services. There is no downside to enabling them.
+Gateway endpoints are free to create and use. Deploy them in every VPC that accesses S3 or DynamoDB, regardless of size or environment. The route table entry directs traffic through the AWS network, eliminating NAT gateway data processing charges for these high-traffic services. There is no downside to enabling them.
 
 #### Use Interface Endpoints for frequently accessed AWS services
 
-Reaching AWS APIs through a NAT Gateway is a pattern to avoid: you pay NAT data processing for every call, and the path crosses the public endpoint instead of your private network. Use interface endpoints for services your workloads call routinely (STS, KMS, ECR, Systems Manager, CloudWatch Logs) and enable private DNS so applications pick up the private path without code changes.
+Reaching AWS APIs through a NAT gateway is a pattern to avoid: you pay NAT data processing for every call, and the path crosses the public endpoint instead of your private network. Use interface endpoints for services your workloads call routinely (STS, KMS, ECR, Systems Manager, CloudWatch Logs) and enable private DNS so applications pick up the private path without code changes.
 
 The key design decision is **decentralized** (each VPC runs its own endpoints) vs **centralized** (a shared endpoint VPC that other VPCs reach via Transit Gateway, AWS Cloud WAN, or peering, with private DNS resolution shared for DNS resolution). Decentralized is the right default: endpoints are local to each VPC, there's no cross-VPC dependency, and the networking stays simple. Centralize only when many small VPCs make low-volume calls to the same services, so the per-VPC endpoint hourly cost dominates; for VPCs with meaningful traffic, inter-VPC data transfer usually cancels the savings.
 
@@ -829,8 +829,8 @@ Interface and gateway endpoints support resource-based policies that restrict wh
 
 AWS PrivateLink is relevant from day one in any AWS environment:
 
-* **Gateway endpoints for Amazon S3 and DynamoDB**: a baseline for every VPC. They're free and they eliminate NAT Gateway data processing for those services.
-* **Interface endpoints for AWS services**: as soon as you have private subnets that need to reach AWS APIs without NAT Gateway.
+* **Gateway endpoints for Amazon S3 and DynamoDB**: a baseline for every VPC. They're free and they eliminate NAT gateway data processing for those services.
+* **Interface endpoints for AWS services**: as soon as you have private subnets that need to reach AWS APIs without NAT gateway.
 * **Interface endpoints for third-party SaaS**: when a Marketplace provider exposes its service through PrivateLink and you want private access from your VPCs.
 * **Endpoint services (exposing your own services)**: when you need private access to a specific service for a known set of consumer accounts, the service is backed by an NLB or GWLB, and you need ENI-level integration in the consumer VPC.
 

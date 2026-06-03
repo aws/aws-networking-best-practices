@@ -117,7 +117,7 @@ Tags are metadata, but in AWS networking they're also the mechanism for cost all
 
 * **`Environment`** — `production`, `staging`, `development`. Gates automation behavior (e.g., don't auto-delete production resources).
 * **`Owner`** — The team responsible for the resource. Critical when a Transit Gateway attachment is consuming capacity and you need to know who to contact.
-* **`CostCenter`** — For billing allocation. Network resources (NAT Gateways, Transit Gateway attachments, VPC endpoints) generate significant cost that must be attributed.
+* **`CostCenter`** — For billing allocation. Network resources (NAT gateways, Transit Gateway attachments, VPC endpoints) generate significant cost that must be attributed.
 * **`ManagedBy`** — `cloudformation`, `terraform`, `cdk`, or `manual`. Identifies how the resource is managed and whether it's safe to modify.
 * **`Name`** — Descriptive and consistent. Use a naming convention like `{env}-{region}-{purpose}-{type}` (e.g., `prod-use1-shared-tgw`).
 
@@ -131,7 +131,7 @@ Tags are metadata, but in AWS networking they're also the mechanism for cost all
 
 ## AWS Well-Architected Framework
 
-The Well-Architected Framework provides the architectural principles that networking decisions should align with. Two pillars are directly relevant to network architecture: **Security** and **Reliability**. A third — **Cost Optimization** — becomes critical once you're running Transit Gateway, NAT Gateways, and VPC endpoints at scale.
+The Well-Architected Framework provides the architectural principles that networking decisions should align with. Two pillars are directly relevant to network architecture: **Security** and **Reliability**. A third — **Cost Optimization** — becomes critical once you're running Transit Gateway, NAT gateways, and VPC endpoints at scale.
 
 **Security Pillar — what applies to networking:**
 
@@ -141,14 +141,14 @@ The Well-Architected Framework provides the architectural principles that networ
 
 **Reliability Pillar — what applies to networking:**
 
-* **Multi-AZ by default** — Every networking component (NAT Gateway, Network Firewall endpoints, load balancers) should be deployed across multiple Availability Zones. Single-AZ networking is a single point of failure for everything above it.
+* **Multi-AZ by default** — Every networking component (NAT gateway, Network Firewall endpoints, load balancers) should be deployed across multiple Availability Zones. Single-AZ networking is a single point of failure for everything above it.
 * **Limit blast radius** — Use multiple VPCs and accounts to contain failures. A routing misconfiguration in one VPC should not propagate to others.
 * **Test failure modes** — Simulate AZ failure, Transit Gateway attachment loss, and DNS resolution failure. Know what breaks and how it recovers.
 
 **Cost Optimization Pillar — what applies to networking:**
 
-* **Understand data transfer pricing** — Cross-AZ, cross-Region, Transit Gateway processing, NAT Gateway processing, and VPC endpoint hourly charges all add up. Architect to minimize unnecessary data movement.
-* **Use VPC endpoints to avoid NAT costs** — Traffic to S3, DynamoDB, and other AWS services through VPC endpoints avoids NAT Gateway processing charges entirely.
+* **Understand data transfer pricing** — Cross-AZ, cross-Region, Transit Gateway processing, NAT gateway processing, and VPC endpoint hourly charges all add up. Architect to minimize unnecessary data movement.
+* **Use VPC endpoints to avoid NAT costs** — Traffic to S3, DynamoDB, and other AWS services through VPC endpoints avoids NAT gateway processing charges entirely.
 * **Right-size your connectivity** — Don't deploy Transit Gateway when VPC peering suffices for two VPCs. Don't deploy AWS Cloud WAN when a single-Region Transit Gateway covers your topology.
 
 ***Key insight:*** *Well-Architected is not a checklist to complete after building — it's a set of principles to apply during design. Review the Security and Reliability pillars before you draw your first network diagram, not after.*

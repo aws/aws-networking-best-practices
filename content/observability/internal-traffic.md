@@ -98,7 +98,7 @@ graph TB
 
     ---
 
-    Real-time network metrics (NetworkIn/Out, NAT Gateway bytes, Transit Gateway bytes) and interactive log querying for Flow Logs delivered to CloudWatch Logs.
+    Real-time network metrics (NetworkIn/Out, NAT gateway bytes, Transit Gateway bytes) and interactive log querying for Flow Logs delivered to CloudWatch Logs.
 
 </div>
 
@@ -122,7 +122,7 @@ The default Flow Log format captures only 14 fields. The custom format supports 
 | --- | --- |
 | `traffic-path` | Identifies the path traffic took (IGW, VGW, Transit Gateway, VPC Peering, etc.) — critical for cost attribution |
 | `flow-direction` | Distinguishes ingress from egress at the ENI level |
-| `pkt-src-addr` / `pkt-dst-addr` | Original source/destination before NAT translation — essential when traffic traverses NAT Gateways |
+| `pkt-src-addr` / `pkt-dst-addr` | Original source/destination before NAT translation — essential when traffic traverses NAT gateways |
 | `tcp-flags` | Identifies SYN-only flows (connection attempts), RST (rejected connections), and FIN (clean closures) |
 | `sublocation-type` / `sublocation-id` | Identifies the specific wavelength zone or local zone |
 | `type` | IPv4 or IPv6 — use this to filter and analyze IPv6 traffic patterns |
@@ -410,8 +410,8 @@ However, Transit Gateway Flow Logs only capture traffic that *crosses* the Trans
 
 ## Related Observability Pages
 
-* **[External Traffic Monitoring](external-traffic.md)** — Covers visibility into traffic between your AWS resources and the internet, including NAT Gateway logs, ALB access logs, and CloudFront logs.
-* **[AWS Services Monitoring](service-monitoring.md)** — Covers health and performance monitoring of the networking services themselves (Transit Gateway metrics, NAT Gateway CloudWatch metrics, VPC endpoint metrics).
+* **[External Traffic Monitoring](external-traffic.md)** — Covers visibility into traffic between your AWS resources and the internet, including NAT gateway logs, ALB access logs, and CloudFront logs.
+* **[AWS Services Monitoring](service-monitoring.md)** — Covers health and performance monitoring of the networking services themselves (Transit Gateway metrics, NAT gateway CloudWatch metrics, VPC endpoint metrics).
 * **[Notifications](notifications.md)** — Covers alerting and notification patterns built on top of the monitoring data described here.
 
 **Relationship to Foundation:**

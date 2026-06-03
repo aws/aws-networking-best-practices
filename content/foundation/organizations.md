@@ -120,12 +120,12 @@ A dedicated networking account hosts shared connectivity infrastructure. This is
 * AWS Transit Gateway or AWS Cloud WAN core network
 * AWS Direct Connect connections and gateways
 * Route 53 Resolver endpoints and forwarding rules
-* Centralized NAT Gateways or egress VPCs (if using centralized egress)
+* Centralized NAT gateways or egress VPCs (if using centralized egress)
 * Network Firewall inspection VPCs
 * IPAM administrator delegation (including IPv6 pool management)
 * VPN connections and Customer Gateways
 
-**Cost visibility note:** The networking account concentrates costs that scale with the number of consuming accounts: Transit Gateway attachment hours ($0.05/hr per attachment), Cloud WAN attachment hours, data processing charges per GB through Transit Gateway or Cloud WAN, and NAT Gateway hourly + per-GB charges for centralized egress. Use Organizations consolidated billing with cost allocation tags to attribute these shared costs back to the workload accounts that generate the traffic. Without this attribution, the networking account's bill grows opaquely as the organization scales.
+**Cost visibility note:** The networking account concentrates costs that scale with the number of consuming accounts: Transit Gateway attachment hours ($0.05/hr per attachment), Cloud WAN attachment hours, data processing charges per GB through Transit Gateway or Cloud WAN, and NAT gateway hourly + per-GB charges for centralized egress. Use Organizations consolidated billing with cost allocation tags to attribute these shared costs back to the workload accounts that generate the traffic. Without this attribution, the networking account's bill grows opaquely as the organization scales.
 
 **What does NOT belong in the networking account:**
 
@@ -199,7 +199,7 @@ Define tag policies that enforce:
 
 * Allowed values for network segment tags (e.g., `network-segment` must be one of `production`, `development`, `shared-services`, `pci`)
 * Consistent environment naming across all accounts
-* Required cost allocation tags on network resources (NAT Gateway, Transit Gateway attachments, VPN connections)
+* Required cost allocation tags on network resources (NAT gateway, Transit Gateway attachments, VPN connections)
 
 ### Implement a network account vending pattern
 

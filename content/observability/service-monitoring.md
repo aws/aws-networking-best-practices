@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This section assumes familiarity with [Connectivity Within AWS](../connectivity/within-aws.md), [Load Balancing](../application-networking/load-balancing.md), and [Hybrid & Multi-Cloud](../connectivity/hybrid-multicloud.md). Review those topics first if you're new to AWS networking fundamentals.
 
-Monitoring network traffic (covered in [Internal Traffic](internal-traffic.md) and [External Traffic](external-traffic.md)) tells you what's flowing through your network. Monitoring the networking *services themselves* tells you whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a NAT Gateway exhausting its port allocation, or a Direct Connect connection flapping between states — these are service-level failures that traffic monitoring alone won't catch until users are already affected.
+Monitoring network traffic (covered in [Internal Traffic](internal-traffic.md) and [External Traffic](external-traffic.md)) tells you what's flowing through your network. Monitoring the networking *services themselves* tells you whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a NAT gateway exhausting its port allocation, or a Direct Connect connection flapping between states — these are service-level failures that traffic monitoring alone won't catch until users are already affected.
 
 This page focuses on the operational health of AWS networking services: the CloudWatch metrics that matter, the alarms you should configure from day one, and the automation patterns that turn monitoring signals into remediation actions. The goal is to detect degradation in the networking plane before it becomes an outage, and to respond automatically where possible.
 
@@ -13,7 +13,7 @@ Service monitoring in a multi-account AWS environment requires a deliberate arch
 graph TB
     subgraph Sources["Networking Service Metrics"]
         TGW["Transit Gateway"]
-        NAT["NAT Gateway"]
+        NAT["NAT gateway"]
         DX["Direct Connect"]
         VPN["Site-to-Site VPN"]
         ALB["Application LB"]
@@ -78,17 +78,17 @@ Not all CloudWatch metrics deserve an alarm. The table below identifies the metr
 | `BytesIn` / `BytesOut` | Baseline throughput. Sudden drops indicate connectivity loss; sustained growth signals capacity planning needs. | Anomaly detection band (2 standard deviations) |
 | `AttachmentCount` | Track attachment growth against the per-Region quota (default 5,000). | > 80% of quota |
 
-### NAT Gateway
+### NAT gateway
 
 | Metric | Why it matters | Alarm condition |
 | --- | --- | --- |
-| `ErrorPortAllocation` | The NAT Gateway has exhausted its 55,000 simultaneous connections to a single destination. Workloads will fail to establish new connections. | > 0 for 1 period |
-| `PacketsDropCount` | Packets dropped due to NAT Gateway processing limits. Indicates the gateway is overwhelmed. | > 0 sustained over 3 periods |
+| `ErrorPortAllocation` | The NAT gateway has exhausted its 55,000 simultaneous connections to a single destination. Workloads will fail to establish new connections. | > 0 for 1 period |
+| `PacketsDropCount` | Packets dropped due to NAT gateway processing limits. Indicates the gateway is overwhelmed. | > 0 sustained over 3 periods |
 | `ActiveConnectionCount` | Tracks connection table utilization. Useful for capacity planning and detecting connection leaks. | Anomaly detection or > 80% of expected baseline |
 | `BytesOutToDestination` | Data processing volume directly correlates with cost. Unexpected spikes indicate misconfigured routing or data exfiltration. | Anomaly detection band |
 | `ConnectionEstablishedCount` | Rate of new connections. Sudden spikes may indicate scanning or misconfigured retry logic. | Anomaly detection band |
 
-***Key insight:*** *`ErrorPortAllocation` is the single most critical NAT Gateway metric. When it fires, connections are already failing. Alarm on it immediately and consider multiple NAT Gateways or destination diversification.*
+***Key insight:*** *`ErrorPortAllocation` is the single most critical NAT gateway metric. When it fires, connections are already failing. Alarm on it immediately and consider multiple NAT gateways or destination diversification.*
 
 ### Direct Connect
 
@@ -167,12 +167,12 @@ For Direct Connect, monitor `ConnectionState` transitions. For VPN, monitor indi
 
 #### Use composite alarms to reduce noise
 
-Individual metric alarms generate noise. A brief spike in `PacketDropCountNoRoute` during a Transit Gateway route table update is expected. A sustained spike combined with increased `ErrorPortAllocation` on a NAT Gateway in the same path is a real problem.
+Individual metric alarms generate noise. A brief spike in `PacketDropCountNoRoute` during a Transit Gateway route table update is expected. A sustained spike combined with increased `ErrorPortAllocation` on a NAT gateway in the same path is a real problem.
 
 [Composite alarms](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html) combine multiple alarm states with AND/OR logic. Configure them to alert only when multiple signals confirm a problem:
 
 * Transit Gateway: `PacketDropCountBlackhole > 0` AND `BytesOut` anomaly (confirms traffic is affected, not just a transient routing update)
-* NAT Gateway: `ErrorPortAllocation > 0` AND `ActiveConnectionCount` above baseline (confirms the port exhaustion is real load, not a monitoring artifact)
+* NAT gateway: `ErrorPortAllocation > 0` AND `ActiveConnectionCount` above baseline (confirms the port exhaustion is real load, not a monitoring artifact)
 * Load Balancer: `UnHealthyHostCount > 0` AND `HealthyHostCount < minimum` (confirms actual capacity loss, not a single target cycling)
 
 ***Key insight:*** *Composite alarms are the difference between a monitoring system that gets ignored and one that gets acted on. Every alert that fires without requiring action trains your team to ignore alerts.*
@@ -181,7 +181,7 @@ Individual metric alarms generate noise. A brief spike in `PacketDropCountNoRout
 
 Static thresholds require constant tuning as traffic patterns change. CloudWatch [anomaly detection](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html) builds a model of expected behavior and alerts when metrics deviate from the learned pattern. This is particularly effective for:
 
-* `BytesIn`/`BytesOut` on Transit Gateway and NAT Gateway (traffic follows daily/weekly patterns)
+* `BytesIn`/`BytesOut` on Transit Gateway and NAT gateway (traffic follows daily/weekly patterns)
 * `RequestCount` on ALB and VPC Lattice (application traffic has predictable cycles)
 * `NewFlowCount` on NLB (connection rates correlate with business activity)
 
@@ -189,7 +189,7 @@ Anomaly detection costs the same as a standard alarm but adapts automatically to
 
 #### Monitor quotas before you hit them
 
-Every networking service has quotas. Hitting a quota silently — no new VPN connections, no additional Transit Gateway attachments, no more NAT Gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.
+Every networking service has quotas. Hitting a quota silently — no new VPN connections, no additional Transit Gateway attachments, no more NAT gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.
 
 Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html) integration with CloudWatch to alarm at 80% utilization:
 
@@ -197,7 +197,7 @@ Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/usergu
 | --- | --- | --- |
 | Transit Gateway | Attachments per TGW | 5,000 |
 | Transit Gateway | Routes per route table | 10,000 |
-| NAT Gateway | NAT Gateways per AZ | 5 |
+| NAT gateway | NAT gateways per AZ | 5 |
 | VPN | VPN connections per VGW/TGW | 10 / 20 |
 | Direct Connect | Virtual interfaces per connection | 50 |
 | ALB | Rules per ALB | 100 |
@@ -238,7 +238,7 @@ Each dashboard should show the last 3 hours by default with the ability to zoom 
 Several networking services report metrics that differ between IPv4 and IPv6 traffic paths. When running dual-stack:
 
 * **ALB/NLB**: Monitor `IPv6ProcessedBytes` and `IPv6RequestCount` separately from their IPv4 counterparts. A failure in the IPv6 path won't show up in aggregate metrics if IPv4 traffic dominates.
-* **NAT Gateway**: NAT64 metrics (`BytesOutToDestination` for IPv6-to-IPv4 translation) track a different failure mode than standard NAT. Monitor both paths.
+* **NAT gateway**: NAT64 metrics (`BytesOutToDestination` for IPv6-to-IPv4 translation) track a different failure mode than standard NAT. Monitor both paths.
 * **VPC Lattice**: Dual-stack service networks carry both IPv4 and IPv6 traffic. Monitor per-protocol error rates to catch IPv6-specific routing issues.
 
 #### Configure IPv6-specific health checks
@@ -249,9 +249,9 @@ For services that support IPv6 health checks (ALB, NLB), configure health checks
 
 #### Use metric math to reduce alarm count
 
-CloudWatch charges per alarm per month. Instead of creating individual alarms for every NAT Gateway or every Transit Gateway attachment, use [metric math](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html) to aggregate:
+CloudWatch charges per alarm per month. Instead of creating individual alarms for every NAT gateway or every Transit Gateway attachment, use [metric math](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html) to aggregate:
 
-* Sum `ErrorPortAllocation` across all NAT Gateways in a Region into a single alarm
+* Sum `ErrorPortAllocation` across all NAT gateways in a Region into a single alarm
 * Calculate the ratio of `UnHealthyHostCount` to total targets across all target groups
 * Compute `PacketDropCountBlackhole + PacketDropCountNoRoute` as a single "routing failures" metric
 
@@ -285,7 +285,7 @@ CloudWatch alarms transition states. [EventBridge](https://docs.aws.amazon.com/e
 | Trigger | Automated action |
 | --- | --- |
 | VPN `TunnelState` → 0 on both tunnels | Trigger failover to backup VPN or Direct Connect path |
-| NAT Gateway `ErrorPortAllocation` > 0 | Scale out by provisioning additional NAT Gateways and updating route tables |
+| NAT gateway `ErrorPortAllocation` > 0 | Scale out by provisioning additional NAT gateways and updating route tables |
 | ALB `HealthyHostCount` < minimum | Trigger Auto Scaling step scaling or notify on-call |
 | Direct Connect `ConnectionState` → down | Update Route 53 health checks to failover to VPN backup |
 | Transit Gateway `PacketDropCountBlackhole` > 0 | Run diagnostic Lambda to identify the affected route and notify |
@@ -296,7 +296,7 @@ CloudWatch alarms transition states. [EventBridge](https://docs.aws.amazon.com/e
 Beyond CloudWatch metrics, active health checking validates end-to-end path availability. Design synthetic checks that probe the networking layer:
 
 * **VPN path validation**: Lambda in the VPC sends ICMP or TCP probes through the VPN tunnel to an on-premises endpoint every 60 seconds. Failure triggers an alarm independent of the `TunnelState` metric (which only reflects IKE/IPsec state, not actual data-plane forwarding).
-* **NAT Gateway validation**: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates NAT Gateway or internet gateway issues.
+* **NAT gateway validation**: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates NAT gateway or internet gateway issues.
 * **Transit Gateway path validation**: Lambda in spoke VPC A sends a request to a known endpoint in spoke VPC B through the Transit Gateway. Validates routing, not just attachment state.
 * **Direct Connect path validation**: On-premises probe sends traffic to a known VPC endpoint. Validates the full path including BGP routing, not just the physical connection state.
 

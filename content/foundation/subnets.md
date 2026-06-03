@@ -60,15 +60,15 @@ graph TB
 
 The classic "public/private/data" three-tier model is a starting point, not a ceiling. Production networks that run firewalls, Transit Gateway, VPC endpoints, or container workloads benefit from additional tiers that isolate infrastructure concerns from application workloads.
 
-***Key insight:*** Each tier is defined by its route table and the class of resources it hosts — not by a label. A "public" subnet is simply one whose route table has a `0.0.0.0/0` route pointing at an Internet Gateway. A "private" subnet routes outbound traffic through a NAT Gateway or has no internet route at all. The subnet resource itself is identical in both cases.
+***Key insight:*** Each tier is defined by its route table and the class of resources it hosts — not by a label. A "public" subnet is simply one whose route table has a `0.0.0.0/0` route pointing at an internet gateway. A "private" subnet routes outbound traffic through a NAT gateway or has no internet route at all. The subnet resource itself is identical in both cases.
 
 ### Five-tier reference architecture
 
 | Tier | Purpose | Typical CIDR | Route table pattern |
 | --- | --- | --- | --- |
 | **Firewall** | AWS Network Firewall endpoints, GWLB endpoints | `/28` per AZ | Routes from IGW and other tiers for inspection |
-| **Public** | ALBs, NLBs, NAT Gateways, bastion hosts | `/24` per AZ | `0.0.0.0/0` → Internet Gateway (or firewall endpoint) |
-| **Private (application)** | EC2, ECS tasks, EKS pods, Lambda ENIs | `/23` or `/22` per AZ | `0.0.0.0/0` → NAT Gateway (or no internet route) |
+| **Public** | ALBs, NLBs, NAT gateways, bastion hosts | `/24` per AZ | `0.0.0.0/0` → internet gateway (or firewall endpoint) |
+| **Private (application)** | EC2, ECS tasks, EKS pods, Lambda ENIs | `/23` or `/22` per AZ | `0.0.0.0/0` → NAT gateway (or no internet route) |
 | **Data** | RDS, ElastiCache, OpenSearch, Redshift | `/24` per AZ | No internet route; only VPC-local and on-premises routes |
 | **Infrastructure / Transit** | TGW ENIs, VPC endpoint ENIs, Direct Connect VIF attachments | `/27` or `/28` per AZ | Service-specific routes only |
 
@@ -90,7 +90,7 @@ AWS reserves 5 addresses in every subnet (network, router, DNS, future use, broa
 | ECS tasks (awsvpc) | 1 ENI per task = 1 IP per running task |
 | EKS pods (VPC CNI) | 1 IP per pod by default; with prefix delegation, 1 `/28` prefix per slot |
 | Lambda (VPC-connected) | 1 ENI per unique security-group + subnet combination (shared across invocations via Hyperplane) |
-| NAT Gateway | 1 IP per gateway |
+| NAT gateway | 1 IP per gateway |
 | Network Firewall endpoint | 1 IP per AZ endpoint |
 | VPC endpoint (interface) | 1 ENI per AZ per endpoint |
 | Transit Gateway attachment | 1 ENI per AZ |
@@ -102,7 +102,7 @@ AWS reserves 5 addresses in every subnet (network, router, DNS, future use, broa
 | Tier | Recommended size | Rationale |
 | --- | --- | --- |
 | Firewall | `/28` (11 usable) | Network Firewall creates one endpoint per AZ; you rarely need more than a handful of IPs |
-| Public | `/24` (251 usable) | ALBs scale horizontally and consume IPs; NAT Gateways need room; `/24` gives comfortable headroom |
+| Public | `/24` (251 usable) | ALBs scale horizontally and consume IPs; NAT gateways need room; `/24` gives comfortable headroom |
 | Private (non-container) | `/24` (251 usable) | Standard EC2 and Lambda workloads fit comfortably |
 | Private (EKS/ECS) | `/22` to `/20` (1,019–4,091 usable) | Container workloads consume IPs aggressively; under-sizing here causes pod scheduling failures |
 | Data | `/24` (251 usable) | Database instances are few but long-lived; `/24` is generous and simple |
@@ -121,10 +121,10 @@ The most common route table pattern is one shared route table per tier, associat
 | Pattern | When to use |
 | --- | --- |
 | **One route table per tier** | Default. All public subnets share one route table; all private subnets share another. Simple, consistent, easy to audit. |
-| **One route table per AZ per tier** | When each AZ has its own NAT Gateway and you want AZ-local egress (the `0.0.0.0/0` route points to the NAT Gateway in the same AZ). This is the standard HA pattern for private subnets. |
+| **One route table per AZ per tier** | When each AZ has its own NAT gateway and you want AZ-local egress (the `0.0.0.0/0` route points to the NAT gateway in the same AZ). This is the standard HA pattern for private subnets. |
 | **One route table per subnet** | Rare. Use only when individual subnets need unique routing (e.g., a specific subnet routes to a firewall endpoint while its peers route directly). Adds operational complexity. |
 
-***Key insight:*** For private subnets with NAT Gateways, you need one route table per AZ (not per tier) because each AZ's route table points `0.0.0.0/0` at the NAT Gateway in that same AZ. This keeps egress traffic AZ-local, avoids cross-AZ data transfer charges, and ensures that a NAT Gateway failure only affects its own AZ.
+***Key insight:*** For private subnets with NAT gateways, you need one route table per AZ (not per tier) because each AZ's route table points `0.0.0.0/0` at the NAT gateway in that same AZ. This keeps egress traffic AZ-local, avoids cross-AZ data transfer charges, and ensures that a NAT gateway failure only affects its own AZ.
 
 ### The infrastructure subnet tier
 
@@ -250,7 +250,7 @@ Subnet design doesn't exist in isolation. Every connectivity and security servic
 
 | Combination | Subnet role | Design consideration |
 | --- | --- | --- |
-| **Subnets + NAT Gateway** | Public subnet hosts the NAT Gateway; private subnets route `0.0.0.0/0` through it | Deploy one NAT Gateway per AZ in the public tier. Each private subnet's route table points to its AZ-local NAT Gateway. Size public subnets to accommodate NAT Gateway IPs alongside ALBs. |
+| **Subnets + NAT gateway** | Public subnet hosts the NAT gateway; private subnets route `0.0.0.0/0` through it | Deploy one NAT gateway per AZ in the public tier. Each private subnet's route table points to its AZ-local NAT gateway. Size public subnets to accommodate NAT gateway IPs alongside ALBs. |
 | **Subnets + Transit Gateway** | Infrastructure subnet hosts TGW ENIs (one per AZ) | Use dedicated `/28` infrastructure subnets. TGW ENIs need their own route table that doesn't conflict with application routing. Appliance mode routes return traffic through the same AZ's ENI. |
 | **Subnets + Network Firewall** | Firewall subnet hosts firewall endpoints; other subnets route through them | Dedicated `/28` firewall subnets per AZ. The firewall subnet's route table points to the IGW; the IGW's edge route table points return traffic to the firewall endpoint. |
 | **Subnets + VPC Endpoints** | Infrastructure subnet hosts interface endpoint ENIs | Interface endpoints create one ENI per AZ per endpoint. Dedicated infrastructure subnets keep endpoint ENIs isolated from application IP pools. Gateway endpoints (S3, DynamoDB) don't consume subnet IPs — they're route table entries. |
@@ -323,7 +323,7 @@ Subnet design doesn't exist in isolation. Every connectivity and security servic
 **Connectivity pages:**
 
 * [Connectivity Within AWS](../connectivity/within-aws.md) — Transit Gateway and Cloud WAN patterns that depend on infrastructure subnet design
-* [Internet Connectivity](../connectivity/internet.md) — NAT Gateway, Internet Gateway, and firewall patterns that shape public and firewall subnet tiers
+* [Internet Connectivity](../connectivity/internet.md) — NAT gateway, internet gateway, and firewall patterns that shape public and firewall subnet tiers
 * [Hybrid and Multicloud](../connectivity/hybrid-multicloud.md) — Direct Connect and VPN attachments that land in infrastructure subnets
 
 **Application Networking pages:**

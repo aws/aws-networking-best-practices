@@ -17,7 +17,7 @@ graph TB
         SG["Security Group<br/>(outbound rules)"]
         DNS["Route 53 DNS Firewall<br/>(domain-based filtering)"]
         NFW["AWS Network Firewall<br/>(stateful inspection, IPS)"]
-        NAT["NAT Gateway / Egress-only IGW<br/>(egress path)"]
+        NAT["NAT gateway / Egress-only IGW<br/>(egress path)"]
         Internet["Internet"]
     end
 
@@ -36,7 +36,7 @@ graph TB
     style Internet fill:#059669,stroke:#047857,color:#fff
 ```
 
-Each layer adds a distinct capability: security groups enforce port and protocol restrictions at the instance level, DNS Firewall blocks resolution of unauthorized domains before a connection is ever attempted, Network Firewall inspects the actual traffic for protocol violations and known-bad signatures, and the egress path (NAT Gateway or egress-only IGW) shapes where traffic exits. Together, they form a pipeline where each layer catches what the previous one cannot.
+Each layer adds a distinct capability: security groups enforce port and protocol restrictions at the instance level, DNS Firewall blocks resolution of unauthorized domains before a connection is ever attempted, Network Firewall inspects the actual traffic for protocol violations and known-bad signatures, and the egress path (NAT gateway or egress-only IGW) shapes where traffic exits. Together, they form a pipeline where each layer catches what the previous one cannot.
 
 ## Key capabilities
 
@@ -114,7 +114,7 @@ Network Firewall sits in the data path and inspects actual traffic. It can filte
 
 ### Layer 4: VPC Endpoints (path elimination)
 
-VPC endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to S3, DynamoDB, and other AWS services via VPC endpoints never traverses a NAT Gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no NAT processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.
+VPC endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to S3, DynamoDB, and other AWS services via VPC endpoints never traverses a NAT gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no NAT processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.
 
 ***Key insight:*** *The most secure outbound traffic is traffic that never reaches the internet. Deploy VPC endpoints for every AWS service your workloads use before tuning your egress filters.*
 
@@ -208,7 +208,7 @@ Firewall Manager's priority ordering makes this layering work: central rules eva
 
 #### Apply security group outbound rules for IPv6 traffic
 
-The [egress-only internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html) allows outbound IPv6 traffic and blocks unsolicited inbound — it is the IPv6 equivalent of a NAT Gateway's one-way behavior. But it does not filter outbound traffic. Security groups remain the first control: restrict outbound IPv6 rules to the ports and protocols the workload actually needs, just as you do for IPv4.
+The [egress-only internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html) allows outbound IPv6 traffic and blocks unsolicited inbound — it is the IPv6 equivalent of a NAT gateway's one-way behavior. But it does not filter outbound traffic. Security groups remain the first control: restrict outbound IPv6 rules to the ports and protocols the workload actually needs, just as you do for IPv4.
 
 A common mistake is leaving the default `0.0.0.0/0` and `::/0` outbound rules in place. Remove the default allow-all outbound rule and replace it with explicit rules for the workload's actual egress requirements.
 
@@ -221,7 +221,7 @@ DNS Firewall operates at the resolution layer and is protocol-agnostic — it bl
 AWS does not offer a managed NAT for IPv6. IPv6 egress is always decentralized (per-VPC egress-only internet gateway) and cannot be centralized through a shared egress VPC the way IPv4 can. This means:
 
 * IPv6 egress inspection must happen per-VPC (Network Firewall endpoints in each VPC) or at the DNS layer (DNS Firewall, which is centrally managed regardless of egress topology).
-* There is no IPv6 equivalent of routing all egress through a centralized NAT Gateway for inspection.
+* There is no IPv6 equivalent of routing all egress through a centralized NAT gateway for inspection.
 * For organizations that require a single physical inspection point, this is a factor in IPv6 adoption planning.
 
 ***Key insight:*** *IPv6 egress security relies on security groups and DNS Firewall as the primary controls. The egress-only IGW provides directionality (outbound-only) but not filtering — your security posture must not depend on it alone.*
@@ -237,13 +237,13 @@ DNS Firewall costs fractions of a cent per million queries. Network Firewall cha
 | **Security groups** | Free | None |
 | **Route 53 DNS Firewall** | Per million queries processed | Query volume (typically negligible) |
 | **AWS Network Firewall** | Per endpoint-hour + per GB processed | Traffic volume through firewall endpoints |
-| **NAT Gateway** | Per hour + per GB processed | All IPv4 egress traffic volume |
+| **NAT gateway** | Per hour + per GB processed | All IPv4 egress traffic volume |
 | **VPC Endpoints (interface)** | Per hour + per GB processed | AWS API call volume |
 | **VPC Endpoints (gateway)** | Free | None |
 
-#### Use VPC endpoints to reduce NAT Gateway processing charges
+#### Use VPC endpoints to reduce NAT gateway processing charges
 
-Every API call to S3, DynamoDB, or other AWS services that traverses a NAT Gateway incurs processing charges. Gateway endpoints for S3 and DynamoDB are free and remove that traffic from the NAT path entirely. Interface endpoints for high-traffic services (ECR, CloudWatch Logs, STS, KMS) often pay for themselves in avoided NAT charges within days.
+Every API call to S3, DynamoDB, or other AWS services that traverses a NAT gateway incurs processing charges. Gateway endpoints for S3 and DynamoDB are free and remove that traffic from the NAT path entirely. Interface endpoints for high-traffic services (ECR, CloudWatch Logs, STS, KMS) often pay for themselves in avoided NAT charges within days.
 
 #### Right-size Network Firewall deployment
 
@@ -293,7 +293,7 @@ Network Firewall is **not the right choice** when:
 **VPC Endpoints** are the right choice when:
 
 * Workloads call AWS services (always — deploy endpoints for services in use)
-* You want to reduce NAT Gateway processing costs
+* You want to reduce NAT gateway processing costs
 * Security policy requires AWS API traffic to stay off the internet path
 
 **AWS Network Firewall Proxy (preview)** is the right choice when:
@@ -308,7 +308,7 @@ Network Firewall is **not the right choice** when:
 | --- | --- | --- |
 | **DNS Firewall + VPC Endpoints** | Domain-based blocking for internet-bound traffic | Path elimination for AWS service traffic (never hits DNS Firewall for endpoint-resolved names) |
 | **DNS Firewall + Network Firewall** | First-pass domain filtering at DNS resolution (cheap, fast) | Second-pass inspection of actual traffic (catches hardcoded IPs, IPS signatures, protocol violations) |
-| **Network Firewall + NAT Gateway** | Stateful inspection before traffic exits | Address translation and egress path for IPv4 |
+| **Network Firewall + NAT gateway** | Stateful inspection before traffic exits | Address translation and egress path for IPv4 |
 | **Security Groups + DNS Firewall** | Port/protocol restriction at the ENI | Domain-based restriction at DNS resolution |
 | **Firewall Manager + DNS Firewall** | Centralized policy definition and automatic deployment | Per-VPC DNS query filtering |
 | **Firewall Manager + Network Firewall** | Centralized rule group management across accounts | Per-VPC or centralized-VPC traffic inspection |
@@ -355,7 +355,7 @@ The [Internet Connectivity](../connectivity/internet.md) page covers the archite
 
     ---
 
-    Centralized security policy management across AWS Organizations for WAF, Network Firewall, DNS Firewall, and security groups.
+    Centralized security policy management across AWS Organizations for AWS WAF, Network Firewall, DNS Firewall, and security groups.
 
     [:octicons-arrow-right-24: Firewall Manager documentation](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html)
 
@@ -367,13 +367,13 @@ The [Internet Connectivity](../connectivity/internet.md) page covers the archite
 
     [:octicons-arrow-right-24: PrivateLink documentation](https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html)
 
-*   :material-currency-usd: **NAT Gateway pricing**
+*   :material-currency-usd: **NAT gateway pricing**
 
     ---
 
     Per-hour and per-GB processing charges that drive the cost case for VPC endpoints and DNS Firewall as first-line controls.
 
-    [:octicons-arrow-right-24: NAT Gateway pricing](https://aws.amazon.com/vpc/pricing/)
+    [:octicons-arrow-right-24: NAT gateway pricing](https://aws.amazon.com/vpc/pricing/)
 
 *   :material-post: **AWS Network Firewall Proxy (preview)**
 
@@ -394,10 +394,10 @@ The [Internet Connectivity](../connectivity/internet.md) page covers the archite
 
 **Relationship to Connectivity:**
 
-* **[Internet Connectivity](../connectivity/internet.md)**: Covers the architectural decision of centralized vs. decentralized egress, NAT Gateway modes, and IPv6 egress paths. This page layers security controls on top of those connectivity patterns.
+* **[Internet Connectivity](../connectivity/internet.md)**: Covers the architectural decision of centralized vs. decentralized egress, NAT gateway modes, and IPv6 egress paths. This page layers security controls on top of those connectivity patterns.
 * **[Within AWS Connectivity](../connectivity/within-aws.md)**: Transit Gateway and Cloud WAN are the transit layer that enables centralized egress inspection when that pattern is chosen.
 
 **Relationship to Foundation:**
 
 * **[Amazon VPC](../foundation/vpc.md)**: VPCs are the boundary within which outbound controls operate. Security groups, route tables, and VPC endpoints are all VPC-level constructs.
-* **[Subnets](../foundation/subnets.md)**: Subnet design determines where NAT Gateways, Network Firewall endpoints, and egress-only IGWs are placed.
+* **[Subnets](../foundation/subnets.md)**: Subnet design determines where NAT gateways, Network Firewall endpoints, and egress-only IGWs are placed.

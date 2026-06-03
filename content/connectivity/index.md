@@ -14,7 +14,7 @@ The connectivity patterns you choose shape cost, latency, security boundaries, a
 *   **Egress: IPv6 vs IPv4** — IPv6 egress is decentralized by design (egress-only internet gateway per VPC); IPv4 egress is a genuine trade-off between decentralized and centralized patterns
 *   **Edge services** — Amazon CloudFront, AWS Global Accelerator, and AWS WAF provide centrally-managed protection regardless of ingress pattern
 
-***Key insight:*** *For ingress, the AWS edge (CloudFront, WAF, per-VPC firewall endpoints) effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress VPC.*
+***Key insight:*** *For ingress, the AWS edge (CloudFront, AWS WAF, per-VPC firewall endpoints) effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress VPC.*
 
 ## 2. Connectivity Within AWS
 
@@ -56,7 +56,7 @@ The connectivity patterns you choose shape cost, latency, security boundaries, a
 
     ---
 
-    Ingress and egress patterns, decentralized vs centralized architectures, edge services, NAT Gateway, and egress filtering.
+    Ingress and egress patterns, decentralized vs centralized architectures, edge services, NAT gateway, and egress filtering.
 
     [:octicons-arrow-right-24: Internet Connectivity](internet.md)
 
