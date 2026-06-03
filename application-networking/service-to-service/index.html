@@ -2838,32 +2838,32 @@
 <tr>
 <td><strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</strong></td>
 <td>No hourly charge for the service network or service</td>
-<td>$0.025/GB data processed</td>
+<td>Per-GB data processed (<a href="https://aws.amazon.com/vpc/lattice/pricing/">Lattice pricing</a>)</td>
 <td>Request volume and payload size</td>
 </tr>
 <tr>
 <td><strong>AWS PrivateLink endpoint services</strong></td>
-<td>$0.01/hr per <abbr title="Availability Zone">AZ</abbr> per interface endpoint (~$7.20/month per <abbr title="Availability Zone">AZ</abbr>)</td>
-<td>$0.01/GB data processed</td>
+<td>Per-<abbr title="Availability Zone">AZ</abbr> per-endpoint-hour charge</td>
+<td>Per-GB data processed (<a href="https://aws.amazon.com/privatelink/pricing/">PrivateLink pricing</a>)</td>
 <td>Number of consumer VPCs × AZs, plus traffic volume</td>
 </tr>
 <tr>
 <td><strong>Transit Gateway + internal <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr></strong></td>
-<td>$0.05/hr per <abbr title="Transit Gateway">TGW</abbr> attachment (~$36/month per <abbr title="Virtual Private Cloud">VPC</abbr>)</td>
-<td>$0.02/GB <abbr title="Transit Gateway">TGW</abbr> data processing</td>
+<td>Per-attachment-hour charge (<a href="https://aws.amazon.com/transit-gateway/pricing/"><abbr title="Transit Gateway">TGW</abbr> pricing</a>)</td>
+<td>Per-GB <abbr title="Transit Gateway">TGW</abbr> data processing</td>
 <td>Number of attached VPCs, plus all traffic through <abbr title="Transit Gateway">TGW</abbr> (not just service traffic)</td>
 </tr>
 <tr>
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Peering + internal <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr></strong></td>
 <td>Free (no hourly charge, no data processing)</td>
-<td>Standard cross-<abbr title="Availability Zone">AZ</abbr> charges only ($0.01/GB if cross-<abbr title="Availability Zone">AZ</abbr>)</td>
+<td>Standard cross-<abbr title="Availability Zone">AZ</abbr> per-GB charges only (if cross-<abbr title="Availability Zone">AZ</abbr>)</td>
 <td>Only cross-<abbr title="Availability Zone">AZ</abbr> traffic; same-<abbr title="Availability Zone">AZ</abbr> is free</td>
 </tr>
 <tr>
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice + <abbr title="Internet Protocol version 6">IPv6</abbr> (no <abbr title="Network Address Translation">NAT</abbr>)</strong></td>
 <td>No hourly charge</td>
-<td>$0.025/GB Lattice processing (no <abbr title="Network Address Translation">NAT</abbr> processing)</td>
-<td>Request volume; eliminates the $0.045/GB <abbr title="Network Address Translation">NAT</abbr> gateway charge on the consumer side</td>
+<td>Per-GB Lattice processing (no <abbr title="Network Address Translation">NAT</abbr> processing)</td>
+<td>Request volume; eliminates the <abbr title="Network Address Translation">NAT</abbr> gateway per-GB charge on the consumer side</td>
 </tr>
 </tbody>
 </table>
@@ -2959,7 +2959,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 20:42:03 UTC">June 3, 2026</span>
   </span>
 
     

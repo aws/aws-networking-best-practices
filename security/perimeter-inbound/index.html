@@ -2818,7 +2818,7 @@
 <p><strong><em>Key insight:</em></strong> <em>NACLs exist for one reason: to deny traffic that security groups cannot deny. Security groups are allow-only — they cannot block a specific IP that would otherwise be permitted by a broader rule. NACLs fill that gap. If you're writing allow rules in NACLs, you're using the wrong tool.</em></p>
 <h3 id="aws-waf">AWS <abbr title="Web Application Firewall">WAF</abbr><a class="headerlink" href="#aws-waf" title="Permanent link">&para;</a></h3>
 <h4 id="deploy-aws-waf-on-every-internet-facing-l7-endpoint">Deploy AWS <abbr title="Web Application Firewall">WAF</abbr> on every internet-facing L7 endpoint<a class="headerlink" href="#deploy-aws-waf-on-every-internet-facing-l7-endpoint" title="Permanent link">&para;</a></h4>
-<p>AWS <abbr title="Web Application Firewall">WAF</abbr> should be attached to every CloudFront distribution, public-facing <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway stage. The cost of a AWS <abbr title="Web Application Firewall">WAF</abbr> WebACL (starting at $5/month plus $0.60 per million requests) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.</p>
+<p>AWS <abbr title="Web Application Firewall">WAF</abbr> should be attached to every CloudFront distribution, public-facing <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway stage. The cost of a AWS <abbr title="Web Application Firewall">WAF</abbr> WebACL (per-WebACL-month plus per-million-requests — see <a href="https://aws.amazon.com/waf/pricing/">AWS <abbr title="Web Application Firewall">WAF</abbr> pricing</a>) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.</p>
 <h4 id="start-with-aws-managed-rule-groups-then-layer-custom-rules">Start with AWS Managed Rule Groups, then layer custom rules<a class="headerlink" href="#start-with-aws-managed-rule-groups-then-layer-custom-rules" title="Permanent link">&para;</a></h4>
 <p>AWS Managed Rules provide immediate coverage for common threats: the Core Rule Set (CRS) covers OWASP Top 10, the Known Bad Inputs rule group blocks common exploit patterns, and the IP Reputation list blocks traffic from known-malicious sources. These are maintained by AWS and updated automatically. Start with these as your baseline, monitor for false positives in count mode for 1-2 weeks, then switch to block mode.</p>
 <p>Custom rules layer on top for application-specific logic: rate limiting per IP or per session, geo-blocking for regions you don't serve, header validation for expected patterns, and request-size constraints that match your application's actual needs.</p>
@@ -2831,7 +2831,7 @@
 <h4 id="understand-what-shield-standard-gives-you-automatically">Understand what Shield Standard gives you automatically<a class="headerlink" href="#understand-what-shield-standard-gives-you-automatically" title="Permanent link">&para;</a></h4>
 <p>Shield Standard is enabled on every AWS account at no cost. It protects all public-facing endpoints (CloudFront, Route 53, Global Accelerator, <abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>, Elastic IPs) against common L3/L4 <abbr title="Distributed Denial of Service">DDoS</abbr> attacks — SYN floods, <abbr title="User Datagram Protocol">UDP</abbr> reflection, and <abbr title="Domain Name System">DNS</abbr> amplification. You do not need to configure anything. This baseline protection is why most AWS workloads never experience a successful volumetric <abbr title="Distributed Denial of Service">DDoS</abbr> attack.</p>
 <h4 id="upgrade-to-shield-advanced-for-business-critical-internet-facing-workloads">Upgrade to Shield Advanced for business-critical internet-facing workloads<a class="headerlink" href="#upgrade-to-shield-advanced-for-business-critical-internet-facing-workloads" title="Permanent link">&para;</a></h4>
-<p>Shield Advanced ($3,000/month per organization, plus data transfer fees during attacks) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS <abbr title="Distributed Denial of Service">DDoS</abbr> Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy AWS <abbr title="Web Application Firewall">WAF</abbr> rules on your behalf during an active incident.</p>
+<p>Shield Advanced (per-organization monthly subscription plus data transfer fees during attacks — see <a href="https://aws.amazon.com/shield/pricing/">Shield pricing</a>) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS <abbr title="Distributed Denial of Service">DDoS</abbr> Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy AWS <abbr title="Web Application Firewall">WAF</abbr> rules on your behalf during an active incident.</p>
 <p>Shield Advanced is justified when the cost of downtime exceeds the subscription cost — typically for revenue-generating web applications, financial services APIs, and SaaS platforms where minutes of unavailability have measurable business impact.</p>
 <h4 id="associate-shield-advanced-with-all-related-resources">Associate Shield Advanced with all related resources<a class="headerlink" href="#associate-shield-advanced-with-all-related-resources" title="Permanent link">&para;</a></h4>
 <p>Shield Advanced protection is per-resource. If your application uses CloudFront → <abbr title="Application Load Balancer">ALB</abbr> → <abbr title="Elastic Compute Cloud">EC2</abbr>, associate Shield Advanced with both the CloudFront distribution and the <abbr title="Application Load Balancer">ALB</abbr>. Protecting only CloudFront leaves the <abbr title="Application Load Balancer">ALB</abbr> exposed to direct attacks if its <abbr title="Domain Name System">DNS</abbr> name is discoverable. Use Firewall Manager to automatically associate Shield Advanced with new resources matching your criteria across all accounts.</p>
@@ -2898,7 +2898,7 @@
 <p>Firewall Manager supports two enforcement modes for security groups: <strong>audit</strong> (report non-compliant groups but don't change them) and <strong>auto-remediate</strong> (bring non-compliant groups into compliance automatically). For baseline rules (e.g., "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For AWS <abbr title="Web Application Firewall">WAF</abbr>, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.</p>
 <p>This creates a layered ownership model: the security team owns the baseline (managed through Firewall Manager), and application teams own workload-specific rules within the guardrails the baseline establishes.</p>
 <h4 id="account-for-firewall-manager-costs-in-your-security-budget">Account for Firewall Manager costs in your security budget<a class="headerlink" href="#account-for-firewall-manager-costs-in-your-security-budget" title="Permanent link">&para;</a></h4>
-<p>Firewall Manager charges per policy per Region ($100/month per policy per Region). If you have 5 policies across 4 Regions, that's $2,000/month for Firewall Manager alone, before the cost of the underlying services (AWS <abbr title="Web Application Firewall">WAF</abbr> WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.</p>
+<p>Firewall Manager charges per-policy per-Region (see <a href="https://aws.amazon.com/firewall-manager/pricing/">Firewall Manager pricing</a>). If you have 5 policies across 4 Regions, that compounds significantly for Firewall Manager alone, before the cost of the underlying services (AWS <abbr title="Web Application Firewall">WAF</abbr> WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.</p>
 <h3 id="ipv6-perimeter-considerations"><abbr title="Internet Protocol version 6">IPv6</abbr> perimeter considerations<a class="headerlink" href="#ipv6-perimeter-considerations" title="Permanent link">&para;</a></h3>
 <h4 id="treat-ipv6-security-as-a-separate-explicit-configuration-not-an-extension-of-ipv4">Treat <abbr title="Internet Protocol version 6">IPv6</abbr> security as a separate, explicit configuration — not an extension of <abbr title="Internet Protocol version 4">IPv4</abbr><a class="headerlink" href="#treat-ipv6-security-as-a-separate-explicit-configuration-not-an-extension-of-ipv4" title="Permanent link">&para;</a></h4>
 <p>The most dangerous <abbr title="Internet Protocol version 6">IPv6</abbr> security posture is accidental: a <abbr title="Virtual Private Cloud">VPC</abbr> is dual-stack, resources receive <abbr title="Internet Protocol version 6">IPv6</abbr> addresses, but security groups, NACLs, and firewall rules only cover <abbr title="Internet Protocol version 4">IPv4</abbr>. In this state, <abbr title="Internet Protocol version 6">IPv6</abbr> traffic bypasses every control you've configured. The fix is straightforward but requires discipline:</p>
@@ -3043,49 +3043,49 @@
 <tr>
 <td><strong>Security Groups</strong></td>
 <td>Free</td>
-<td>$0</td>
+<td>Free</td>
 <td>None needed — always use</td>
 </tr>
 <tr>
 <td><strong>Network ACLs</strong></td>
 <td>Free</td>
-<td>$0</td>
+<td>Free</td>
 <td>None needed — always use where appropriate</td>
 </tr>
 <tr>
 <td><strong>AWS <abbr title="Web Application Firewall">WAF</abbr></strong></td>
-<td>$5/WebACL + $1/rule + $0.60/million requests</td>
-<td>$50-500 for typical workloads</td>
+<td>Per-WebACL + per-rule + per-million-requests (<a href="https://aws.amazon.com/waf/pricing/">pricing</a>)</td>
+<td>Low-moderate for typical workloads</td>
 <td>Consolidate rules; use managed rule groups (flat fee) over many custom rules</td>
 </tr>
 <tr>
 <td><strong>AWS Shield Standard</strong></td>
 <td>Free (automatic)</td>
-<td>$0</td>
+<td>Free</td>
 <td>None needed — always active</td>
 </tr>
 <tr>
 <td><strong>AWS Shield Advanced</strong></td>
-<td>$3,000/month/org + data transfer during attacks</td>
-<td>$3,000+</td>
+<td>Per-organization monthly subscription + data transfer during attacks (<a href="https://aws.amazon.com/shield/pricing/">pricing</a>)</td>
+<td>Significant fixed cost</td>
 <td>Single subscription covers all accounts in the Organization</td>
 </tr>
 <tr>
 <td><strong>AWS Network Firewall</strong></td>
-<td>$0.395/endpoint/hour + $0.065/GB processed</td>
-<td>$300-2,000+ per <abbr title="Virtual Private Cloud">VPC</abbr></td>
+<td>Per-endpoint-hour + per-GB processed (<a href="https://aws.amazon.com/network-firewall/pricing/">pricing</a>)</td>
+<td>Moderate-high per <abbr title="Virtual Private Cloud">VPC</abbr></td>
 <td>Use stateless rules for high-volume simple filtering; minimize endpoints by using multi-<abbr title="Availability Zone">AZ</abbr> efficiently</td>
 </tr>
 <tr>
 <td><strong>Gateway Load Balancer</strong></td>
-<td>$0.0125/hour/endpoint + $0.004/GB processed + appliance costs</td>
-<td>$500-5,000+ per deployment</td>
+<td>Per-endpoint-hour + per-GB processed + appliance costs (<a href="https://aws.amazon.com/elasticloadbalancing/pricing/">pricing</a>)</td>
+<td>High per deployment</td>
 <td>Right-size appliance fleet; use auto-scaling groups for the target appliances</td>
 </tr>
 <tr>
 <td><strong>AWS Firewall Manager</strong></td>
-<td>$100/policy/Region</td>
-<td>$100-2,000 depending on policy count and Regions</td>
+<td>Per-policy per-Region (<a href="https://aws.amazon.com/firewall-manager/pricing/">pricing</a>)</td>
+<td>Scales with policy count and Regions</td>
 <td>Consolidate policies where possible; evaluate whether manual management is cheaper for small orgs</td>
 </tr>
 </tbody>
@@ -3173,7 +3173,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 20:42:03 UTC">June 3, 2026</span>
   </span>
 
     

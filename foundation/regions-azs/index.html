@@ -2521,9 +2521,9 @@
 <p>Amazon Application Recovery Controller's zonal shift removes an impaired <abbr title="Availability Zone">AZ</abbr> from load balancer <abbr title="Domain Name System">DNS</abbr> in seconds, without touching health checks or routing rules. Configure zonal autoshift for automatic activation when AWS detects an <abbr title="Availability Zone">AZ</abbr> impairment. This is the fastest path to <abbr title="Availability Zone">AZ</abbr> evacuation — faster than health check failures, faster than manual intervention.</p>
 <h3 id="cross-az-traffic-cost-management">Cross-<abbr title="Availability Zone">AZ</abbr> traffic cost management<a class="headerlink" href="#cross-az-traffic-cost-management" title="Permanent link">&para;</a></h3>
 <h4 id="understand-the-cost-model">Understand the cost model<a class="headerlink" href="#understand-the-cost-model" title="Permanent link">&para;</a></h4>
-<p>Cross-<abbr title="Availability Zone">AZ</abbr> data transfer within a Region is charged at $0.01/GB in each direction ($0.02/GB round-trip) in most Regions. This applies to both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic — dual-stack does not change the cross-<abbr title="Availability Zone">AZ</abbr> cost model. This sounds small, but at scale it dominates networking costs:</p>
+<p>Cross-<abbr title="Availability Zone">AZ</abbr> data transfer within a Region is charged per-GB in each direction (doubled for round-trip) in most Regions — see <a href="https://aws.amazon.com/vpc/pricing/"><abbr title="Virtual Private Cloud">VPC</abbr> pricing</a> for current rates. This applies to both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic — dual-stack does not change the cross-<abbr title="Availability Zone">AZ</abbr> cost model. The per-GB charge sounds small, but at scale it dominates networking costs:</p>
 <ul>
-<li>A service making 10,000 requests/second with 1 KB payloads across AZs generates ~1.7 TB/month of cross-<abbr title="Availability Zone">AZ</abbr> traffic — roughly $34/month for that single service pair.</li>
+<li>A service making 10,000 requests/second with 1 KB payloads across AZs generates ~1.7 TB/month of cross-<abbr title="Availability Zone">AZ</abbr> traffic — costs compound significantly at scale for that single service pair.</li>
 <li>A chatty microservices architecture with dozens of service-to-service calls can easily generate hundreds of TB/month in cross-<abbr title="Availability Zone">AZ</abbr> traffic.</li>
 </ul>
 <h4 id="minimize-cross-az-traffic-without-sacrificing-availability">Minimize cross-<abbr title="Availability Zone">AZ</abbr> traffic without sacrificing availability<a class="headerlink" href="#minimize-cross-az-traffic-without-sacrificing-availability" title="Permanent link">&para;</a></h4>
@@ -2678,7 +2678,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 20:42:03 UTC">June 3, 2026</span>
   </span>
 
     
