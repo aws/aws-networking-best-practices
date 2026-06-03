@@ -2586,10 +2586,10 @@
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="cidr-sizing-and-planning"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizing and planning<a class="headerlink" href="#cidr-sizing-and-planning" title="Permanent link">&para;</a></h3>
 <h4 id="start-with-16-for-production-vpcs-and-never-go-smaller-than-20">Start with /16 for production VPCs and never go smaller than /20<a class="headerlink" href="#start-with-16-for-production-vpcs-and-never-go-smaller-than-20" title="Permanent link">&para;</a></h4>
-<p>A <code>/16</code> gives you 65,536 addresses — enough to accommodate growth, multiple subnet tiers across all AZs, and services that consume IPs aggressively (EKS pods with <abbr title="Virtual Private Cloud">VPC</abbr> CNI, Lambda ENIs, ECS tasks in awsvpc mode). Starting smaller feels efficient but creates painful expansion scenarios later.</p>
-<p>The cost of a <code>/16</code> is address space consumption from your private range, not dollars. If you're using <a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a> with a well-planned top-level pool (e.g., <code>10.0.0.0/8</code>), you have 256 <code>/16</code> blocks available. That's enough for most organizations. If you're constrained on RFC 1918 space due to on-premises overlap, use <code>/20</code> as the minimum for production and plan secondary CIDRs from the start.</p>
+<p>A <code>/16</code> gives you 65,536 addresses — enough to accommodate growth, multiple subnet tiers across all Availability Zones, and services that consume IPs aggressively (EKS pods with <abbr title="Virtual Private Cloud">VPC</abbr> CNI, Lambda ENIs, ECS tasks in awsvpc mode). Starting smaller feels efficient but creates painful expansion scenarios later.</p>
+<p>The cost of a <code>/16</code> is address space consumption from your private range, not dollars. If you're using <a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a> with a well-planned top-level pool (for example, <code>10.0.0.0/8</code>), you have 256 <code>/16</code> blocks available. That's enough for most organizations. If you're constrained on RFC 1918 space due to on-premises overlap, use <code>/20</code> as the minimum for production and plan secondary CIDRs from the start.</p>
 <h4 id="use-secondary-cidrs-strategically-not-as-a-band-aid">Use secondary CIDRs strategically, not as a band-aid<a class="headerlink" href="#use-secondary-cidrs-strategically-not-as-a-band-aid" title="Permanent link">&para;</a></h4>
-<p>Secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks let you expand a <abbr title="Virtual Private Cloud">VPC</abbr>'s address space without recreating it. This is valuable for planned growth (adding a new subnet tier, supporting a new <abbr title="Availability Zone">AZ</abbr>) but should not become a pattern for fixing undersized initial allocations. Each secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> adds routing complexity — route tables, security groups, and NACLs must account for the additional ranges.</p>
+<p>Secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks let you expand a <abbr title="Virtual Private Cloud">VPC</abbr>'s address space without recreating it. This is valuable for planned growth (adding a new subnet tier, supporting a new Availability Zone) but should not become a pattern for fixing undersized initial allocations. Each secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> adds routing complexity — route tables, security groups, and NACLs must account for the additional ranges.</p>
 <p>The best use of secondary CIDRs is for non-RFC 1918 ranges (100.64.0.0/10 for EKS pod networking) or for adding <abbr title="Internet Protocol version 6">IPv6</abbr> alongside an existing <abbr title="Internet Protocol version 4">IPv4</abbr>-only <abbr title="Virtual Private Cloud">VPC</abbr>. Avoid accumulating secondary CIDRs because the primary was too small — that's a signal to create a new, properly-sized <abbr title="Virtual Private Cloud">VPC</abbr> and migrate.</p>
 <h4 id="reserve-cidr-space-for-future-vpcs-in-the-same-region">Reserve <abbr title="Classless Inter-Domain Routing">CIDR</abbr> space for future VPCs in the same Region<a class="headerlink" href="#reserve-cidr-space-for-future-vpcs-in-the-same-region" title="Permanent link">&para;</a></h4>
 <p>When allocating CIDRs, don't just plan for the current <abbr title="Virtual Private Cloud">VPC</abbr>. Reserve contiguous blocks for future VPCs in the same Region so that route summarization remains possible. If your production <abbr title="Virtual Private Cloud">VPC</abbr> is <code>10.1.0.0/16</code> and your staging <abbr title="Virtual Private Cloud">VPC</abbr> is <code>10.2.0.0/16</code>, you can advertise <code>10.1.0.0/15</code> as a summary route to on-premises. Random <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation across your <code>/8</code> makes summarization impossible and inflates route tables everywhere.</p>
@@ -2627,7 +2627,7 @@
 <h4 id="use-multiple-subnet-tiers-but-keep-the-number-manageable">Use multiple subnet tiers but keep the number manageable<a class="headerlink" href="#use-multiple-subnet-tiers-but-keep-the-number-manageable" title="Permanent link">&para;</a></h4>
 <p>The classic three-tier model (public, private, data) works for most workloads. Add tiers only when you have a genuine routing or access control requirement that differs from existing tiers. Common additions include a dedicated tier for Transit Gateway or Cloud WAN attachment ENIs, a tier for <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, or a tier for firewall endpoints. Avoid creating tiers for organizational reasons (one tier per team) — that's what separate VPCs are for.</p>
 <h2 id="when-to-use-custom-vpcs-vs-default-vpcs">When to use custom VPCs vs default VPCs<a class="headerlink" href="#when-to-use-custom-vpcs-vs-default-vpcs" title="Permanent link">&para;</a></h2>
-<p>The default <abbr title="Virtual Private Cloud">VPC</abbr> exists for one purpose: letting new AWS users launch resources without understanding networking. It is pre-configured with a <code>172.31.0.0/16</code> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, public subnets in every <abbr title="Availability Zone">AZ</abbr>, an internet gateway, and a route table that sends all traffic to the internet. This configuration is the opposite of what production workloads need.</p>
+<p>The default <abbr title="Virtual Private Cloud">VPC</abbr> exists for one purpose: letting new AWS users launch resources without understanding networking. It is pre-configured with a <code>172.31.0.0/16</code> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, public subnets in every Availability Zone, an internet gateway, and a route table that sends all traffic to the internet. This configuration is the opposite of what production workloads need.</p>
 <table>
 <thead>
 <tr>
@@ -2693,7 +2693,7 @@
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + Transit Gateway</strong></td>
 <td>Attachment ENIs in designated subnets, route table entries pointing to the <abbr title="Transit Gateway">TGW</abbr></td>
 <td>Regional hub-and-spoke routing between VPCs, <abbr title="Virtual Private Network">VPN</abbr>, and Direct Connect</td>
-<td>Dedicate a subnet tier for <abbr title="Transit Gateway">TGW</abbr> attachment ENIs. Size these subnets for the number of AZs (one ENI per <abbr title="Availability Zone">AZ</abbr>).</td>
+<td>Dedicate a subnet tier for <abbr title="Transit Gateway">TGW</abbr> attachment ENIs. Size these subnets for the number of Availability Zones (one ENI per Availability Zone).</td>
 </tr>
 <tr>
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + AWS Cloud WAN</strong></td>
@@ -2717,7 +2717,7 @@
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + AWS PrivateLink</strong></td>
 <td>Interface endpoints (ENIs) in designated subnets consuming services, or <abbr title="Network Load Balancer">NLB</abbr>-backed endpoint services exposing them</td>
 <td>Private access to AWS services and cross-account service exposure</td>
-<td>Size endpoint subnets for the number of endpoints you'll consume. Each interface endpoint creates one ENI per <abbr title="Availability Zone">AZ</abbr>.</td>
+<td>Size endpoint subnets for the number of endpoints you'll consume. Each interface endpoint creates one ENI per Availability Zone.</td>
 </tr>
 <tr>
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></td>
@@ -2741,7 +2741,7 @@
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Network Address Translation">NAT</abbr> gateway</strong></td>
 <td>The elastic network interface and elastic IP in a public subnet</td>
 <td>Outbound <abbr title="Internet Protocol version 4">IPv4</abbr> internet access for private subnets</td>
-<td>Place <abbr title="Network Address Translation">NAT</abbr> gateways in public subnets (one per <abbr title="Availability Zone">AZ</abbr> for resilience). Size the subnet to accommodate <abbr title="Network Address Translation">NAT</abbr> gateway ENIs and any future growth.</td>
+<td>Place <abbr title="Network Address Translation">NAT</abbr> gateways in public subnets (one per Availability Zone for resilience). Size the subnet to accommodate <abbr title="Network Address Translation">NAT</abbr> gateway ENIs and any future growth.</td>
 </tr>
 </tbody>
 </table>
@@ -2803,9 +2803,9 @@
 <p><strong>Relationship to other Foundation topics:</strong></p>
 <ul>
 <li><strong><a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></strong>: The <abbr title="Virtual Private Cloud">VPC</abbr>'s primary and secondary CIDRs come from your <abbr title="Classless Inter-Domain Routing">CIDR</abbr> plan. Poor <abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning at the <abbr title="Virtual Private Cloud">VPC</abbr> level cascades into routing conflicts, peering limitations, and summarization failures.</li>
-<li><strong><a href="../subnets/">Subnets</a></strong>: Subnets divide the <abbr title="Virtual Private Cloud">VPC</abbr>'s <abbr title="Classless Inter-Domain Routing">CIDR</abbr> across AZs and tiers. Subnet design is constrained by the <abbr title="Virtual Private Cloud">VPC</abbr>'s <abbr title="Classless Inter-Domain Routing">CIDR</abbr> size — an undersized <abbr title="Virtual Private Cloud">VPC</abbr> limits your subnet options.</li>
+<li><strong><a href="../subnets/">Subnets</a></strong>: Subnets divide the <abbr title="Virtual Private Cloud">VPC</abbr>'s <abbr title="Classless Inter-Domain Routing">CIDR</abbr> across Availability Zones and tiers. Subnet design is constrained by the <abbr title="Virtual Private Cloud">VPC</abbr>'s <abbr title="Classless Inter-Domain Routing">CIDR</abbr> size — an undersized <abbr title="Virtual Private Cloud">VPC</abbr> limits your subnet options.</li>
 <li><strong><a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a></strong>: <abbr title="IP Address Manager">IPAM</abbr> pools allocate CIDRs to VPCs automatically, preventing overlaps and enforcing organizational standards. Every <abbr title="Virtual Private Cloud">VPC</abbr> should get its <abbr title="Classless Inter-Domain Routing">CIDR</abbr> from an <abbr title="IP Address Manager">IPAM</abbr> pool, not from manual selection.</li>
-<li><strong><a href="../regions-azs/">Regions and Availability Zones</a></strong>: A <abbr title="Virtual Private Cloud">VPC</abbr> exists in exactly one Region and spans all its AZs. Your Region strategy determines how many VPCs you need and where.</li>
+<li><strong><a href="../regions-azs/">Regions and Availability Zones</a></strong>: A <abbr title="Virtual Private Cloud">VPC</abbr> exists in exactly one Region and spans all its Availability Zones. Your Region strategy determines how many VPCs you need and where.</li>
 <li><strong><a href="../organizations/">AWS Organizations</a></strong>: Organizations governs who can create VPCs (SCPs), how VPCs are shared (RAM), and how VPCs attach to connectivity services (Cloud WAN attachment policies).</li>
 </ul>
 <p><strong>Relationship to Connectivity:</strong></p>
@@ -2841,7 +2841,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

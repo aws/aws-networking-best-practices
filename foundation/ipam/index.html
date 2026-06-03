@@ -2850,7 +2850,7 @@
 <p>This structure enables route summarization at every level. Your on-premises network can route to <code>10.0.0.0/12</code> for all of us-east-1, rather than maintaining individual routes for every <abbr title="Virtual Private Cloud">VPC</abbr>. That summarization reduces route table size on your on-premises routers and simplifies firewall rules.</p>
 <h4 id="size-regional-pools-generously-address-space-is-not-a-scarce-resource">Size regional pools generously — address space is not a scarce resource<a class="headerlink" href="#size-regional-pools-generously-address-space-is-not-a-scarce-resource" title="Permanent link">&para;</a></h4>
 <p>The most common <abbr title="IP Address Manager">IPAM</abbr> mistake is creating regional pools that are too small. A <code>/16</code> regional pool gives you only 256 <code>/24</code> VPCs or 16 <code>/20</code> VPCs. That sounds like enough until you account for production, staging, development, and sandbox environments across dozens of accounts.</p>
-<p>Use <code>/12</code> for regional pools if your top-level pool is a <code>/8</code>. This gives each Region 16 <code>/16</code> blocks or 256 <code>/20</code> blocks — enough for years of growth. If you're constrained to a smaller top-level range (e.g., <code>10.0.0.0/10</code> because the rest is used on-premises), allocate at least a <code>/14</code> per Region.</p>
+<p>Use <code>/12</code> for regional pools if your top-level pool is a <code>/8</code>. This gives each Region 16 <code>/16</code> blocks or 256 <code>/20</code> blocks — enough for years of growth. If you're constrained to a smaller top-level range (for example, <code>10.0.0.0/10</code> because the rest is used on-premises), allocate at least a <code>/14</code> per Region.</p>
 <p>The cost of oversizing a pool is zero — unused address space in a pool costs nothing. The cost of undersizing is a pool restructuring that requires reallocating every <abbr title="Virtual Private Cloud">VPC</abbr> beneath it.</p>
 <h4 id="create-separate-pool-branches-for-production-and-non-production">Create separate pool branches for production and non-production<a class="headerlink" href="#create-separate-pool-branches-for-production-and-non-production" title="Permanent link">&para;</a></h4>
 <p>Production and non-production workloads should draw from different pool branches, not different allocations within the same pool. This separation enables:</p>
@@ -3192,7 +3192,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

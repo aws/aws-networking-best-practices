@@ -743,15 +743,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-infrastructure-subnet-tier" class="md-nav__link">
+  <a href="#infrastructure-subnet-tier" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The infrastructure subnet tier
+        Infrastructure subnet tier
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The infrastructure subnet tier">
+    <nav class="md-nav" aria-label="Infrastructure subnet tier">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -917,10 +917,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#use-a-consistent-naming-convention-that-encodes-tier-az-and-purpose" class="md-nav__link">
+  <a href="#use-a-consistent-naming-convention-that-encodes-tier-availability-zone-and-purpose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use a consistent naming convention that encodes tier, AZ, and purpose
+        Use a consistent naming convention that encodes tier, Availability Zone, and purpose
       
     </span>
   </a>
@@ -2112,15 +2112,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#the-infrastructure-subnet-tier" class="md-nav__link">
+  <a href="#infrastructure-subnet-tier" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The infrastructure subnet tier
+        Infrastructure subnet tier
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="The infrastructure subnet tier">
+    <nav class="md-nav" aria-label="Infrastructure subnet tier">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2286,10 +2286,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#use-a-consistent-naming-convention-that-encodes-tier-az-and-purpose" class="md-nav__link">
+  <a href="#use-a-consistent-naming-convention-that-encodes-tier-availability-zone-and-purpose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use a consistent naming convention that encodes tier, AZ, and purpose
+        Use a consistent naming convention that encodes tier, Availability Zone, and purpose
       
     </span>
   </a>
@@ -2518,31 +2518,31 @@
 <tr>
 <td><strong>Firewall</strong></td>
 <td>AWS Network Firewall endpoints, <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints</td>
-<td><code>/28</code> per <abbr title="Availability Zone">AZ</abbr></td>
+<td><code>/28</code> per Availability Zone</td>
 <td>Routes from IGW and other tiers for inspection</td>
 </tr>
 <tr>
 <td><strong>Public</strong></td>
 <td>ALBs, NLBs, <abbr title="Network Address Translation">NAT</abbr> gateways, bastion hosts</td>
-<td><code>/24</code> per <abbr title="Availability Zone">AZ</abbr></td>
+<td><code>/24</code> per Availability Zone</td>
 <td><code>0.0.0.0/0</code> → internet gateway (or firewall endpoint)</td>
 </tr>
 <tr>
 <td><strong>Private (application)</strong></td>
 <td><abbr title="Elastic Compute Cloud">EC2</abbr>, ECS tasks, EKS pods, Lambda ENIs</td>
-<td><code>/23</code> or <code>/22</code> per <abbr title="Availability Zone">AZ</abbr></td>
+<td><code>/23</code> or <code>/22</code> per Availability Zone</td>
 <td><code>0.0.0.0/0</code> → <abbr title="Network Address Translation">NAT</abbr> gateway (or no internet route)</td>
 </tr>
 <tr>
 <td><strong>Data</strong></td>
 <td><abbr title="Relational Database Service">RDS</abbr>, ElastiCache, OpenSearch, Redshift</td>
-<td><code>/24</code> per <abbr title="Availability Zone">AZ</abbr></td>
+<td><code>/24</code> per Availability Zone</td>
 <td>No internet route; only <abbr title="Virtual Private Cloud">VPC</abbr>-local and on-premises routes</td>
 </tr>
 <tr>
 <td><strong>Infrastructure / Transit</strong></td>
 <td><abbr title="Transit Gateway">TGW</abbr> ENIs, <abbr title="Virtual Private Cloud">VPC</abbr> endpoint ENIs, Direct Connect VIF attachments</td>
-<td><code>/27</code> or <code>/28</code> per <abbr title="Availability Zone">AZ</abbr></td>
+<td><code>/27</code> or <code>/28</code> per Availability Zone</td>
 <td>Service-specific routes only</td>
 </tr>
 </tbody>
@@ -2583,19 +2583,19 @@
 </tr>
 <tr>
 <td>Network Firewall endpoint</td>
-<td>1 IP per <abbr title="Availability Zone">AZ</abbr> endpoint</td>
+<td>1 IP per Availability Zone endpoint</td>
 </tr>
 <tr>
 <td><abbr title="Virtual Private Cloud">VPC</abbr> endpoint (interface)</td>
-<td>1 ENI per <abbr title="Availability Zone">AZ</abbr> per endpoint</td>
+<td>1 ENI per Availability Zone per endpoint</td>
 </tr>
 <tr>
 <td>Transit Gateway attachment</td>
-<td>1 ENI per <abbr title="Availability Zone">AZ</abbr></td>
+<td>1 ENI per Availability Zone</td>
 </tr>
 </tbody>
 </table>
-<p><strong><em>Key insight:</em></strong> EKS with the <abbr title="Virtual Private Cloud">VPC</abbr> CNI plugin is the most aggressive IP consumer in AWS. A single <code>m5.xlarge</code> node can host 58 pods, each consuming an IP from the subnet. A 20-node cluster in one <abbr title="Availability Zone">AZ</abbr> can consume 1,160 IPs — more than four <code>/24</code> subnets. If you run EKS, size private subnets at <code>/21</code> or <code>/20</code> per <abbr title="Availability Zone">AZ</abbr>, or enable prefix delegation to reduce consumption to one <code>/28</code> per ENI slot.</p>
+<p><strong><em>Key insight:</em></strong> EKS with the <abbr title="Virtual Private Cloud">VPC</abbr> CNI plugin is the most aggressive IP consumer in AWS. A single <code>m5.xlarge</code> node can host 58 pods, each consuming an IP from the subnet. A 20-node cluster in one Availability Zone can consume 1,160 IPs — more than four <code>/24</code> subnets. If you run EKS, size private subnets at <code>/21</code> or <code>/20</code> per Availability Zone, or enable prefix delegation to reduce consumption to one <code>/28</code> per ENI slot.</p>
 <h4 id="sizing-recommendations-by-tier">Sizing recommendations by tier<a class="headerlink" href="#sizing-recommendations-by-tier" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -2609,7 +2609,7 @@
 <tr>
 <td>Firewall</td>
 <td><code>/28</code> (11 usable)</td>
-<td>Network Firewall creates one endpoint per <abbr title="Availability Zone">AZ</abbr>; you rarely need more than a handful of IPs</td>
+<td>Network Firewall creates one endpoint per Availability Zone; you rarely need more than a handful of IPs</td>
 </tr>
 <tr>
 <td>Public</td>
@@ -2642,7 +2642,7 @@
 <p>If a subnet tier grows beyond its initial allocation, you cannot resize the subnet — you must create a new, larger subnet and migrate resources. To avoid this, use the <abbr title="Virtual Private Cloud">VPC</abbr>'s ability to add secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks. This lets you create additional subnets in the same tier from a different <abbr title="Classless Inter-Domain Routing">CIDR</abbr> range without disrupting existing workloads.</p>
 <h3 id="route-table-design">Route table design<a class="headerlink" href="#route-table-design" title="Permanent link">&para;</a></h3>
 <h4 id="one-route-table-per-tier-not-one-per-subnet">One route table per tier, not one per subnet<a class="headerlink" href="#one-route-table-per-tier-not-one-per-subnet" title="Permanent link">&para;</a></h4>
-<p>The most common route table pattern is one shared route table per tier, associated with all subnets in that tier across all AZs. This keeps routing policy consistent within a tier and reduces the number of route tables to manage.</p>
+<p>The most common route table pattern is one shared route table per tier, associated with all subnets in that tier across all Availability Zones. This keeps routing policy consistent within a tier and reduces the number of route tables to manage.</p>
 <table>
 <thead>
 <tr>
@@ -2656,17 +2656,17 @@
 <td>Default. All public subnets share one route table; all private subnets share another. Simple, consistent, easy to audit.</td>
 </tr>
 <tr>
-<td><strong>One route table per <abbr title="Availability Zone">AZ</abbr> per tier</strong></td>
-<td>When each <abbr title="Availability Zone">AZ</abbr> has its own <abbr title="Network Address Translation">NAT</abbr> gateway and you want <abbr title="Availability Zone">AZ</abbr>-local egress (the <code>0.0.0.0/0</code> route points to the <abbr title="Network Address Translation">NAT</abbr> gateway in the same <abbr title="Availability Zone">AZ</abbr>). This is the standard HA pattern for private subnets.</td>
+<td><strong>One route table per Availability Zone per tier</strong></td>
+<td>When each Availability Zone has its own <abbr title="Network Address Translation">NAT</abbr> gateway and you want <abbr title="Availability Zone">AZ</abbr>-local egress (the <code>0.0.0.0/0</code> route points to the <abbr title="Network Address Translation">NAT</abbr> gateway in the same Availability Zone). This is the standard HA pattern for private subnets.</td>
 </tr>
 <tr>
 <td><strong>One route table per subnet</strong></td>
-<td>Rare. Use only when individual subnets need unique routing (e.g., a specific subnet routes to a firewall endpoint while its peers route directly). Adds operational complexity.</td>
+<td>Rare. Use only when individual subnets need unique routing (for example, a specific subnet routes to a firewall endpoint while its peers route directly). Adds operational complexity.</td>
 </tr>
 </tbody>
 </table>
-<p><strong><em>Key insight:</em></strong> For private subnets with <abbr title="Network Address Translation">NAT</abbr> gateways, you need one route table per <abbr title="Availability Zone">AZ</abbr> (not per tier) because each <abbr title="Availability Zone">AZ</abbr>'s route table points <code>0.0.0.0/0</code> at the <abbr title="Network Address Translation">NAT</abbr> gateway in that same <abbr title="Availability Zone">AZ</abbr>. This keeps egress traffic <abbr title="Availability Zone">AZ</abbr>-local, avoids cross-<abbr title="Availability Zone">AZ</abbr> data transfer charges, and ensures that a <abbr title="Network Address Translation">NAT</abbr> gateway failure only affects its own <abbr title="Availability Zone">AZ</abbr>.</p>
-<h3 id="the-infrastructure-subnet-tier">The infrastructure subnet tier<a class="headerlink" href="#the-infrastructure-subnet-tier" title="Permanent link">&para;</a></h3>
+<p><strong><em>Key insight:</em></strong> For private subnets with <abbr title="Network Address Translation">NAT</abbr> gateways, you need one route table per Availability Zone (not per tier) because each Availability Zone's route table points <code>0.0.0.0/0</code> at the <abbr title="Network Address Translation">NAT</abbr> gateway in that same Availability Zone. This keeps egress traffic <abbr title="Availability Zone">AZ</abbr>-local, avoids cross-<abbr title="Availability Zone">AZ</abbr> data transfer charges, and ensures that a <abbr title="Network Address Translation">NAT</abbr> gateway failure only affects its own Availability Zone.</p>
+<h3 id="infrastructure-subnet-tier">Infrastructure subnet tier<a class="headerlink" href="#infrastructure-subnet-tier" title="Permanent link">&para;</a></h3>
 <h4 id="dedicate-subnets-for-network-service-enis">Dedicate subnets for network service ENIs<a class="headerlink" href="#dedicate-subnets-for-network-service-enis" title="Permanent link">&para;</a></h4>
 <p>Transit Gateway attachments, <abbr title="Virtual Private Cloud">VPC</abbr> interface endpoints, Network Firewall endpoints, and Direct Connect virtual interface attachments all place ENIs in your subnets. Mixing these with application workloads creates problems:</p>
 <ul>
@@ -2675,14 +2675,14 @@
 <li><strong>Security group sprawl.</strong> Infrastructure ENIs have different access patterns than application resources.</li>
 </ul>
 <p>Dedicated infrastructure subnets (small — <code>/27</code> or <code>/28</code>) solve all three. They have their own route tables, their own NACLs if needed, and their IP consumption is isolated and predictable.</p>
-<p><strong><em>Key insight:</em></strong> Transit Gateway attachments create one ENI per <abbr title="Availability Zone">AZ</abbr> in the subnets you specify. If you put <abbr title="Transit Gateway">TGW</abbr> ENIs in your application subnets, the <abbr title="Transit Gateway">TGW</abbr>'s route table entries and the subnet's route table interact in ways that are hard to reason about. A dedicated <code>/28</code> infrastructure subnet per <abbr title="Availability Zone">AZ</abbr> costs almost nothing in address space and eliminates an entire class of routing confusion.</p>
+<p><strong><em>Key insight:</em></strong> Transit Gateway attachments create one ENI per Availability Zone in the subnets you specify. If you put <abbr title="Transit Gateway">TGW</abbr> ENIs in your application subnets, the <abbr title="Transit Gateway">TGW</abbr>'s route table entries and the subnet's route table interact in ways that are hard to reason about. A dedicated <code>/28</code> infrastructure subnet per Availability Zone costs almost nothing in address space and eliminates an entire class of routing confusion.</p>
 <h3 id="network-acls">Network ACLs<a class="headerlink" href="#network-acls" title="Permanent link">&para;</a></h3>
 <h4 id="default-to-open-nacls-add-rules-only-for-specific-compliance-requirements">Default to open NACLs; add rules only for specific compliance requirements<a class="headerlink" href="#default-to-open-nacls-add-rules-only-for-specific-compliance-requirements" title="Permanent link">&para;</a></h4>
 <p>NACLs are stateless, operate at the subnet level, and apply to all traffic entering or leaving the subnet regardless of security groups. They are a blunt instrument compared to security groups, which are stateful and instance-level.</p>
 <p><strong>When NACLs add value:</strong></p>
 <ul>
 <li>Compliance frameworks (PCI-DSS, HIPAA) that require network-level deny rules independent of instance-level controls</li>
-<li>Blocking entire <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges at the subnet boundary (e.g., denying traffic from a known-bad range before it reaches any security group)</li>
+<li>Blocking entire <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges at the subnet boundary (for example, denying traffic from a known-bad range before it reaches any security group)</li>
 <li>Defense-in-depth for data-tier subnets where you want an explicit allowlist of source CIDRs regardless of what security groups permit</li>
 </ul>
 <p><strong>When NACLs add complexity without value:</strong></p>
@@ -2698,7 +2698,7 @@
 <p><strong>Use <abbr title="Classless Inter-Domain Routing">CIDR</abbr> reservations when:</strong></p>
 <ul>
 <li>Running EKS with prefix delegation — reserve a range for <code>/28</code> prefixes so that pod IPs come from a predictable block</li>
-<li>You need stable IP ranges for specific workloads (e.g., a block of IPs that on-premises firewalls allowlist)</li>
+<li>You need stable IP ranges for specific workloads (for example, a block of IPs that on-premises firewalls allowlist)</li>
 <li>Preventing IP conflicts between auto-assigned resources and manually assigned ENIs</li>
 </ul>
 <p><strong>Skip <abbr title="Classless Inter-Domain Routing">CIDR</abbr> reservations when:</strong></p>
@@ -2712,11 +2712,11 @@
 <p>Design implications:</p>
 <ul>
 <li><strong>No variable sizing.</strong> You cannot create a "small" <abbr title="Internet Protocol version 6">IPv6</abbr> subnet. Every subnet gets the same <code>/64</code> regardless of tier.</li>
-<li><strong>Subnet count is the constraint, not size.</strong> With 256 <code>/64</code>s available from a single <code>/56</code>, plan your tier and <abbr title="Availability Zone">AZ</abbr> layout to fit within that budget.</li>
+<li><strong>Subnet count is the constraint, not size.</strong> With 256 <code>/64</code>s available from a single <code>/56</code>, plan your tier and Availability Zone layout to fit within that budget.</li>
 <li><strong>Dual-stack subnets carry both an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> and an <abbr title="Internet Protocol version 6">IPv6</abbr> /64.</strong> Size the <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> for the workload; the <abbr title="Internet Protocol version 6">IPv6</abbr> side takes care of itself.</li>
 <li><strong><abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets</strong> eliminate <abbr title="Internet Protocol version 4">IPv4</abbr> entirely. Use these for workloads that don't need <abbr title="Internet Protocol version 4">IPv4</abbr> connectivity (internal microservices, batch processing) to simplify addressing and avoid <abbr title="Internet Protocol version 4">IPv4</abbr> exhaustion.</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> The <code>/56</code> per <abbr title="Virtual Private Cloud">VPC</abbr> gives you 256 subnets. If you run 3 AZs × 5 tiers = 15 subnets, you've used 15 of 256 — plenty of room. But if you're building a shared <abbr title="Virtual Private Cloud">VPC</abbr> with dozens of workload-specific subnets, track your <code>/64</code> allocation to avoid running out.</p>
+<p><strong><em>Key insight:</em></strong> The <code>/56</code> per <abbr title="Virtual Private Cloud">VPC</abbr> gives you 256 subnets. If you run 3 Availability Zones × 5 tiers = 15 subnets, you've used 15 of 256 — plenty of room. But if you're building a shared <abbr title="Virtual Private Cloud">VPC</abbr> with dozens of workload-specific subnets, track your <code>/64</code> allocation to avoid running out.</p>
 <h3 id="container-and-serverless-workload-considerations">Container and serverless workload considerations<a class="headerlink" href="#container-and-serverless-workload-considerations" title="Permanent link">&para;</a></h3>
 <h4 id="eks-plan-for-aggressive-ip-consumption">EKS: plan for aggressive IP consumption<a class="headerlink" href="#eks-plan-for-aggressive-ip-consumption" title="Permanent link">&para;</a></h4>
 <p>The Amazon <abbr title="Virtual Private Cloud">VPC</abbr> CNI plugin assigns a <abbr title="Virtual Private Cloud">VPC</abbr> IP address to every pod by default. On a <code>m5.xlarge</code> (4 ENIs × 15 IPs per ENI = 58 max pods), a fully packed node consumes 58 subnet IPs. Strategies to manage this:</p>
@@ -2727,14 +2727,14 @@
 </ul>
 <p>The worst-case scenario is an EKS cluster that auto-scales aggressively without prefix delegation in a <code>/24</code> subnet. A burst from 5 to 30 nodes can exhaust the subnet in minutes, causing pod scheduling failures that look like cluster issues but are actually subnet IP exhaustion. Monitor the <code>available IPs</code> CloudWatch metric on your subnets and alert well before exhaustion.</p>
 <h4 id="ecs-with-awsvpc-mode-one-eni-per-task">ECS with awsvpc mode: one ENI per task<a class="headerlink" href="#ecs-with-awsvpc-mode-one-eni-per-task" title="Permanent link">&para;</a></h4>
-<p>Every ECS task in <code>awsvpc</code> network mode gets its own ENI with a <abbr title="Virtual Private Cloud">VPC</abbr> IP. For high-density services (hundreds of tasks per <abbr title="Availability Zone">AZ</abbr>), size subnets accordingly. Unlike EKS, there's no prefix delegation equivalent for ECS — each task is one IP, period.</p>
-<p>For ECS services that scale to hundreds of tasks, calculate peak task count per <abbr title="Availability Zone">AZ</abbr> and add 20% headroom. A service running 200 tasks across 3 AZs needs approximately 67 IPs per <abbr title="Availability Zone">AZ</abbr> at steady state, but during deployments (rolling update with 200% max), you temporarily need double that. A <code>/24</code> handles this comfortably; a <code>/26</code> does not.</p>
+<p>Every ECS task in <code>awsvpc</code> network mode gets its own ENI with a <abbr title="Virtual Private Cloud">VPC</abbr> IP. For high-density services (hundreds of tasks per Availability Zone), size subnets accordingly. Unlike EKS, there's no prefix delegation equivalent for ECS — each task is one IP, period.</p>
+<p>For ECS services that scale to hundreds of tasks, calculate peak task count per Availability Zone and add 20% headroom. A service running 200 tasks across 3 Availability Zones needs approximately 67 IPs per Availability Zone at steady state, but during deployments (rolling update with 200% max), you temporarily need double that. A <code>/24</code> handles this comfortably; a <code>/26</code> does not.</p>
 <h4 id="lambda-in-vpc-hyperplane-eni-sharing">Lambda in <abbr title="Virtual Private Cloud">VPC</abbr>: Hyperplane ENI sharing<a class="headerlink" href="#lambda-in-vpc-hyperplane-eni-sharing" title="Permanent link">&para;</a></h4>
 <p><abbr title="Virtual Private Cloud">VPC</abbr>-connected Lambda functions use Hyperplane ENIs that are shared across invocations with the same security group and subnet combination. You don't need one IP per concurrent invocation. However, each unique (subnet, security group) pair creates at least one ENI. If you have many Lambda functions with different security groups in the same subnet, ENI consumption can add up.</p>
 <p><strong><em>Key insight:</em></strong> The common fear that "Lambda in <abbr title="Virtual Private Cloud">VPC</abbr> will exhaust my subnet" is outdated. Since the Hyperplane ENI model (2019), Lambda shares ENIs across invocations. The real consumption driver is the number of unique (subnet, security group) combinations, not concurrency. Consolidate Lambda functions onto shared security groups where access patterns allow it.</p>
 <h3 id="naming-and-tagging">Naming and tagging<a class="headerlink" href="#naming-and-tagging" title="Permanent link">&para;</a></h3>
-<h4 id="use-a-consistent-naming-convention-that-encodes-tier-az-and-purpose">Use a consistent naming convention that encodes tier, <abbr title="Availability Zone">AZ</abbr>, and purpose<a class="headerlink" href="#use-a-consistent-naming-convention-that-encodes-tier-az-and-purpose" title="Permanent link">&para;</a></h4>
-<p>Subnet names should be immediately parseable by both humans and automation. A pattern like <code>{env}-{tier}-{az}</code> (e.g., <code>prod-private-use1a</code>, <code>prod-infra-use1b</code>) lets you filter subnets in the console, write <abbr title="Identity and Access Management">IAM</abbr> policies with conditions on tags, and build IaC modules that select subnets by convention.</p>
+<h4 id="use-a-consistent-naming-convention-that-encodes-tier-availability-zone-and-purpose">Use a consistent naming convention that encodes tier, Availability Zone, and purpose<a class="headerlink" href="#use-a-consistent-naming-convention-that-encodes-tier-availability-zone-and-purpose" title="Permanent link">&para;</a></h4>
+<p>Subnet names should be immediately parseable by both humans and automation. A pattern like <code>{env}-{tier}-{az}</code> (for example, <code>prod-private-use1a</code>, <code>prod-infra-use1b</code>) lets you filter subnets in the console, write <abbr title="Identity and Access Management">IAM</abbr> policies with conditions on tags, and build IaC modules that select subnets by convention.</p>
 <p>Tag subnets with at minimum:</p>
 <ul>
 <li><code>Environment</code> (prod, staging, dev)</li>
@@ -2767,32 +2767,32 @@
 <tr>
 <td><strong>Subnets + <abbr title="Network Address Translation">NAT</abbr> gateway</strong></td>
 <td>Public subnet hosts the <abbr title="Network Address Translation">NAT</abbr> gateway; private subnets route <code>0.0.0.0/0</code> through it</td>
-<td>Deploy one <abbr title="Network Address Translation">NAT</abbr> gateway per <abbr title="Availability Zone">AZ</abbr> in the public tier. Each private subnet's route table points to its <abbr title="Availability Zone">AZ</abbr>-local <abbr title="Network Address Translation">NAT</abbr> gateway. Size public subnets to accommodate <abbr title="Network Address Translation">NAT</abbr> gateway IPs alongside ALBs.</td>
+<td>Deploy one <abbr title="Network Address Translation">NAT</abbr> gateway per Availability Zone in the public tier. Each private subnet's route table points to its <abbr title="Availability Zone">AZ</abbr>-local <abbr title="Network Address Translation">NAT</abbr> gateway. Size public subnets to accommodate <abbr title="Network Address Translation">NAT</abbr> gateway IPs alongside ALBs.</td>
 </tr>
 <tr>
 <td><strong>Subnets + Transit Gateway</strong></td>
-<td>Infrastructure subnet hosts <abbr title="Transit Gateway">TGW</abbr> ENIs (one per <abbr title="Availability Zone">AZ</abbr>)</td>
-<td>Use dedicated <code>/28</code> infrastructure subnets. <abbr title="Transit Gateway">TGW</abbr> ENIs need their own route table that doesn't conflict with application routing. Appliance mode routes return traffic through the same <abbr title="Availability Zone">AZ</abbr>'s ENI.</td>
+<td>Infrastructure subnet hosts <abbr title="Transit Gateway">TGW</abbr> ENIs (one per Availability Zone)</td>
+<td>Use dedicated <code>/28</code> infrastructure subnets. <abbr title="Transit Gateway">TGW</abbr> ENIs need their own route table that doesn't conflict with application routing. Appliance mode routes return traffic through the same Availability Zone's ENI.</td>
 </tr>
 <tr>
 <td><strong>Subnets + Network Firewall</strong></td>
 <td>Firewall subnet hosts firewall endpoints; other subnets route through them</td>
-<td>Dedicated <code>/28</code> firewall subnets per <abbr title="Availability Zone">AZ</abbr>. The firewall subnet's route table points to the IGW; the IGW's edge route table points return traffic to the firewall endpoint.</td>
+<td>Dedicated <code>/28</code> firewall subnets per Availability Zone. The firewall subnet's route table points to the IGW; the IGW's edge route table points return traffic to the firewall endpoint.</td>
 </tr>
 <tr>
 <td><strong>Subnets + <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints</strong></td>
 <td>Infrastructure subnet hosts interface endpoint ENIs</td>
-<td>Interface endpoints create one ENI per <abbr title="Availability Zone">AZ</abbr> per endpoint. Dedicated infrastructure subnets keep endpoint ENIs isolated from application IP pools. Gateway endpoints (<abbr title="Simple Storage Service">S3</abbr>, DynamoDB) don't consume subnet IPs — they're route table entries.</td>
+<td>Interface endpoints create one ENI per Availability Zone per endpoint. Dedicated infrastructure subnets keep endpoint ENIs isolated from application IP pools. Gateway endpoints (<abbr title="Simple Storage Service">S3</abbr>, DynamoDB) don't consume subnet IPs — they're route table entries.</td>
 </tr>
 <tr>
 <td><strong>Subnets + Load Balancers</strong></td>
 <td>Public subnets for internet-facing ALBs/NLBs; private subnets for internal load balancers</td>
-<td>ALBs require at least <code>/27</code> subnets with 8 free IPs per <abbr title="Availability Zone">AZ</abbr>. NLBs are less demanding but still need room to scale. Never share a <code>/28</code> subnet between a load balancer and other resources.</td>
+<td>ALBs require at least <code>/27</code> subnets with 8 free IPs per Availability Zone. NLBs are less demanding but still need room to scale. Never share a <code>/28</code> subnet between a load balancer and other resources.</td>
 </tr>
 <tr>
 <td><strong>Subnets + EKS/ECS</strong></td>
 <td>Private subnets host worker nodes and pod/task ENIs</td>
-<td>Size at <code>/22</code> or larger for EKS with <abbr title="Virtual Private Cloud">VPC</abbr> CNI. Use custom networking to separate node and pod <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges. For ECS Fargate, every task is one IP — plan for peak task count per <abbr title="Availability Zone">AZ</abbr>.</td>
+<td>Size at <code>/22</code> or larger for EKS with <abbr title="Virtual Private Cloud">VPC</abbr> CNI. Use custom networking to separate node and pod <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges. For ECS Fargate, every task is one IP — plan for peak task count per Availability Zone.</td>
 </tr>
 </tbody>
 </table>
@@ -2842,7 +2842,7 @@
 <ul>
 <li><a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a> — <abbr title="Virtual Private Cloud">VPC</abbr> design patterns, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation, and the relationship between VPCs and subnets</li>
 <li><a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a> — How to plan address space across VPCs and subnets without conflicts</li>
-<li><a href="../regions-azs/">Regions and Availability Zones</a> — <abbr title="Availability Zone">AZ</abbr> placement strategy that drives subnet distribution</li>
+<li><a href="../regions-azs/">Regions and Availability Zones</a> — Availability Zone placement strategy that drives subnet distribution</li>
 <li><a href="../ipam/"><abbr title="IP Address Manager">IPAM</abbr></a> — Automated IP address management for subnet <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation at scale</li>
 </ul>
 <p><strong>Connectivity pages:</strong></p>
@@ -2853,7 +2853,7 @@
 </ul>
 <p><strong>Application Networking pages:</strong></p>
 <ul>
-<li><a href="../../application-networking/load-balancing/">Load Balancing</a> — <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> subnet requirements and <abbr title="Availability Zone">AZ</abbr> placement</li>
+<li><a href="../../application-networking/load-balancing/">Load Balancing</a> — <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr> subnet requirements and Availability Zone placement</li>
 <li><a href="../../application-networking/container-mesh/">Container Mesh</a> — EKS and ECS networking patterns that drive private subnet sizing</li>
 </ul>
 
@@ -2878,7 +2878,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

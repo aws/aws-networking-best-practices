@@ -2649,7 +2649,7 @@
 </tbody>
 </table>
 <p>For a <abbr title="Virtual Private Cloud">VPC</abbr> generating 100 GB/month of Flow Log data, <abbr title="Simple Storage Service">S3</abbr> delivery costs roughly half what CloudWatch Logs charges for the same data. At scale across dozens of VPCs, this difference compounds significantly.</p>
-<p>Use CloudWatch Logs as a <em>secondary</em> destination only when you need real-time alerting on specific traffic patterns (e.g., rejected flows to sensitive subnets). Keep the retention short (7-14 days) to control costs.</p>
+<p>Use CloudWatch Logs as a <em>secondary</em> destination only when you need real-time alerting on specific traffic patterns (for example, rejected flows to sensitive subnets). Keep the retention short (7-14 days) to control costs.</p>
 <h4 id="partition-flow-log-data-in-s3-for-efficient-athena-queries">Partition Flow Log data in <abbr title="Simple Storage Service">S3</abbr> for efficient Athena queries<a class="headerlink" href="#partition-flow-log-data-in-s3-for-efficient-athena-queries" title="Permanent link">&para;</a></h4>
 <p>When delivering to <abbr title="Simple Storage Service">S3</abbr>, use Hive-compatible partitioning with the following structure: <code>{bucket}/{prefix}/AWSLogs/{account-id}/vpcflowlogs/{region}/{year}/{month}/{day}/</code>. This is the default delivery structure and enables Athena partition projection, which eliminates the need to run <code>MSCK REPAIR TABLE</code> as new partitions arrive.</p>
 <p>Create your Athena table with partition projection enabled:</p>
@@ -2706,7 +2706,7 @@
 <h4 id="use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication">Use Transit Gateway Flow Logs to detect unauthorized cross-<abbr title="Virtual Private Cloud">VPC</abbr> communication<a class="headerlink" href="#use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication" title="Permanent link">&para;</a></h4>
 <p>Transit Gateway route tables and attachments define what <em>can</em> communicate. Transit Gateway Flow Logs show what <em>does</em> communicate. Compare the two to identify:</p>
 <ul>
-<li>Traffic between VPCs that should be isolated (e.g., production to development)</li>
+<li>Traffic between VPCs that should be isolated (for example, production to development)</li>
 <li>Unexpected traffic volumes between specific <abbr title="Virtual Private Cloud">VPC</abbr> pairs (potential data exfiltration)</li>
 <li>Traffic patterns that indicate misconfigured route tables (traffic taking unexpected paths)</li>
 </ul>
@@ -2826,7 +2826,7 @@
 <tr>
 <td>"How much cross-<abbr title="Availability Zone">AZ</abbr> traffic is this <abbr title="Virtual Private Cloud">VPC</abbr> generating?"</td>
 <td><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs + <code>az-id</code> field</td>
-<td>The <code>az-id</code> field identifies which <abbr title="Availability Zone">AZ</abbr> each flow originates from</td>
+<td>The <code>az-id</code> field identifies which Availability Zone each flow originates from</td>
 </tr>
 <tr>
 <td>"Which accounts are generating the most inter-<abbr title="Virtual Private Cloud">VPC</abbr> traffic?"</td>
@@ -2998,7 +2998,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 20:42:03 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

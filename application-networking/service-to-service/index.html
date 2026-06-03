@@ -2366,7 +2366,7 @@
 <h2 id="synchronous-service-to-service-patterns">Synchronous service-to-service patterns<a class="headerlink" href="#synchronous-service-to-service-patterns" title="Permanent link">&para;</a></h2>
 <p>Synchronous service-to-service communication (a service makes a request, waits for the response) is the most common shape of service interaction inside a typical workload. The patterns below cover the design questions that consistently come up: how the consumer finds the provider, how the two sides authenticate, how the call crosses <abbr title="Virtual Private Cloud">VPC</abbr> and account boundaries, how new versions roll out safely, and how the operator sees what's happening.</p>
 <h3 id="service-discovery-and-addressing">Service discovery and addressing<a class="headerlink" href="#service-discovery-and-addressing" title="Permanent link">&para;</a></h3>
-<p>Hard-coded IPs don't survive contact with a real environment. Targets scale, instances replace, AZs fail, and the service backing a name might migrate. Service discovery answers two questions: given a service name, what address(es) should the consumer use right now, and how do you keep that name stable as the implementation behind it changes?</p>
+<p>Hard-coded IPs don't survive contact with a real environment. Targets scale, instances replace, Availability Zones fail, and the service backing a name might migrate. Service discovery answers two questions: given a service name, what address(es) should the consumer use right now, and how do you keep that name stable as the implementation behind it changes?</p>
 <p>The right pattern in AWS, regardless of which option below you choose, is <strong>always abstract the consumer-facing name with an Amazon Route 53 record</strong>. The application calls <code>payments.internal.example.com</code>, never a bare load-balancer <abbr title="Domain Name System">DNS</abbr> name and never an Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice managed <abbr title="Domain Name System">DNS</abbr> name. Route 53 alias records resolve the friendly name to whatever's actually backing the service today (an internal <abbr title="Application Load Balancer">ALB</abbr>, an <abbr title="Network Load Balancer">NLB</abbr>, an Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice service, an <abbr title="Elastic Compute Cloud">EC2</abbr> instance), and changing the implementation becomes a Route 53 record change rather than a consumer-side coordination exercise.</p>
 <table>
 <thead>
@@ -2845,7 +2845,7 @@
 <td><strong>AWS PrivateLink endpoint services</strong></td>
 <td>Per-<abbr title="Availability Zone">AZ</abbr> per-endpoint-hour charge</td>
 <td>Per-GB data processed (<a href="https://aws.amazon.com/privatelink/pricing/">PrivateLink pricing</a>)</td>
-<td>Number of consumer VPCs × AZs, plus traffic volume</td>
+<td>Number of consumer VPCs × Availability Zones, plus traffic volume</td>
 </tr>
 <tr>
 <td><strong>Transit Gateway + internal <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr></strong></td>
@@ -2959,7 +2959,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 20:42:03 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

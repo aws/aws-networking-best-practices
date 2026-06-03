@@ -1009,10 +1009,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plan-for-az-resilience" class="md-nav__link">
+  <a href="#plan-for-availability-zone-resilience" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan for AZ resilience
+        Plan for Availability Zone resilience
       
     </span>
   </a>
@@ -1164,10 +1164,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plan-for-az-resilience_1" class="md-nav__link">
+  <a href="#plan-for-availability-zone-resilience_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan for AZ resilience
+        Plan for Availability Zone resilience
       
     </span>
   </a>
@@ -1330,10 +1330,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plan-for-az-resilience_2" class="md-nav__link">
+  <a href="#plan-for-availability-zone-resilience_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan for AZ resilience
+        Plan for Availability Zone resilience
       
     </span>
   </a>
@@ -1352,10 +1352,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#place-gwlb-endpoints-per-az-in-the-consumer-vpc" class="md-nav__link">
+  <a href="#place-gwlb-endpoints-per-availability-zone-in-the-consumer-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Place GWLB endpoints per AZ in the consumer VPC
+        Place GWLB endpoints per Availability Zone in the consumer VPC
       
     </span>
   </a>
@@ -2258,10 +2258,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plan-for-az-resilience" class="md-nav__link">
+  <a href="#plan-for-availability-zone-resilience" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan for AZ resilience
+        Plan for Availability Zone resilience
       
     </span>
   </a>
@@ -2413,10 +2413,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plan-for-az-resilience_1" class="md-nav__link">
+  <a href="#plan-for-availability-zone-resilience_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan for AZ resilience
+        Plan for Availability Zone resilience
       
     </span>
   </a>
@@ -2579,10 +2579,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#plan-for-az-resilience_2" class="md-nav__link">
+  <a href="#plan-for-availability-zone-resilience_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Plan for AZ resilience
+        Plan for Availability Zone resilience
       
     </span>
   </a>
@@ -2601,10 +2601,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#place-gwlb-endpoints-per-az-in-the-consumer-vpc" class="md-nav__link">
+  <a href="#place-gwlb-endpoints-per-availability-zone-in-the-consumer-vpc" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Place GWLB endpoints per AZ in the consumer VPC
+        Place GWLB endpoints per Availability Zone in the consumer VPC
       
     </span>
   </a>
@@ -2801,7 +2801,7 @@
 <p class="admonition-title">Prerequisites</p>
 <p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/subnets/">Subnets</a>, and the connectivity patterns covered in the <a href="../../connectivity/within-aws/">Within AWS</a> and <a href="../../connectivity/internet/">Internet connectivity</a> pages. Review those topics first if you're new to AWS networking fundamentals.</p>
 </div>
-<p>AWS Elastic Load Balancing distributes traffic across multiple targets through three managed services: Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>) for L7 HTTP/HTTPS/gRPC with content-based routing across up to 100 listener rules, Network Load Balancer (<abbr title="Network Load Balancer">NLB</abbr>) for L4 <abbr title="Transmission Control Protocol">TCP</abbr>/<abbr title="User Datagram Protocol">UDP</abbr>/<abbr title="Transport Layer Security">TLS</abbr> handling millions of connections per second with sub-millisecond latency and static IPs per <abbr title="Availability Zone">AZ</abbr>, and Gateway Load Balancer (<abbr title="Gateway Load Balancer">GWLB</abbr>) for transparent insertion of third-party firewall appliances using GENEVE encapsulation. These are not interchangeable — each is built for a different traffic class and a different role in the architecture.</p>
+<p>AWS Elastic Load Balancing distributes traffic across multiple targets through three managed services: Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>) for L7 HTTP/HTTPS/gRPC with content-based routing across up to 100 listener rules, Network Load Balancer (<abbr title="Network Load Balancer">NLB</abbr>) for L4 <abbr title="Transmission Control Protocol">TCP</abbr>/<abbr title="User Datagram Protocol">UDP</abbr>/<abbr title="Transport Layer Security">TLS</abbr> handling millions of connections per second with sub-millisecond latency and static IPs per Availability Zone, and Gateway Load Balancer (<abbr title="Gateway Load Balancer">GWLB</abbr>) for transparent insertion of third-party firewall appliances using GENEVE encapsulation. These are not interchangeable — each is built for a different traffic class and a different role in the architecture.</p>
 <p>This page covers the three Elastic Load Balancing services as building blocks of an application architecture: what each one does, how to configure it well, when to choose one over the others, and how to combine them with other AWS services.</p>
 <p><a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</a> services <em>also</em> load-balance traffic across targets, with managed health checks and weighted routing. The full treatment of <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, including the load-balancing capabilities of its services, are covered in the <a href="../service-to-service/">Service to Service</a> and <a href="../container-mesh/">Container Mesh</a> pages, because <abbr title="Virtual Private Cloud">VPC</abbr> Lattice's value extends well beyond load balancing into cross-<abbr title="Virtual Private Cloud">VPC</abbr> and cross-account service discovery, <abbr title="Identity and Access Management">IAM</abbr>-based authentication, and service-to-service connectivity. This page focuses on the three Elastic Load Balancing services; references to <abbr title="Virtual Private Cloud">VPC</abbr> Lattice on this page are pointers to where it fits, not deep coverage.</p>
 <pre class="mermaid"><code>graph TB
@@ -2813,7 +2813,7 @@
 
             subgraph AppTraffic["Application traffic distribution"]
                 ALB["Application Load Balancer (ALB)&lt;br/&gt;L7 — HTTP, HTTPS, gRPC&lt;br/&gt;Content-based routing,&lt;br/&gt;TLS termination, mTLS, AWS WAF"]
-                NLB["Network Load Balancer (NLB)&lt;br/&gt;L4 — TCP, UDP, TLS&lt;br/&gt;Ultra-high throughput,&lt;br/&gt;client IP preservation,&lt;br/&gt;static IPs per AZ"]
+                NLB["Network Load Balancer (NLB)&lt;br/&gt;L4 — TCP, UDP, TLS&lt;br/&gt;Ultra-high throughput,&lt;br/&gt;client IP preservation,&lt;br/&gt;static IPs per Availability Zone"]
             end
 
             subgraph Inspection["Transparent inspection insertion"]
@@ -2988,13 +2988,13 @@
 <ul>
 <li><strong>Issue per-application certificates from ACM</strong> rather than rotating self-managed certificates on the targets themselves.</li>
 <li><strong>Re-encrypt to the origin only when the workload's compliance baseline requires end-to-end <abbr title="Transport Layer Security">TLS</abbr></strong>. The vast majority of L7 traffic terminates at the <abbr title="Application Load Balancer">ALB</abbr> and uses HTTP from the <abbr title="Application Load Balancer">ALB</abbr> to the targets.</li>
-<li><strong>For workloads that authenticate clients by certificate, use <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html">mutual <abbr title="Transport Layer Security">TLS</abbr></a></strong>. Choose <code>passthrough</code> mode if backend services need the full client certificate chain to make their own authentication decisions, or <code>verify</code> mode if the <abbr title="Application Load Balancer">ALB</abbr> itself should perform X.509 authentication using a CA bundle. Note that <abbr title="Transport Layer Security">TLS</abbr> session resumption is not supported with mTLS, so factor that into the connection-rate budget.</li>
+<li><strong>For workloads that authenticate clients by certificate, use <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html">mutual <abbr title="Transport Layer Security">TLS</abbr></a></strong>. Choose <code>passthrough</code> mode if backend services need the full client certificate chain to make their own authentication decisions, or <code>verify</code> mode if the <abbr title="Application Load Balancer">ALB</abbr> itself should perform X.509 authentication using a CA bundle. <abbr title="Transport Layer Security">TLS</abbr> session resumption is not supported with mTLS, so factor that into the connection-rate budget.</li>
 </ul>
-<h4 id="plan-for-az-resilience">Plan for <abbr title="Availability Zone">AZ</abbr> resilience<a class="headerlink" href="#plan-for-az-resilience" title="Permanent link">&para;</a></h4>
+<h4 id="plan-for-availability-zone-resilience">Plan for Availability Zone resilience<a class="headerlink" href="#plan-for-availability-zone-resilience" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Run <abbr title="Application Load Balancer">ALB</abbr> in at least two AZs and ideally three</strong> for production. <abbr title="Application Load Balancer">ALB</abbr> itself is highly available across enabled AZs; the limit is your subnet sizing and the AZs your targets actually run in.</li>
-<li><strong>Cross-zone load balancing is on by default</strong> at the <abbr title="Application Load Balancer">ALB</abbr> level (and that's the right setting). It evens out target utilization regardless of how clients distribute themselves across AZs. You can override it per target group, but the default is correct for almost every workload.</li>
-<li><strong>Enable <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/zonal-shift.html">zonal shift</a> through Amazon Application Recovery Controller</strong> (ARC) for production ALBs. Zonal shift lets an operator drain an <abbr title="Availability Zone">AZ</abbr> from the load balancer's <abbr title="Domain Name System">DNS</abbr> in seconds during a real or suspected <abbr title="Availability Zone">AZ</abbr> event, without touching health checks or routing rules. For automatic activation on <abbr title="Availability Zone">AZ</abbr>-impacting events, configure <code>zonal autoshift</code> (an ARC feature that lets AWS trigger a zonal shift on your behalf when AWS-internal telemetry detects an <abbr title="Availability Zone">AZ</abbr> impairment). The <code>zonal autoshift</code> feature requires a weekly practice-run configuration so the application is validated to run cleanly without one <abbr title="Availability Zone">AZ</abbr> before a real shift fires.</li>
+<li><strong>Run <abbr title="Application Load Balancer">ALB</abbr> in at least two Availability Zones and ideally three</strong> for production. <abbr title="Application Load Balancer">ALB</abbr> itself is highly available across enabled Availability Zones; the limit is your subnet sizing and the Availability Zones your targets actually run in.</li>
+<li><strong>Cross-zone load balancing is on by default</strong> at the <abbr title="Application Load Balancer">ALB</abbr> level (and that's the right setting). It evens out target utilization regardless of how clients distribute themselves across Availability Zones. You can override it per target group, but the default is correct for almost every workload.</li>
+<li><strong>Enable <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/zonal-shift.html">zonal shift</a> through Amazon Application Recovery Controller</strong> (ARC) for production ALBs. Zonal shift lets an operator drain an Availability Zone from the load balancer's <abbr title="Domain Name System">DNS</abbr> in seconds during a real or suspected Availability Zone event, without touching health checks or routing rules. For automatic activation on <abbr title="Availability Zone">AZ</abbr>-impacting events, configure <code>zonal autoshift</code> (an ARC feature that lets AWS trigger a zonal shift on your behalf when AWS-internal telemetry detects an Availability Zone impairment). The <code>zonal autoshift</code> feature requires a weekly practice-run configuration so the application is validated to run cleanly without one Availability Zone before a real shift fires.</li>
 </ul>
 <h4 id="plan-ipv6-as-a-first-class-option">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> as a first-class option<a class="headerlink" href="#plan-ipv6-as-a-first-class-option" title="Permanent link">&para;</a></h4>
 <p><abbr title="Application Load Balancer">ALB</abbr> supports dual-stack listeners (both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>) and <abbr title="Internet Protocol version 6">IPv6</abbr>-only listeners. Both options reach native <abbr title="Internet Protocol version 6">IPv6</abbr> clients without <abbr title="Internet Protocol version 4">IPv4</abbr>-to-<abbr title="Internet Protocol version 6">IPv6</abbr> translation, which avoids the cost and complexity of <abbr title="Network Address Translation">NAT</abbr> and lets the application identify the original client by <abbr title="Internet Protocol version 6">IPv6</abbr> address.</p>
@@ -3046,7 +3046,7 @@
 <tr>
 <td>Subnet sizing</td>
 <td>—</td>
-<td>At least <code>/27</code> per <abbr title="Availability Zone">AZ</abbr> subnet, with eight free IPs reserved. Tight <code>/28</code> subnets exhaust during scale events and cause 5xx errors.</td>
+<td>At least <code>/27</code> per Availability Zone subnet, with eight free IPs reserved. Tight <code>/28</code> subnets exhaust during scale events and cause 5xx errors.</td>
 </tr>
 </tbody>
 </table>
@@ -3069,7 +3069,7 @@
 <li><strong>Integrate with Auto Scaling, Amazon ECS, and Amazon EKS</strong> through native target group registration, so the load balancer's target list reflects the actual capacity.</li>
 <li><strong>Use Lambda targets</strong> for serverless backends behind an HTTP front door without an API Gateway dependency.</li>
 <li><strong>Use weighted target groups</strong> for blue/green and canary releases without <abbr title="Domain Name System">DNS</abbr>-based traffic shifting.</li>
-<li><strong>Pair with <a href="https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html">Amazon Application Recovery Controller</a></strong> to enable zonal shift (operator-triggered) and <code>zonal autoshift</code> (AWS-triggered, requires a practice-run configuration) for fast <abbr title="Availability Zone">AZ</abbr>-level traffic draining during <abbr title="Availability Zone">AZ</abbr> events.</li>
+<li><strong>Pair with <a href="https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html">Amazon Application Recovery Controller</a></strong> to enable zonal shift (operator-triggered) and <code>zonal autoshift</code> (AWS-triggered, requires a practice-run configuration) for fast <abbr title="Availability Zone">AZ</abbr>-level traffic draining during Availability Zone events.</li>
 </ul>
 <h3 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h3>
 <div class="grid cards">
@@ -3098,9 +3098,9 @@
 <p>By default, instance targets and <abbr title="User Datagram Protocol">UDP</abbr>/TCP_UDP/QUIC/TCP_QUIC targets see the original client IP, so backend security groups and application logic can use real client addresses.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Static and Elastic IPs per <abbr title="Availability Zone">AZ</abbr></strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Static and Elastic IPs per Availability Zone</strong></p>
 <hr />
-<p>Each <abbr title="Network Load Balancer">NLB</abbr> has a stable IP per enabled <abbr title="Availability Zone">AZ</abbr> (with optional Elastic IPs for public NLBs), suitable for clients that need to allow-list specific addresses and for <abbr title="Domain Name System">DNS</abbr> records that point at a fixed L4 endpoint.</p>
+<p>Each <abbr title="Network Load Balancer">NLB</abbr> has a stable IP per enabled Availability Zone (with optional Elastic IPs for public NLBs), suitable for clients that need to allow-list specific addresses and for <abbr title="Domain Name System">DNS</abbr> records that point at a fixed L4 endpoint.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4 9 4zm-9 10c3.75-1 7-5.46 7-9.78V6.3l-7-3.12L5 6.3v4.92C5 15.54 8.25 20 12 21m0-15a3 3 0 0 1 3 3c0 1.31-.83 2.42-2 2.83V14h2v2h-2v2h-2v-6.17A2.99 2.99 0 0 1 9 9a3 3 0 0 1 3-3m0 2a1 1 0 0 0-1 1 1 1 0 0 0 1 1 1 1 0 0 0 1-1 1 1 0 0 0-1-1"/></svg></span> <strong><abbr title="Transport Layer Security">TLS</abbr> termination at L4</strong></p>
@@ -3170,10 +3170,10 @@
 <li><strong>Use <abbr title="Transmission Control Protocol">TCP</abbr> probes when the target doesn't expose an HTTP health endpoint</strong>. Recognize that a <abbr title="Transmission Control Protocol">TCP</abbr> success only means "the port accepts connections" — not "the application is ready". Pair <abbr title="Transmission Control Protocol">TCP</abbr> health checks with application-level alarms on metrics that reflect actual readiness.</li>
 <li><strong>Tune interval and threshold to the application's recovery time</strong>. <abbr title="Network Load Balancer">NLB</abbr> health checks default to 30-second intervals and 5 healthy / 2 unhealthy thresholds; that's right for many workloads but wrong for slow-starting backends or for protocols where a single failure should not pull a target out of rotation.</li>
 </ul>
-<h4 id="plan-for-az-resilience_1">Plan for <abbr title="Availability Zone">AZ</abbr> resilience<a class="headerlink" href="#plan-for-az-resilience_1" title="Permanent link">&para;</a></h4>
-<p><abbr title="Network Load Balancer">NLB</abbr>'s <abbr title="Availability Zone">AZ</abbr> behavior is more nuanced than <abbr title="Application Load Balancer">ALB</abbr>'s because cross-zone load balancing is <strong>off</strong> by default and zonal traffic distribution is part of the design. Deploy <abbr title="Network Load Balancer">NLB</abbr> in at least two AZs and treat cross-zone, <abbr title="Availability Zone">AZ</abbr> <abbr title="Domain Name System">DNS</abbr> affinity, and zonal shift as one connected set of decisions.</p>
+<h4 id="plan-for-availability-zone-resilience_1">Plan for Availability Zone resilience<a class="headerlink" href="#plan-for-availability-zone-resilience_1" title="Permanent link">&para;</a></h4>
+<p><abbr title="Network Load Balancer">NLB</abbr>'s Availability Zone behavior is more nuanced than <abbr title="Application Load Balancer">ALB</abbr>'s because cross-zone load balancing is <strong>off</strong> by default and zonal traffic distribution is part of the design. Deploy <abbr title="Network Load Balancer">NLB</abbr> in at least two Availability Zones and treat cross-zone, Availability Zone <abbr title="Domain Name System">DNS</abbr> affinity, and zonal shift as one connected set of decisions.</p>
 <ul>
-<li><strong>Cross-zone load balancing is off by default</strong>, which keeps client traffic within the <abbr title="Availability Zone">AZ</abbr> where it arrived (no cross-zone data-transfer charges, lower latency). The trade-off is that distribution depends on how clients spread across AZs.</li>
+<li><strong>Cross-zone load balancing is off by default</strong>, which keeps client traffic within the Availability Zone where it arrived (no cross-zone data-transfer charges, lower latency). The trade-off is that distribution depends on how clients spread across Availability Zones.</li>
 </ul>
 <table>
 <thead>
@@ -3185,18 +3185,18 @@
 <tbody>
 <tr>
 <td><strong>Off</strong> <em>(default)</em></td>
-<td>Client distribution is roughly uniform across AZs and zonal locality matters for cost or latency.</td>
+<td>Client distribution is roughly uniform across Availability Zones and zonal locality matters for cost or latency.</td>
 </tr>
 <tr>
 <td><strong>On</strong></td>
-<td>Distribution is uneven (single-<abbr title="Availability Zone">AZ</abbr> caller dominates), or every target should receive equal traffic regardless of arrival <abbr title="Availability Zone">AZ</abbr>. Cross-zone <abbr title="Network Load Balancer">NLB</abbr>-to-target traffic incurs cross-<abbr title="Availability Zone">AZ</abbr> data-transfer charges.</td>
+<td>Distribution is uneven (single-<abbr title="Availability Zone">AZ</abbr> caller dominates), or every target should receive equal traffic regardless of arrival Availability Zone. Cross-zone <abbr title="Network Load Balancer">NLB</abbr>-to-target traffic incurs cross-<abbr title="Availability Zone">AZ</abbr> data-transfer charges.</td>
 </tr>
 </tbody>
 </table>
-<p>Combine cross-zone-off with <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/edit-load-balancer-attributes.html">Availability Zone <abbr title="Domain Name System">DNS</abbr> affinity</a> (Route 53 Resolver returns the <abbr title="Network Load Balancer">NLB</abbr>'s IP in the client's own <abbr title="Availability Zone">AZ</abbr>) when both halves of the path should stay zonal. Plan for targets to scale per <abbr title="Availability Zone">AZ</abbr> rather than as a single pool.</p>
+<p>Combine cross-zone-off with <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/edit-load-balancer-attributes.html">Availability Zone <abbr title="Domain Name System">DNS</abbr> affinity</a> (Route 53 Resolver returns the <abbr title="Network Load Balancer">NLB</abbr>'s IP in the client's own Availability Zone) when both halves of the path should stay zonal. Plan for targets to scale per Availability Zone rather than as a single pool.</p>
 <ul>
 <li>
-<p><strong>Enable <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/zonal-shift.html">zonal shift</a> through Amazon Application Recovery Controller</strong> (ARC) for production NLBs. An operator-triggered zonal shift removes the impaired <abbr title="Availability Zone">AZ</abbr>'s IP from <abbr title="Domain Name System">DNS</abbr> so new connections go to healthy AZs (existing connections drain as they close). Configure <code>zonal autoshift</code> for AWS-triggered activation when AWS-internal telemetry detects an <abbr title="Availability Zone">AZ</abbr> impairment; it requires a weekly practice-run configuration so the application is validated to run cleanly without one <abbr title="Availability Zone">AZ</abbr> before a real shift fires.</p>
+<p><strong>Enable <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/zonal-shift.html">zonal shift</a> through Amazon Application Recovery Controller</strong> (ARC) for production NLBs. An operator-triggered zonal shift removes the impaired <abbr title="Availability Zone">AZ</abbr>'s IP from <abbr title="Domain Name System">DNS</abbr> so new connections go to healthy Availability Zones (existing connections drain as they close). Configure <code>zonal autoshift</code> for AWS-triggered activation when AWS-internal telemetry detects an Availability Zone impairment; it requires a weekly practice-run configuration so the application is validated to run cleanly without one Availability Zone before a real shift fires.</p>
 </li>
 <li>
 <p><strong>Alarm on the <code>ZonalHealthStatus</code> CloudWatch metric</strong>. <abbr title="Network Load Balancer">NLB</abbr> removes a zone's <abbr title="Domain Name System">DNS</abbr> record when the zone fails its zonal health check (no healthy targets, configured minimum not met, or an active zonal shift). Catching this early prevents zonal trouble from turning into customer-facing failure.</p>
@@ -3268,7 +3268,7 @@
 <tr>
 <td>Zonal shift</td>
 <td>Off</td>
-<td><strong>On</strong> for production NLBs, with <code>zonal autoshift</code> and a practice-run configuration where the application can be validated to run with one fewer <abbr title="Availability Zone">AZ</abbr>.</td>
+<td><strong>On</strong> for production NLBs, with <code>zonal autoshift</code> and a practice-run configuration where the application can be validated to run with one fewer Availability Zone.</td>
 </tr>
 <tr>
 <td>Secondary IP addresses per subnet</td>
@@ -3283,7 +3283,7 @@
 <li>The workload is L4 — <abbr title="Transmission Control Protocol">TCP</abbr>, <abbr title="User Datagram Protocol">UDP</abbr>, <abbr title="Transport Layer Security">TLS</abbr> that isn't HTTPS, or QUIC.</li>
 <li>You need ultra-low-latency forwarding without HTTP-aware processing.</li>
 <li>The application authenticates clients by source IP end-to-end and needs client IP preservation.</li>
-<li>You need a static IP per <abbr title="Availability Zone">AZ</abbr> (or Elastic IPs for stable public addresses) so that clients can allow-list the load balancer.</li>
+<li>You need a static IP per Availability Zone (or Elastic IPs for stable public addresses) so that clients can allow-list the load balancer.</li>
 <li>The protocol must traverse the load balancer transparently — gaming, voice, video, real-time financial trading, custom binary protocols, or HTTP/3 / QUIC workloads.</li>
 <li>You need to expose a service through AWS PrivateLink, where <abbr title="Network Load Balancer">NLB</abbr> is the supported load balancer in front of an <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/configure-endpoint-service.html">interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoint service</a>.</li>
 </ul>
@@ -3295,7 +3295,7 @@
 <li><strong>Use <abbr title="Virtual Private Cloud">VPC</abbr> Lattice <abbr title="Virtual Private Cloud">VPC</abbr> Resources</strong> as an alternative to PrivateLink endpoint services when the goal is private <abbr title="Transmission Control Protocol">TCP</abbr> resource access across VPCs and accounts. <abbr title="Virtual Private Cloud">VPC</abbr> Resources require no <abbr title="Network Load Balancer">NLB</abbr> to maintain and support overlapping CIDRs natively.</li>
 <li><strong>Combine <abbr title="Network Load Balancer">NLB</abbr> with <abbr title="Application Load Balancer">ALB</abbr>-as-target</strong> for the L4-then-L7 pattern when the workload genuinely needs both: an <abbr title="Network Load Balancer">NLB</abbr> for static IPs or PrivateLink exposure, and an <abbr title="Application Load Balancer">ALB</abbr> for HTTP-aware routing. This is a small set of use cases, and not a workaround for cross-<abbr title="Virtual Private Cloud">VPC</abbr> HTTPS ingress.</li>
 <li><strong>Integrate with Auto Scaling, Amazon ECS, and Amazon EKS</strong> through native target group registration.</li>
-<li><strong>Pair with <a href="https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html">Amazon Application Recovery Controller</a></strong> to enable zonal shift (operator-triggered) and <code>zonal autoshift</code> (AWS-triggered, requires a practice-run configuration) for fast <abbr title="Availability Zone">AZ</abbr>-level traffic draining during <abbr title="Availability Zone">AZ</abbr> events.</li>
+<li><strong>Pair with <a href="https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html">Amazon Application Recovery Controller</a></strong> to enable zonal shift (operator-triggered) and <code>zonal autoshift</code> (AWS-triggered, requires a practice-run configuration) for fast <abbr title="Availability Zone">AZ</abbr>-level traffic draining during Availability Zone events.</li>
 </ul>
 <h3 id="documentation_1">Documentation<a class="headerlink" href="#documentation_1" title="Permanent link">&para;</a></h3>
 <div class="grid cards">
@@ -3303,7 +3303,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Network Load Balancer documentation</strong></p>
 <hr />
-<p>Complete service documentation including <abbr title="Transmission Control Protocol">TCP</abbr>/<abbr title="User Datagram Protocol">UDP</abbr>/<abbr title="Transport Layer Security">TLS</abbr>/QUIC listeners, target groups, client IP preservation, Proxy Protocol, security groups, <abbr title="Availability Zone">AZ</abbr> <abbr title="Domain Name System">DNS</abbr> affinity, zonal shift, and pricing.</p>
+<p>Complete service documentation including <abbr title="Transmission Control Protocol">TCP</abbr>/<abbr title="User Datagram Protocol">UDP</abbr>/<abbr title="Transport Layer Security">TLS</abbr>/QUIC listeners, target groups, client IP preservation, Proxy Protocol, security groups, Availability Zone <abbr title="Domain Name System">DNS</abbr> affinity, zonal shift, and pricing.</p>
 <p><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 </ul>
@@ -3327,12 +3327,12 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7V3H2v18h11.35a5.8 5.8 0 0 1-.35-2h-1v-2h1.35a5 5 0 0 1 .65-1.31V15h-2v-2h2v-2h-2V9h8v4.09a5.6 5.6 0 0 1 2 .72V7M6 19H4v-2h2m0-2H4v-2h2m0-2H4V9h2m0-2H4V5h2m4 14H8v-2h2m0-2H8v-2h2m0-2H8V9h2m0-2H8V5h2m6 8h2v-2h-2m0 0v2h2v-2m-2 0v2h2v-2m2 4v3h3v2h-3v3h-2v-3h-3v-2h3v-3Z"/></svg></span> <strong>Managed scaling and multi-<abbr title="Availability Zone">AZ</abbr> appliance fleet</strong></p>
 <hr />
-<p>Deploy appliances across multiple AZs behind the <abbr title="Gateway Load Balancer">GWLB</abbr>; target group health drives in-service status and Auto Scaling adjusts fleet size. Cross-zone load balancing and Transit Gateway/AWS Cloud WAN Appliance Mode handle east-west and <abbr title="Availability Zone">AZ</abbr>-imbalance scenarios.</p>
+<p>Deploy appliances across multiple Availability Zones behind the <abbr title="Gateway Load Balancer">GWLB</abbr>; target group health drives in-service status and Auto Scaling adjusts fleet size. Cross-zone load balancing and Transit Gateway/AWS Cloud WAN Appliance Mode handle east-west and <abbr title="Availability Zone">AZ</abbr>-imbalance scenarios.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 6.5c-1.7 0-3 1.3-3 3v.2l-2 .7c-.6-1.2-1.8-2.1-3.2-2.3V5.9C14 5.6 15 4.4 15 3c0-1.7-1.3-3-3-3S9 1.3 9 3c0 1.4 1 2.6 2.2 2.9v2.2c-1.3.2-2.5 1.1-3.2 2.3l-2-.7v-.2c0-1.7-1.3-3-3-3s-3 1.3-3 3 1.3 3 3 3c1.1 0 2-.6 2.5-1.4l2 .7c-.2 1.3.2 2.7 1.1 3.7l-1.4 1.8Q6.6 17 6 17c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3q0-1.05-.6-1.8l1.4-1.8c1.4.8 3 .8 4.4 0l1.4 1.8q-.6.75-.6 1.8c0 1.7 1.3 3 3 3s3-1.3 3-3-1.3-3-3-3c-.4 0-.9.1-1.2.3l-1.4-1.8c.9-1 1.3-2.4 1.1-3.7l2-.7c.5.8 1.5 1.4 2.5 1.4 1.7 0 3-1.3 3-3s-1.3-3-3-3m-18 4c-.5 0-1-.4-1-1s.5-1 1-1 1 .4 1 1-.5 1-1 1M6 21c-.6 0-1-.5-1-1s.4-1 1-1 1 .5 1 1-.4 1-1 1m5-18c0-.5.4-1 1-1s1 .5 1 1-.4 1-1 1-1-.5-1-1m1 12c-1.4 0-2.5-1.1-2.5-2.5S10.6 10 12 10s2.5 1.1 2.5 2.5S13.4 15 12 15m6 4c.5 0 1 .5 1 1s-.5 1-1 1-1-.5-1-1 .5-1 1-1m3-8.5c-.5 0-1-.4-1-1s.5-1 1-1 1 .4 1 1-.5 1-1 1"/></svg></span> <strong>PrivateLink-based <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints</strong></p>
 <hr />
-<p>Consumer VPCs reach the inspection layer through one <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint per <abbr title="Availability Zone">AZ</abbr> — a PrivateLink construct that integrates with <abbr title="Virtual Private Cloud">VPC</abbr> route tables so any flow can be steered through inspection.</p>
+<p>Consumer VPCs reach the inspection layer through one <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint per Availability Zone — a PrivateLink construct that integrates with <abbr title="Virtual Private Cloud">VPC</abbr> route tables so any flow can be steered through inspection.</p>
 </li>
 </ul>
 </div>
@@ -3364,12 +3364,12 @@
 </tbody>
 </table>
 <p>For <abbr title="Transmission Control Protocol">TCP</abbr>, also configure keep-alive on the application or OS to fire below the <abbr title="Gateway Load Balancer">GWLB</abbr> idle timeout (<code>net.ipv4.tcp_keepalive_time = 60</code> on Linux, or another value below the <abbr title="Gateway Load Balancer">GWLB</abbr> timeout) so idle connections are kept alive end-to-end. Tune the <abbr title="Gateway Load Balancer">GWLB</abbr> <abbr title="Transmission Control Protocol">TCP</abbr> idle timeout deliberately when the workload has long-lived flows (database synchronization, persistent message buses); raising it also increases the chance of stale entries in the connection table.</p>
-<h4 id="plan-for-az-resilience_2">Plan for <abbr title="Availability Zone">AZ</abbr> resilience<a class="headerlink" href="#plan-for-az-resilience_2" title="Permanent link">&para;</a></h4>
-<p>A single-<abbr title="Availability Zone">AZ</abbr> appliance deployment behind <abbr title="Gateway Load Balancer">GWLB</abbr> is a single point of failure for inspection. <abbr title="Gateway Load Balancer">GWLB</abbr>'s cross-zone load balancing is <strong>off</strong> by default, which is usually correct as it isolates <abbr title="Availability Zone">AZ</abbr> failures so a failed <abbr title="Availability Zone">AZ</abbr> doesn't mask itself behind cross-zone routing.</p>
+<h4 id="plan-for-availability-zone-resilience_2">Plan for Availability Zone resilience<a class="headerlink" href="#plan-for-availability-zone-resilience_2" title="Permanent link">&para;</a></h4>
+<p>A single-<abbr title="Availability Zone">AZ</abbr> appliance deployment behind <abbr title="Gateway Load Balancer">GWLB</abbr> is a single point of failure for inspection. <abbr title="Gateway Load Balancer">GWLB</abbr>'s cross-zone load balancing is <strong>off</strong> by default, which is usually correct as it isolates Availability Zone failures so a failed Availability Zone doesn't mask itself behind cross-zone routing.</p>
 <ul>
-<li><strong>Deploy appliances in at least two AZs</strong> behind the <abbr title="Gateway Load Balancer">GWLB</abbr>, with health checks that exercise the appliance's actual inspection path (not just an interface ping).</li>
+<li><strong>Deploy appliances in at least two Availability Zones</strong> behind the <abbr title="Gateway Load Balancer">GWLB</abbr>, with health checks that exercise the appliance's actual inspection path (not just an interface ping).</li>
 <li><strong>Use Auto Scaling for the appliance fleet</strong> when traffic load is variable. <abbr title="Gateway Load Balancer">GWLB</abbr> target group health drives in-service status; Auto Scaling adds and removes appliance capacity based on the workload signals you choose.</li>
-<li><strong>Keep cross-zone load balancing off as the default</strong> so a fully-failed <abbr title="Availability Zone">AZ</abbr> becomes offline for inspection rather than masking itself behind a healthy <abbr title="Availability Zone">AZ</abbr>. Turn it on only when you've decided the workload prefers continued service over strict zonal isolation, and you've sized appliances to absorb cross-zone traffic.</li>
+<li><strong>Keep cross-zone load balancing off as the default</strong> so a fully-failed Availability Zone becomes offline for inspection rather than masking itself behind a healthy Availability Zone. Turn it on only when you've decided the workload prefers continued service over strict zonal isolation, and you've sized appliances to absorb cross-zone traffic.</li>
 </ul>
 <h4 id="choose-one-arm-or-two-arm-appliance-deployment">Choose one-arm or two-arm appliance deployment<a class="headerlink" href="#choose-one-arm-or-two-arm-appliance-deployment" title="Permanent link">&para;</a></h4>
 <p>Third-party appliances behind <abbr title="Gateway Load Balancer">GWLB</abbr> run in either one-arm or two-arm mode. The choice affects the appliance configuration and the surrounding routing.</p>
@@ -3395,10 +3395,10 @@
 </tbody>
 </table>
 <p>The architectural decision (centralized inspection in a shared <abbr title="Virtual Private Cloud">VPC</abbr> vs decentralized inspection per workload <abbr title="Virtual Private Cloud">VPC</abbr>) is independent of the deployment-mode decision.</p>
-<h4 id="place-gwlb-endpoints-per-az-in-the-consumer-vpc">Place <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints per <abbr title="Availability Zone">AZ</abbr> in the consumer <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#place-gwlb-endpoints-per-az-in-the-consumer-vpc" title="Permanent link">&para;</a></h4>
-<p><abbr title="Gateway Load Balancer">GWLB</abbr> endpoints are PrivateLink-based and deployed one per <abbr title="Availability Zone">AZ</abbr> in the consumer <abbr title="Virtual Private Cloud">VPC</abbr>. The endpoint is what the consumer's route tables target to direct traffic through inspection.</p>
+<h4 id="place-gwlb-endpoints-per-availability-zone-in-the-consumer-vpc">Place <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints per Availability Zone in the consumer <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#place-gwlb-endpoints-per-availability-zone-in-the-consumer-vpc" title="Permanent link">&para;</a></h4>
+<p><abbr title="Gateway Load Balancer">GWLB</abbr> endpoints are PrivateLink-based and deployed one per Availability Zone in the consumer <abbr title="Virtual Private Cloud">VPC</abbr>. The endpoint is what the consumer's route tables target to direct traffic through inspection.</p>
 <ul>
-<li><strong>Deploy one <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint per <abbr title="Availability Zone">AZ</abbr> in every consuming <abbr title="Virtual Private Cloud">VPC</abbr></strong> (or in the inspection <abbr title="Virtual Private Cloud">VPC</abbr> for centralized designs). Routing must direct each <abbr title="Availability Zone">AZ</abbr>'s traffic to its local endpoint to avoid unnecessary cross-<abbr title="Availability Zone">AZ</abbr> hops.</li>
+<li><strong>Deploy one <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint per Availability Zone in every consuming <abbr title="Virtual Private Cloud">VPC</abbr></strong> (or in the inspection <abbr title="Virtual Private Cloud">VPC</abbr> for centralized designs). Routing must direct each Availability Zone's traffic to its local endpoint to avoid unnecessary cross-<abbr title="Availability Zone">AZ</abbr> hops.</li>
 <li><strong>Plan routing carefully</strong>. The route-table change that directs traffic through the <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint is what makes inspection happen; an incomplete route-table update means some flows bypass inspection — a security gap that's easy to miss in an audit.</li>
 </ul>
 <h4 id="plan-for-the-encapsulation-mtu-and-packet-handling">Plan for the encapsulation <abbr title="Maximum Transmission Unit">MTU</abbr> and packet handling<a class="headerlink" href="#plan-for-the-encapsulation-mtu-and-packet-handling" title="Permanent link">&para;</a></h4>
@@ -3436,7 +3436,7 @@
 <td>Leave <strong>off</strong> as the default, for the <abbr title="Availability Zone">AZ</abbr>-isolation reasons above. Override only when you've decided the workload prefers continued service over strict zonal isolation.</td>
 </tr>
 <tr>
-<td>Subnet size per <abbr title="Availability Zone">AZ</abbr></td>
+<td>Subnet size per Availability Zone</td>
 <td>—</td>
 <td>At least 8 free IPs per subnet. Subnets cannot be removed after creation; to change them, recreate the <abbr title="Gateway Load Balancer">GWLB</abbr>.</td>
 </tr>
@@ -3475,7 +3475,7 @@
         end
 
         subgraph L4["L4 — Network Load Balancer"]
-            NLB2["TCP, UDP, TLS, QUIC&lt;br/&gt;Static IPs per AZ&lt;br/&gt;Client IP preservation&lt;br/&gt;EC2, IP, ALB-as-target&lt;br/&gt;PrivateLink front"]
+            NLB2["TCP, UDP, TLS, QUIC&lt;br/&gt;Static IPs per Availability Zone&lt;br/&gt;Client IP preservation&lt;br/&gt;EC2, IP, ALB-as-target&lt;br/&gt;PrivateLink front"]
         end
 
         subgraph L3Insp["Transparent appliance insertion"]
@@ -3501,14 +3501,14 @@
 <li><strong>Application-aware health checks from day one</strong>. Probe a path that exercises the target's real dependencies; tune interval and threshold to the workload's recovery shape. A misconfigured health check is one of the most common causes of avoidable production incidents.</li>
 <li><strong><abbr title="Gateway Load Balancer">GWLB</abbr> only when there's a third-party appliance to insert</strong>. For AWS-native L4 inspection, AWS Network Firewall is the managed alternative. When <abbr title="Gateway Load Balancer">GWLB</abbr> is the right call, deploy multi-<abbr title="Availability Zone">AZ</abbr> from day one, enable Transit Gateway or AWS Cloud WAN Appliance Mode for east-west inspection, and tune timeouts so the <abbr title="Gateway Load Balancer">GWLB</abbr>, the appliance, and the client agree.</li>
 <li><strong><abbr title="Internet Protocol version 6">IPv6</abbr> first-class on <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Network Load Balancer">NLB</abbr></strong> for new VPCs. Dual-stack listeners by default; <abbr title="Internet Protocol version 6">IPv6</abbr>-only when the client population is fully <abbr title="Internet Protocol version 6">IPv6</abbr>-capable.</li>
-<li><strong>Production defaults set from creation</strong>: deletion protection on, access logs to <abbr title="Simple Storage Service">S3</abbr>, zonal shift through ARC enabled (with <code>zonal autoshift</code> and a practice-run configuration where the application can run cleanly with one fewer <abbr title="Availability Zone">AZ</abbr>).</li>
+<li><strong>Production defaults set from creation</strong>: deletion protection on, access logs to <abbr title="Simple Storage Service">S3</abbr>, zonal shift through ARC enabled (with <code>zonal autoshift</code> and a practice-run configuration where the application can run cleanly with one fewer Availability Zone).</li>
 </ol>
 <h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations running existing load balancers have working patterns that don't need to be replaced:</p>
 <ol>
 <li><strong>Existing ALBs</strong> keep their role. Adopt CloudFront <abbr title="Virtual Private Cloud">VPC</abbr> Origins on new <abbr title="Virtual Private Cloud">VPC</abbr>-hosted L7 workloads; add AWS <abbr title="Web Application Firewall">WAF</abbr> (centrally managed through Firewall Manager) where it isn't already attached; turn on Automatic Target Weights for workloads that have shown gray-failure incidents; enable zonal shift through ARC.</li>
 <li><strong>Existing NLBs without security groups</strong> can stay running, with target-side security groups still doing the access control. New NLBs and recreated NLBs should be created with security groups attached. Enable zonal shift through ARC on production NLBs.</li>
-<li><strong>Existing <abbr title="Gateway Load Balancer">GWLB</abbr> deployments</strong> continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the <abbr title="Gateway Load Balancer">GWLB</abbr>, the appliances, and the workloads, that the appliance <abbr title="Maximum Transmission Unit">MTU</abbr> is at least 8568 bytes, and that <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints are deployed per <abbr title="Availability Zone">AZ</abbr> in every consuming <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
+<li><strong>Existing <abbr title="Gateway Load Balancer">GWLB</abbr> deployments</strong> continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the <abbr title="Gateway Load Balancer">GWLB</abbr>, the appliances, and the workloads, that the appliance <abbr title="Maximum Transmission Unit">MTU</abbr> is at least 8568 bytes, and that <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints are deployed per Availability Zone in every consuming <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
 <li><strong>Classic Load Balancer</strong> is a legacy choice. Plan migration to <abbr title="Application Load Balancer">ALB</abbr> (for HTTP/HTTPS) or <abbr title="Network Load Balancer">NLB</abbr> (for L4) opportunistically; <abbr title="Classic Load Balancer">CLB</abbr> is supported but does not receive new features and should not be the target for new workloads.</li>
 <li><strong><abbr title="Internet Protocol version 6">IPv6</abbr> adoption on existing load balancers</strong> is a per-listener decision. ALBs and NLBs can be moved to dual-stack on a new listener without disrupting the existing <abbr title="Internet Protocol version 4">IPv4</abbr> listener; plan the rollout per workload.</li>
 </ol>
@@ -3534,7 +3534,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

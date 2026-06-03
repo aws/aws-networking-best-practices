@@ -3485,7 +3485,7 @@
 <ul>
 <li><strong>Split-tunnel by default</strong>. Unless a specific compliance requirement justifies full-tunnel, use split-tunnel so only AWS-destined traffic goes through Client <abbr title="Virtual Private Network">VPN</abbr> and general internet traffic exits the client's local network directly. Full-tunnel multiplies egress cost and concentrates load on the <abbr title="Virtual Private Network">VPN</abbr> endpoint.</li>
 <li><strong>Authorization rules, not route tables alone</strong>. Client <abbr title="Virtual Private Network">VPN</abbr> authorization rules control which users can reach which destinations. Route tables alone allow traffic to flow; without matching authorization rules, users can still be blocked from destinations that their role shouldn't reach.</li>
-<li><strong>Scale by endpoint, not by <abbr title="Availability Zone">AZ</abbr> alone</strong>. A Client <abbr title="Virtual Private Network">VPN</abbr> endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.</li>
+<li><strong>Scale by endpoint, not by Availability Zone alone</strong>. A Client <abbr title="Virtual Private Network">VPN</abbr> endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.</li>
 </ul>
 <h3 id="aws-verified-access">AWS Verified Access<a class="headerlink" href="#aws-verified-access" title="Permanent link">&para;</a></h3>
 <p>AWS Verified Access provides zero-trust access to corporate applications without a <abbr title="Virtual Private Network">VPN</abbr> client. Users reach an application through a browser or an application-specific client, and Verified Access evaluates every request against a policy that combines identity (from AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center or a third-party identity provider) and device posture (from an integrated device-trust provider such as CrowdStrike or a mobile-device-management vendor). Requests that don't satisfy the policy are rejected. Requests that satisfy it are forwarded to the application.</p>
@@ -3598,7 +3598,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 8, 2026 16:30:31 UTC">May 8, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     

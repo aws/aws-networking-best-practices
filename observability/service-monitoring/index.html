@@ -2749,9 +2749,9 @@
 <td>Anomaly detection band</td>
 </tr>
 <tr>
-<td><code>UnHealthyHostCount</code> (per <abbr title="Availability Zone">AZ</abbr>)</td>
+<td><code>UnHealthyHostCount</code> (per Availability Zone)</td>
 <td>Per-<abbr title="Availability Zone">AZ</abbr> health. Critical when cross-zone load balancing is off (<abbr title="Network Load Balancer">NLB</abbr> default).</td>
-<td>&gt; 0 in any single <abbr title="Availability Zone">AZ</abbr></td>
+<td>&gt; 0 in any single Availability Zone</td>
 </tr>
 </tbody>
 </table>
@@ -2849,7 +2849,7 @@
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="alarm-design">Alarm design<a class="headerlink" href="#alarm-design" title="Permanent link">&para;</a></h3>
 <h4 id="alarm-on-state-changes-not-just-thresholds">Alarm on state changes, not just thresholds<a class="headerlink" href="#alarm-on-state-changes-not-just-thresholds" title="Permanent link">&para;</a></h4>
-<p>Many networking services have binary state metrics (tunnel up/down, connection active/inactive, <abbr title="Border Gateway Protocol">BGP</abbr> session established/idle). These deserve state-change alarms, not threshold-based alarms. A <abbr title="Virtual Private Network">VPN</abbr> tunnel transitioning from up to down is immediately actionable regardless of traffic volume. Configure alarms that trigger on the state value itself (e.g., <code>TunnelState &lt; 1</code> for 1 evaluation period) rather than waiting for traffic metrics to reflect the failure.</p>
+<p>Many networking services have binary state metrics (tunnel up/down, connection active/inactive, <abbr title="Border Gateway Protocol">BGP</abbr> session established/idle). These deserve state-change alarms, not threshold-based alarms. A <abbr title="Virtual Private Network">VPN</abbr> tunnel transitioning from up to down is immediately actionable regardless of traffic volume. Configure alarms that trigger on the state value itself (for example, <code>TunnelState &lt; 1</code> for 1 evaluation period) rather than waiting for traffic metrics to reflect the failure.</p>
 <p>For Direct Connect, monitor <code>ConnectionState</code> transitions. For <abbr title="Virtual Private Network">VPN</abbr>, monitor individual <code>TunnelState</code> per tunnel. For <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr>, monitor <code>HealthyHostCount</code> dropping below the expected minimum rather than waiting for error rates to climb.</p>
 <h4 id="use-composite-alarms-to-reduce-noise">Use composite alarms to reduce noise<a class="headerlink" href="#use-composite-alarms-to-reduce-noise" title="Permanent link">&para;</a></h4>
 <p>Individual metric alarms generate noise. A brief spike in <code>PacketDropCountNoRoute</code> during a Transit Gateway route table update is expected. A sustained spike combined with increased <code>ErrorPortAllocation</code> on a <abbr title="Network Address Translation">NAT</abbr> gateway in the same path is a real problem.</p>
@@ -2892,7 +2892,7 @@
 </tr>
 <tr>
 <td><abbr title="Network Address Translation">NAT</abbr> gateway</td>
-<td><abbr title="Network Address Translation">NAT</abbr> gateways per <abbr title="Availability Zone">AZ</abbr></td>
+<td><abbr title="Network Address Translation">NAT</abbr> gateways per Availability Zone</td>
 <td>5</td>
 </tr>
 <tr>
@@ -3175,7 +3175,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 20:42:03 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
   </span>
 
     
