@@ -313,7 +313,7 @@ The correct order:
 5. **Security groups** — Per-resource micro-segmentation with reference-based rules
 6. **VPC Lattice auth policies** — Per-service identity-based access control
 
-Each layer adds defense in depth. A failure at one layer (e.g., a misconfigured security group) is contained by the layers above it (the workload is still in an isolated VPC in a separate account).
+Each layer adds defense in depth. A failure at one layer (for example, a misconfigured security group) is contained by the layers above it (the workload is still in an isolated VPC in a separate account).
 
 #### Align segmentation with compliance requirements
 

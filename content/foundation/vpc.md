@@ -161,13 +161,13 @@ A single account contains multiple VPCs for different purposes (production, stag
 
 #### Start with /16 for production VPCs and never go smaller than /20
 
-A `/16` gives you 65,536 addresses — enough to accommodate growth, multiple subnet tiers across all AZs, and services that consume IPs aggressively (EKS pods with VPC CNI, Lambda ENIs, ECS tasks in awsvpc mode). Starting smaller feels efficient but creates painful expansion scenarios later.
+A `/16` gives you 65,536 addresses — enough to accommodate growth, multiple subnet tiers across all Availability Zones, and services that consume IPs aggressively (EKS pods with VPC CNI, Lambda ENIs, ECS tasks in awsvpc mode). Starting smaller feels efficient but creates painful expansion scenarios later.
 
-The cost of a `/16` is address space consumption from your private range, not dollars. If you're using [IPAM](ipam.md) with a well-planned top-level pool (e.g., `10.0.0.0/8`), you have 256 `/16` blocks available. That's enough for most organizations. If you're constrained on RFC 1918 space due to on-premises overlap, use `/20` as the minimum for production and plan secondary CIDRs from the start.
+The cost of a `/16` is address space consumption from your private range, not dollars. If you're using [IPAM](ipam.md) with a well-planned top-level pool (for example, `10.0.0.0/8`), you have 256 `/16` blocks available. That's enough for most organizations. If you're constrained on RFC 1918 space due to on-premises overlap, use `/20` as the minimum for production and plan secondary CIDRs from the start.
 
 #### Use secondary CIDRs strategically, not as a band-aid
 
-Secondary CIDR blocks let you expand a VPC's address space without recreating it. This is valuable for planned growth (adding a new subnet tier, supporting a new AZ) but should not become a pattern for fixing undersized initial allocations. Each secondary CIDR adds routing complexity — route tables, security groups, and NACLs must account for the additional ranges.
+Secondary CIDR blocks let you expand a VPC's address space without recreating it. This is valuable for planned growth (adding a new subnet tier, supporting a new Availability Zone) but should not become a pattern for fixing undersized initial allocations. Each secondary CIDR adds routing complexity — route tables, security groups, and NACLs must account for the additional ranges.
 
 The best use of secondary CIDRs is for non-RFC 1918 ranges (100.64.0.0/10 for EKS pod networking) or for adding IPv6 alongside an existing IPv4-only VPC. Avoid accumulating secondary CIDRs because the primary was too small — that's a signal to create a new, properly-sized VPC and migrate.
 
@@ -243,7 +243,7 @@ The classic three-tier model (public, private, data) works for most workloads. A
 
 ## When to use custom VPCs vs default VPCs
 
-The default VPC exists for one purpose: letting new AWS users launch resources without understanding networking. It is pre-configured with a `172.31.0.0/16` CIDR, public subnets in every AZ, an internet gateway, and a route table that sends all traffic to the internet. This configuration is the opposite of what production workloads need.
+The default VPC exists for one purpose: letting new AWS users launch resources without understanding networking. It is pre-configured with a `172.31.0.0/16` CIDR, public subnets in every Availability Zone, an internet gateway, and a route table that sends all traffic to the internet. This configuration is the opposite of what production workloads need.
 
 | Criterion | Default VPC | Custom VPC |
 | --- | --- | --- |
@@ -267,15 +267,15 @@ The VPC is the attachment point for every connectivity and application networkin
 
 | Combination | VPC provides | Other service provides | VPC design implication |
 | --- | --- | --- | --- |
-| **VPC + Transit Gateway** | Attachment ENIs in designated subnets, route table entries pointing to the TGW | Regional hub-and-spoke routing between VPCs, VPN, and Direct Connect | Dedicate a subnet tier for TGW attachment ENIs. Size these subnets for the number of AZs (one ENI per AZ). |
+| **VPC + Transit Gateway** | Attachment ENIs in designated subnets, route table entries pointing to the TGW | Regional hub-and-spoke routing between VPCs, VPN, and Direct Connect | Dedicate a subnet tier for TGW attachment ENIs. Size these subnets for the number of Availability Zones (one ENI per Availability Zone). |
 | **VPC + AWS Cloud WAN** | Core network attachment ENIs, segment membership via tags | Global policy-driven network management with segmentation | Tag VPCs with segment metadata for automated attachment acceptance. Plan CIDRs to enable route summarization per segment. |
 | **VPC + VPC Peering** | The two endpoints of the peering connection, route table entries for the peer CIDR | Direct point-to-point connectivity without bandwidth bottleneck | Ensure CIDRs don't overlap between peered VPCs. Peering doesn't support transitive routing. |
 | **VPC + Amazon VPC Lattice** | Service network VPC association (places Lattice data plane in the VPC) | Application-layer service-to-service communication with IAM auth | No CIDR coordination required between VPCs. Lattice operates independently of IP-level routing. |
-| **VPC + AWS PrivateLink** | Interface endpoints (ENIs) in designated subnets consuming services, or NLB-backed endpoint services exposing them | Private access to AWS services and cross-account service exposure | Size endpoint subnets for the number of endpoints you'll consume. Each interface endpoint creates one ENI per AZ. |
+| **VPC + AWS PrivateLink** | Interface endpoints (ENIs) in designated subnets consuming services, or NLB-backed endpoint services exposing them | Private access to AWS services and cross-account service exposure | Size endpoint subnets for the number of endpoints you'll consume. Each interface endpoint creates one ENI per Availability Zone. |
 | **VPC + VPC Flow Logs** | The traffic source being monitored | Metadata capture of all IP traffic for security and troubleshooting | Enable at VPC level for comprehensive coverage. Plan S3 bucket and CloudWatch log group structure for multi-VPC environments. |
 | **VPC + Route 53 Resolver** | The DNS resolution context (VPC+2 resolver) | Hybrid DNS forwarding, private hosted zone resolution, Resolver rules | Enable DNS hostnames and DNS support. Deploy Resolver endpoints in a shared-services VPC and share rules via RAM. |
 | **VPC + AWS Network Firewall** | Firewall endpoints in dedicated subnets, route tables directing traffic through them | Stateful and stateless traffic inspection and filtering | Dedicate a subnet tier for firewall endpoints. Adjust route tables so traffic traverses the firewall before reaching its destination. |
-| **VPC + NAT gateway** | The elastic network interface and elastic IP in a public subnet | Outbound IPv4 internet access for private subnets | Place NAT gateways in public subnets (one per AZ for resilience). Size the subnet to accommodate NAT gateway ENIs and any future growth. |
+| **VPC + NAT gateway** | The elastic network interface and elastic IP in a public subnet | Outbound IPv4 internet access for private subnets | Place NAT gateways in public subnets (one per Availability Zone for resilience). Size the subnet to accommodate NAT gateway ENIs and any future growth. |
 
 ***Key insight:*** *Almost every connectivity service attaches to your VPC through ENIs in specific subnets. This means your subnet design must account for Transit Gateway ENIs, PrivateLink endpoints, firewall endpoints, NAT gateways, and Resolver endpoints — not just your application workloads. Plan subnet tiers for infrastructure components from the start, or you'll run out of IP space in the subnets that matter most.*
 
@@ -352,9 +352,9 @@ Amazon VPC is the central construct that every other foundation component plugs 
 **Relationship to other Foundation topics:**
 
 * **[CIDR Planning](cidr.md)**: The VPC's primary and secondary CIDRs come from your CIDR plan. Poor CIDR planning at the VPC level cascades into routing conflicts, peering limitations, and summarization failures.
-* **[Subnets](subnets.md)**: Subnets divide the VPC's CIDR across AZs and tiers. Subnet design is constrained by the VPC's CIDR size — an undersized VPC limits your subnet options.
+* **[Subnets](subnets.md)**: Subnets divide the VPC's CIDR across Availability Zones and tiers. Subnet design is constrained by the VPC's CIDR size — an undersized VPC limits your subnet options.
 * **[IPAM](ipam.md)**: IPAM pools allocate CIDRs to VPCs automatically, preventing overlaps and enforcing organizational standards. Every VPC should get its CIDR from an IPAM pool, not from manual selection.
-* **[Regions and Availability Zones](regions-azs.md)**: A VPC exists in exactly one Region and spans all its AZs. Your Region strategy determines how many VPCs you need and where.
+* **[Regions and Availability Zones](regions-azs.md)**: A VPC exists in exactly one Region and spans all its Availability Zones. Your Region strategy determines how many VPCs you need and where.
 * **[AWS Organizations](organizations.md)**: Organizations governs who can create VPCs (SCPs), how VPCs are shared (RAM), and how VPCs attach to connectivity services (Cloud WAN attachment policies).
 
 **Relationship to Connectivity:**

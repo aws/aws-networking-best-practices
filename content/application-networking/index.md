@@ -11,7 +11,7 @@ The application networking services covered here handle the concerns that sit be
 **Key services:**
 
 *   **Application Load Balancer (ALB)** — L7 load balancing for HTTP, HTTPS, and gRPC with content-based routing, TLS termination, mutual TLS, and AWS WAF integration
-*   **Network Load Balancer (NLB)** — L4 load balancing for TCP, UDP, TLS, and QUIC with ultra-high throughput, client IP preservation, and static IPs per AZ
+*   **Network Load Balancer (NLB)** — L4 load balancing for TCP, UDP, TLS, and QUIC with ultra-high throughput, client IP preservation, and static IPs per Availability Zone
 *   **Gateway Load Balancer (GWLB)** — Transparent insertion of third-party network appliances (firewalls, IDS/IPS) into the data path; structurally different from ALB and NLB
 
 ***Key insight:*** *ALB and NLB distribute application traffic to targets. GWLB does something fundamentally different: it transparently inserts a fleet of third-party appliances into the data path. Treating GWLB as a peer of ALB or NLB is the most common source of confusion.*
@@ -52,7 +52,7 @@ The application networking services covered here handle the concerns that sit be
 
     ---
 
-    ALB, NLB, and GWLB: when to use each, best practices, health checks, AZ resilience, and how to combine them.
+    ALB, NLB, and GWLB: when to use each, best practices, health checks, Availability Zone resilience, and how to combine them.
 
     [:octicons-arrow-right-24: Load Balancing](load-balancing.md)
 

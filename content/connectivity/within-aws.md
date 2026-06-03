@@ -109,7 +109,7 @@ Designing segments around trust boundaries and traffic flow patterns gives you m
 
 AWS Cloud WAN attachment acceptance policies determine which attachments can connect to which segments, based on attachment's metadata, being the main one the use of tags. The key to making this work at scale without manual approval is controlling those tags at the source.
 
-Use [AWS Organizations Service Control Policies](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html) (SCPs) to enforce tagging requirements on resources across your accounts. When accounts in a specific OU create VPCs with the required tags (e.g., `segment:production` or `segment:sharedservices`), Cloud WAN automatically accepts the attachment into the correct segment. No tickets, no manual review by the networking team.
+Use [AWS Organizations Service Control Policies](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html) (SCPs) to enforce tagging requirements on resources across your accounts. When accounts in a specific OU create VPCs with the required tags (for example, `segment:production` or `segment:sharedservices`), Cloud WAN automatically accepts the attachment into the correct segment. No tickets, no manual review by the networking team.
 
 This combination of SCPs for tag governance and attachment policies for automated acceptance removes the networking team as a bottleneck for attachment onboarding while maintaining control over which traffic land in which segments.
 
@@ -125,7 +125,7 @@ AWS Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/lat
 
 **Route filtering and summarization**: in large networks, not every attachment needs visibility into every route. Routing policies let you filter which prefixes propagate between segments or between Cloud WAN and external networks (Direct Connect, VPN). You can also summarize routes to reduce route table size and limit the blast radius of misconfigurations. For example, instead of propagating individual VPC CIDRs to your on-premises network, you can advertise a single summary route that covers the entire segment.
 
-**BGP attribute manipulation for multi-path environments**: when you have multiple connectivity paths to on-premises (e.g., Direct Connect in two Regions, plus a VPN backup), routing policies let you manipulate BGP attributes (AS path prepending, MED, local preference) to control which path traffic takes. This is essential for optimizing performance based on bandwidth availability, latency, or cost, and for building active/standby failover patterns without relying on third-party routing appliances.
+**BGP attribute manipulation for multi-path environments**: when you have multiple connectivity paths to on-premises (for example, Direct Connect in two Regions, plus a VPN backup), routing policies let you manipulate BGP attributes (AS path prepending, MED, local preference) to control which path traffic takes. This is essential for optimizing performance based on bandwidth availability, latency, or cost, and for building active/standby failover patterns without relying on third-party routing appliances.
 
 **Regional internet egress control**: Organizations that centralize outbound internet traffic through inspection VPCs in specific Regions can use routing policies to direct default routes appropriately. For example, traffic from Asia-Pacific Regions routes through an Inspection VPC in Singapore, while European traffic routes through Frankfurt.
 
@@ -172,7 +172,7 @@ This approach avoids a disruptive one-step migration and lets you validate the n
 | **AWS Cloud WAN + VPC Resources** | Network backbone and segmentation | Private TCP access to specific resources (databases, on-prem endpoints) without requiring network-level routing between consumer and provider VPCs |
 | **AWS Cloud WAN + PrivateLink** | Inter-VPC routing | Private access to AWS services (gateway/interface endpoints) |
 | **AWS Cloud WAN + Transit Gateway** | Global policy-driven network (during migration, both run side by side) | Regional hub-and-spoke routing for VPCs not yet migrated |
-| **AWS Cloud WAN + VPC Peering** | Primary network backbone | Direct low-latency, high-throughput connectivity for specific VPC pairs (e.g., database replication) |
+| **AWS Cloud WAN + VPC Peering** | Primary network backbone | Direct low-latency, high-throughput connectivity for specific VPC pairs (for example, database replication) |
 
 ### Documentation
 
@@ -286,7 +286,7 @@ Keep this as the default unless you have a specific reason to deviate. Legitimat
 
 #### Size service networks around business domains, not environments or consumers
 
-Because the recommendation is that consumer VPCs associate with a single service network, the way you carve up service networks directly shapes what each consumer sees. Group related capabilities into service networks aligned with **business domains** (e.g., `payments`, `inventory`, `identity`), not environment names like `production` or `staging` and not infrastructure boundaries like accounts or VPCs.
+Because the recommendation is that consumer VPCs associate with a single service network, the way you carve up service networks directly shapes what each consumer sees. Group related capabilities into service networks aligned with **business domains** (for example, `payments`, `inventory`, `identity`), not environment names like `production` or `staging` and not infrastructure boundaries like accounts or VPCs.
 
 A key piece of flexibility: a VPC Lattice **service or resource configuration can be associated with more than one service network**. You don't have to duplicate a service to expose it to different consumer groups, and you don't have to collapse unrelated domains into one service network just because some consumers need both. Publish each service or resource once, then associate it with whichever service networks represent the consumer groups that should reach it.
 
@@ -425,7 +425,7 @@ VPC Resources address a common pain point: exposing a managed database, a legacy
 
     ---
 
-    An ENI-based ingress point in the provider VPC, spanning multiple AZs. All consumer traffic lands on the resource gateway and is forwarded to the backend resource as if it were local traffic. Acts as the boundary where VPC Lattice hands traffic off to your VPC.
+    An ENI-based ingress point in the provider VPC, spanning multiple Availability Zones. All consumer traffic lands on the resource gateway and is forwarded to the backend resource as if it were local traffic. Acts as the boundary where VPC Lattice hands traffic off to your VPC.
 
 *   :material-account-multiple: **Service network or direct access**
 
@@ -486,13 +486,13 @@ Use standalone resource endpoints for targeted, short-lived, or strictly limited
 
 #### Organize resource configurations alongside related services
 
-If a business domain (e.g., `payments`) already has a service network with HTTP/HTTPS services, register the databases and other TCP resources that the domain depends on into that same service network. Consumers associate their VPC once and reach both the domain's services (via VPC Lattice listeners) and its underlying resources (via resource configurations) through a single association.
+If a business domain (for example, `payments`) already has a service network with HTTP/HTTPS services, register the databases and other TCP resources that the domain depends on into that same service network. Consumers associate their VPC once and reach both the domain's services (via VPC Lattice listeners) and its underlying resources (via resource configurations) through a single association.
 
 Avoid creating a separate "resources only" service network parallel to your services service network for the same domain. The service network is the unit of sharing and auth; keeping services and their resources together gives consumers one thing to associate with and one auth policy to reason about.
 
 #### Size the resource gateway for your connection volume
 
-The resource gateway NATs consumer traffic to the backend resource. Each IPv4 address on the gateway supports up to ~55,000 concurrent connections per destination IP, and each ENI is assigned multiple IPv4 addresses (16 by default, configurable). For high-concurrency workloads (busy databases, long-lived TCP sessions), verify the gateway's capacity matches your expected concurrent connection count and deploy the gateway across as many AZs as the resource supports.
+The resource gateway NATs consumer traffic to the backend resource. Each IPv4 address on the gateway supports up to ~55,000 concurrent connections per destination IP, and each ENI is assigned multiple IPv4 addresses (16 by default, configurable). For high-concurrency workloads (busy databases, long-lived TCP sessions), verify the gateway's capacity matches your expected concurrent connection count and deploy the gateway across as many Availability Zones as the resource supports.
 
 Plan this up front rather than discovering it under load. A resource gateway's IPv4 address allocation is set at creation time.
 
@@ -583,7 +583,7 @@ With a single service network association, the consumer reaches all three. The c
 
     ---
 
-    Details on resource gateway sizing, IP address allocation, AZ placement, and security group configuration.
+    Details on resource gateway sizing, IP address allocation, Availability Zone placement, and security group configuration.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-gateway.html)
 
@@ -663,7 +663,7 @@ Own the Transit Gateway in a dedicated networking account and share it across yo
 
 #### Use dedicated `/28` subnets for Transit Gateway attachments
 
-Create small `/28` subnets in each AZ specifically for the Transit Gateway ENIs. A dedicated subnet keeps the attachment ENIs predictable for NACL and flow log configuration, and the small size reserves minimal address space from the VPC CIDR.
+Create small `/28` subnets in each Availability Zone specifically for the Transit Gateway ENIs. A dedicated subnet keeps the attachment ENIs predictable for NACL and flow log configuration, and the small size reserves minimal address space from the VPC CIDR.
 
 #### Propagate routes selectively
 
@@ -819,7 +819,7 @@ The key design decision is **decentralized** (each VPC runs its own endpoints) v
 
 #### Deploy endpoints in multiple Availability Zones
 
-Create endpoint ENIs in at least two AZs for high availability. An endpoint confined to a single AZ becomes a single point of failure for every workload using it, which is easy to miss until the AZ has a problem.
+Create endpoint ENIs in at least two Availability Zones for high availability. An endpoint confined to a single Availability Zone becomes a single point of failure for every workload using it, which is easy to miss until the Availability Zone has a problem.
 
 #### Use endpoint policies for defense in depth
 
@@ -869,7 +869,7 @@ For new cross-account service-to-service patterns, evaluate VPC Lattice first. F
 
     ---
 
-    Gateway endpoints are free. Interface endpoints incur an hourly charge per AZ plus data processing per GB. Endpoint services have no PrivateLink charge beyond the NLB/GWLB.
+    Gateway endpoints are free. Interface endpoints incur an hourly charge per Availability Zone plus data processing per GB. Endpoint services have no PrivateLink charge beyond the NLB/GWLB.
 
     [:octicons-arrow-right-24: Pricing](https://aws.amazon.com/privatelink/pricing/)
 
@@ -976,7 +976,7 @@ Avoid building your connectivity strategy around VPC Peering if you expect to co
 
 | Combination | VPC Peering handles | Other service handles |
 | --- | --- | --- |
-| **VPC Peering + AWS Cloud WAN** | Direct connectivity for specific VPC pairs (e.g., high-throughput database replication) to avoid data processing charges on the backbone | Primary network backbone with policy-driven segmentation |
+| **VPC Peering + AWS Cloud WAN** | Direct connectivity for specific VPC pairs (for example, high-throughput database replication) to avoid data processing charges on the backbone | Primary network backbone with policy-driven segmentation |
 | **VPC Peering + Transit Gateway** | Direct connectivity for specific VPC pairs with high data transfer volumes, bypassing Transit Gateway data processing | Hub-and-spoke routing for the rest of the network |
 | **VPC Peering + VPC Lattice** | Direct IP-level traffic between the two peered VPCs | Service and resource communication through the VPC Lattice data plane, independent of the peering |
 | **VPC Peering + AWS PrivateLink** | Direct IP connectivity between the two VPCs | Local PrivateLink endpoints maintained independently in each peered VPC |

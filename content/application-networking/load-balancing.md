@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This section assumes familiarity with [Amazon VPC](../foundation/vpc.md), [Subnets](../foundation/subnets.md), and the connectivity patterns covered in the [Within AWS](../connectivity/within-aws.md) and [Internet connectivity](../connectivity/internet.md) pages. Review those topics first if you're new to AWS networking fundamentals.
 
-AWS Elastic Load Balancing distributes traffic across multiple targets through three managed services: Application Load Balancer (ALB) for L7 HTTP/HTTPS/gRPC with content-based routing across up to 100 listener rules, Network Load Balancer (NLB) for L4 TCP/UDP/TLS handling millions of connections per second with sub-millisecond latency and static IPs per AZ, and Gateway Load Balancer (GWLB) for transparent insertion of third-party firewall appliances using GENEVE encapsulation. These are not interchangeable — each is built for a different traffic class and a different role in the architecture.
+AWS Elastic Load Balancing distributes traffic across multiple targets through three managed services: Application Load Balancer (ALB) for L7 HTTP/HTTPS/gRPC with content-based routing across up to 100 listener rules, Network Load Balancer (NLB) for L4 TCP/UDP/TLS handling millions of connections per second with sub-millisecond latency and static IPs per Availability Zone, and Gateway Load Balancer (GWLB) for transparent insertion of third-party firewall appliances using GENEVE encapsulation. These are not interchangeable — each is built for a different traffic class and a different role in the architecture.
 
 This page covers the three Elastic Load Balancing services as building blocks of an application architecture: what each one does, how to configure it well, when to choose one over the others, and how to combine them with other AWS services.
 
@@ -19,7 +19,7 @@ graph TB
 
             subgraph AppTraffic["Application traffic distribution"]
                 ALB["Application Load Balancer (ALB)<br/>L7 — HTTP, HTTPS, gRPC<br/>Content-based routing,<br/>TLS termination, mTLS, AWS WAF"]
-                NLB["Network Load Balancer (NLB)<br/>L4 — TCP, UDP, TLS<br/>Ultra-high throughput,<br/>client IP preservation,<br/>static IPs per AZ"]
+                NLB["Network Load Balancer (NLB)<br/>L4 — TCP, UDP, TLS<br/>Ultra-high throughput,<br/>client IP preservation,<br/>static IPs per Availability Zone"]
             end
 
             subgraph Inspection["Transparent inspection insertion"]
@@ -146,13 +146,13 @@ ALB terminates TLS using certificates managed by [AWS Certificate Manager](https
 
 * **Issue per-application certificates from ACM** rather than rotating self-managed certificates on the targets themselves.
 * **Re-encrypt to the origin only when the workload's compliance baseline requires end-to-end TLS**. The vast majority of L7 traffic terminates at the ALB and uses HTTP from the ALB to the targets.
-* **For workloads that authenticate clients by certificate, use [mutual TLS](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html)**. Choose `passthrough` mode if backend services need the full client certificate chain to make their own authentication decisions, or `verify` mode if the ALB itself should perform X.509 authentication using a CA bundle. Note that TLS session resumption is not supported with mTLS, so factor that into the connection-rate budget.
+* **For workloads that authenticate clients by certificate, use [mutual TLS](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/mutual-authentication.html)**. Choose `passthrough` mode if backend services need the full client certificate chain to make their own authentication decisions, or `verify` mode if the ALB itself should perform X.509 authentication using a CA bundle. TLS session resumption is not supported with mTLS, so factor that into the connection-rate budget.
 
-#### Plan for AZ resilience
+#### Plan for Availability Zone resilience
 
-* **Run ALB in at least two AZs and ideally three** for production. ALB itself is highly available across enabled AZs; the limit is your subnet sizing and the AZs your targets actually run in.
-* **Cross-zone load balancing is on by default** at the ALB level (and that's the right setting). It evens out target utilization regardless of how clients distribute themselves across AZs. You can override it per target group, but the default is correct for almost every workload.
-* **Enable [zonal shift](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/zonal-shift.html) through Amazon Application Recovery Controller** (ARC) for production ALBs. Zonal shift lets an operator drain an AZ from the load balancer's DNS in seconds during a real or suspected AZ event, without touching health checks or routing rules. For automatic activation on AZ-impacting events, configure `zonal autoshift` (an ARC feature that lets AWS trigger a zonal shift on your behalf when AWS-internal telemetry detects an AZ impairment). The `zonal autoshift` feature requires a weekly practice-run configuration so the application is validated to run cleanly without one AZ before a real shift fires.
+* **Run ALB in at least two Availability Zones and ideally three** for production. ALB itself is highly available across enabled Availability Zones; the limit is your subnet sizing and the Availability Zones your targets actually run in.
+* **Cross-zone load balancing is on by default** at the ALB level (and that's the right setting). It evens out target utilization regardless of how clients distribute themselves across Availability Zones. You can override it per target group, but the default is correct for almost every workload.
+* **Enable [zonal shift](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/zonal-shift.html) through Amazon Application Recovery Controller** (ARC) for production ALBs. Zonal shift lets an operator drain an Availability Zone from the load balancer's DNS in seconds during a real or suspected Availability Zone event, without touching health checks or routing rules. For automatic activation on AZ-impacting events, configure `zonal autoshift` (an ARC feature that lets AWS trigger a zonal shift on your behalf when AWS-internal telemetry detects an Availability Zone impairment). The `zonal autoshift` feature requires a weekly practice-run configuration so the application is validated to run cleanly without one Availability Zone before a real shift fires.
 
 #### Plan IPv6 as a first-class option
 
@@ -186,7 +186,7 @@ Target group attributes control how an ALB drains and starts targets, which dire
 | Deletion protection | Off | **On** for production. Cost is zero; protection against accidental deletion is real. |
 | Access logs to S3 | Off | **On** for workloads that need request-level forensics. ALB charges nothing extra; only S3 storage cost applies. |
 | Idle timeout (`idle_timeout.timeout_seconds`) | 60 seconds | Tune up for long-lived connections (server-sent events, long polling); leave at 60 for typical request/response. |
-| Subnet sizing | — | At least `/27` per AZ subnet, with eight free IPs reserved. Tight `/28` subnets exhaust during scale events and cause 5xx errors. |
+| Subnet sizing | — | At least `/27` per Availability Zone subnet, with eight free IPs reserved. Tight `/28` subnets exhaust during scale events and cause 5xx errors. |
 
 ### When to use Application Load Balancer
 
@@ -209,7 +209,7 @@ ALB is not the right choice when the workload is non-HTTP (use NLB), needs ultra
 * **Integrate with Auto Scaling, Amazon ECS, and Amazon EKS** through native target group registration, so the load balancer's target list reflects the actual capacity.
 * **Use Lambda targets** for serverless backends behind an HTTP front door without an API Gateway dependency.
 * **Use weighted target groups** for blue/green and canary releases without DNS-based traffic shifting.
-* **Pair with [Amazon Application Recovery Controller](https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html)** to enable zonal shift (operator-triggered) and `zonal autoshift` (AWS-triggered, requires a practice-run configuration) for fast AZ-level traffic draining during AZ events.
+* **Pair with [Amazon Application Recovery Controller](https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html)** to enable zonal shift (operator-triggered) and `zonal autoshift` (AWS-triggered, requires a practice-run configuration) for fast AZ-level traffic draining during Availability Zone events.
 
 ### Documentation
 
@@ -245,11 +245,11 @@ ALB is not the right choice when the workload is non-HTTP (use NLB), needs ultra
 
     By default, instance targets and UDP/TCP_UDP/QUIC/TCP_QUIC targets see the original client IP, so backend security groups and application logic can use real client addresses.
 
-*   :material-ip-network: **Static and Elastic IPs per AZ**
+*   :material-ip-network: **Static and Elastic IPs per Availability Zone**
 
     ---
 
-    Each NLB has a stable IP per enabled AZ (with optional Elastic IPs for public NLBs), suitable for clients that need to allow-list specific addresses and for DNS records that point at a fixed L4 endpoint.
+    Each NLB has a stable IP per enabled Availability Zone (with optional Elastic IPs for public NLBs), suitable for clients that need to allow-list specific addresses and for DNS records that point at a fixed L4 endpoint.
 
 *   :material-shield-key-outline: **TLS termination at L4**
 
@@ -294,20 +294,20 @@ NLB health checks happen at the target group level and probe each target indepen
 * **Use TCP probes when the target doesn't expose an HTTP health endpoint**. Recognize that a TCP success only means "the port accepts connections" — not "the application is ready". Pair TCP health checks with application-level alarms on metrics that reflect actual readiness.
 * **Tune interval and threshold to the application's recovery time**. NLB health checks default to 30-second intervals and 5 healthy / 2 unhealthy thresholds; that's right for many workloads but wrong for slow-starting backends or for protocols where a single failure should not pull a target out of rotation.
 
-#### Plan for AZ resilience
+#### Plan for Availability Zone resilience
 
-NLB's AZ behavior is more nuanced than ALB's because cross-zone load balancing is **off** by default and zonal traffic distribution is part of the design. Deploy NLB in at least two AZs and treat cross-zone, AZ DNS affinity, and zonal shift as one connected set of decisions.
+NLB's Availability Zone behavior is more nuanced than ALB's because cross-zone load balancing is **off** by default and zonal traffic distribution is part of the design. Deploy NLB in at least two Availability Zones and treat cross-zone, Availability Zone DNS affinity, and zonal shift as one connected set of decisions.
 
-* **Cross-zone load balancing is off by default**, which keeps client traffic within the AZ where it arrived (no cross-zone data-transfer charges, lower latency). The trade-off is that distribution depends on how clients spread across AZs.
+* **Cross-zone load balancing is off by default**, which keeps client traffic within the Availability Zone where it arrived (no cross-zone data-transfer charges, lower latency). The trade-off is that distribution depends on how clients spread across Availability Zones.
 
   | Setting | Use it when |
   | --- | --- |
-  | **Off** *(default)* | Client distribution is roughly uniform across AZs and zonal locality matters for cost or latency. |
-  | **On** | Distribution is uneven (single-AZ caller dominates), or every target should receive equal traffic regardless of arrival AZ. Cross-zone NLB-to-target traffic incurs cross-AZ data-transfer charges. |
+  | **Off** *(default)* | Client distribution is roughly uniform across Availability Zones and zonal locality matters for cost or latency. |
+  | **On** | Distribution is uneven (single-AZ caller dominates), or every target should receive equal traffic regardless of arrival Availability Zone. Cross-zone NLB-to-target traffic incurs cross-AZ data-transfer charges. |
 
-  Combine cross-zone-off with [Availability Zone DNS affinity](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/edit-load-balancer-attributes.html) (Route 53 Resolver returns the NLB's IP in the client's own AZ) when both halves of the path should stay zonal. Plan for targets to scale per AZ rather than as a single pool.
+  Combine cross-zone-off with [Availability Zone DNS affinity](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/edit-load-balancer-attributes.html) (Route 53 Resolver returns the NLB's IP in the client's own Availability Zone) when both halves of the path should stay zonal. Plan for targets to scale per Availability Zone rather than as a single pool.
 
-* **Enable [zonal shift](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/zonal-shift.html) through Amazon Application Recovery Controller** (ARC) for production NLBs. An operator-triggered zonal shift removes the impaired AZ's IP from DNS so new connections go to healthy AZs (existing connections drain as they close). Configure `zonal autoshift` for AWS-triggered activation when AWS-internal telemetry detects an AZ impairment; it requires a weekly practice-run configuration so the application is validated to run cleanly without one AZ before a real shift fires.
+* **Enable [zonal shift](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/zonal-shift.html) through Amazon Application Recovery Controller** (ARC) for production NLBs. An operator-triggered zonal shift removes the impaired AZ's IP from DNS so new connections go to healthy Availability Zones (existing connections drain as they close). Configure `zonal autoshift` for AWS-triggered activation when AWS-internal telemetry detects an Availability Zone impairment; it requires a weekly practice-run configuration so the application is validated to run cleanly without one Availability Zone before a real shift fires.
 
 * **Alarm on the `ZonalHealthStatus` CloudWatch metric**. NLB removes a zone's DNS record when the zone fails its zonal health check (no healthy targets, configured minimum not met, or an active zonal shift). Catching this early prevents zonal trouble from turning into customer-facing failure.
 
@@ -361,7 +361,7 @@ Several L4-level features on NLB cover concerns that would otherwise need extra 
 | Deletion protection | Off | **On** for production. Cost is zero; protection against accidental deletion is real. |
 | Access logs to S3 | Off | **On** for workloads that need flow-level forensics. NLB charges nothing extra; only S3 storage cost applies. |
 | Cross-zone load balancing | Off | Leave **off** as the default for the latency and cross-zone-cost reasons above. Override per target group if a specific workload needs it. |
-| Zonal shift | Off | **On** for production NLBs, with `zonal autoshift` and a practice-run configuration where the application can be validated to run with one fewer AZ. |
+| Zonal shift | Off | **On** for production NLBs, with `zonal autoshift` and a practice-run configuration where the application can be validated to run with one fewer Availability Zone. |
 | Secondary IP addresses per subnet | 0 | Increase only when port allocation errors prevent target additions at very high scale. The setting cannot be reduced once raised. |
 
 ### When to use Network Load Balancer
@@ -371,7 +371,7 @@ NLB is the right load balancer when:
 * The workload is L4 — TCP, UDP, TLS that isn't HTTPS, or QUIC.
 * You need ultra-low-latency forwarding without HTTP-aware processing.
 * The application authenticates clients by source IP end-to-end and needs client IP preservation.
-* You need a static IP per AZ (or Elastic IPs for stable public addresses) so that clients can allow-list the load balancer.
+* You need a static IP per Availability Zone (or Elastic IPs for stable public addresses) so that clients can allow-list the load balancer.
 * The protocol must traverse the load balancer transparently — gaming, voice, video, real-time financial trading, custom binary protocols, or HTTP/3 / QUIC workloads.
 * You need to expose a service through AWS PrivateLink, where NLB is the supported load balancer in front of an [interface VPC endpoint service](https://docs.aws.amazon.com/vpc/latest/privatelink/configure-endpoint-service.html).
 
@@ -384,7 +384,7 @@ NLB is not the right choice for HTTP/HTTPS workloads that need request-level rou
 * **Use VPC Lattice VPC Resources** as an alternative to PrivateLink endpoint services when the goal is private TCP resource access across VPCs and accounts. VPC Resources require no NLB to maintain and support overlapping CIDRs natively.
 * **Combine NLB with ALB-as-target** for the L4-then-L7 pattern when the workload genuinely needs both: an NLB for static IPs or PrivateLink exposure, and an ALB for HTTP-aware routing. This is a small set of use cases, and not a workaround for cross-VPC HTTPS ingress.
 * **Integrate with Auto Scaling, Amazon ECS, and Amazon EKS** through native target group registration.
-* **Pair with [Amazon Application Recovery Controller](https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html)** to enable zonal shift (operator-triggered) and `zonal autoshift` (AWS-triggered, requires a practice-run configuration) for fast AZ-level traffic draining during AZ events.
+* **Pair with [Amazon Application Recovery Controller](https://docs.aws.amazon.com/r53recovery/latest/dg/what-is-route53-recovery.html)** to enable zonal shift (operator-triggered) and `zonal autoshift` (AWS-triggered, requires a practice-run configuration) for fast AZ-level traffic draining during Availability Zone events.
 
 ### Documentation
 
@@ -394,7 +394,7 @@ NLB is not the right choice for HTTP/HTTPS workloads that need request-level rou
 
     ---
 
-    Complete service documentation including TCP/UDP/TLS/QUIC listeners, target groups, client IP preservation, Proxy Protocol, security groups, AZ DNS affinity, zonal shift, and pricing.
+    Complete service documentation including TCP/UDP/TLS/QUIC listeners, target groups, client IP preservation, Proxy Protocol, security groups, Availability Zone DNS affinity, zonal shift, and pricing.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html)
 
@@ -426,13 +426,13 @@ Choose GWLB only when you actually have third-party appliances to insert. For AW
 
     ---
 
-    Deploy appliances across multiple AZs behind the GWLB; target group health drives in-service status and Auto Scaling adjusts fleet size. Cross-zone load balancing and Transit Gateway/AWS Cloud WAN Appliance Mode handle east-west and AZ-imbalance scenarios.
+    Deploy appliances across multiple Availability Zones behind the GWLB; target group health drives in-service status and Auto Scaling adjusts fleet size. Cross-zone load balancing and Transit Gateway/AWS Cloud WAN Appliance Mode handle east-west and AZ-imbalance scenarios.
 
 *   :material-hub-outline: **PrivateLink-based GWLB endpoints**
 
     ---
 
-    Consumer VPCs reach the inspection layer through one GWLB endpoint per AZ — a PrivateLink construct that integrates with VPC route tables so any flow can be steered through inspection.
+    Consumer VPCs reach the inspection layer through one GWLB endpoint per Availability Zone — a PrivateLink construct that integrates with VPC route tables so any flow can be steered through inspection.
 
 </div>
 
@@ -449,13 +449,13 @@ When the GWLB removes a flow from its connection table before the appliance does
 
 For TCP, also configure keep-alive on the application or OS to fire below the GWLB idle timeout (`net.ipv4.tcp_keepalive_time = 60` on Linux, or another value below the GWLB timeout) so idle connections are kept alive end-to-end. Tune the GWLB TCP idle timeout deliberately when the workload has long-lived flows (database synchronization, persistent message buses); raising it also increases the chance of stale entries in the connection table.
 
-#### Plan for AZ resilience
+#### Plan for Availability Zone resilience
 
-A single-AZ appliance deployment behind GWLB is a single point of failure for inspection. GWLB's cross-zone load balancing is **off** by default, which is usually correct as it isolates AZ failures so a failed AZ doesn't mask itself behind cross-zone routing.
+A single-AZ appliance deployment behind GWLB is a single point of failure for inspection. GWLB's cross-zone load balancing is **off** by default, which is usually correct as it isolates Availability Zone failures so a failed Availability Zone doesn't mask itself behind cross-zone routing.
 
-* **Deploy appliances in at least two AZs** behind the GWLB, with health checks that exercise the appliance's actual inspection path (not just an interface ping).
+* **Deploy appliances in at least two Availability Zones** behind the GWLB, with health checks that exercise the appliance's actual inspection path (not just an interface ping).
 * **Use Auto Scaling for the appliance fleet** when traffic load is variable. GWLB target group health drives in-service status; Auto Scaling adds and removes appliance capacity based on the workload signals you choose.
-* **Keep cross-zone load balancing off as the default** so a fully-failed AZ becomes offline for inspection rather than masking itself behind a healthy AZ. Turn it on only when you've decided the workload prefers continued service over strict zonal isolation, and you've sized appliances to absorb cross-zone traffic.
+* **Keep cross-zone load balancing off as the default** so a fully-failed Availability Zone becomes offline for inspection rather than masking itself behind a healthy Availability Zone. Turn it on only when you've decided the workload prefers continued service over strict zonal isolation, and you've sized appliances to absorb cross-zone traffic.
 
 #### Choose one-arm or two-arm appliance deployment
 
@@ -468,11 +468,11 @@ Third-party appliances behind GWLB run in either one-arm or two-arm mode. The ch
 
 The architectural decision (centralized inspection in a shared VPC vs decentralized inspection per workload VPC) is independent of the deployment-mode decision.
 
-#### Place GWLB endpoints per AZ in the consumer VPC
+#### Place GWLB endpoints per Availability Zone in the consumer VPC
 
-GWLB endpoints are PrivateLink-based and deployed one per AZ in the consumer VPC. The endpoint is what the consumer's route tables target to direct traffic through inspection.
+GWLB endpoints are PrivateLink-based and deployed one per Availability Zone in the consumer VPC. The endpoint is what the consumer's route tables target to direct traffic through inspection.
 
-* **Deploy one GWLB endpoint per AZ in every consuming VPC** (or in the inspection VPC for centralized designs). Routing must direct each AZ's traffic to its local endpoint to avoid unnecessary cross-AZ hops.
+* **Deploy one GWLB endpoint per Availability Zone in every consuming VPC** (or in the inspection VPC for centralized designs). Routing must direct each Availability Zone's traffic to its local endpoint to avoid unnecessary cross-AZ hops.
 * **Plan routing carefully**. The route-table change that directs traffic through the GWLB endpoint is what makes inspection happen; an incomplete route-table update means some flows bypass inspection — a security gap that's easy to miss in an audit.
 
 #### Plan for the encapsulation MTU and packet handling
@@ -497,7 +497,7 @@ GWLB supports `ipv4` and `dualstack` IP-address types. Dual-stack mode lets clie
 | --- | --- | --- |
 | Deletion protection | Off | **On** for production. Cost is zero; protection against accidental deletion is real. |
 | Cross-zone load balancing | Off | Leave **off** as the default, for the AZ-isolation reasons above. Override only when you've decided the workload prefers continued service over strict zonal isolation. |
-| Subnet size per AZ | — | At least 8 free IPs per subnet. Subnets cannot be removed after creation; to change them, recreate the GWLB. |
+| Subnet size per Availability Zone | — | At least 8 free IPs per subnet. Subnets cannot be removed after creation; to change them, recreate the GWLB. |
 | Network ACLs | — | When the application servers and the GWLB endpoint are in the same subnet, NACL rules are evaluated for application-server-to-endpoint traffic. Test NACL changes in a non-production environment first. |
 
 ### Combining Gateway Load Balancer with other services
@@ -534,7 +534,7 @@ graph TB
         end
 
         subgraph L4["L4 — Network Load Balancer"]
-            NLB2["TCP, UDP, TLS, QUIC<br/>Static IPs per AZ<br/>Client IP preservation<br/>EC2, IP, ALB-as-target<br/>PrivateLink front"]
+            NLB2["TCP, UDP, TLS, QUIC<br/>Static IPs per Availability Zone<br/>Client IP preservation<br/>EC2, IP, ALB-as-target<br/>PrivateLink front"]
         end
 
         subgraph L3Insp["Transparent appliance insertion"]
@@ -563,7 +563,7 @@ Organizations building load balancing on a clean slate can start with the patter
 4. **Application-aware health checks from day one**. Probe a path that exercises the target's real dependencies; tune interval and threshold to the workload's recovery shape. A misconfigured health check is one of the most common causes of avoidable production incidents.
 5. **GWLB only when there's a third-party appliance to insert**. For AWS-native L4 inspection, AWS Network Firewall is the managed alternative. When GWLB is the right call, deploy multi-AZ from day one, enable Transit Gateway or AWS Cloud WAN Appliance Mode for east-west inspection, and tune timeouts so the GWLB, the appliance, and the client agree.
 6. **IPv6 first-class on ALB and NLB** for new VPCs. Dual-stack listeners by default; IPv6-only when the client population is fully IPv6-capable.
-7. **Production defaults set from creation**: deletion protection on, access logs to S3, zonal shift through ARC enabled (with `zonal autoshift` and a practice-run configuration where the application can run cleanly with one fewer AZ).
+7. **Production defaults set from creation**: deletion protection on, access logs to S3, zonal shift through ARC enabled (with `zonal autoshift` and a practice-run configuration where the application can run cleanly with one fewer Availability Zone).
 
 ### Existing environments
 
@@ -571,6 +571,6 @@ Organizations running existing load balancers have working patterns that don't n
 
 1. **Existing ALBs** keep their role. Adopt CloudFront VPC Origins on new VPC-hosted L7 workloads; add AWS WAF (centrally managed through Firewall Manager) where it isn't already attached; turn on Automatic Target Weights for workloads that have shown gray-failure incidents; enable zonal shift through ARC.
 2. **Existing NLBs without security groups** can stay running, with target-side security groups still doing the access control. New NLBs and recreated NLBs should be created with security groups attached. Enable zonal shift through ARC on production NLBs.
-3. **Existing GWLB deployments** continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the GWLB, the appliances, and the workloads, that the appliance MTU is at least 8568 bytes, and that GWLB endpoints are deployed per AZ in every consuming VPC.
+3. **Existing GWLB deployments** continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the GWLB, the appliances, and the workloads, that the appliance MTU is at least 8568 bytes, and that GWLB endpoints are deployed per Availability Zone in every consuming VPC.
 4. **Classic Load Balancer** is a legacy choice. Plan migration to ALB (for HTTP/HTTPS) or NLB (for L4) opportunistically; CLB is supported but does not receive new features and should not be the target for new workloads.
 5. **IPv6 adoption on existing load balancers** is a per-listener decision. ALBs and NLBs can be moved to dual-stack on a new listener without disrupting the existing IPv4 listener; plan the rollout per workload.

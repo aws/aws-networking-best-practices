@@ -64,7 +64,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 | Traffic type | Use this | Not this | Why |
 | --- | --- | --- | --- |
 | HTTP, HTTPS, gRPC | **ALB** | NLB (can handle but has not app layer visibility) | ALB provides content-based routing, TLS termination, AWS WAF integration, mTLS, and Automatic Target Weights |
-| TCP, UDP, TLS, QUIC (non-HTTP) | **NLB** | ALB | NLB forwards without HTTP decoding; preserves client IP; provides static IPs per AZ |
+| TCP, UDP, TLS, QUIC (non-HTTP) | **NLB** | ALB | NLB forwards without HTTP decoding; preserves client IP; provides static IPs per Availability Zone |
 | Need static IPs AND HTTP routing | **NLB with ALB-as-target** | ALB alone | NLB provides the static IPs; ALB provides the L7 routing behind it |
 | Third-party firewall insertion | **GWLB** | Network Firewall | GWLB is for your own appliance fleet; Network Firewall is the AWS-managed alternative |
 | Service-to-service across VPCs | **VPC Lattice** | ALB + PrivateLink | VPC Lattice bundles cross-VPC reach, auth, weighted routing, and access logs without managing load balancers |

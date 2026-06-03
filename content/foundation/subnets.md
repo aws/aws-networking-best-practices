@@ -66,11 +66,11 @@ The classic "public/private/data" three-tier model is a starting point, not a ce
 
 | Tier | Purpose | Typical CIDR | Route table pattern |
 | --- | --- | --- | --- |
-| **Firewall** | AWS Network Firewall endpoints, GWLB endpoints | `/28` per AZ | Routes from IGW and other tiers for inspection |
-| **Public** | ALBs, NLBs, NAT gateways, bastion hosts | `/24` per AZ | `0.0.0.0/0` → internet gateway (or firewall endpoint) |
-| **Private (application)** | EC2, ECS tasks, EKS pods, Lambda ENIs | `/23` or `/22` per AZ | `0.0.0.0/0` → NAT gateway (or no internet route) |
-| **Data** | RDS, ElastiCache, OpenSearch, Redshift | `/24` per AZ | No internet route; only VPC-local and on-premises routes |
-| **Infrastructure / Transit** | TGW ENIs, VPC endpoint ENIs, Direct Connect VIF attachments | `/27` or `/28` per AZ | Service-specific routes only |
+| **Firewall** | AWS Network Firewall endpoints, GWLB endpoints | `/28` per Availability Zone | Routes from IGW and other tiers for inspection |
+| **Public** | ALBs, NLBs, NAT gateways, bastion hosts | `/24` per Availability Zone | `0.0.0.0/0` → internet gateway (or firewall endpoint) |
+| **Private (application)** | EC2, ECS tasks, EKS pods, Lambda ENIs | `/23` or `/22` per Availability Zone | `0.0.0.0/0` → NAT gateway (or no internet route) |
+| **Data** | RDS, ElastiCache, OpenSearch, Redshift | `/24` per Availability Zone | No internet route; only VPC-local and on-premises routes |
+| **Infrastructure / Transit** | TGW ENIs, VPC endpoint ENIs, Direct Connect VIF attachments | `/27` or `/28` per Availability Zone | Service-specific routes only |
 
 Not every VPC needs all five tiers. A simple workload VPC might use only public and private. A shared-services VPC might add infrastructure subnets for VPC endpoints. An inspection VPC needs the firewall tier. Design for what you deploy today and leave CIDR room for tiers you might add later.
 
@@ -91,17 +91,17 @@ AWS reserves 5 addresses in every subnet (network, router, DNS, future use, broa
 | EKS pods (VPC CNI) | 1 IP per pod by default; with prefix delegation, 1 `/28` prefix per slot |
 | Lambda (VPC-connected) | 1 ENI per unique security-group + subnet combination (shared across invocations via Hyperplane) |
 | NAT gateway | 1 IP per gateway |
-| Network Firewall endpoint | 1 IP per AZ endpoint |
-| VPC endpoint (interface) | 1 ENI per AZ per endpoint |
-| Transit Gateway attachment | 1 ENI per AZ |
+| Network Firewall endpoint | 1 IP per Availability Zone endpoint |
+| VPC endpoint (interface) | 1 ENI per Availability Zone per endpoint |
+| Transit Gateway attachment | 1 ENI per Availability Zone |
 
-***Key insight:*** EKS with the VPC CNI plugin is the most aggressive IP consumer in AWS. A single `m5.xlarge` node can host 58 pods, each consuming an IP from the subnet. A 20-node cluster in one AZ can consume 1,160 IPs — more than four `/24` subnets. If you run EKS, size private subnets at `/21` or `/20` per AZ, or enable prefix delegation to reduce consumption to one `/28` per ENI slot.
+***Key insight:*** EKS with the VPC CNI plugin is the most aggressive IP consumer in AWS. A single `m5.xlarge` node can host 58 pods, each consuming an IP from the subnet. A 20-node cluster in one Availability Zone can consume 1,160 IPs — more than four `/24` subnets. If you run EKS, size private subnets at `/21` or `/20` per Availability Zone, or enable prefix delegation to reduce consumption to one `/28` per ENI slot.
 
 #### Sizing recommendations by tier
 
 | Tier | Recommended size | Rationale |
 | --- | --- | --- |
-| Firewall | `/28` (11 usable) | Network Firewall creates one endpoint per AZ; you rarely need more than a handful of IPs |
+| Firewall | `/28` (11 usable) | Network Firewall creates one endpoint per Availability Zone; you rarely need more than a handful of IPs |
 | Public | `/24` (251 usable) | ALBs scale horizontally and consume IPs; NAT gateways need room; `/24` gives comfortable headroom |
 | Private (non-container) | `/24` (251 usable) | Standard EC2 and Lambda workloads fit comfortably |
 | Private (EKS/ECS) | `/22` to `/20` (1,019–4,091 usable) | Container workloads consume IPs aggressively; under-sizing here causes pod scheduling failures |
@@ -116,17 +116,17 @@ If a subnet tier grows beyond its initial allocation, you cannot resize the subn
 
 #### One route table per tier, not one per subnet
 
-The most common route table pattern is one shared route table per tier, associated with all subnets in that tier across all AZs. This keeps routing policy consistent within a tier and reduces the number of route tables to manage.
+The most common route table pattern is one shared route table per tier, associated with all subnets in that tier across all Availability Zones. This keeps routing policy consistent within a tier and reduces the number of route tables to manage.
 
 | Pattern | When to use |
 | --- | --- |
 | **One route table per tier** | Default. All public subnets share one route table; all private subnets share another. Simple, consistent, easy to audit. |
-| **One route table per AZ per tier** | When each AZ has its own NAT gateway and you want AZ-local egress (the `0.0.0.0/0` route points to the NAT gateway in the same AZ). This is the standard HA pattern for private subnets. |
-| **One route table per subnet** | Rare. Use only when individual subnets need unique routing (e.g., a specific subnet routes to a firewall endpoint while its peers route directly). Adds operational complexity. |
+| **One route table per Availability Zone per tier** | When each Availability Zone has its own NAT gateway and you want AZ-local egress (the `0.0.0.0/0` route points to the NAT gateway in the same Availability Zone). This is the standard HA pattern for private subnets. |
+| **One route table per subnet** | Rare. Use only when individual subnets need unique routing (for example, a specific subnet routes to a firewall endpoint while its peers route directly). Adds operational complexity. |
 
-***Key insight:*** For private subnets with NAT gateways, you need one route table per AZ (not per tier) because each AZ's route table points `0.0.0.0/0` at the NAT gateway in that same AZ. This keeps egress traffic AZ-local, avoids cross-AZ data transfer charges, and ensures that a NAT gateway failure only affects its own AZ.
+***Key insight:*** For private subnets with NAT gateways, you need one route table per Availability Zone (not per tier) because each Availability Zone's route table points `0.0.0.0/0` at the NAT gateway in that same Availability Zone. This keeps egress traffic AZ-local, avoids cross-AZ data transfer charges, and ensures that a NAT gateway failure only affects its own Availability Zone.
 
-### The infrastructure subnet tier
+### Infrastructure subnet tier
 
 #### Dedicate subnets for network service ENIs
 
@@ -138,7 +138,7 @@ Transit Gateway attachments, VPC interface endpoints, Network Firewall endpoints
 
 Dedicated infrastructure subnets (small — `/27` or `/28`) solve all three. They have their own route tables, their own NACLs if needed, and their IP consumption is isolated and predictable.
 
-***Key insight:*** Transit Gateway attachments create one ENI per AZ in the subnets you specify. If you put TGW ENIs in your application subnets, the TGW's route table entries and the subnet's route table interact in ways that are hard to reason about. A dedicated `/28` infrastructure subnet per AZ costs almost nothing in address space and eliminates an entire class of routing confusion.
+***Key insight:*** Transit Gateway attachments create one ENI per Availability Zone in the subnets you specify. If you put TGW ENIs in your application subnets, the TGW's route table entries and the subnet's route table interact in ways that are hard to reason about. A dedicated `/28` infrastructure subnet per Availability Zone costs almost nothing in address space and eliminates an entire class of routing confusion.
 
 ### Network ACLs
 
@@ -149,7 +149,7 @@ NACLs are stateless, operate at the subnet level, and apply to all traffic enter
 **When NACLs add value:**
 
 * Compliance frameworks (PCI-DSS, HIPAA) that require network-level deny rules independent of instance-level controls
-* Blocking entire CIDR ranges at the subnet boundary (e.g., denying traffic from a known-bad range before it reaches any security group)
+* Blocking entire CIDR ranges at the subnet boundary (for example, denying traffic from a known-bad range before it reaches any security group)
 * Defense-in-depth for data-tier subnets where you want an explicit allowlist of source CIDRs regardless of what security groups permit
 
 **When NACLs add complexity without value:**
@@ -169,7 +169,7 @@ NACLs are stateless, operate at the subnet level, and apply to all traffic enter
 **Use CIDR reservations when:**
 
 * Running EKS with prefix delegation — reserve a range for `/28` prefixes so that pod IPs come from a predictable block
-* You need stable IP ranges for specific workloads (e.g., a block of IPs that on-premises firewalls allowlist)
+* You need stable IP ranges for specific workloads (for example, a block of IPs that on-premises firewalls allowlist)
 * Preventing IP conflicts between auto-assigned resources and manually assigned ENIs
 
 **Skip CIDR reservations when:**
@@ -186,11 +186,11 @@ Unlike IPv4, where you choose subnet sizes from `/28` to `/16`, IPv6 subnets in 
 Design implications:
 
 * **No variable sizing.** You cannot create a "small" IPv6 subnet. Every subnet gets the same `/64` regardless of tier.
-* **Subnet count is the constraint, not size.** With 256 `/64`s available from a single `/56`, plan your tier and AZ layout to fit within that budget.
+* **Subnet count is the constraint, not size.** With 256 `/64`s available from a single `/56`, plan your tier and Availability Zone layout to fit within that budget.
 * **Dual-stack subnets carry both an IPv4 CIDR and an IPv6 /64.** Size the IPv4 CIDR for the workload; the IPv6 side takes care of itself.
 * **IPv6-only subnets** eliminate IPv4 entirely. Use these for workloads that don't need IPv4 connectivity (internal microservices, batch processing) to simplify addressing and avoid IPv4 exhaustion.
 
-***Key insight:*** The `/56` per VPC gives you 256 subnets. If you run 3 AZs × 5 tiers = 15 subnets, you've used 15 of 256 — plenty of room. But if you're building a shared VPC with dozens of workload-specific subnets, track your `/64` allocation to avoid running out.
+***Key insight:*** The `/56` per VPC gives you 256 subnets. If you run 3 Availability Zones × 5 tiers = 15 subnets, you've used 15 of 256 — plenty of room. But if you're building a shared VPC with dozens of workload-specific subnets, track your `/64` allocation to avoid running out.
 
 ### Container and serverless workload considerations
 
@@ -206,9 +206,9 @@ The worst-case scenario is an EKS cluster that auto-scales aggressively without 
 
 #### ECS with awsvpc mode: one ENI per task
 
-Every ECS task in `awsvpc` network mode gets its own ENI with a VPC IP. For high-density services (hundreds of tasks per AZ), size subnets accordingly. Unlike EKS, there's no prefix delegation equivalent for ECS — each task is one IP, period.
+Every ECS task in `awsvpc` network mode gets its own ENI with a VPC IP. For high-density services (hundreds of tasks per Availability Zone), size subnets accordingly. Unlike EKS, there's no prefix delegation equivalent for ECS — each task is one IP, period.
 
-For ECS services that scale to hundreds of tasks, calculate peak task count per AZ and add 20% headroom. A service running 200 tasks across 3 AZs needs approximately 67 IPs per AZ at steady state, but during deployments (rolling update with 200% max), you temporarily need double that. A `/24` handles this comfortably; a `/26` does not.
+For ECS services that scale to hundreds of tasks, calculate peak task count per Availability Zone and add 20% headroom. A service running 200 tasks across 3 Availability Zones needs approximately 67 IPs per Availability Zone at steady state, but during deployments (rolling update with 200% max), you temporarily need double that. A `/24` handles this comfortably; a `/26` does not.
 
 #### Lambda in VPC: Hyperplane ENI sharing
 
@@ -218,9 +218,9 @@ VPC-connected Lambda functions use Hyperplane ENIs that are shared across invoca
 
 ### Naming and tagging
 
-#### Use a consistent naming convention that encodes tier, AZ, and purpose
+#### Use a consistent naming convention that encodes tier, Availability Zone, and purpose
 
-Subnet names should be immediately parseable by both humans and automation. A pattern like `{env}-{tier}-{az}` (e.g., `prod-private-use1a`, `prod-infra-use1b`) lets you filter subnets in the console, write IAM policies with conditions on tags, and build IaC modules that select subnets by convention.
+Subnet names should be immediately parseable by both humans and automation. A pattern like `{env}-{tier}-{az}` (for example, `prod-private-use1a`, `prod-infra-use1b`) lets you filter subnets in the console, write IAM policies with conditions on tags, and build IaC modules that select subnets by convention.
 
 Tag subnets with at minimum:
 
@@ -250,12 +250,12 @@ Subnet design doesn't exist in isolation. Every connectivity and security servic
 
 | Combination | Subnet role | Design consideration |
 | --- | --- | --- |
-| **Subnets + NAT gateway** | Public subnet hosts the NAT gateway; private subnets route `0.0.0.0/0` through it | Deploy one NAT gateway per AZ in the public tier. Each private subnet's route table points to its AZ-local NAT gateway. Size public subnets to accommodate NAT gateway IPs alongside ALBs. |
-| **Subnets + Transit Gateway** | Infrastructure subnet hosts TGW ENIs (one per AZ) | Use dedicated `/28` infrastructure subnets. TGW ENIs need their own route table that doesn't conflict with application routing. Appliance mode routes return traffic through the same AZ's ENI. |
-| **Subnets + Network Firewall** | Firewall subnet hosts firewall endpoints; other subnets route through them | Dedicated `/28` firewall subnets per AZ. The firewall subnet's route table points to the IGW; the IGW's edge route table points return traffic to the firewall endpoint. |
-| **Subnets + VPC Endpoints** | Infrastructure subnet hosts interface endpoint ENIs | Interface endpoints create one ENI per AZ per endpoint. Dedicated infrastructure subnets keep endpoint ENIs isolated from application IP pools. Gateway endpoints (S3, DynamoDB) don't consume subnet IPs — they're route table entries. |
-| **Subnets + Load Balancers** | Public subnets for internet-facing ALBs/NLBs; private subnets for internal load balancers | ALBs require at least `/27` subnets with 8 free IPs per AZ. NLBs are less demanding but still need room to scale. Never share a `/28` subnet between a load balancer and other resources. |
-| **Subnets + EKS/ECS** | Private subnets host worker nodes and pod/task ENIs | Size at `/22` or larger for EKS with VPC CNI. Use custom networking to separate node and pod CIDR ranges. For ECS Fargate, every task is one IP — plan for peak task count per AZ. |
+| **Subnets + NAT gateway** | Public subnet hosts the NAT gateway; private subnets route `0.0.0.0/0` through it | Deploy one NAT gateway per Availability Zone in the public tier. Each private subnet's route table points to its AZ-local NAT gateway. Size public subnets to accommodate NAT gateway IPs alongside ALBs. |
+| **Subnets + Transit Gateway** | Infrastructure subnet hosts TGW ENIs (one per Availability Zone) | Use dedicated `/28` infrastructure subnets. TGW ENIs need their own route table that doesn't conflict with application routing. Appliance mode routes return traffic through the same Availability Zone's ENI. |
+| **Subnets + Network Firewall** | Firewall subnet hosts firewall endpoints; other subnets route through them | Dedicated `/28` firewall subnets per Availability Zone. The firewall subnet's route table points to the IGW; the IGW's edge route table points return traffic to the firewall endpoint. |
+| **Subnets + VPC Endpoints** | Infrastructure subnet hosts interface endpoint ENIs | Interface endpoints create one ENI per Availability Zone per endpoint. Dedicated infrastructure subnets keep endpoint ENIs isolated from application IP pools. Gateway endpoints (S3, DynamoDB) don't consume subnet IPs — they're route table entries. |
+| **Subnets + Load Balancers** | Public subnets for internet-facing ALBs/NLBs; private subnets for internal load balancers | ALBs require at least `/27` subnets with 8 free IPs per Availability Zone. NLBs are less demanding but still need room to scale. Never share a `/28` subnet between a load balancer and other resources. |
+| **Subnets + EKS/ECS** | Private subnets host worker nodes and pod/task ENIs | Size at `/22` or larger for EKS with VPC CNI. Use custom networking to separate node and pod CIDR ranges. For ECS Fargate, every task is one IP — plan for peak task count per Availability Zone. |
 
 ## Documentation
 
@@ -317,7 +317,7 @@ Subnet design doesn't exist in isolation. Every connectivity and security servic
 
 * [Amazon VPC](vpc.md) — VPC design patterns, CIDR allocation, and the relationship between VPCs and subnets
 * [CIDR Planning](cidr.md) — How to plan address space across VPCs and subnets without conflicts
-* [Regions and Availability Zones](regions-azs.md) — AZ placement strategy that drives subnet distribution
+* [Regions and Availability Zones](regions-azs.md) — Availability Zone placement strategy that drives subnet distribution
 * [IPAM](ipam.md) — Automated IP address management for subnet CIDR allocation at scale
 
 **Connectivity pages:**
@@ -328,5 +328,5 @@ Subnet design doesn't exist in isolation. Every connectivity and security servic
 
 **Application Networking pages:**
 
-* [Load Balancing](../application-networking/load-balancing.md) — ALB and NLB subnet requirements and AZ placement
+* [Load Balancing](../application-networking/load-balancing.md) — ALB and NLB subnet requirements and Availability Zone placement
 * [Container Mesh](../application-networking/container-mesh.md) — EKS and ECS networking patterns that drive private subnet sizing

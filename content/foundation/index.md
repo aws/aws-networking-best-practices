@@ -44,16 +44,16 @@ Every VPC, route table, and Transit Gateway attachment lives inside an account, 
 
 ## 4. Regions and Availability Zones
 
-**AWS Regions** are separate geographic areas with fully independent infrastructure. Each Region contains multiple **Availability Zones (AZs)** — physically separated data centers connected by low-latency private fiber. Every networking resource you deploy exists in exactly one AZ, and your multi-AZ strategy determines resilience, cost, and blast radius.
+**AWS Regions** are separate geographic areas with fully independent infrastructure. Each Region contains multiple **Availability Zones (Availability Zones)** — physically separated data centers connected by low-latency private fiber. Every networking resource you deploy exists in exactly one Availability Zone, and your multi-AZ strategy determines resilience, cost, and blast radius.
 
 **Key considerations:**
 
 *   **Region selection** — Latency, Direct Connect locations, service availability, compliance, and cost
-*   **AZ IDs vs AZ names** — AZ names are mapped randomly per account; use AZ IDs for cross-account coordination
-*   **Multi-AZ patterns** — Deploy every stateful networking resource per-AZ; size for N-1 AZ capacity
+*   **AZ IDs vs Availability Zone names** — Availability Zone names are mapped randomly per account; use Availability Zone IDs for cross-account coordination
+*   **Multi-AZ patterns** — Deploy every stateful networking resource per-AZ; size for N-1 Availability Zone capacity
 *   **Cross-AZ cost** — per-GB charge in each direction (see [VPC pricing](https://aws.amazon.com/vpc/pricing/)); minimize unnecessary cross-AZ traffic without sacrificing availability
 
-***Best Practice:*** *Deploy production workloads across at least 3 AZs. Size per-AZ capacity so that losing one AZ doesn't overwhelm the remaining two.*
+***Best Practice:*** *Deploy production workloads across at least 3 Availability Zones. Size per-AZ capacity so that losing one Availability Zone doesn't overwhelm the remaining two.*
 
 ## 5. IP Address Planning with CIDR Blocks
 
@@ -75,7 +75,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 **Key patterns:**
 
 *   **Five-tier architecture** — Firewall, public, private (application), data, and infrastructure/transit subnets
-*   **One subnet per AZ per tier** — Consistent across all Availability Zones
+*   **One subnet per Availability Zone per tier** — Consistent across all Availability Zones
 *   **Size for the workload** — `/24` for most tiers; `/22` or larger for EKS/ECS container subnets
 *   **Infrastructure subnets** — Dedicated `/28` subnets for Transit Gateway ENIs, firewall endpoints, and VPC endpoint ENIs
 
@@ -128,9 +128,9 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
     ---
 
-    Region selection, AZ IDs, multi-AZ patterns, cross-AZ cost management, and Local Zones.
+    Region selection, Availability Zone IDs, multi-AZ patterns, cross-AZ cost management, and Local Zones.
 
-    [:octicons-arrow-right-24: Regions and AZs](regions-azs.md)
+    [:octicons-arrow-right-24: Regions and Availability Zones](regions-azs.md)
 
 *   :material-ip-network: **CIDR Planning**
 

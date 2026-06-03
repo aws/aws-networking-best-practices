@@ -197,7 +197,7 @@ For networking, this is critical because automated systems (Cloud WAN attachment
 
 Define tag policies that enforce:
 
-* Allowed values for network segment tags (e.g., `network-segment` must be one of `production`, `development`, `shared-services`, `pci`)
+* Allowed values for network segment tags (for example, `network-segment` must be one of `production`, `development`, `shared-services`, `pci`)
 * Consistent environment naming across all accounts
 * Required cost allocation tags on network resources (NAT gateway, Transit Gateway attachments, VPN connections)
 
@@ -317,7 +317,7 @@ AWS Organizations is the governance layer that sits above all other foundation c
 
 * **[Amazon VPC](vpc.md)**: Organizations determines which accounts can create VPCs and what CIDR ranges they can use (via SCPs and IPAM delegation)
 * **[CIDR Planning](cidr.md)**: IPAM pools shared through Organizations ensure non-overlapping address space across all accounts
-* **[Subnets](subnets.md)**: SCPs can enforce subnet tagging and restrict subnet creation to approved AZs
+* **[Subnets](subnets.md)**: SCPs can enforce subnet tagging and restrict subnet creation to approved Availability Zones
 * **[IPAM](ipam.md)**: Delegated IPAM administration through Organizations enables centralized IP governance
 * **[Regions and Availability Zones](regions-azs.md)**: SCPs restrict which Regions accounts can deploy resources in, directly shaping your network's geographic footprint
 

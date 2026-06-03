@@ -126,7 +126,7 @@ This structure enables route summarization at every level. Your on-premises netw
 
 The most common IPAM mistake is creating regional pools that are too small. A `/16` regional pool gives you only 256 `/24` VPCs or 16 `/20` VPCs. That sounds like enough until you account for production, staging, development, and sandbox environments across dozens of accounts.
 
-Use `/12` for regional pools if your top-level pool is a `/8`. This gives each Region 16 `/16` blocks or 256 `/20` blocks — enough for years of growth. If you're constrained to a smaller top-level range (e.g., `10.0.0.0/10` because the rest is used on-premises), allocate at least a `/14` per Region.
+Use `/12` for regional pools if your top-level pool is a `/8`. This gives each Region 16 `/16` blocks or 256 `/20` blocks — enough for years of growth. If you're constrained to a smaller top-level range (for example, `10.0.0.0/10` because the rest is used on-premises), allocate at least a `/14` per Region.
 
 The cost of oversizing a pool is zero — unused address space in a pool costs nothing. The cost of undersizing is a pool restructuring that requires reallocating every VPC beneath it.
 
