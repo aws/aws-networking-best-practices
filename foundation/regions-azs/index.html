@@ -768,19 +768,19 @@
   <a href="#nat-gateway-placement-follows-az-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NAT Gateway placement follows AZ boundaries
+        NAT gateway placement follows AZ boundaries
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="NAT Gateway placement follows AZ boundaries">
+    <nav class="md-nav" aria-label="NAT gateway placement follows AZ boundaries">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#one-nat-gateway-per-az-is-the-production-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        One NAT Gateway per AZ is the production pattern
+        One NAT gateway per AZ is the production pattern
       
     </span>
   </a>
@@ -2148,19 +2148,19 @@
   <a href="#nat-gateway-placement-follows-az-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NAT Gateway placement follows AZ boundaries
+        NAT gateway placement follows AZ boundaries
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="NAT Gateway placement follows AZ boundaries">
+    <nav class="md-nav" aria-label="NAT gateway placement follows AZ boundaries">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#one-nat-gateway-per-az-is-the-production-pattern" class="md-nav__link">
     <span class="md-ellipsis">
       
-        One NAT Gateway per AZ is the production pattern
+        One NAT gateway per AZ is the production pattern
       
     </span>
   </a>
@@ -2363,7 +2363,7 @@
 <p class="admonition-title">Prerequisites</p>
 <p>This page assumes familiarity with the concepts covered in <a href="../aws-prerequisites/">Before You Start</a>. Review that page first if you're new to AWS networking fundamentals.</p>
 </div>
-<p>AWS infrastructure is organized into Regions and Availability Zones (AZs). Every networking decision you make — subnet layout, <abbr title="Network Address Translation">NAT</abbr> Gateway placement, load balancer deployment, Direct Connect termination — is shaped by how Regions and AZs work. This page covers the infrastructure context that drives those decisions: what Regions and AZs are, how they affect network design, and the patterns that produce resilient, cost-efficient architectures.</p>
+<p>AWS infrastructure is organized into Regions and Availability Zones (AZs). Every networking decision you make — subnet layout, <abbr title="Network Address Translation">NAT</abbr> gateway placement, load balancer deployment, Direct Connect termination — is shaped by how Regions and AZs work. This page covers the infrastructure context that drives those decisions: what Regions and AZs are, how they affect network design, and the patterns that produce resilient, cost-efficient architectures.</p>
 <p>The most common networking mistakes aren't service misconfigurations — they're failures to account for how Region and <abbr title="Availability Zone">AZ</abbr> choices cascade into subnet sizing, traffic cost, and blast radius. Understanding this layer deeply prevents those mistakes.</p>
 <pre class="mermaid"><code>graph TB
     subgraph AWS["AWS Global Infrastructure"]
@@ -2413,7 +2413,7 @@
     style NAT3 fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
 <h2 id="aws-regions">AWS Regions<a class="headerlink" href="#aws-regions" title="Permanent link">&para;</a></h2>
 <p>An AWS Region is a cluster of data centers in a specific geographic area, operating as a fully independent instance of the AWS platform. Each Region has its own control plane, its own API endpoints, and its own set of services. Data never leaves a Region unless you explicitly configure replication or transfer.</p>
-<p>From a networking perspective, a Region is the blast radius boundary for most infrastructure failures and the unit of deployment for services like Transit Gateway, <abbr title="Network Address Translation">NAT</abbr> Gateway, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Multi-Region architectures exist, but they require explicit cross-Region connectivity (<abbr title="Virtual Private Cloud">VPC</abbr> peering, Transit Gateway peering, or CloudFront/Global Accelerator at the edge).</p>
+<p>From a networking perspective, a Region is the blast radius boundary for most infrastructure failures and the unit of deployment for services like Transit Gateway, <abbr title="Network Address Translation">NAT</abbr> gateway, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints. Multi-Region architectures exist, but they require explicit cross-Region connectivity (<abbr title="Virtual Private Cloud">VPC</abbr> peering, Transit Gateway peering, or CloudFront/Global Accelerator at the edge).</p>
 <p><strong><em>Key insight:</em></strong> <em>Region selection is a networking decision, not just a latency or compliance decision. Your choice of Region determines which Direct Connect locations are available, which services you can use, and what your cross-Region traffic costs look like.</em></p>
 <h3 id="region-selection-criteria-for-networking">Region selection criteria for networking<a class="headerlink" href="#region-selection-criteria-for-networking" title="Permanent link">&para;</a></h3>
 <table>
@@ -2460,7 +2460,7 @@
 <h2 id="availability-zones">Availability Zones<a class="headerlink" href="#availability-zones" title="Permanent link">&para;</a></h2>
 <p>An Availability Zone is one or more discrete data centers within a Region, each with redundant power, networking, and connectivity. AZs within a Region are connected by low-latency, high-throughput private fiber (typically sub-2ms round-trip), but are physically separated enough that a localized failure (power grid, flood, fire) affects only one <abbr title="Availability Zone">AZ</abbr>.</p>
 <p>Every Region has at least three AZs. This is the minimum needed for quorum-based systems and for maintaining availability during a single-<abbr title="Availability Zone">AZ</abbr> failure while still having capacity headroom.</p>
-<p><strong><em>Key insight:</em></strong> <em>AZs are the unit of fault isolation within a Region. Every networking resource you deploy — subnets, <abbr title="Network Address Translation">NAT</abbr> Gateways, load balancer nodes, interface endpoints — exists in exactly one <abbr title="Availability Zone">AZ</abbr>. Your multi-<abbr title="Availability Zone">AZ</abbr> strategy is really a subnet-per-<abbr title="Availability Zone">AZ</abbr> strategy, and getting it wrong means either paying for unused capacity or losing availability when you need it most.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>AZs are the unit of fault isolation within a Region. Every networking resource you deploy — subnets, <abbr title="Network Address Translation">NAT</abbr> gateways, load balancer nodes, interface endpoints — exists in exactly one <abbr title="Availability Zone">AZ</abbr>. Your multi-<abbr title="Availability Zone">AZ</abbr> strategy is really a subnet-per-<abbr title="Availability Zone">AZ</abbr> strategy, and getting it wrong means either paying for unused capacity or losing availability when you need it most.</em></p>
 <h3 id="az-ids-vs-az-names"><abbr title="Availability Zone">AZ</abbr> IDs vs <abbr title="Availability Zone">AZ</abbr> names<a class="headerlink" href="#az-ids-vs-az-names" title="Permanent link">&para;</a></h3>
 <p>This is the single most misunderstood aspect of <abbr title="Availability Zone">AZ</abbr> architecture, and it causes real problems in cross-account networking:</p>
 <ul>
@@ -2501,20 +2501,20 @@
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="multi-az-design-patterns-for-networking">Multi-<abbr title="Availability Zone">AZ</abbr> design patterns for networking<a class="headerlink" href="#multi-az-design-patterns-for-networking" title="Permanent link">&para;</a></h3>
 <h4 id="deploy-every-stateful-networking-resource-per-az">Deploy every stateful networking resource per-<abbr title="Availability Zone">AZ</abbr><a class="headerlink" href="#deploy-every-stateful-networking-resource-per-az" title="Permanent link">&para;</a></h4>
-<p><abbr title="Network Address Translation">NAT</abbr> Gateways, interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, and load balancer nodes are <abbr title="Availability Zone">AZ</abbr>-scoped. If you deploy a single <abbr title="Network Address Translation">NAT</abbr> Gateway in one <abbr title="Availability Zone">AZ</abbr> and route all private subnets through it, you've created a single point of failure and you're paying cross-<abbr title="Availability Zone">AZ</abbr> data transfer charges on every packet from the other AZs.</p>
+<p><abbr title="Network Address Translation">NAT</abbr> gateways, interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, and load balancer nodes are <abbr title="Availability Zone">AZ</abbr>-scoped. If you deploy a single <abbr title="Network Address Translation">NAT</abbr> gateway in one <abbr title="Availability Zone">AZ</abbr> and route all private subnets through it, you've created a single point of failure and you're paying cross-<abbr title="Availability Zone">AZ</abbr> data transfer charges on every packet from the other AZs.</p>
 <p>The correct pattern:</p>
 <ul>
-<li><strong>One <abbr title="Network Address Translation">NAT</abbr> Gateway per <abbr title="Availability Zone">AZ</abbr></strong> in each public subnet tier. Route tables for private subnets in each <abbr title="Availability Zone">AZ</abbr> point to the <abbr title="Network Address Translation">NAT</abbr> Gateway in the same <abbr title="Availability Zone">AZ</abbr>.</li>
+<li><strong>One <abbr title="Network Address Translation">NAT</abbr> gateway per <abbr title="Availability Zone">AZ</abbr></strong> in each public subnet tier. Route tables for private subnets in each <abbr title="Availability Zone">AZ</abbr> point to the <abbr title="Network Address Translation">NAT</abbr> gateway in the same <abbr title="Availability Zone">AZ</abbr>.</li>
 <li><strong>Interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoints in every <abbr title="Availability Zone">AZ</abbr></strong> where you have workloads that use the endpoint. A missing endpoint in one <abbr title="Availability Zone">AZ</abbr> means traffic from that <abbr title="Availability Zone">AZ</abbr> crosses to another <abbr title="Availability Zone">AZ</abbr> to reach the endpoint — adding latency and cost.</li>
 <li><strong>Load balancers enabled in all AZs</strong> where targets exist. An <abbr title="Application Load Balancer">ALB</abbr> or <abbr title="Network Load Balancer">NLB</abbr> with a missing <abbr title="Availability Zone">AZ</abbr> creates asymmetric routing and uneven target utilization.</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em>The "per-<abbr title="Availability Zone">AZ</abbr>" pattern costs more in fixed resources (three <abbr title="Network Address Translation">NAT</abbr> Gateways instead of one), but it eliminates cross-<abbr title="Availability Zone">AZ</abbr> data transfer charges, removes single-<abbr title="Availability Zone">AZ</abbr> failure modes, and keeps blast radius contained. For any production workload, the per-<abbr title="Availability Zone">AZ</abbr> pattern is correct.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>The "per-<abbr title="Availability Zone">AZ</abbr>" pattern costs more in fixed resources (three <abbr title="Network Address Translation">NAT</abbr> gateways instead of one), but it eliminates cross-<abbr title="Availability Zone">AZ</abbr> data transfer charges, removes single-<abbr title="Availability Zone">AZ</abbr> failure modes, and keeps blast radius contained. For any production workload, the per-<abbr title="Availability Zone">AZ</abbr> pattern is correct.</em></p>
 <h4 id="size-for-n-1-az-capacity">Size for N-1 <abbr title="Availability Zone">AZ</abbr> capacity<a class="headerlink" href="#size-for-n-1-az-capacity" title="Permanent link">&para;</a></h4>
 <p>Design your per-<abbr title="Availability Zone">AZ</abbr> capacity so that losing one <abbr title="Availability Zone">AZ</abbr> doesn't overwhelm the remaining AZs. In a three-<abbr title="Availability Zone">AZ</abbr> deployment, each <abbr title="Availability Zone">AZ</abbr> should handle 50% of peak load (not 33%), so that two AZs can absorb the full workload during a failure.</p>
 <p>This applies to:</p>
 <ul>
 <li>Auto Scaling group minimum and desired counts per <abbr title="Availability Zone">AZ</abbr></li>
-<li><abbr title="Network Address Translation">NAT</abbr> Gateway throughput headroom (each <abbr title="Network Address Translation">NAT</abbr> GW handles 100 Gbps, but your per-<abbr title="Availability Zone">AZ</abbr> egress patterns matter)</li>
+<li><abbr title="Network Address Translation">NAT</abbr> gateway throughput headroom (each <abbr title="Network Address Translation">NAT</abbr> GW handles 100 Gbps, but your per-<abbr title="Availability Zone">AZ</abbr> egress patterns matter)</li>
 <li>Subnet IP address capacity (if one <abbr title="Availability Zone">AZ</abbr> fails and workloads relaunch in the remaining two, those subnets need the IP headroom)</li>
 </ul>
 <h4 id="use-zonal-shift-for-fast-az-evacuation">Use zonal shift for fast <abbr title="Availability Zone">AZ</abbr> evacuation<a class="headerlink" href="#use-zonal-shift-for-fast-az-evacuation" title="Permanent link">&para;</a></h4>
@@ -2546,13 +2546,13 @@
 <p>For a three-<abbr title="Availability Zone">AZ</abbr>, three-tier <abbr title="Virtual Private Cloud">VPC</abbr>, you need nine subnets minimum. Plan your <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation accordingly — see <a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a> and <a href="../subnets/">Subnets</a> for sizing guidance.</p>
 <h4 id="subnet-sizing-must-account-for-az-failure-scenarios">Subnet sizing must account for <abbr title="Availability Zone">AZ</abbr> failure scenarios<a class="headerlink" href="#subnet-sizing-must-account-for-az-failure-scenarios" title="Permanent link">&para;</a></h4>
 <p>If you size each <abbr title="Availability Zone">AZ</abbr>'s subnets for exactly the current workload, you have no headroom for <abbr title="Availability Zone">AZ</abbr> failure recovery. When an <abbr title="Availability Zone">AZ</abbr> fails and Auto Scaling launches replacement capacity in the remaining AZs, those subnets need available IP addresses. Size subnets for 2x the steady-state requirement in each <abbr title="Availability Zone">AZ</abbr>, or use larger <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks with secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges as overflow.</p>
-<h3 id="nat-gateway-placement-follows-az-boundaries"><abbr title="Network Address Translation">NAT</abbr> Gateway placement follows <abbr title="Availability Zone">AZ</abbr> boundaries<a class="headerlink" href="#nat-gateway-placement-follows-az-boundaries" title="Permanent link">&para;</a></h3>
-<h4 id="one-nat-gateway-per-az-is-the-production-pattern">One <abbr title="Network Address Translation">NAT</abbr> Gateway per <abbr title="Availability Zone">AZ</abbr> is the production pattern<a class="headerlink" href="#one-nat-gateway-per-az-is-the-production-pattern" title="Permanent link">&para;</a></h4>
-<p>A <abbr title="Network Address Translation">NAT</abbr> Gateway is an <abbr title="Availability Zone">AZ</abbr>-scoped resource. Deploying one per <abbr title="Availability Zone">AZ</abbr> and routing each <abbr title="Availability Zone">AZ</abbr>'s private subnets to its local <abbr title="Network Address Translation">NAT</abbr> Gateway achieves:</p>
+<h3 id="nat-gateway-placement-follows-az-boundaries"><abbr title="Network Address Translation">NAT</abbr> gateway placement follows <abbr title="Availability Zone">AZ</abbr> boundaries<a class="headerlink" href="#nat-gateway-placement-follows-az-boundaries" title="Permanent link">&para;</a></h3>
+<h4 id="one-nat-gateway-per-az-is-the-production-pattern">One <abbr title="Network Address Translation">NAT</abbr> gateway per <abbr title="Availability Zone">AZ</abbr> is the production pattern<a class="headerlink" href="#one-nat-gateway-per-az-is-the-production-pattern" title="Permanent link">&para;</a></h4>
+<p>A <abbr title="Network Address Translation">NAT</abbr> gateway is an <abbr title="Availability Zone">AZ</abbr>-scoped resource. Deploying one per <abbr title="Availability Zone">AZ</abbr> and routing each <abbr title="Availability Zone">AZ</abbr>'s private subnets to its local <abbr title="Network Address Translation">NAT</abbr> gateway achieves:</p>
 <ul>
-<li><strong>Fault isolation</strong>: An <abbr title="Availability Zone">AZ</abbr> failure takes out only that <abbr title="Availability Zone">AZ</abbr>'s <abbr title="Network Address Translation">NAT</abbr> Gateway, not egress for the entire <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
-<li><strong>No cross-<abbr title="Availability Zone">AZ</abbr> charges</strong>: Traffic from a private subnet to the internet stays within the same <abbr title="Availability Zone">AZ</abbr> until it hits the <abbr title="Network Address Translation">NAT</abbr> Gateway, then exits through the internet gateway (which is Region-scoped and free of cross-<abbr title="Availability Zone">AZ</abbr> charges).</li>
-<li><strong>Predictable throughput</strong>: Each <abbr title="Network Address Translation">NAT</abbr> Gateway handles up to 100 Gbps independently.</li>
+<li><strong>Fault isolation</strong>: An <abbr title="Availability Zone">AZ</abbr> failure takes out only that <abbr title="Availability Zone">AZ</abbr>'s <abbr title="Network Address Translation">NAT</abbr> gateway, not egress for the entire <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
+<li><strong>No cross-<abbr title="Availability Zone">AZ</abbr> charges</strong>: Traffic from a private subnet to the internet stays within the same <abbr title="Availability Zone">AZ</abbr> until it hits the <abbr title="Network Address Translation">NAT</abbr> gateway, then exits through the internet gateway (which is Region-scoped and free of cross-<abbr title="Availability Zone">AZ</abbr> charges).</li>
+<li><strong>Predictable throughput</strong>: Each <abbr title="Network Address Translation">NAT</abbr> gateway handles up to 100 Gbps independently.</li>
 </ul>
 <p>The single-<abbr title="Network Address Translation">NAT</abbr>-Gateway pattern (one <abbr title="Network Address Translation">NAT</abbr> GW, all AZs route to it) is acceptable only for development and test environments where cost matters more than availability.</p>
 <h3 id="load-balancer-deployment-and-az-awareness">Load balancer deployment and <abbr title="Availability Zone">AZ</abbr> awareness<a class="headerlink" href="#load-balancer-deployment-and-az-awareness" title="Permanent link">&para;</a></h3>
@@ -2593,7 +2593,7 @@
 <li>A Local Zone subnet is part of the parent Region's <abbr title="Virtual Private Cloud">VPC</abbr> but exists in the Local Zone's physical location.</li>
 <li><strong>Internet egress from a Local Zone uses the Local Zone's own internet gateway</strong> — traffic doesn't backhaul to the parent Region for internet access.</li>
 <li><strong>Traffic between a Local Zone and the parent Region traverses the AWS backbone</strong>, not the public internet, but it does incur data transfer charges similar to cross-<abbr title="Availability Zone">AZ</abbr> traffic.</li>
-<li><strong>Not all networking services are available in Local Zones</strong>. <abbr title="Network Address Translation">NAT</abbr> Gateway, Transit Gateway attachments, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints may not be available — check the <a href="https://aws.amazon.com/about-aws/global-infrastructure/localzones/features/">Local Zones features page</a> for your specific Local Zone.</li>
+<li><strong>Not all networking services are available in Local Zones</strong>. <abbr title="Network Address Translation">NAT</abbr> gateway, Transit Gateway attachments, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints may not be available — check the <a href="https://aws.amazon.com/about-aws/global-infrastructure/localzones/features/">Local Zones features page</a> for your specific Local Zone.</li>
 <li><strong>Subnet design</strong>: Create dedicated subnets in the Local Zone within your existing <abbr title="Virtual Private Cloud">VPC</abbr>. Route tables for Local Zone subnets are independent of the parent Region's <abbr title="Availability Zone">AZ</abbr> route tables.</li>
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>Local Zones are for latency-sensitive workloads that need single-digit millisecond access from a specific metro area. They are not a replacement for multi-<abbr title="Availability Zone">AZ</abbr> deployment in the parent Region — they complement it by placing a latency-sensitive tier closer to users while the rest of the architecture stays in the parent Region.</em></p>
@@ -2602,7 +2602,7 @@
 <ul>
 <li>Wavelength Zones have their own carrier gateway for traffic to/from the carrier network — this traffic never touches the public internet.</li>
 <li>Traffic between a Wavelength Zone and the parent Region uses the AWS backbone.</li>
-<li>The networking service set is limited: no <abbr title="Network Address Translation">NAT</abbr> Gateway, no <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, no Transit Gateway attachments within the Wavelength Zone itself.</li>
+<li>The networking service set is limited: no <abbr title="Network Address Translation">NAT</abbr> gateway, no <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, no Transit Gateway attachments within the Wavelength Zone itself.</li>
 <li>Use Wavelength for ultra-low-latency mobile/edge workloads where the 5G network hop to a Region <abbr title="Availability Zone">AZ</abbr> would add unacceptable latency.</li>
 </ul>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
@@ -2678,7 +2678,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

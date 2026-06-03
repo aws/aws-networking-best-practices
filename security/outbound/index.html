@@ -1418,7 +1418,7 @@
   <a href="#use-vpc-endpoints-to-reduce-nat-gateway-processing-charges" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use VPC endpoints to reduce NAT Gateway processing charges
+        Use VPC endpoints to reduce NAT gateway processing charges
       
     </span>
   </a>
@@ -2324,7 +2324,7 @@
   <a href="#use-vpc-endpoints-to-reduce-nat-gateway-processing-charges" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Use VPC endpoints to reduce NAT Gateway processing charges
+        Use VPC endpoints to reduce NAT gateway processing charges
       
     </span>
   </a>
@@ -2503,7 +2503,7 @@
         SG["Security Group&lt;br/&gt;(outbound rules)"]
         DNS["Route 53 DNS Firewall&lt;br/&gt;(domain-based filtering)"]
         NFW["AWS Network Firewall&lt;br/&gt;(stateful inspection, IPS)"]
-        NAT["NAT Gateway / Egress-only IGW&lt;br/&gt;(egress path)"]
+        NAT["NAT gateway / Egress-only IGW&lt;br/&gt;(egress path)"]
         Internet["Internet"]
     end
 
@@ -2520,7 +2520,7 @@
     style NFW fill:#2563eb,stroke:#1e40af,color:#fff
     style NAT fill:#059669,stroke:#047857,color:#fff
     style Internet fill:#059669,stroke:#047857,color:#fff</code></pre>
-<p>Each layer adds a distinct capability: security groups enforce port and protocol restrictions at the instance level, <abbr title="Domain Name System">DNS</abbr> Firewall blocks resolution of unauthorized domains before a connection is ever attempted, Network Firewall inspects the actual traffic for protocol violations and known-bad signatures, and the egress path (<abbr title="Network Address Translation">NAT</abbr> Gateway or egress-only IGW) shapes where traffic exits. Together, they form a pipeline where each layer catches what the previous one cannot.</p>
+<p>Each layer adds a distinct capability: security groups enforce port and protocol restrictions at the instance level, <abbr title="Domain Name System">DNS</abbr> Firewall blocks resolution of unauthorized domains before a connection is ever attempted, Network Firewall inspects the actual traffic for protocol violations and known-bad signatures, and the egress path (<abbr title="Network Address Translation">NAT</abbr> gateway or egress-only IGW) shapes where traffic exits. Together, they form a pipeline where each layer catches what the previous one cannot.</p>
 <h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -2573,7 +2573,7 @@
 <p><strong>What Network Firewall catches</strong>: outbound connections to IPs with no <abbr title="Domain Name System">DNS</abbr> resolution, <abbr title="Transport Layer Security">TLS</abbr> connections to unauthorized domains (via SNI inspection), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.</p>
 <p><strong>What Network Firewall costs</strong>: endpoint hourly charges plus per-GB traffic processing. For a centralized egress <abbr title="Virtual Private Cloud">VPC</abbr> processing terabytes of outbound traffic, Network Firewall costs are significant. This is why <abbr title="Domain Name System">DNS</abbr> Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.</p>
 <h3 id="layer-4-vpc-endpoints-path-elimination">Layer 4: <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints (path elimination)<a class="headerlink" href="#layer-4-vpc-endpoints-path-elimination" title="Permanent link">&para;</a></h3>
-<p><abbr title="Virtual Private Cloud">VPC</abbr> endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, and other AWS services via <abbr title="Virtual Private Cloud">VPC</abbr> endpoints never traverses a <abbr title="Network Address Translation">NAT</abbr> Gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no <abbr title="Network Address Translation">NAT</abbr> processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.</p>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, and other AWS services via <abbr title="Virtual Private Cloud">VPC</abbr> endpoints never traverses a <abbr title="Network Address Translation">NAT</abbr> gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no <abbr title="Network Address Translation">NAT</abbr> processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.</p>
 <p><strong><em>Key insight:</em></strong> <em>The most secure outbound traffic is traffic that never reaches the internet. Deploy <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for every AWS service your workloads use before tuning your egress filters.</em></p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="domain-based-filtering">Domain-based filtering<a class="headerlink" href="#domain-based-filtering" title="Permanent link">&para;</a></h3>
@@ -2682,7 +2682,7 @@
 <p>Firewall Manager's priority ordering makes this layering work: central rules evaluate first, application-team rules layer on top without overriding the baseline.</p>
 <h3 id="ipv6-egress-security"><abbr title="Internet Protocol version 6">IPv6</abbr> egress security<a class="headerlink" href="#ipv6-egress-security" title="Permanent link">&para;</a></h3>
 <h4 id="apply-security-group-outbound-rules-for-ipv6-traffic">Apply security group outbound rules for <abbr title="Internet Protocol version 6">IPv6</abbr> traffic<a class="headerlink" href="#apply-security-group-outbound-rules-for-ipv6-traffic" title="Permanent link">&para;</a></h4>
-<p>The <a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">egress-only internet gateway</a> allows outbound <abbr title="Internet Protocol version 6">IPv6</abbr> traffic and blocks unsolicited inbound — it is the <abbr title="Internet Protocol version 6">IPv6</abbr> equivalent of a <abbr title="Network Address Translation">NAT</abbr> Gateway's one-way behavior. But it does not filter outbound traffic. Security groups remain the first control: restrict outbound <abbr title="Internet Protocol version 6">IPv6</abbr> rules to the ports and protocols the workload actually needs, just as you do for <abbr title="Internet Protocol version 4">IPv4</abbr>.</p>
+<p>The <a href="https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html">egress-only internet gateway</a> allows outbound <abbr title="Internet Protocol version 6">IPv6</abbr> traffic and blocks unsolicited inbound — it is the <abbr title="Internet Protocol version 6">IPv6</abbr> equivalent of a <abbr title="Network Address Translation">NAT</abbr> gateway's one-way behavior. But it does not filter outbound traffic. Security groups remain the first control: restrict outbound <abbr title="Internet Protocol version 6">IPv6</abbr> rules to the ports and protocols the workload actually needs, just as you do for <abbr title="Internet Protocol version 4">IPv4</abbr>.</p>
 <p>A common mistake is leaving the default <code>0.0.0.0/0</code> and <code>::/0</code> outbound rules in place. Remove the default allow-all outbound rule and replace it with explicit rules for the workload's actual egress requirements.</p>
 <h4 id="use-dns-firewall-identically-for-ipv4-and-ipv6">Use <abbr title="Domain Name System">DNS</abbr> Firewall identically for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr><a class="headerlink" href="#use-dns-firewall-identically-for-ipv4-and-ipv6" title="Permanent link">&para;</a></h4>
 <p><abbr title="Domain Name System">DNS</abbr> Firewall operates at the resolution layer and is protocol-agnostic — it blocks domain resolution regardless of whether the resulting connection would use <abbr title="Internet Protocol version 4">IPv4</abbr> or <abbr title="Internet Protocol version 6">IPv6</abbr>. Your <abbr title="Domain Name System">DNS</abbr> Firewall rules apply equally to both address families with no additional configuration.</p>
@@ -2690,7 +2690,7 @@
 <p>AWS does not offer a managed <abbr title="Network Address Translation">NAT</abbr> for <abbr title="Internet Protocol version 6">IPv6</abbr>. <abbr title="Internet Protocol version 6">IPv6</abbr> egress is always decentralized (per-<abbr title="Virtual Private Cloud">VPC</abbr> egress-only internet gateway) and cannot be centralized through a shared egress <abbr title="Virtual Private Cloud">VPC</abbr> the way <abbr title="Internet Protocol version 4">IPv4</abbr> can. This means:</p>
 <ul>
 <li><abbr title="Internet Protocol version 6">IPv6</abbr> egress inspection must happen per-<abbr title="Virtual Private Cloud">VPC</abbr> (Network Firewall endpoints in each <abbr title="Virtual Private Cloud">VPC</abbr>) or at the <abbr title="Domain Name System">DNS</abbr> layer (<abbr title="Domain Name System">DNS</abbr> Firewall, which is centrally managed regardless of egress topology).</li>
-<li>There is no <abbr title="Internet Protocol version 6">IPv6</abbr> equivalent of routing all egress through a centralized <abbr title="Network Address Translation">NAT</abbr> Gateway for inspection.</li>
+<li>There is no <abbr title="Internet Protocol version 6">IPv6</abbr> equivalent of routing all egress through a centralized <abbr title="Network Address Translation">NAT</abbr> gateway for inspection.</li>
 <li>For organizations that require a single physical inspection point, this is a factor in <abbr title="Internet Protocol version 6">IPv6</abbr> adoption planning.</li>
 </ul>
 <p><strong><em>Key insight:</em></strong> <em><abbr title="Internet Protocol version 6">IPv6</abbr> egress security relies on security groups and <abbr title="Domain Name System">DNS</abbr> Firewall as the primary controls. The egress-only IGW provides directionality (outbound-only) but not filtering — your security posture must not depend on it alone.</em></p>
@@ -2722,7 +2722,7 @@
 <td>Traffic volume through firewall endpoints</td>
 </tr>
 <tr>
-<td><strong><abbr title="Network Address Translation">NAT</abbr> Gateway</strong></td>
+<td><strong><abbr title="Network Address Translation">NAT</abbr> gateway</strong></td>
 <td>Per hour + per GB processed</td>
 <td>All <abbr title="Internet Protocol version 4">IPv4</abbr> egress traffic volume</td>
 </tr>
@@ -2738,8 +2738,8 @@
 </tr>
 </tbody>
 </table>
-<h4 id="use-vpc-endpoints-to-reduce-nat-gateway-processing-charges">Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints to reduce <abbr title="Network Address Translation">NAT</abbr> Gateway processing charges<a class="headerlink" href="#use-vpc-endpoints-to-reduce-nat-gateway-processing-charges" title="Permanent link">&para;</a></h4>
-<p>Every API call to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, or other AWS services that traverses a <abbr title="Network Address Translation">NAT</abbr> Gateway incurs processing charges. Gateway endpoints for <abbr title="Simple Storage Service">S3</abbr> and DynamoDB are free and remove that traffic from the <abbr title="Network Address Translation">NAT</abbr> path entirely. Interface endpoints for high-traffic services (ECR, CloudWatch Logs, STS, KMS) often pay for themselves in avoided <abbr title="Network Address Translation">NAT</abbr> charges within days.</p>
+<h4 id="use-vpc-endpoints-to-reduce-nat-gateway-processing-charges">Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints to reduce <abbr title="Network Address Translation">NAT</abbr> gateway processing charges<a class="headerlink" href="#use-vpc-endpoints-to-reduce-nat-gateway-processing-charges" title="Permanent link">&para;</a></h4>
+<p>Every API call to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, or other AWS services that traverses a <abbr title="Network Address Translation">NAT</abbr> gateway incurs processing charges. Gateway endpoints for <abbr title="Simple Storage Service">S3</abbr> and DynamoDB are free and remove that traffic from the <abbr title="Network Address Translation">NAT</abbr> path entirely. Interface endpoints for high-traffic services (ECR, CloudWatch Logs, STS, KMS) often pay for themselves in avoided <abbr title="Network Address Translation">NAT</abbr> charges within days.</p>
 <h4 id="right-size-network-firewall-deployment">Right-size Network Firewall deployment<a class="headerlink" href="#right-size-network-firewall-deployment" title="Permanent link">&para;</a></h4>
 <p>Network Firewall charges per endpoint-hour. In a decentralized model, every <abbr title="Virtual Private Cloud">VPC</abbr> with a firewall endpoint pays that hourly cost. Not every <abbr title="Virtual Private Cloud">VPC</abbr> needs full traffic inspection — workloads with no internet egress, or workloads whose egress is fully covered by <abbr title="Domain Name System">DNS</abbr> Firewall and security groups, don't need a Network Firewall endpoint. Reserve Network Firewall for VPCs that handle sensitive data or have complex egress requirements that <abbr title="Domain Name System">DNS</abbr> Firewall alone cannot cover.</p>
 <h2 id="when-to-use-each-outbound-control">When to use each outbound control<a class="headerlink" href="#when-to-use-each-outbound-control" title="Permanent link">&para;</a></h2>
@@ -2784,7 +2784,7 @@
 <p><strong><abbr title="Virtual Private Cloud">VPC</abbr> Endpoints</strong> are the right choice when:</p>
 <ul>
 <li>Workloads call AWS services (always — deploy endpoints for services in use)</li>
-<li>You want to reduce <abbr title="Network Address Translation">NAT</abbr> Gateway processing costs</li>
+<li>You want to reduce <abbr title="Network Address Translation">NAT</abbr> gateway processing costs</li>
 <li>Security policy requires AWS API traffic to stay off the internet path</li>
 </ul>
 <p><strong>AWS Network Firewall Proxy (preview)</strong> is the right choice when:</p>
@@ -2814,7 +2814,7 @@
 <td>Second-pass inspection of actual traffic (catches hardcoded IPs, IPS signatures, protocol violations)</td>
 </tr>
 <tr>
-<td><strong>Network Firewall + <abbr title="Network Address Translation">NAT</abbr> Gateway</strong></td>
+<td><strong>Network Firewall + <abbr title="Network Address Translation">NAT</abbr> gateway</strong></td>
 <td>Stateful inspection before traffic exits</td>
 <td>Address translation and egress path for <abbr title="Internet Protocol version 4">IPv4</abbr></td>
 </tr>
@@ -2912,7 +2912,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Firewall Manager</strong></p>
 <hr />
-<p>Centralized security policy management across AWS Organizations for <abbr title="Web Application Firewall">WAF</abbr>, Network Firewall, <abbr title="Domain Name System">DNS</abbr> Firewall, and security groups.</p>
+<p>Centralized security policy management across AWS Organizations for AWS <abbr title="Web Application Firewall">WAF</abbr>, Network Firewall, <abbr title="Domain Name System">DNS</abbr> Firewall, and security groups.</p>
 <p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Firewall Manager documentation</a></p>
 </li>
 <li>
@@ -2922,10 +2922,10 @@
 <p><a href="https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> PrivateLink documentation</a></p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong><abbr title="Network Address Translation">NAT</abbr> Gateway pricing</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong><abbr title="Network Address Translation">NAT</abbr> gateway pricing</strong></p>
 <hr />
 <p>Per-hour and per-GB processing charges that drive the cost case for <abbr title="Virtual Private Cloud">VPC</abbr> endpoints and <abbr title="Domain Name System">DNS</abbr> Firewall as first-line controls.</p>
-<p><a href="https://aws.amazon.com/vpc/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Network Address Translation">NAT</abbr> Gateway pricing</a></p>
+<p><a href="https://aws.amazon.com/vpc/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Network Address Translation">NAT</abbr> gateway pricing</a></p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>AWS Network Firewall Proxy (preview)</strong></p>
@@ -2943,13 +2943,13 @@
 </ul>
 <p><strong>Relationship to Connectivity:</strong></p>
 <ul>
-<li><strong><a href="../../connectivity/internet/">Internet Connectivity</a></strong>: Covers the architectural decision of centralized vs. decentralized egress, <abbr title="Network Address Translation">NAT</abbr> Gateway modes, and <abbr title="Internet Protocol version 6">IPv6</abbr> egress paths. This page layers security controls on top of those connectivity patterns.</li>
+<li><strong><a href="../../connectivity/internet/">Internet Connectivity</a></strong>: Covers the architectural decision of centralized vs. decentralized egress, <abbr title="Network Address Translation">NAT</abbr> gateway modes, and <abbr title="Internet Protocol version 6">IPv6</abbr> egress paths. This page layers security controls on top of those connectivity patterns.</li>
 <li><strong><a href="../../connectivity/within-aws/">Within AWS Connectivity</a></strong>: Transit Gateway and Cloud WAN are the transit layer that enables centralized egress inspection when that pattern is chosen.</li>
 </ul>
 <p><strong>Relationship to Foundation:</strong></p>
 <ul>
 <li><strong><a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: VPCs are the boundary within which outbound controls operate. Security groups, route tables, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints are all <abbr title="Virtual Private Cloud">VPC</abbr>-level constructs.</li>
-<li><strong><a href="../../foundation/subnets/">Subnets</a></strong>: Subnet design determines where <abbr title="Network Address Translation">NAT</abbr> Gateways, Network Firewall endpoints, and egress-only IGWs are placed.</li>
+<li><strong><a href="../../foundation/subnets/">Subnets</a></strong>: Subnet design determines where <abbr title="Network Address Translation">NAT</abbr> gateways, Network Firewall endpoints, and egress-only IGWs are placed.</li>
 </ul>
 
 
@@ -2973,7 +2973,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

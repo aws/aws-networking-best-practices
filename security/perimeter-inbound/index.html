@@ -1237,10 +1237,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#deploy-waf-on-every-internet-facing-l7-endpoint" class="md-nav__link">
+  <a href="#deploy-aws-waf-on-every-internet-facing-l7-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Deploy WAF on every internet-facing L7 endpoint
+        Deploy AWS WAF on every internet-facing L7 endpoint
       
     </span>
   </a>
@@ -1270,10 +1270,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#waf-handles-both-ipv4-and-ipv6-transparently" class="md-nav__link">
+  <a href="#aws-waf-handles-both-ipv4-and-ipv6-transparently" class="md-nav__link">
     <span class="md-ellipsis">
       
-        WAF handles both IPv4 and IPv6 transparently
+        AWS WAF handles both IPv4 and IPv6 transparently
       
     </span>
   </a>
@@ -2282,10 +2282,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#deploy-waf-on-every-internet-facing-l7-endpoint" class="md-nav__link">
+  <a href="#deploy-aws-waf-on-every-internet-facing-l7-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Deploy WAF on every internet-facing L7 endpoint
+        Deploy AWS WAF on every internet-facing L7 endpoint
       
     </span>
   </a>
@@ -2315,10 +2315,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#waf-handles-both-ipv4-and-ipv6-transparently" class="md-nav__link">
+  <a href="#aws-waf-handles-both-ipv4-and-ipv6-transparently" class="md-nav__link">
     <span class="md-ellipsis">
       
-        WAF handles both IPv4 and IPv6 transparently
+        AWS WAF handles both IPv4 and IPv6 transparently
       
     </span>
   </a>
@@ -2817,21 +2817,21 @@
 <p>NACLs are evaluated in rule-number order, and the first match wins. Complex <abbr title="Network Access Control List">NACL</abbr> configurations with dozens of rules become difficult to reason about and audit. If your <abbr title="Network Access Control List">NACL</abbr> has more than 10-15 custom rules, you're likely using it for access control that belongs in security groups or Network Firewall. Keep NACLs focused on broad deny patterns: deny known-bad ranges, deny protocols that should never appear on a subnet, and let security groups handle the fine-grained allow logic.</p>
 <p><strong><em>Key insight:</em></strong> <em>NACLs exist for one reason: to deny traffic that security groups cannot deny. Security groups are allow-only — they cannot block a specific IP that would otherwise be permitted by a broader rule. NACLs fill that gap. If you're writing allow rules in NACLs, you're using the wrong tool.</em></p>
 <h3 id="aws-waf">AWS <abbr title="Web Application Firewall">WAF</abbr><a class="headerlink" href="#aws-waf" title="Permanent link">&para;</a></h3>
-<h4 id="deploy-waf-on-every-internet-facing-l7-endpoint">Deploy <abbr title="Web Application Firewall">WAF</abbr> on every internet-facing L7 endpoint<a class="headerlink" href="#deploy-waf-on-every-internet-facing-l7-endpoint" title="Permanent link">&para;</a></h4>
-<p>AWS <abbr title="Web Application Firewall">WAF</abbr> should be attached to every CloudFront distribution, public-facing <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway stage. The cost of a <abbr title="Web Application Firewall">WAF</abbr> WebACL (starting at $5/month plus $0.60 per million requests) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.</p>
+<h4 id="deploy-aws-waf-on-every-internet-facing-l7-endpoint">Deploy AWS <abbr title="Web Application Firewall">WAF</abbr> on every internet-facing L7 endpoint<a class="headerlink" href="#deploy-aws-waf-on-every-internet-facing-l7-endpoint" title="Permanent link">&para;</a></h4>
+<p>AWS <abbr title="Web Application Firewall">WAF</abbr> should be attached to every CloudFront distribution, public-facing <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway stage. The cost of a AWS <abbr title="Web Application Firewall">WAF</abbr> WebACL (starting at $5/month plus $0.60 per million requests) is negligible compared to the cost of an application-layer attack reaching your origin. Use AWS Firewall Manager to deploy a baseline WebACL across all accounts automatically — this ensures new resources get protection without relying on application teams to remember.</p>
 <h4 id="start-with-aws-managed-rule-groups-then-layer-custom-rules">Start with AWS Managed Rule Groups, then layer custom rules<a class="headerlink" href="#start-with-aws-managed-rule-groups-then-layer-custom-rules" title="Permanent link">&para;</a></h4>
 <p>AWS Managed Rules provide immediate coverage for common threats: the Core Rule Set (CRS) covers OWASP Top 10, the Known Bad Inputs rule group blocks common exploit patterns, and the IP Reputation list blocks traffic from known-malicious sources. These are maintained by AWS and updated automatically. Start with these as your baseline, monitor for false positives in count mode for 1-2 weeks, then switch to block mode.</p>
 <p>Custom rules layer on top for application-specific logic: rate limiting per IP or per session, geo-blocking for regions you don't serve, header validation for expected patterns, and request-size constraints that match your application's actual needs.</p>
 <h4 id="use-rate-based-rules-as-your-first-line-against-volumetric-application-layer-attacks">Use rate-based rules as your first line against volumetric application-layer attacks<a class="headerlink" href="#use-rate-based-rules-as-your-first-line-against-volumetric-application-layer-attacks" title="Permanent link">&para;</a></h4>
 <p>Rate-based rules throttle requests from a single IP (or other key) that exceed a threshold within a 5-minute window. Set a rate limit that reflects your application's legitimate traffic pattern — if no single client should send more than 2,000 requests per 5 minutes, set the threshold there. This catches credential stuffing, scraping, and application-layer <abbr title="Distributed Denial of Service">DDoS</abbr> before they consume backend resources.</p>
 <p>Rate-based rules support custom keys beyond IP: you can rate-limit by header value, query string, cookie, or label namespace. This handles distributed attacks where a single IP stays below the threshold but the aggregate from a botnet is overwhelming.</p>
-<h4 id="waf-handles-both-ipv4-and-ipv6-transparently"><abbr title="Web Application Firewall">WAF</abbr> handles both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> transparently<a class="headerlink" href="#waf-handles-both-ipv4-and-ipv6-transparently" title="Permanent link">&para;</a></h4>
-<p><abbr title="Web Application Firewall">WAF</abbr> rules that match on IP addresses accept both <abbr title="Internet Protocol version 4">IPv4</abbr> CIDRs and <abbr title="Internet Protocol version 6">IPv6</abbr> CIDRs in IP sets. Rate-based rules track <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> sources independently. There is no separate configuration needed for <abbr title="Internet Protocol version 6">IPv6</abbr> — <abbr title="Web Application Firewall">WAF</abbr> evaluates all HTTP/HTTPS traffic regardless of the underlying IP version. This is one area where <abbr title="Internet Protocol version 6">IPv6</abbr> does not require additional configuration, unlike security groups and NACLs.</p>
+<h4 id="aws-waf-handles-both-ipv4-and-ipv6-transparently">AWS <abbr title="Web Application Firewall">WAF</abbr> handles both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> transparently<a class="headerlink" href="#aws-waf-handles-both-ipv4-and-ipv6-transparently" title="Permanent link">&para;</a></h4>
+<p>AWS <abbr title="Web Application Firewall">WAF</abbr> rules that match on IP addresses accept both <abbr title="Internet Protocol version 4">IPv4</abbr> CIDRs and <abbr title="Internet Protocol version 6">IPv6</abbr> CIDRs in IP sets. Rate-based rules track <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> sources independently. There is no separate configuration needed for <abbr title="Internet Protocol version 6">IPv6</abbr> — AWS <abbr title="Web Application Firewall">WAF</abbr> evaluates all HTTP/HTTPS traffic regardless of the underlying IP version. This is one area where <abbr title="Internet Protocol version 6">IPv6</abbr> does not require additional configuration, unlike security groups and NACLs.</p>
 <h3 id="aws-shield">AWS Shield<a class="headerlink" href="#aws-shield" title="Permanent link">&para;</a></h3>
 <h4 id="understand-what-shield-standard-gives-you-automatically">Understand what Shield Standard gives you automatically<a class="headerlink" href="#understand-what-shield-standard-gives-you-automatically" title="Permanent link">&para;</a></h4>
 <p>Shield Standard is enabled on every AWS account at no cost. It protects all public-facing endpoints (CloudFront, Route 53, Global Accelerator, <abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>, Elastic IPs) against common L3/L4 <abbr title="Distributed Denial of Service">DDoS</abbr> attacks — SYN floods, <abbr title="User Datagram Protocol">UDP</abbr> reflection, and <abbr title="Domain Name System">DNS</abbr> amplification. You do not need to configure anything. This baseline protection is why most AWS workloads never experience a successful volumetric <abbr title="Distributed Denial of Service">DDoS</abbr> attack.</p>
 <h4 id="upgrade-to-shield-advanced-for-business-critical-internet-facing-workloads">Upgrade to Shield Advanced for business-critical internet-facing workloads<a class="headerlink" href="#upgrade-to-shield-advanced-for-business-critical-internet-facing-workloads" title="Permanent link">&para;</a></h4>
-<p>Shield Advanced ($3,000/month per organization, plus data transfer fees during attacks) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS <abbr title="Distributed Denial of Service">DDoS</abbr> Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy <abbr title="Web Application Firewall">WAF</abbr> rules on your behalf during an active incident.</p>
+<p>Shield Advanced ($3,000/month per organization, plus data transfer fees during attacks) adds capabilities that matter for high-value targets: real-time attack visibility in the Shield console, access to the AWS <abbr title="Distributed Denial of Service">DDoS</abbr> Response Team (DRT) for manual mitigation during complex attacks, cost protection (credits for scaling charges incurred during an attack), and proactive engagement where AWS contacts you when an attack is detected. The DRT can also write and deploy AWS <abbr title="Web Application Firewall">WAF</abbr> rules on your behalf during an active incident.</p>
 <p>Shield Advanced is justified when the cost of downtime exceeds the subscription cost — typically for revenue-generating web applications, financial services APIs, and SaaS platforms where minutes of unavailability have measurable business impact.</p>
 <h4 id="associate-shield-advanced-with-all-related-resources">Associate Shield Advanced with all related resources<a class="headerlink" href="#associate-shield-advanced-with-all-related-resources" title="Permanent link">&para;</a></h4>
 <p>Shield Advanced protection is per-resource. If your application uses CloudFront → <abbr title="Application Load Balancer">ALB</abbr> → <abbr title="Elastic Compute Cloud">EC2</abbr>, associate Shield Advanced with both the CloudFront distribution and the <abbr title="Application Load Balancer">ALB</abbr>. Protecting only CloudFront leaves the <abbr title="Application Load Balancer">ALB</abbr> exposed to direct attacks if its <abbr title="Domain Name System">DNS</abbr> name is discoverable. Use Firewall Manager to automatically associate Shield Advanced with new resources matching your criteria across all accounts.</p>
@@ -2892,13 +2892,13 @@
 <p><strong><em>Key insight:</em></strong> <em><abbr title="Gateway Load Balancer">GWLB</abbr> is not a competitor to Network Firewall — it's a deployment mechanism for third-party appliances. Choose based on whether you need AWS-managed inspection (Network Firewall) or vendor-specific inspection (<abbr title="Gateway Load Balancer">GWLB</abbr> + appliances). Many organizations use both: Network Firewall for standard <abbr title="Virtual Private Cloud">VPC</abbr> inspection and <abbr title="Gateway Load Balancer">GWLB</abbr> for specialized workloads that require vendor-specific capabilities.</em></p>
 <h3 id="aws-firewall-manager">AWS Firewall Manager<a class="headerlink" href="#aws-firewall-manager" title="Permanent link">&para;</a></h3>
 <h4 id="use-firewall-manager-as-the-single-pane-for-cross-account-perimeter-policy">Use Firewall Manager as the single pane for cross-account perimeter policy<a class="headerlink" href="#use-firewall-manager-as-the-single-pane-for-cross-account-perimeter-policy" title="Permanent link">&para;</a></h4>
-<p>Firewall Manager is not a firewall — it is a policy management service that deploys and enforces security group rules, <abbr title="Web Application Firewall">WAF</abbr> WebACLs, Shield Advanced associations, Network Firewall policies, and <abbr title="Domain Name System">DNS</abbr> Firewall rules across every account in your Organization. Without Firewall Manager, each account team must independently configure these controls, leading to drift, gaps, and inconsistent baselines.</p>
+<p>Firewall Manager is not a firewall — it is a policy management service that deploys and enforces security group rules, AWS <abbr title="Web Application Firewall">WAF</abbr> WebACLs, Shield Advanced associations, Network Firewall policies, and <abbr title="Domain Name System">DNS</abbr> Firewall rules across every account in your Organization. Without Firewall Manager, each account team must independently configure these controls, leading to drift, gaps, and inconsistent baselines.</p>
 <p>Firewall Manager requires AWS Organizations with all features enabled and a delegated administrator account (typically your security or networking account). Once configured, policies automatically apply to new accounts and new resources as they're created — no manual onboarding step.</p>
 <h4 id="define-baseline-policies-that-application-teams-cannot-weaken">Define baseline policies that application teams cannot weaken<a class="headerlink" href="#define-baseline-policies-that-application-teams-cannot-weaken" title="Permanent link">&para;</a></h4>
-<p>Firewall Manager supports two enforcement modes for security groups: <strong>audit</strong> (report non-compliant groups but don't change them) and <strong>auto-remediate</strong> (bring non-compliant groups into compliance automatically). For baseline rules (e.g., "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For <abbr title="Web Application Firewall">WAF</abbr>, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.</p>
+<p>Firewall Manager supports two enforcement modes for security groups: <strong>audit</strong> (report non-compliant groups but don't change them) and <strong>auto-remediate</strong> (bring non-compliant groups into compliance automatically). For baseline rules (e.g., "no security group may allow SSH from 0.0.0.0/0"), use auto-remediation. For AWS <abbr title="Web Application Firewall">WAF</abbr>, deploy a baseline WebACL that application teams cannot remove, while allowing them to add their own rules on top.</p>
 <p>This creates a layered ownership model: the security team owns the baseline (managed through Firewall Manager), and application teams own workload-specific rules within the guardrails the baseline establishes.</p>
 <h4 id="account-for-firewall-manager-costs-in-your-security-budget">Account for Firewall Manager costs in your security budget<a class="headerlink" href="#account-for-firewall-manager-costs-in-your-security-budget" title="Permanent link">&para;</a></h4>
-<p>Firewall Manager charges per policy per Region ($100/month per policy per Region). If you have 5 policies across 4 Regions, that's $2,000/month for Firewall Manager alone, before the cost of the underlying services (<abbr title="Web Application Firewall">WAF</abbr> WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.</p>
+<p>Firewall Manager charges per policy per Region ($100/month per policy per Region). If you have 5 policies across 4 Regions, that's $2,000/month for Firewall Manager alone, before the cost of the underlying services (AWS <abbr title="Web Application Firewall">WAF</abbr> WebACLs, Network Firewall endpoints, Shield Advanced subscriptions). This cost is justified for organizations with 10+ accounts where manual policy management is impractical, but may not be cost-effective for small organizations with 2-3 accounts where manual configuration is manageable.</p>
 <h3 id="ipv6-perimeter-considerations"><abbr title="Internet Protocol version 6">IPv6</abbr> perimeter considerations<a class="headerlink" href="#ipv6-perimeter-considerations" title="Permanent link">&para;</a></h3>
 <h4 id="treat-ipv6-security-as-a-separate-explicit-configuration-not-an-extension-of-ipv4">Treat <abbr title="Internet Protocol version 6">IPv6</abbr> security as a separate, explicit configuration — not an extension of <abbr title="Internet Protocol version 4">IPv4</abbr><a class="headerlink" href="#treat-ipv6-security-as-a-separate-explicit-configuration-not-an-extension-of-ipv4" title="Permanent link">&para;</a></h4>
 <p>The most dangerous <abbr title="Internet Protocol version 6">IPv6</abbr> security posture is accidental: a <abbr title="Virtual Private Cloud">VPC</abbr> is dual-stack, resources receive <abbr title="Internet Protocol version 6">IPv6</abbr> addresses, but security groups, NACLs, and firewall rules only cover <abbr title="Internet Protocol version 4">IPv4</abbr>. In this state, <abbr title="Internet Protocol version 6">IPv6</abbr> traffic bypasses every control you've configured. The fix is straightforward but requires discipline:</p>
@@ -2906,7 +2906,7 @@
 <li><strong>Security groups</strong>: Add explicit <abbr title="Internet Protocol version 6">IPv6</abbr> rules (<code>::/0</code> for public, specific <abbr title="Internet Protocol version 6">IPv6</abbr> prefixes for internal). No <abbr title="Internet Protocol version 4">IPv4</abbr> rule applies to <abbr title="Internet Protocol version 6">IPv6</abbr> traffic.</li>
 <li><strong>NACLs</strong>: Add <abbr title="Internet Protocol version 6">IPv6</abbr> entries for both inbound and outbound, including ephemeral port ranges. Custom NACLs start with no <abbr title="Internet Protocol version 6">IPv6</abbr> rules.</li>
 <li><strong>Network Firewall</strong>: Stateful rules that reference IP addresses need both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> variants. Domain-based rules (SNI, HTTP host) work regardless of IP version.</li>
-<li><strong><abbr title="Web Application Firewall">WAF</abbr></strong>: Handles both address families transparently — no separate configuration needed.</li>
+<li><strong>AWS <abbr title="Web Application Firewall">WAF</abbr></strong>: Handles both address families transparently — no separate configuration needed.</li>
 </ul>
 <h4 id="audit-for-unintended-ipv6-exposure-in-dual-stack-vpcs">Audit for unintended <abbr title="Internet Protocol version 6">IPv6</abbr> exposure in dual-stack VPCs<a class="headerlink" href="#audit-for-unintended-ipv6-exposure-in-dual-stack-vpcs" title="Permanent link">&para;</a></h4>
 <p>When you enable <abbr title="Internet Protocol version 6">IPv6</abbr> on a subnet, every ENI in that subnet can receive an <abbr title="Internet Protocol version 6">IPv6</abbr> address (depending on the subnet setting). If a security group has no <abbr title="Internet Protocol version 6">IPv6</abbr> inbound rules, traffic is blocked — but if someone adds a <code>::/0</code> rule without understanding the implications, the resource is now reachable from the entire <abbr title="Internet Protocol version 6">IPv6</abbr> internet. Use Firewall Manager's security group audit policies to detect overly permissive <abbr title="Internet Protocol version 6">IPv6</abbr> rules across your Organization.</p>
@@ -2925,21 +2925,21 @@
 <li>Compliance requires a second independent control layer beyond security groups</li>
 <li>You need to block traffic from compromised internal resources that security groups would otherwise allow</li>
 </ul>
-<p>NACLs are <strong>not the right tool</strong> for fine-grained access control (use security groups) or for application-layer filtering (use <abbr title="Web Application Firewall">WAF</abbr>).</p>
+<p>NACLs are <strong>not the right tool</strong> for fine-grained access control (use security groups) or for application-layer filtering (use AWS <abbr title="Web Application Firewall">WAF</abbr>).</p>
 <p><strong>AWS <abbr title="Web Application Firewall">WAF</abbr></strong> is the right choice when:</p>
 <ul>
 <li>You need to inspect HTTP/HTTPS request content (headers, body, URI, query strings)</li>
 <li>You need rate limiting, bot detection, or geo-blocking</li>
 <li>Your workload is fronted by CloudFront, <abbr title="Application Load Balancer">ALB</abbr>, API Gateway, or AppSync</li>
 </ul>
-<p><abbr title="Web Application Firewall">WAF</abbr> is <strong>not the right tool</strong> for L3/L4 traffic inspection (use Network Firewall) or for non-HTTP protocols.</p>
+<p>AWS <abbr title="Web Application Firewall">WAF</abbr> is <strong>not the right tool</strong> for L3/L4 traffic inspection (use Network Firewall) or for non-HTTP protocols.</p>
 <p><strong>AWS Network Firewall</strong> is the right choice when:</p>
 <ul>
 <li>You need stateful L3/L4 inspection with IPS/IDS capabilities</li>
 <li>You need domain-based filtering for non-HTTP traffic (<abbr title="Transport Layer Security">TLS</abbr> SNI inspection)</li>
 <li>You need protocol detection and deep packet inspection at the <abbr title="Virtual Private Cloud">VPC</abbr> boundary</li>
 </ul>
-<p>Network Firewall is <strong>not the right tool</strong> for HTTP-specific logic (use <abbr title="Web Application Firewall">WAF</abbr>) or when you need vendor-specific appliance features (use <abbr title="Gateway Load Balancer">GWLB</abbr>).</p>
+<p>Network Firewall is <strong>not the right tool</strong> for HTTP-specific logic (use AWS <abbr title="Web Application Firewall">WAF</abbr>) or when you need vendor-specific appliance features (use <abbr title="Gateway Load Balancer">GWLB</abbr>).</p>
 <p><strong>Gateway Load Balancer + third-party firewalls</strong> is the right choice when:</p>
 <ul>
 <li>Your organization mandates a specific firewall vendor for compliance or operational consistency</li>
@@ -2973,13 +2973,13 @@
 <td>Always — security groups remain active even when Lattice handles service-to-service auth</td>
 </tr>
 <tr>
-<td><strong><abbr title="Web Application Firewall">WAF</abbr> + CloudFront</strong></td>
+<td><strong>AWS <abbr title="Web Application Firewall">WAF</abbr> + CloudFront</strong></td>
 <td>L7 request inspection, rate limiting, geo-blocking</td>
 <td>Global edge distribution, <abbr title="Transport Layer Security">TLS</abbr> termination, caching, origin isolation via <abbr title="Virtual Private Cloud">VPC</abbr> Origins</td>
-<td>Every internet-facing L7 workload — <abbr title="Web Application Firewall">WAF</abbr> at CloudFront inspects before traffic reaches your Region</td>
+<td>Every internet-facing L7 workload — AWS <abbr title="Web Application Firewall">WAF</abbr> at CloudFront inspects before traffic reaches your Region</td>
 </tr>
 <tr>
-<td><strong><abbr title="Web Application Firewall">WAF</abbr> + API Gateway</strong></td>
+<td><strong>AWS <abbr title="Web Application Firewall">WAF</abbr> + API Gateway</strong></td>
 <td>Request filtering, IP blocking, rate limiting</td>
 <td>API management, throttling, request validation, authorization</td>
 <td>API-first workloads where API Gateway is the entry point rather than CloudFront</td>
@@ -2997,10 +2997,10 @@
 <td>Per-<abbr title="Virtual Private Cloud">VPC</abbr> inspection of internet-bound inbound traffic</td>
 </tr>
 <tr>
-<td><strong>Shield Advanced + <abbr title="Web Application Firewall">WAF</abbr></strong></td>
+<td><strong>Shield Advanced + AWS <abbr title="Web Application Firewall">WAF</abbr></strong></td>
 <td><abbr title="Distributed Denial of Service">DDoS</abbr> protection, DRT access, cost protection</td>
 <td>Application-layer attack mitigation, automatic rate limiting</td>
-<td>Shield Advanced can instruct <abbr title="Web Application Firewall">WAF</abbr> to deploy emergency rules during an attack via DRT</td>
+<td>Shield Advanced can instruct AWS <abbr title="Web Application Firewall">WAF</abbr> to deploy emergency rules during an attack via DRT</td>
 </tr>
 <tr>
 <td><strong><abbr title="Gateway Load Balancer">GWLB</abbr> + Network Firewall</strong></td>
@@ -3090,7 +3090,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong><em>Key insight:</em></strong> <em>Security groups and NACLs are free. <abbr title="Web Application Firewall">WAF</abbr> is cheap relative to the protection it provides. Network Firewall and <abbr title="Gateway Load Balancer">GWLB</abbr> are the expensive layers — deploy them where the inspection value justifies the per-GB processing cost, not as a blanket "inspect everything" approach. Use <abbr title="Web Application Firewall">WAF</abbr> for L7 and security groups for L3/L4 as your cost-effective baseline, and add Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr> only where deeper inspection is required.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>Security groups and NACLs are free. AWS <abbr title="Web Application Firewall">WAF</abbr> is cheap relative to the protection it provides. Network Firewall and <abbr title="Gateway Load Balancer">GWLB</abbr> are the expensive layers — deploy them where the inspection value justifies the per-GB processing cost, not as a blanket "inspect everything" approach. Use AWS <abbr title="Web Application Firewall">WAF</abbr> for L7 and security groups for L3/L4 as your cost-effective baseline, and add Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr> only where deeper inspection is required.</em></p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -3103,7 +3103,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS <abbr title="Web Application Firewall">WAF</abbr> Developer Guide</strong></p>
 <hr />
-<p>Full <abbr title="Web Application Firewall">WAF</abbr> documentation covering WebACLs, rule groups, managed rules, and integration with CloudFront, <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway.</p>
+<p>Full AWS <abbr title="Web Application Firewall">WAF</abbr> documentation covering WebACLs, rule groups, managed rules, and integration with CloudFront, <abbr title="Application Load Balancer">ALB</abbr>, and API Gateway.</p>
 <p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> AWS <abbr title="Web Application Firewall">WAF</abbr></a></p>
 </li>
 <li>
@@ -3121,7 +3121,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Firewall Manager documentation</strong></p>
 <hr />
-<p>Cross-account policy management for <abbr title="Web Application Firewall">WAF</abbr>, Shield, security groups, Network Firewall, and <abbr title="Domain Name System">DNS</abbr> Firewall.</p>
+<p>Cross-account policy management for AWS <abbr title="Web Application Firewall">WAF</abbr>, Shield, security groups, Network Firewall, and <abbr title="Domain Name System">DNS</abbr> Firewall.</p>
 <p><a href="https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Firewall Manager</a></p>
 </li>
 <li>
@@ -3149,7 +3149,7 @@
 </ul>
 <p><strong>Relationship to Application Networking topics:</strong></p>
 <ul>
-<li><strong><a href="../../application-networking/load-balancing/">Load Balancing</a></strong>: Load balancers are the primary targets of perimeter controls — security groups on ALBs/NLBs, <abbr title="Web Application Firewall">WAF</abbr> on ALBs, and Network Firewall inspection in front of load balancer subnets.</li>
+<li><strong><a href="../../application-networking/load-balancing/">Load Balancing</a></strong>: Load balancers are the primary targets of perimeter controls — security groups on ALBs/NLBs, AWS <abbr title="Web Application Firewall">WAF</abbr> on ALBs, and Network Firewall inspection in front of load balancer subnets.</li>
 </ul>
 
 
@@ -3173,7 +3173,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

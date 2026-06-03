@@ -2772,7 +2772,7 @@
 </ul>
 </div>
 <h2 id="ipv6-for-service-to-service-communication"><abbr title="Internet Protocol version 6">IPv6</abbr> for service-to-service communication<a class="headerlink" href="#ipv6-for-service-to-service-communication" title="Permanent link">&para;</a></h2>
-<p>Service-to-service traffic should be dual-stack from the start. All of the synchronous patterns on this page support <abbr title="Internet Protocol version 6">IPv6</abbr>, and adopting it for internal traffic removes <abbr title="Network Address Translation">NAT</abbr> Gateway dependency (and its per-GB cost) for east-west communication.</p>
+<p>Service-to-service traffic should be dual-stack from the start. All of the synchronous patterns on this page support <abbr title="Internet Protocol version 6">IPv6</abbr>, and adopting it for internal traffic removes <abbr title="Network Address Translation">NAT</abbr> gateway dependency (and its per-GB cost) for east-west communication.</p>
 <p><strong><abbr title="Internet Protocol version 6">IPv6</abbr> support across the service-to-service options:</strong></p>
 <table>
 <thead>
@@ -2820,9 +2820,9 @@
 <li><strong>Configure <abbr title="Virtual Private Cloud">VPC</abbr> Lattice services as dual-stack</strong> so that consumers in <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets can reach them without NAT64. This is especially relevant for EKS clusters running in <abbr title="Internet Protocol version 6">IPv6</abbr> mode where pods have only <abbr title="Internet Protocol version 6">IPv6</abbr> addresses.</li>
 <li><strong>Add AAAA alias records alongside A records</strong> in Route 53 private hosted zones for every internal service. <abbr title="Internet Protocol version 6">IPv6</abbr>-capable consumers will prefer the AAAA record automatically.</li>
 <li><strong>Update security groups for both address families</strong> on every service endpoint. A common failure: the <abbr title="Application Load Balancer">ALB</abbr>'s security group allows <code>10.0.0.0/8</code> on port 443 but has no <abbr title="Internet Protocol version 6">IPv6</abbr> rule, so <abbr title="Internet Protocol version 6">IPv6</abbr> consumers get connection refused.</li>
-<li><strong>Use <abbr title="Internet Protocol version 6">IPv6</abbr> for east-west traffic to eliminate <abbr title="Network Address Translation">NAT</abbr> Gateway costs.</strong> Service-to-service calls between VPCs over <abbr title="Virtual Private Cloud">VPC</abbr> Lattice or peering don't need <abbr title="Network Address Translation">NAT</abbr> when both sides are <abbr title="Internet Protocol version 6">IPv6</abbr>-capable. This removes the per-GB <abbr title="Network Address Translation">NAT</abbr> Gateway processing charge from internal traffic paths.</li>
+<li><strong>Use <abbr title="Internet Protocol version 6">IPv6</abbr> for east-west traffic to eliminate <abbr title="Network Address Translation">NAT</abbr> gateway costs.</strong> Service-to-service calls between VPCs over <abbr title="Virtual Private Cloud">VPC</abbr> Lattice or peering don't need <abbr title="Network Address Translation">NAT</abbr> when both sides are <abbr title="Internet Protocol version 6">IPv6</abbr>-capable. This removes the per-GB <abbr title="Network Address Translation">NAT</abbr> gateway processing charge from internal traffic paths.</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em><abbr title="Internet Protocol version 6">IPv6</abbr> for service-to-service is primarily a cost optimization: it removes <abbr title="Network Address Translation">NAT</abbr> Gateway from east-west traffic paths. The functionality is identical to <abbr title="Internet Protocol version 4">IPv4</abbr> — the same auth policies, the same weighted routing, the same access logs. The difference is that <abbr title="Internet Protocol version 6">IPv6</abbr> traffic between services doesn't incur <abbr title="Network Address Translation">NAT</abbr> processing charges.</em></p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Internet Protocol version 6">IPv6</abbr> for service-to-service is primarily a cost optimization: it removes <abbr title="Network Address Translation">NAT</abbr> gateway from east-west traffic paths. The functionality is identical to <abbr title="Internet Protocol version 4">IPv4</abbr> — the same auth policies, the same weighted routing, the same access logs. The difference is that <abbr title="Internet Protocol version 6">IPv6</abbr> traffic between services doesn't incur <abbr title="Network Address Translation">NAT</abbr> processing charges.</em></p>
 <h2 id="cost-considerations-for-cross-vpc-service-access">Cost considerations for cross-<abbr title="Virtual Private Cloud">VPC</abbr> service access<a class="headerlink" href="#cost-considerations-for-cross-vpc-service-access" title="Permanent link">&para;</a></h2>
 <p>The choice between service-to-service connectivity options has significant cost implications that scale with traffic volume. The table below compares the cost model of each cross-<abbr title="Virtual Private Cloud">VPC</abbr> access pattern.</p>
 <table>
@@ -2863,7 +2863,7 @@
 <td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice + <abbr title="Internet Protocol version 6">IPv6</abbr> (no <abbr title="Network Address Translation">NAT</abbr>)</strong></td>
 <td>No hourly charge</td>
 <td>$0.025/GB Lattice processing (no <abbr title="Network Address Translation">NAT</abbr> processing)</td>
-<td>Request volume; eliminates the $0.045/GB <abbr title="Network Address Translation">NAT</abbr> Gateway charge on the consumer side</td>
+<td>Request volume; eliminates the $0.045/GB <abbr title="Network Address Translation">NAT</abbr> gateway charge on the consumer side</td>
 </tr>
 </tbody>
 </table>
@@ -2959,7 +2959,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:29:16 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

@@ -1708,7 +1708,7 @@
 <li><strong>Egress: <abbr title="Internet Protocol version 6">IPv6</abbr> vs <abbr title="Internet Protocol version 4">IPv4</abbr></strong> — <abbr title="Internet Protocol version 6">IPv6</abbr> egress is decentralized by design (egress-only internet gateway per <abbr title="Virtual Private Cloud">VPC</abbr>); <abbr title="Internet Protocol version 4">IPv4</abbr> egress is a genuine trade-off between decentralized and centralized patterns</li>
 <li><strong>Edge services</strong> — Amazon CloudFront, AWS Global Accelerator, and AWS <abbr title="Web Application Firewall">WAF</abbr> provide centrally-managed protection regardless of ingress pattern</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em>For ingress, the AWS edge (CloudFront, <abbr title="Web Application Firewall">WAF</abbr>, per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints) effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress <abbr title="Virtual Private Cloud">VPC</abbr>.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>For ingress, the AWS edge (CloudFront, AWS <abbr title="Web Application Firewall">WAF</abbr>, per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints) effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress <abbr title="Virtual Private Cloud">VPC</abbr>.</em></p>
 <h2 id="2-connectivity-within-aws">2. Connectivity Within AWS<a class="headerlink" href="#2-connectivity-within-aws" title="Permanent link">&para;</a></h2>
 <p><strong>Within-AWS connectivity</strong> handles how VPCs, accounts, and Regions communicate with each other. The services operate at two complementary layers: network-level connectivity (how VPCs route traffic) and application-level connectivity (how services discover and talk to each other).</p>
 <p><strong>Key services:</strong></p>
@@ -1740,7 +1740,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.36 14c.08-.66.14-1.32.14-2s-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2m-5.15 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95a8.03 8.03 0 0 1-4.33 3.56M14.34 14H9.66c-.1-.66-.16-1.32-.16-2s.06-1.35.16-2h4.68c.09.65.16 1.32.16 2s-.07 1.34-.16 2M12 19.96c-.83-1.2-1.5-2.53-1.91-3.96h3.82c-.41 1.43-1.08 2.76-1.91 3.96M8 8H5.08A7.92 7.92 0 0 1 9.4 4.44C8.8 5.55 8.35 6.75 8 8m-2.92 8H8c.35 1.25.8 2.45 1.4 3.56A8 8 0 0 1 5.08 16m-.82-2C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2s.06 1.34.14 2M12 4.03c.83 1.2 1.5 2.54 1.91 3.97h-3.82c.41-1.43 1.08-2.77 1.91-3.97M18.92 8h-2.95a15.7 15.7 0 0 0-1.38-3.56c1.84.63 3.37 1.9 4.33 3.56M12 2C6.47 2 2 6.5 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg></span> <strong>Internet Connectivity</strong></p>
 <hr />
-<p>Ingress and egress patterns, decentralized vs centralized architectures, edge services, <abbr title="Network Address Translation">NAT</abbr> Gateway, and egress filtering.</p>
+<p>Ingress and egress patterns, decentralized vs centralized architectures, edge services, <abbr title="Network Address Translation">NAT</abbr> gateway, and egress filtering.</p>
 <p><a href="internet/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Internet Connectivity</a></p>
 </li>
 <li>
@@ -1779,7 +1779,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 03:16:27 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

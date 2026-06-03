@@ -2504,7 +2504,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 10H5L3 8l2-2h6V3l1-1 1 1v1h6l2 2-2 2h-6v2h6l2 2-2 2h-6v6a2 2 0 0 1 2 2H9a2 2 0 0 1 2-2z"/></svg></span> <strong>Route tables and gateways</strong></p>
 <hr />
-<p>Per-subnet route tables control traffic flow. Internet Gateways, <abbr title="Network Address Translation">NAT</abbr> Gateways, Transit Gateway attachments, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints provide connectivity to different destinations.</p>
+<p>Per-subnet route tables control traffic flow. internet gateways, <abbr title="Network Address Translation">NAT</abbr> gateways, Transit Gateway attachments, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints provide connectivity to different destinations.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m3 14 .5.07L8.07 9.5a1.95 1.95 0 0 1 .52-1.91c.78-.79 2.04-.79 2.82 0 .53.52.7 1.26.52 1.91l2.57 2.57.5-.07c.18 0 .35 0 .5.07l3.57-3.57C19 8.35 19 8.18 19 8a2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2c-.18 0-.35 0-.5-.07l-3.57 3.57c.07.15.07.32.07.5a2 2 0 0 1-2 2 2 2 0 0 1-2-2l.07-.5-2.57-2.57c-.32.07-.68.07-1 0L4.93 15.5 5 16a2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong></p>
@@ -2599,7 +2599,7 @@
 <p>Every new <abbr title="Virtual Private Cloud">VPC</abbr> should be created with both an <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> and an Amazon-provided <code>/56</code> <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>. The incremental cost is zero (<abbr title="Internet Protocol version 6">IPv6</abbr> addressing is free), and retrofitting <abbr title="Internet Protocol version 6">IPv6</abbr> into an existing <abbr title="Virtual Private Cloud">VPC</abbr> requires updating every subnet, security group, route table, and <abbr title="Network Access Control List">NACL</abbr> — work that compounds with the age of the <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
 <p>Dual-stack doesn't mean you must use <abbr title="Internet Protocol version 6">IPv6</abbr> immediately. It means the option is available when workloads are ready, without a migration project. Services like EKS, Lambda, and <abbr title="Application Load Balancer">ALB</abbr> already support <abbr title="Internet Protocol version 6">IPv6</abbr> natively. The trend is clear: <abbr title="Internet Protocol version 6">IPv6</abbr> adoption is accelerating, and VPCs created today without it will need it within their lifetime.</p>
 <h4 id="use-ipv6-for-east-west-traffic-to-reduce-nat-dependency">Use <abbr title="Internet Protocol version 6">IPv6</abbr> for east-west traffic to reduce <abbr title="Network Address Translation">NAT</abbr> dependency<a class="headerlink" href="#use-ipv6-for-east-west-traffic-to-reduce-nat-dependency" title="Permanent link">&para;</a></h4>
-<p><abbr title="Internet Protocol version 6">IPv6</abbr> addresses are globally unique and publicly routable by design, but that doesn't mean they're publicly accessible. Egress-only internet gateways allow outbound <abbr title="Internet Protocol version 6">IPv6</abbr> traffic while blocking inbound. For service-to-service communication within AWS, <abbr title="Internet Protocol version 6">IPv6</abbr> eliminates the need for <abbr title="Network Address Translation">NAT</abbr> Gateway (and its per-GB cost) for traffic that doesn't need <abbr title="Internet Protocol version 4">IPv4</abbr> translation.</p>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr> addresses are globally unique and publicly routable by design, but that doesn't mean they're publicly accessible. Egress-only internet gateways allow outbound <abbr title="Internet Protocol version 6">IPv6</abbr> traffic while blocking inbound. For service-to-service communication within AWS, <abbr title="Internet Protocol version 6">IPv6</abbr> eliminates the need for <abbr title="Network Address Translation">NAT</abbr> gateway (and its per-GB cost) for traffic that doesn't need <abbr title="Internet Protocol version 4">IPv4</abbr> translation.</p>
 <h3 id="vpc-flow-logs"><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs<a class="headerlink" href="#vpc-flow-logs" title="Permanent link">&para;</a></h3>
 <h4 id="enable-flow-logs-at-the-vpc-level-not-the-subnet-or-eni-level">Enable Flow Logs at the <abbr title="Virtual Private Cloud">VPC</abbr> level, not the subnet or ENI level<a class="headerlink" href="#enable-flow-logs-at-the-vpc-level-not-the-subnet-or-eni-level" title="Permanent link">&para;</a></h4>
 <p><abbr title="Virtual Private Cloud">VPC</abbr>-level Flow Logs capture all traffic within the <abbr title="Virtual Private Cloud">VPC</abbr> with a single configuration. Subnet-level or ENI-level logs are useful for targeted troubleshooting but should not be your primary observability mechanism — they create gaps in visibility and require per-resource management.</p>
@@ -2738,14 +2738,14 @@
 <td>Dedicate a subnet tier for firewall endpoints. Adjust route tables so traffic traverses the firewall before reaching its destination.</td>
 </tr>
 <tr>
-<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Network Address Translation">NAT</abbr> Gateway</strong></td>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> + <abbr title="Network Address Translation">NAT</abbr> gateway</strong></td>
 <td>The elastic network interface and elastic IP in a public subnet</td>
 <td>Outbound <abbr title="Internet Protocol version 4">IPv4</abbr> internet access for private subnets</td>
-<td>Place <abbr title="Network Address Translation">NAT</abbr> Gateways in public subnets (one per <abbr title="Availability Zone">AZ</abbr> for resilience). Size the subnet to accommodate <abbr title="Network Address Translation">NAT</abbr> Gateway ENIs and any future growth.</td>
+<td>Place <abbr title="Network Address Translation">NAT</abbr> gateways in public subnets (one per <abbr title="Availability Zone">AZ</abbr> for resilience). Size the subnet to accommodate <abbr title="Network Address Translation">NAT</abbr> gateway ENIs and any future growth.</td>
 </tr>
 </tbody>
 </table>
-<p><strong><em>Key insight:</em></strong> <em>Almost every connectivity service attaches to your <abbr title="Virtual Private Cloud">VPC</abbr> through ENIs in specific subnets. This means your subnet design must account for Transit Gateway ENIs, PrivateLink endpoints, firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> Gateways, and Resolver endpoints — not just your application workloads. Plan subnet tiers for infrastructure components from the start, or you'll run out of IP space in the subnets that matter most.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>Almost every connectivity service attaches to your <abbr title="Virtual Private Cloud">VPC</abbr> through ENIs in specific subnets. This means your subnet design must account for Transit Gateway ENIs, PrivateLink endpoints, firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> gateways, and Resolver endpoints — not just your application workloads. Plan subnet tiers for infrastructure components from the start, or you'll run out of IP space in the subnets that matter most.</em></p>
 <h2 id="vpc-limits-and-quotas-to-plan-around"><abbr title="Virtual Private Cloud">VPC</abbr> limits and quotas to plan around<a class="headerlink" href="#vpc-limits-and-quotas-to-plan-around" title="Permanent link">&para;</a></h2>
 <p>Understanding <abbr title="Virtual Private Cloud">VPC</abbr> limits prevents architectural dead ends:</p>
 <ul>
@@ -2812,7 +2812,7 @@
 <ul>
 <li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Every Transit Gateway attachment, Cloud WAN attachment, and <abbr title="Virtual Private Cloud">VPC</abbr> peering connection terminates in a <abbr title="Virtual Private Cloud">VPC</abbr>. Your <abbr title="Virtual Private Cloud">VPC</abbr> design enables or constrains your connectivity architecture.</li>
 <li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a></strong>: Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> traffic enters AWS through a <abbr title="Virtual Private Cloud">VPC</abbr>. The <abbr title="Virtual Private Cloud">VPC</abbr> hosting these connections is typically in a centralized networking account.</li>
-<li><strong><a href="../../connectivity/internet/">Internet Connectivity</a></strong>: Internet Gateways, <abbr title="Network Address Translation">NAT</abbr> Gateways, and egress-only internet gateways are <abbr title="Virtual Private Cloud">VPC</abbr>-level constructs. Your <abbr title="Virtual Private Cloud">VPC</abbr>'s subnet tiers determine which resources can reach the internet and how.</li>
+<li><strong><a href="../../connectivity/internet/">Internet Connectivity</a></strong>: internet gateways, <abbr title="Network Address Translation">NAT</abbr> gateways, and egress-only internet gateways are <abbr title="Virtual Private Cloud">VPC</abbr>-level constructs. Your <abbr title="Virtual Private Cloud">VPC</abbr>'s subnet tiers determine which resources can reach the internet and how.</li>
 </ul>
 <p><strong>Relationship to Application Networking:</strong></p>
 <ul>
@@ -2841,7 +2841,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

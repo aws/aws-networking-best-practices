@@ -2403,7 +2403,7 @@
 <h3 id="alarm-design">Alarm Design<a class="headerlink" href="#alarm-design" title="Permanent link">&para;</a></h3>
 <h4 id="alarm-on-what-matters-not-on-everything">Alarm on what matters, not on everything<a class="headerlink" href="#alarm-on-what-matters-not-on-everything" title="Permanent link">&para;</a></h4>
 <p>Every alarm that fires without requiring action trains your team to ignore alarms. Before creating an alarm, answer: "If this fires at 3 AM, what will someone do?" If the answer is "look at it tomorrow," it's not a P1 alarm — it's a dashboard metric or a daily report item.</p>
-<p>For networking, the alarms that matter are the ones that indicate traffic is affected or about to be affected: tunnel down, <abbr title="Border Gateway Protocol">BGP</abbr> session lost, <abbr title="Network Address Translation">NAT</abbr> Gateway ErrorPortAllocation spiking, Network Firewall dropping legitimate traffic, Transit Gateway blackholing packets. Metrics like "<abbr title="Virtual Private Network">VPN</abbr> tunnel bytes in" are useful for dashboards but rarely warrant an alarm unless they drop to zero (which means the tunnel is effectively dead even if the state shows "UP").</p>
+<p>For networking, the alarms that matter are the ones that indicate traffic is affected or about to be affected: tunnel down, <abbr title="Border Gateway Protocol">BGP</abbr> session lost, <abbr title="Network Address Translation">NAT</abbr> gateway ErrorPortAllocation spiking, Network Firewall dropping legitimate traffic, Transit Gateway blackholing packets. Metrics like "<abbr title="Virtual Private Network">VPN</abbr> tunnel bytes in" are useful for dashboards but rarely warrant an alarm unless they drop to zero (which means the tunnel is effectively dead even if the state shows "UP").</p>
 <p><strong><em>Key insight:</em></strong> <em>If your team routinely ignores alarms, you don't have a monitoring problem — you have an alarm design problem. Every alarm must have a clear owner and a defined response action.</em></p>
 <h4 id="use-anomaly-detection-for-metrics-without-obvious-thresholds">Use anomaly detection for metrics without obvious thresholds<a class="headerlink" href="#use-anomaly-detection-for-metrics-without-obvious-thresholds" title="Permanent link">&para;</a></h4>
 <p>Some networking metrics don't have a natural static threshold. What's "normal" for Transit Gateway bytes processed depends on time of day, day of week, and business seasonality. CloudWatch anomaly detection builds a model of expected behavior and alarms when the metric deviates beyond a configurable band width. This is particularly useful for detecting <abbr title="Distributed Denial of Service">DDoS</abbr> traffic patterns, unexpected traffic shifts after a routing change, or gradual degradation that wouldn't trip a static threshold.</p>
@@ -2446,7 +2446,7 @@
 <p>Networking patterns that benefit from composite alarms:</p>
 <ul>
 <li><strong>Both <abbr title="Virtual Private Network">VPN</abbr> tunnels down</strong> on the same connection (single tunnel down is P2; both down is P1)</li>
-<li><strong><abbr title="Network Address Translation">NAT</abbr> Gateway errors AND increased packet drops</strong> (errors alone might be transient; combined with drops confirms impact)</li>
+<li><strong><abbr title="Network Address Translation">NAT</abbr> gateway errors AND increased packet drops</strong> (errors alone might be transient; combined with drops confirms impact)</li>
 <li><strong><abbr title="Border Gateway Protocol">BGP</abbr> session down AND no traffic on the backup path</strong> (<abbr title="Border Gateway Protocol">BGP</abbr> down alone might mean traffic shifted to backup successfully)</li>
 <li><strong>Multiple Transit Gateway attachments unhealthy</strong> (one attachment flapping is isolated; multiple suggests a broader issue)</li>
 </ul>
@@ -2487,7 +2487,7 @@
 <p>Some network events have well-defined, safe automated responses:</p>
 <ul>
 <li><strong><abbr title="Virtual Private Network">VPN</abbr> tunnel down</strong> → Lambda triggers a CloudFormation stack update to rotate pre-shared keys and re-establish the tunnel</li>
-<li><strong><abbr title="Network Address Translation">NAT</abbr> Gateway ErrorPortAllocation</strong> → Lambda provisions an additional <abbr title="Network Address Translation">NAT</abbr> Gateway and updates route tables</li>
+<li><strong><abbr title="Network Address Translation">NAT</abbr> gateway ErrorPortAllocation</strong> → Lambda provisions an additional <abbr title="Network Address Translation">NAT</abbr> gateway and updates route tables</li>
 <li><strong>Direct Connect connection down</strong> → Lambda verifies backup <abbr title="Virtual Private Network">VPN</abbr> path is active and creates a ticket if it isn't</li>
 <li><strong>Network Firewall rule group update failed</strong> → Lambda rolls back to the previous rule group version</li>
 </ul>
@@ -2541,7 +2541,7 @@
 <tr>
 <td><strong>CloudWatch Alarms + CloudWatch Metrics</strong></td>
 <td>Threshold evaluation, state management, notification triggering</td>
-<td>The underlying metric data from networking services (<abbr title="Virtual Private Network">VPN</abbr>, Direct Connect, <abbr title="Network Address Translation">NAT</abbr> Gateway, Transit Gateway)</td>
+<td>The underlying metric data from networking services (<abbr title="Virtual Private Network">VPN</abbr>, Direct Connect, <abbr title="Network Address Translation">NAT</abbr> gateway, Transit Gateway)</td>
 </tr>
 <tr>
 <td><strong>EventBridge + AWS Health</strong></td>
@@ -2653,7 +2653,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

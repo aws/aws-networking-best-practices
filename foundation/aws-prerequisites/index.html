@@ -2010,7 +2010,7 @@
 <ul>
 <li><strong><code>Environment</code></strong> — <code>production</code>, <code>staging</code>, <code>development</code>. Gates automation behavior (e.g., don't auto-delete production resources).</li>
 <li><strong><code>Owner</code></strong> — The team responsible for the resource. Critical when a Transit Gateway attachment is consuming capacity and you need to know who to contact.</li>
-<li><strong><code>CostCenter</code></strong> — For billing allocation. Network resources (<abbr title="Network Address Translation">NAT</abbr> Gateways, Transit Gateway attachments, <abbr title="Virtual Private Cloud">VPC</abbr> endpoints) generate significant cost that must be attributed.</li>
+<li><strong><code>CostCenter</code></strong> — For billing allocation. Network resources (<abbr title="Network Address Translation">NAT</abbr> gateways, Transit Gateway attachments, <abbr title="Virtual Private Cloud">VPC</abbr> endpoints) generate significant cost that must be attributed.</li>
 <li><strong><code>ManagedBy</code></strong> — <code>cloudformation</code>, <code>terraform</code>, <code>cdk</code>, or <code>manual</code>. Identifies how the resource is managed and whether it's safe to modify.</li>
 <li><strong><code>Name</code></strong> — Descriptive and consistent. Use a naming convention like <code>{env}-{region}-{purpose}-{type}</code> (e.g., <code>prod-use1-shared-tgw</code>).</li>
 </ul>
@@ -2022,7 +2022,7 @@
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>Enforce tagging at creation time, not after the fact. Retroactively tagging hundreds of network resources is painful and error-prone. An SCP or <abbr title="Identity and Access Management">IAM</abbr> policy condition that requires tags on resource creation is far cheaper than a quarterly tagging remediation effort.</em></p>
 <h2 id="aws-well-architected-framework">AWS Well-Architected Framework<a class="headerlink" href="#aws-well-architected-framework" title="Permanent link">&para;</a></h2>
-<p>The Well-Architected Framework provides the architectural principles that networking decisions should align with. Two pillars are directly relevant to network architecture: <strong>Security</strong> and <strong>Reliability</strong>. A third — <strong>Cost Optimization</strong> — becomes critical once you're running Transit Gateway, <abbr title="Network Address Translation">NAT</abbr> Gateways, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints at scale.</p>
+<p>The Well-Architected Framework provides the architectural principles that networking decisions should align with. Two pillars are directly relevant to network architecture: <strong>Security</strong> and <strong>Reliability</strong>. A third — <strong>Cost Optimization</strong> — becomes critical once you're running Transit Gateway, <abbr title="Network Address Translation">NAT</abbr> gateways, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoints at scale.</p>
 <p><strong>Security Pillar — what applies to networking:</strong></p>
 <ul>
 <li><strong>Defense in depth</strong> — Layer security controls: security groups at the ENI, NACLs at the subnet, Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr> at the <abbr title="Virtual Private Cloud">VPC</abbr> perimeter, and AWS <abbr title="Web Application Firewall">WAF</abbr> at the application edge. No single layer is sufficient alone.</li>
@@ -2031,14 +2031,14 @@
 </ul>
 <p><strong>Reliability Pillar — what applies to networking:</strong></p>
 <ul>
-<li><strong>Multi-<abbr title="Availability Zone">AZ</abbr> by default</strong> — Every networking component (<abbr title="Network Address Translation">NAT</abbr> Gateway, Network Firewall endpoints, load balancers) should be deployed across multiple Availability Zones. Single-<abbr title="Availability Zone">AZ</abbr> networking is a single point of failure for everything above it.</li>
+<li><strong>Multi-<abbr title="Availability Zone">AZ</abbr> by default</strong> — Every networking component (<abbr title="Network Address Translation">NAT</abbr> gateway, Network Firewall endpoints, load balancers) should be deployed across multiple Availability Zones. Single-<abbr title="Availability Zone">AZ</abbr> networking is a single point of failure for everything above it.</li>
 <li><strong>Limit blast radius</strong> — Use multiple VPCs and accounts to contain failures. A routing misconfiguration in one <abbr title="Virtual Private Cloud">VPC</abbr> should not propagate to others.</li>
 <li><strong>Test failure modes</strong> — Simulate <abbr title="Availability Zone">AZ</abbr> failure, Transit Gateway attachment loss, and <abbr title="Domain Name System">DNS</abbr> resolution failure. Know what breaks and how it recovers.</li>
 </ul>
 <p><strong>Cost Optimization Pillar — what applies to networking:</strong></p>
 <ul>
-<li><strong>Understand data transfer pricing</strong> — Cross-<abbr title="Availability Zone">AZ</abbr>, cross-Region, Transit Gateway processing, <abbr title="Network Address Translation">NAT</abbr> Gateway processing, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoint hourly charges all add up. Architect to minimize unnecessary data movement.</li>
-<li><strong>Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints to avoid <abbr title="Network Address Translation">NAT</abbr> costs</strong> — Traffic to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, and other AWS services through <abbr title="Virtual Private Cloud">VPC</abbr> endpoints avoids <abbr title="Network Address Translation">NAT</abbr> Gateway processing charges entirely.</li>
+<li><strong>Understand data transfer pricing</strong> — Cross-<abbr title="Availability Zone">AZ</abbr>, cross-Region, Transit Gateway processing, <abbr title="Network Address Translation">NAT</abbr> gateway processing, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoint hourly charges all add up. Architect to minimize unnecessary data movement.</li>
+<li><strong>Use <abbr title="Virtual Private Cloud">VPC</abbr> endpoints to avoid <abbr title="Network Address Translation">NAT</abbr> costs</strong> — Traffic to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, and other AWS services through <abbr title="Virtual Private Cloud">VPC</abbr> endpoints avoids <abbr title="Network Address Translation">NAT</abbr> gateway processing charges entirely.</li>
 <li><strong>Right-size your connectivity</strong> — Don't deploy Transit Gateway when <abbr title="Virtual Private Cloud">VPC</abbr> peering suffices for two VPCs. Don't deploy AWS Cloud WAN when a single-Region Transit Gateway covers your topology.</li>
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>Well-Architected is not a checklist to complete after building — it's a set of principles to apply during design. Review the Security and Reliability pillars before you draw your first network diagram, not after.</em></p>
@@ -2116,7 +2116,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 03:16:27 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

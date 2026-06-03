@@ -2211,7 +2211,7 @@
 <td>/26</td>
 <td>64</td>
 <td>59</td>
-<td>Smaller subnets for firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> Gateway, or <abbr title="Transit Gateway">TGW</abbr> attachments</td>
+<td>Smaller subnets for firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> gateway, or <abbr title="Transit Gateway">TGW</abbr> attachments</td>
 </tr>
 <tr>
 <td>/28</td>
@@ -2509,7 +2509,7 @@
 <td>10.0.1.0/24</td>
 <td>10.0.2.0/24</td>
 <td>/24 (251 usable)</td>
-<td>Load balancers, <abbr title="Network Address Translation">NAT</abbr> Gateways, bastion hosts</td>
+<td>Load balancers, <abbr title="Network Address Translation">NAT</abbr> gateways, bastion hosts</td>
 </tr>
 <tr>
 <td>Private (application)</td>
@@ -2549,7 +2549,7 @@
 <ul>
 <li><code>/24</code> is the standard subnet size for most workloads. It provides 251 usable addresses per <abbr title="Availability Zone">AZ</abbr>, which handles most application tiers comfortably.</li>
 <li><code>/20</code> or larger for EKS worker node subnets if pods use the primary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> (each node consumes IPs proportional to its pod capacity).</li>
-<li><code>/28</code> for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> Gateways).</li>
+<li><code>/28</code> for infrastructure subnets that only host a few ENIs (Transit Gateway attachments, Network Firewall endpoints, <abbr title="Network Address Translation">NAT</abbr> gateways).</li>
 <li>Leave gaps in your numbering scheme (notice the jump from <code>.2.0</code> to <code>.10.0</code> above) to allow inserting new subnet tiers without renumbering.</li>
 </ul>
 <p><strong>Subnet design principles:</strong></p>
@@ -2633,7 +2633,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

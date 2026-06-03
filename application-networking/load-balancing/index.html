@@ -2812,7 +2812,7 @@
             direction TB
 
             subgraph AppTraffic["Application traffic distribution"]
-                ALB["Application Load Balancer (ALB)&lt;br/&gt;L7 — HTTP, HTTPS, gRPC&lt;br/&gt;Content-based routing,&lt;br/&gt;TLS termination, mTLS, WAF"]
+                ALB["Application Load Balancer (ALB)&lt;br/&gt;L7 — HTTP, HTTPS, gRPC&lt;br/&gt;Content-based routing,&lt;br/&gt;TLS termination, mTLS, AWS WAF"]
                 NLB["Network Load Balancer (NLB)&lt;br/&gt;L4 — TCP, UDP, TLS&lt;br/&gt;Ultra-high throughput,&lt;br/&gt;client IP preservation,&lt;br/&gt;static IPs per AZ"]
             end
 
@@ -3451,7 +3451,7 @@
 <ul>
 <li><strong>Pair <abbr title="Gateway Load Balancer">GWLB</abbr> with <a href="https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html">AWS Transit Gateway</a> (Appliance Mode enabled) or <a href="https://docs.aws.amazon.com/vpc/latest/cloudwan/what-is-cloudwan.html">AWS Cloud WAN</a></strong> for centralized inspection of <abbr title="Virtual Private Cloud">VPC</abbr>-to-<abbr title="Virtual Private Cloud">VPC</abbr>, <abbr title="Virtual Private Cloud">VPC</abbr>-to-on-premises, or Internet egress traffic. The inspection <abbr title="Virtual Private Cloud">VPC</abbr> sits behind the <abbr title="Transit Gateway">TGW</abbr> or Cloud WAN attachment; spoke VPCs route through <abbr title="Transit Gateway">TGW</abbr> or Cloud WAN to reach it.</li>
 <li><strong>Front internet ingress with <abbr title="Gateway Load Balancer">GWLB</abbr> and a third-party firewall</strong> for <a href="https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/inspecting-inbound-traffic-fa.html">inbound inspection</a>. Traffic from the internet gateway is directed through the <abbr title="Gateway Load Balancer">GWLB</abbr> endpoint to the appliances, which inspect the flow before it reaches the workload's <abbr title="Network Load Balancer">NLB</abbr> or <abbr title="Application Load Balancer">ALB</abbr>.</li>
-<li><strong>Combine with <abbr title="Network Address Translation">NAT</abbr> Gateway in a centralized egress <abbr title="Virtual Private Cloud">VPC</abbr></strong> for inspection-then-<abbr title="Network Address Translation">NAT</abbr> egress, where the appliance sees traffic with the original <abbr title="Virtual Private Cloud">VPC</abbr> source IP and <abbr title="Network Address Translation">NAT</abbr> happens after inspection.</li>
+<li><strong>Combine with <abbr title="Network Address Translation">NAT</abbr> gateway in a centralized egress <abbr title="Virtual Private Cloud">VPC</abbr></strong> for inspection-then-<abbr title="Network Address Translation">NAT</abbr> egress, where the appliance sees traffic with the original <abbr title="Virtual Private Cloud">VPC</abbr> source IP and <abbr title="Network Address Translation">NAT</abbr> happens after inspection.</li>
 </ul>
 <h3 id="documentation_2">Documentation<a class="headerlink" href="#documentation_2" title="Permanent link">&para;</a></h3>
 <div class="grid cards">
@@ -3534,7 +3534,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:29:16 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     

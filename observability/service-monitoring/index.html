@@ -1297,7 +1297,7 @@
   <a href="#nat-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NAT Gateway
+        NAT gateway
       
     </span>
   </a>
@@ -2040,7 +2040,7 @@
   <a href="#nat-gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        NAT Gateway
+        NAT gateway
       
     </span>
   </a>
@@ -2493,13 +2493,13 @@
 <p class="admonition-title">Prerequisites</p>
 <p>This section assumes familiarity with <a href="../../connectivity/within-aws/">Connectivity Within AWS</a>, <a href="../../application-networking/load-balancing/">Load Balancing</a>, and <a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a>. Review those topics first if you're new to AWS networking fundamentals.</p>
 </div>
-<p>Monitoring network traffic (covered in <a href="../internal-traffic/">Internal Traffic</a> and <a href="../external-traffic/">External Traffic</a>) tells you what's flowing through your network. Monitoring the networking <em>services themselves</em> tells you whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a <abbr title="Network Address Translation">NAT</abbr> Gateway exhausting its port allocation, or a Direct Connect connection flapping between states — these are service-level failures that traffic monitoring alone won't catch until users are already affected.</p>
+<p>Monitoring network traffic (covered in <a href="../internal-traffic/">Internal Traffic</a> and <a href="../external-traffic/">External Traffic</a>) tells you what's flowing through your network. Monitoring the networking <em>services themselves</em> tells you whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a <abbr title="Network Address Translation">NAT</abbr> gateway exhausting its port allocation, or a Direct Connect connection flapping between states — these are service-level failures that traffic monitoring alone won't catch until users are already affected.</p>
 <p>This page focuses on the operational health of AWS networking services: the CloudWatch metrics that matter, the alarms you should configure from day one, and the automation patterns that turn monitoring signals into remediation actions. The goal is to detect degradation in the networking plane before it becomes an outage, and to respond automatically where possible.</p>
 <p>Service monitoring in a multi-account AWS environment requires a deliberate architecture. Metrics live in the account that owns the resource, but the networking team needs a unified view across all accounts and Regions. The patterns here assume a centralized monitoring account with cross-account CloudWatch dashboards and a shared EventBridge bus for networking events.</p>
 <pre class="mermaid"><code>graph TB
     subgraph Sources["Networking Service Metrics"]
         TGW["Transit Gateway"]
-        NAT["NAT Gateway"]
+        NAT["NAT gateway"]
         DX["Direct Connect"]
         VPN["Site-to-Site VPN"]
         ALB["Application LB"]
@@ -2583,7 +2583,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="nat-gateway"><abbr title="Network Address Translation">NAT</abbr> Gateway<a class="headerlink" href="#nat-gateway" title="Permanent link">&para;</a></h3>
+<h3 id="nat-gateway"><abbr title="Network Address Translation">NAT</abbr> gateway<a class="headerlink" href="#nat-gateway" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2595,12 +2595,12 @@
 <tbody>
 <tr>
 <td><code>ErrorPortAllocation</code></td>
-<td>The <abbr title="Network Address Translation">NAT</abbr> Gateway has exhausted its 55,000 simultaneous connections to a single destination. Workloads will fail to establish new connections.</td>
+<td>The <abbr title="Network Address Translation">NAT</abbr> gateway has exhausted its 55,000 simultaneous connections to a single destination. Workloads will fail to establish new connections.</td>
 <td>&gt; 0 for 1 period</td>
 </tr>
 <tr>
 <td><code>PacketsDropCount</code></td>
-<td>Packets dropped due to <abbr title="Network Address Translation">NAT</abbr> Gateway processing limits. Indicates the gateway is overwhelmed.</td>
+<td>Packets dropped due to <abbr title="Network Address Translation">NAT</abbr> gateway processing limits. Indicates the gateway is overwhelmed.</td>
 <td>&gt; 0 sustained over 3 periods</td>
 </tr>
 <tr>
@@ -2620,7 +2620,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong><em>Key insight:</em></strong> <em><code>ErrorPortAllocation</code> is the single most critical <abbr title="Network Address Translation">NAT</abbr> Gateway metric. When it fires, connections are already failing. Alarm on it immediately and consider multiple <abbr title="Network Address Translation">NAT</abbr> Gateways or destination diversification.</em></p>
+<p><strong><em>Key insight:</em></strong> <em><code>ErrorPortAllocation</code> is the single most critical <abbr title="Network Address Translation">NAT</abbr> gateway metric. When it fires, connections are already failing. Alarm on it immediately and consider multiple <abbr title="Network Address Translation">NAT</abbr> gateways or destination diversification.</em></p>
 <h3 id="direct-connect">Direct Connect<a class="headerlink" href="#direct-connect" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2852,24 +2852,24 @@
 <p>Many networking services have binary state metrics (tunnel up/down, connection active/inactive, <abbr title="Border Gateway Protocol">BGP</abbr> session established/idle). These deserve state-change alarms, not threshold-based alarms. A <abbr title="Virtual Private Network">VPN</abbr> tunnel transitioning from up to down is immediately actionable regardless of traffic volume. Configure alarms that trigger on the state value itself (e.g., <code>TunnelState &lt; 1</code> for 1 evaluation period) rather than waiting for traffic metrics to reflect the failure.</p>
 <p>For Direct Connect, monitor <code>ConnectionState</code> transitions. For <abbr title="Virtual Private Network">VPN</abbr>, monitor individual <code>TunnelState</code> per tunnel. For <abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr>, monitor <code>HealthyHostCount</code> dropping below the expected minimum rather than waiting for error rates to climb.</p>
 <h4 id="use-composite-alarms-to-reduce-noise">Use composite alarms to reduce noise<a class="headerlink" href="#use-composite-alarms-to-reduce-noise" title="Permanent link">&para;</a></h4>
-<p>Individual metric alarms generate noise. A brief spike in <code>PacketDropCountNoRoute</code> during a Transit Gateway route table update is expected. A sustained spike combined with increased <code>ErrorPortAllocation</code> on a <abbr title="Network Address Translation">NAT</abbr> Gateway in the same path is a real problem.</p>
+<p>Individual metric alarms generate noise. A brief spike in <code>PacketDropCountNoRoute</code> during a Transit Gateway route table update is expected. A sustained spike combined with increased <code>ErrorPortAllocation</code> on a <abbr title="Network Address Translation">NAT</abbr> gateway in the same path is a real problem.</p>
 <p><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Create_Composite_Alarm.html">Composite alarms</a> combine multiple alarm states with AND/OR logic. Configure them to alert only when multiple signals confirm a problem:</p>
 <ul>
 <li>Transit Gateway: <code>PacketDropCountBlackhole &gt; 0</code> AND <code>BytesOut</code> anomaly (confirms traffic is affected, not just a transient routing update)</li>
-<li><abbr title="Network Address Translation">NAT</abbr> Gateway: <code>ErrorPortAllocation &gt; 0</code> AND <code>ActiveConnectionCount</code> above baseline (confirms the port exhaustion is real load, not a monitoring artifact)</li>
+<li><abbr title="Network Address Translation">NAT</abbr> gateway: <code>ErrorPortAllocation &gt; 0</code> AND <code>ActiveConnectionCount</code> above baseline (confirms the port exhaustion is real load, not a monitoring artifact)</li>
 <li>Load Balancer: <code>UnHealthyHostCount &gt; 0</code> AND <code>HealthyHostCount &lt; minimum</code> (confirms actual capacity loss, not a single target cycling)</li>
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>Composite alarms are the difference between a monitoring system that gets ignored and one that gets acted on. Every alert that fires without requiring action trains your team to ignore alerts.</em></p>
 <h4 id="use-anomaly-detection-instead-of-static-thresholds">Use anomaly detection instead of static thresholds<a class="headerlink" href="#use-anomaly-detection-instead-of-static-thresholds" title="Permanent link">&para;</a></h4>
 <p>Static thresholds require constant tuning as traffic patterns change. CloudWatch <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Anomaly_Detection.html">anomaly detection</a> builds a model of expected behavior and alerts when metrics deviate from the learned pattern. This is particularly effective for:</p>
 <ul>
-<li><code>BytesIn</code>/<code>BytesOut</code> on Transit Gateway and <abbr title="Network Address Translation">NAT</abbr> Gateway (traffic follows daily/weekly patterns)</li>
+<li><code>BytesIn</code>/<code>BytesOut</code> on Transit Gateway and <abbr title="Network Address Translation">NAT</abbr> gateway (traffic follows daily/weekly patterns)</li>
 <li><code>RequestCount</code> on <abbr title="Application Load Balancer">ALB</abbr> and <abbr title="Virtual Private Cloud">VPC</abbr> Lattice (application traffic has predictable cycles)</li>
 <li><code>NewFlowCount</code> on <abbr title="Network Load Balancer">NLB</abbr> (connection rates correlate with business activity)</li>
 </ul>
 <p>Anomaly detection costs the same as a standard alarm but adapts automatically to traffic growth, seasonal patterns, and baseline shifts. Use a band width of 2 standard deviations for most networking metrics — tight enough to catch real anomalies, loose enough to avoid false positives during normal variance.</p>
 <h4 id="monitor-quotas-before-you-hit-them">Monitor quotas before you hit them<a class="headerlink" href="#monitor-quotas-before-you-hit-them" title="Permanent link">&para;</a></h4>
-<p>Every networking service has quotas. Hitting a quota silently — no new <abbr title="Virtual Private Network">VPN</abbr> connections, no additional Transit Gateway attachments, no more <abbr title="Network Address Translation">NAT</abbr> Gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.</p>
+<p>Every networking service has quotas. Hitting a quota silently — no new <abbr title="Virtual Private Network">VPN</abbr> connections, no additional Transit Gateway attachments, no more <abbr title="Network Address Translation">NAT</abbr> gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.</p>
 <p>Use <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html">AWS Service Quotas</a> integration with CloudWatch to alarm at 80% utilization:</p>
 <table>
 <thead>
@@ -2891,8 +2891,8 @@
 <td>10,000</td>
 </tr>
 <tr>
-<td><abbr title="Network Address Translation">NAT</abbr> Gateway</td>
-<td><abbr title="Network Address Translation">NAT</abbr> Gateways per <abbr title="Availability Zone">AZ</abbr></td>
+<td><abbr title="Network Address Translation">NAT</abbr> gateway</td>
+<td><abbr title="Network Address Translation">NAT</abbr> gateways per <abbr title="Availability Zone">AZ</abbr></td>
 <td>5</td>
 </tr>
 <tr>
@@ -2947,16 +2947,16 @@
 <p>Several networking services report metrics that differ between <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic paths. When running dual-stack:</p>
 <ul>
 <li><strong><abbr title="Application Load Balancer">ALB</abbr>/<abbr title="Network Load Balancer">NLB</abbr></strong>: Monitor <code>IPv6ProcessedBytes</code> and <code>IPv6RequestCount</code> separately from their <abbr title="Internet Protocol version 4">IPv4</abbr> counterparts. A failure in the <abbr title="Internet Protocol version 6">IPv6</abbr> path won't show up in aggregate metrics if <abbr title="Internet Protocol version 4">IPv4</abbr> traffic dominates.</li>
-<li><strong><abbr title="Network Address Translation">NAT</abbr> Gateway</strong>: NAT64 metrics (<code>BytesOutToDestination</code> for <abbr title="Internet Protocol version 6">IPv6</abbr>-to-<abbr title="Internet Protocol version 4">IPv4</abbr> translation) track a different failure mode than standard <abbr title="Network Address Translation">NAT</abbr>. Monitor both paths.</li>
+<li><strong><abbr title="Network Address Translation">NAT</abbr> gateway</strong>: NAT64 metrics (<code>BytesOutToDestination</code> for <abbr title="Internet Protocol version 6">IPv6</abbr>-to-<abbr title="Internet Protocol version 4">IPv4</abbr> translation) track a different failure mode than standard <abbr title="Network Address Translation">NAT</abbr>. Monitor both paths.</li>
 <li><strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice</strong>: Dual-stack service networks carry both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic. Monitor per-protocol error rates to catch <abbr title="Internet Protocol version 6">IPv6</abbr>-specific routing issues.</li>
 </ul>
 <h4 id="configure-ipv6-specific-health-checks">Configure <abbr title="Internet Protocol version 6">IPv6</abbr>-specific health checks<a class="headerlink" href="#configure-ipv6-specific-health-checks" title="Permanent link">&para;</a></h4>
 <p>For services that support <abbr title="Internet Protocol version 6">IPv6</abbr> health checks (<abbr title="Application Load Balancer">ALB</abbr>, <abbr title="Network Load Balancer">NLB</abbr>), configure health checks over both protocols when targets are dual-stack. An <abbr title="Internet Protocol version 4">IPv4</abbr> health check passing doesn't guarantee the <abbr title="Internet Protocol version 6">IPv6</abbr> path is functional — different security groups, NACLs, or routing may apply to each address family.</p>
 <h3 id="cost-effective-monitoring">Cost-effective monitoring<a class="headerlink" href="#cost-effective-monitoring" title="Permanent link">&para;</a></h3>
 <h4 id="use-metric-math-to-reduce-alarm-count">Use metric math to reduce alarm count<a class="headerlink" href="#use-metric-math-to-reduce-alarm-count" title="Permanent link">&para;</a></h4>
-<p>CloudWatch charges per alarm per month. Instead of creating individual alarms for every <abbr title="Network Address Translation">NAT</abbr> Gateway or every Transit Gateway attachment, use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html">metric math</a> to aggregate:</p>
+<p>CloudWatch charges per alarm per month. Instead of creating individual alarms for every <abbr title="Network Address Translation">NAT</abbr> gateway or every Transit Gateway attachment, use <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/using-metric-math.html">metric math</a> to aggregate:</p>
 <ul>
-<li>Sum <code>ErrorPortAllocation</code> across all <abbr title="Network Address Translation">NAT</abbr> Gateways in a Region into a single alarm</li>
+<li>Sum <code>ErrorPortAllocation</code> across all <abbr title="Network Address Translation">NAT</abbr> gateways in a Region into a single alarm</li>
 <li>Calculate the ratio of <code>UnHealthyHostCount</code> to total targets across all target groups</li>
 <li>Compute <code>PacketDropCountBlackhole + PacketDropCountNoRoute</code> as a single "routing failures" metric</li>
 </ul>
@@ -3023,8 +3023,8 @@
 <td>Trigger failover to backup <abbr title="Virtual Private Network">VPN</abbr> or Direct Connect path</td>
 </tr>
 <tr>
-<td><abbr title="Network Address Translation">NAT</abbr> Gateway <code>ErrorPortAllocation</code> &gt; 0</td>
-<td>Scale out by provisioning additional <abbr title="Network Address Translation">NAT</abbr> Gateways and updating route tables</td>
+<td><abbr title="Network Address Translation">NAT</abbr> gateway <code>ErrorPortAllocation</code> &gt; 0</td>
+<td>Scale out by provisioning additional <abbr title="Network Address Translation">NAT</abbr> gateways and updating route tables</td>
 </tr>
 <tr>
 <td><abbr title="Application Load Balancer">ALB</abbr> <code>HealthyHostCount</code> &lt; minimum</td>
@@ -3048,7 +3048,7 @@
 <p>Beyond CloudWatch metrics, active health checking validates end-to-end path availability. Design synthetic checks that probe the networking layer:</p>
 <ul>
 <li><strong><abbr title="Virtual Private Network">VPN</abbr> path validation</strong>: Lambda in the <abbr title="Virtual Private Cloud">VPC</abbr> sends <abbr title="Internet Control Message Protocol">ICMP</abbr> or <abbr title="Transmission Control Protocol">TCP</abbr> probes through the <abbr title="Virtual Private Network">VPN</abbr> tunnel to an on-premises endpoint every 60 seconds. Failure triggers an alarm independent of the <code>TunnelState</code> metric (which only reflects IKE/IPsec state, not actual data-plane forwarding).</li>
-<li><strong><abbr title="Network Address Translation">NAT</abbr> Gateway validation</strong>: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates <abbr title="Network Address Translation">NAT</abbr> Gateway or internet gateway issues.</li>
+<li><strong><abbr title="Network Address Translation">NAT</abbr> gateway validation</strong>: Lambda in a private subnet makes an HTTPS request to an external endpoint. Failure indicates <abbr title="Network Address Translation">NAT</abbr> gateway or internet gateway issues.</li>
 <li><strong>Transit Gateway path validation</strong>: Lambda in spoke <abbr title="Virtual Private Cloud">VPC</abbr> A sends a request to a known endpoint in spoke <abbr title="Virtual Private Cloud">VPC</abbr> B through the Transit Gateway. Validates routing, not just attachment state.</li>
 <li><strong>Direct Connect path validation</strong>: On-premises probe sends traffic to a known <abbr title="Virtual Private Cloud">VPC</abbr> endpoint. Validates the full path including <abbr title="Border Gateway Protocol">BGP</abbr> routing, not just the physical connection state.</li>
 </ul>
@@ -3175,7 +3175,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 04:50:05 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
   </span>
 
     
