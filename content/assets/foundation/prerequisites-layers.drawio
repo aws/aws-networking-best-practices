@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="OmcYobqclknjknv9zuoz">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-7" parent="1" style="swimlane;startSize=30;fillColor=none;strokeColor=#7c3aed;strokeWidth=2;dashed=1;html=1;" value="AWS Networking Layer" vertex="1">
+          <mxGeometry height="180" width="700" x="64" y="80" as="geometry">
+            <mxRectangle height="30" width="160" x="50" y="300" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-8" parent="4M6it1R4-_FhKvlVjrOj-7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d8b4fe;strokeColor=#5b21b6;strokeWidth=2;" value="&lt;b&gt;VPCs&lt;/b&gt;&lt;br&gt;Subnets, Route Tables" vertex="1">
+          <mxGeometry height="100" width="120" x="80" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-9" parent="4M6it1R4-_FhKvlVjrOj-7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d8b4fe;strokeColor=#5b21b6;strokeWidth=2;" value="&lt;b&gt;Connectivity&lt;/b&gt;&lt;br&gt;Transit Gateway,&lt;br&gt;Cloud WAN, VPC Lattice" vertex="1">
+          <mxGeometry height="100" width="120" x="290" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-10" parent="4M6it1R4-_FhKvlVjrOj-7" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d8b4fe;strokeColor=#5b21b6;strokeWidth=2;" value="&lt;b&gt;Security&lt;/b&gt;&lt;br&gt;Security Groups, NACLs,&lt;br&gt;Network Firewall" vertex="1">
+          <mxGeometry height="100" width="120" x="480" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-11" edge="1" parent="1" source="4M6it1R4-_FhKvlVjrOj-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=2;strokeColor=#6b7280;" target="4M6it1R4-_FhKvlVjrOj-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-12" edge="1" parent="1" source="4M6it1R4-_FhKvlVjrOj-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=2;strokeColor=#6b7280;" target="4M6it1R4-_FhKvlVjrOj-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-13" edge="1" parent="1" source="4M6it1R4-_FhKvlVjrOj-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=2;strokeColor=#6b7280;" target="4M6it1R4-_FhKvlVjrOj-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="389" y="298" />
+              <mxPoint x="419" y="298" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-14" edge="1" parent="1" source="4M6it1R4-_FhKvlVjrOj-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=2;strokeColor=#6b7280;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="4M6it1R4-_FhKvlVjrOj-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="534" y="300" />
+              <mxPoint x="419" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-15" edge="1" parent="1" source="4M6it1R4-_FhKvlVjrOj-6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=2;strokeColor=#6b7280;" target="4M6it1R4-_FhKvlVjrOj-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-1" parent="1" style="swimlane;startSize=30;fillColor=none;strokeColor=#2563eb;strokeWidth=2;dashed=1;html=1;" value="&lt;span style=&quot;background-color: light-dark(#ffffff, var(--ge-dark-color, #121212));&quot;&gt;Non-Networking Foundations&lt;/span&gt;" vertex="1">
+          <mxGeometry height="200" width="700" x="64" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-3" parent="4M6it1R4-_FhKvlVjrOj-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#93c5fd;strokeColor=#1e40af;strokeWidth=2;" value="&lt;b&gt;Infrastructure as Code&lt;/b&gt;&lt;br&gt;CloudFormation, Terraform, CDK" vertex="1">
+          <mxGeometry height="120" width="110" x="156" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-4" parent="4M6it1R4-_FhKvlVjrOj-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#93c5fd;strokeColor=#1e40af;strokeWidth=2;" value="&lt;b&gt;Service Quotas&lt;/b&gt;&lt;br&gt;Limits that gate deployment" vertex="1">
+          <mxGeometry height="120" width="110" x="300" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-5" parent="4M6it1R4-_FhKvlVjrOj-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#93c5fd;strokeColor=#1e40af;strokeWidth=2;" value="&lt;b&gt;Tagging Strategy&lt;/b&gt;&lt;br&gt;Cost allocation, automation,&lt;br&gt;policy enforcement" vertex="1">
+          <mxGeometry height="120" width="110" x="436" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-6" parent="4M6it1R4-_FhKvlVjrOj-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#93c5fd;strokeColor=#1e40af;strokeWidth=2;" value="&lt;b&gt;Well-Architected&lt;/b&gt;&lt;br&gt;Security and Reliability pillars" vertex="1">
+          <mxGeometry height="120" width="100" x="576" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="4M6it1R4-_FhKvlVjrOj-2" parent="4M6it1R4-_FhKvlVjrOj-1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#93c5fd;strokeColor=#1e40af;strokeWidth=2;" value="&lt;b&gt;IAM&lt;/b&gt;&lt;br&gt;Permissions, cross-account roles,&lt;br&gt;service-linked roles" vertex="1">
+          <mxGeometry height="120" width="100" x="26" y="50" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

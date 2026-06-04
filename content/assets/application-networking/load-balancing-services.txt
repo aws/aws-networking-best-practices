@@ -1,0 +1,25 @@
+DIAGRAM: Load Balancing Services
+PURPOSE: Shows the AWS managed load-balancing landscape: Elastic Load Balancing (ALB for L7, NLB for L4, GWLB for transparent inspection insertion) and Amazon VPC Lattice as a separate application networking service. Clarifies that GWLB is fundamentally different from ALB/NLB.
+LAYOUT: top-to-bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Elastic Load Balancing (covered on this page): border style solid, color dark gray
+  - Application traffic distribution: contains ALB, NLB; border style dashed, color blue (#2563eb)
+  - Transparent inspection insertion: contains GWLB; border style dashed, color purple (#7c3aed)
+- Application networking (covered in Service to Service and Container Mesh): border style dashed (lighter), color gray; contains VPC Lattice
+
+NODES:
+- ALB: AWS icon "Elastic Load Balancing (ALB resource icon)", label "Application Load Balancer (ALB)\nL7 — HTTP, HTTPS, gRPC\nContent-based routing,\nTLS termination, mTLS, AWS WAF"
+- NLB: AWS icon "Elastic Load Balancing (NLB resource icon)", label "Network Load Balancer (NLB)\nL4 — TCP, UDP, TLS\nUltra-high throughput,\nclient IP preservation,\nstatic IPs per AZ"
+- GWLB: AWS icon "Elastic Load Balancing (GWLB resource icon)", label "Gateway Load Balancer (GWLB)\nL3 — encapsulated transparent insertion\nThird-party firewall, IDS/IPS,\nor DPI appliances"
+- VPC Lattice: AWS icon "Amazon VPC Lattice", label "Amazon VPC Lattice services\nService-to-service load balancing\nCross-VPC and cross-account\nauth, discovery, weighted routing"
+
+CONNECTIONS:
+- No connections (categorization diagram)
+
+NOTES:
+- ALB and NLB are peers in the "Application traffic" subgroup (blue)
+- GWLB is separate in "Inspection insertion" subgroup (purple) to show it serves a fundamentally different purpose
+- VPC Lattice is in a lighter/grayed group to indicate it's covered elsewhere
+- The overall ELB container groups ALB+NLB+GWLB as one AWS service family

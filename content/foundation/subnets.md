@@ -7,54 +7,10 @@ Subnets are where routing policy meets IP addressing. Every resource you launch 
 
 A well-designed subnet architecture gives you isolation between tiers, predictable IP consumption, room for growth, and clean integration with every connectivity and security service AWS offers. A poorly designed one creates IP exhaustion emergencies, forces workload migrations, and makes firewall and routing policies unnecessarily complex.
 
-``` mermaid
-graph TB
-    subgraph VPC["VPC: 10.0.0.0/16"]
-        subgraph AZA["Availability Zone A"]
-            FWA["Firewall<br/>10.0.100.0/28"]
-            PubA["Public<br/>10.0.0.0/24"]
-            PrivA["Private<br/>10.0.10.0/23"]
-            DataA["Data<br/>10.0.20.0/24"]
-            InfraA["Infrastructure<br/>10.0.30.0/27"]
-        end
-        
-        subgraph AZB["Availability Zone B"]
-            FWB["Firewall<br/>10.0.100.16/28"]
-            PubB["Public<br/>10.0.1.0/24"]
-            PrivB["Private<br/>10.0.12.0/23"]
-            DataB["Data<br/>10.0.21.0/24"]
-            InfraB["Infrastructure<br/>10.0.30.32/27"]
-        end
-        
-        subgraph AZC["Availability Zone C"]
-            FWC["Firewall<br/>10.0.100.32/28"]
-            PubC["Public<br/>10.0.2.0/24"]
-            PrivC["Private<br/>10.0.14.0/23"]
-            DataC["Data<br/>10.0.22.0/24"]
-            InfraC["Infrastructure<br/>10.0.30.64/27"]
-        end
-    end
-    
-    style VPC fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
-    style AZA fill:#f3f4f6,stroke:#9ca3af,stroke-width:2px,color:#000
-    style AZB fill:#f3f4f6,stroke:#9ca3af,stroke-width:2px,color:#000
-    style AZC fill:#f3f4f6,stroke:#9ca3af,stroke-width:2px,color:#000
-    style FWA fill:#fecaca,stroke:#dc2626,color:#000
-    style FWB fill:#fecaca,stroke:#dc2626,color:#000
-    style FWC fill:#fecaca,stroke:#dc2626,color:#000
-    style PubA fill:#dcfce7,stroke:#16a34a,color:#000
-    style PubB fill:#dcfce7,stroke:#16a34a,color:#000
-    style PubC fill:#dcfce7,stroke:#16a34a,color:#000
-    style PrivA fill:#fef3c7,stroke:#f59e0b,color:#000
-    style PrivB fill:#fef3c7,stroke:#f59e0b,color:#000
-    style PrivC fill:#fef3c7,stroke:#f59e0b,color:#000
-    style DataA fill:#e0e7ff,stroke:#6366f1,color:#000
-    style DataB fill:#e0e7ff,stroke:#6366f1,color:#000
-    style DataC fill:#e0e7ff,stroke:#6366f1,color:#000
-    style InfraA fill:#f3e8ff,stroke:#a855f7,color:#000
-    style InfraB fill:#f3e8ff,stroke:#a855f7,color:#000
-    style InfraC fill:#f3e8ff,stroke:#a855f7,color:#000
-```
+![Five-tier subnet architecture across three Availability Zones](../assets/foundation/subnet-tiers.png)
+/// caption
+Five-tier subnet architecture — [Drawio Source](../assets/foundation/subnet-tiers.drawio)
+///
 
 ## Subnet tier design patterns
 

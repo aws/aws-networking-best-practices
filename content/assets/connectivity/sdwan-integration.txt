@@ -1,0 +1,32 @@
+DIAGRAM: SD-WAN Integration
+PURPOSE: Shows how on-premises SD-WAN devices (branches and data centers) connect through virtual SD-WAN appliances in a Transit VPC to Transit Gateway or Cloud WAN, which then routes to workload VPCs. Illustrates the Connect attachment pattern.
+LAYOUT: left-to-right
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- On-premises and branches: border style dashed, color gray (#64748b); contains Branch SD-WAN device, Data center SD-WAN device
+- AWS: border style dashed, color orange (#ff9900); contains Transit VPC group, TGW, Workload VPCs
+- Transit VPC: inside AWS group; border style dashed, color green (#059669); contains SD-WAN appliances
+
+NODES:
+- Branch: generic on-prem icon, label "Branch\nSD-WAN device"
+- Data Center: generic on-prem icon, label "Data center\nSD-WAN device"
+- SD-WAN Appliance 1: generic virtual appliance icon, label "SD-WAN appliance\n(virtual)"
+- SD-WAN Appliance 2: generic virtual appliance icon, label "SD-WAN appliance\n(virtual)"
+- TGW: AWS icon "AWS Transit Gateway", label "Transit Gateway\nor AWS Cloud WAN"
+- Workload VPCs: AWS icon "Amazon Virtual Private Cloud", label "Workload VPCs"
+
+CONNECTIONS:
+- Branch → SD-WAN Appliance 1: style dashed, label "SD-WAN overlay\n(IPsec/SSL)"
+- Data Center → SD-WAN Appliance 2: style dashed, label "SD-WAN overlay\n(IPsec/SSL)"
+- SD-WAN Appliance 1 → TGW: style solid (thick), label "Connect attachment\n(GRE or Tunnel-less, BGP)"
+- SD-WAN Appliance 2 → TGW: style solid (thick), label "Connect attachment\n(GRE or Tunnel-less, BGP)"
+- TGW → Workload VPCs: style solid (thick), no label
+
+NOTES:
+- Left-to-right flow showing the path from on-premises through AWS
+- On-premises side is gray, AWS side is orange-bordered
+- Dashed lines for overlay/encrypted connections, solid thick lines for AWS-internal connections
+- The Transit VPC hosts the SD-WAN virtual appliances (purple nodes)
+- TGW/Cloud WAN is the central hub (blue node)
+- Workload VPCs are the final destination (green node)

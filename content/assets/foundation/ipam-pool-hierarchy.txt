@@ -1,0 +1,42 @@
+DIAGRAM: IPAM Pool Hierarchy
+PURPOSE: Shows the AWS IPAM pool hierarchy from the IPAM instance through scopes, top-level pool, regional pools, environment pools, down to individual VPC allocations. Demonstrates how IPAM provides centralized IP governance at scale.
+LAYOUT: top-to-bottom (tree structure)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- No explicit group containers — this is a tree diagram
+
+NODES:
+- IPAM: generic IPAM icon, label "AWS IPAM\nCentralized IP Management"
+- Private Scope: generic icon, label "Private Scope"
+- Public Scope: generic icon, label "Public Scope\n(BYOIP)"
+- Top Pool: generic pool icon, label "Top-Level Pool\n10.0.0.0/8"
+- Region East: generic icon, label "Regional Pool\n10.0.0.0/12\nus-east-1"
+- Region West: generic icon, label "Regional Pool\n10.16.0.0/12\nus-west-2"
+- Region EU: generic icon, label "Regional Pool\n10.32.0.0/12\neu-west-1"
+- Prod East: generic icon, label "Production Pool\n10.0.0.0/13"
+- NonProd East: generic icon, label "Non-Production Pool\n10.8.0.0/13"
+- VPC 1: AWS icon "Amazon Virtual Private Cloud", label "VPC: 10.0.0.0/16\nAccount: prod-app-1"
+- VPC 2: AWS icon "Amazon Virtual Private Cloud", label "VPC: 10.1.0.0/16\nAccount: prod-app-2"
+- VPC 3: AWS icon "Amazon Virtual Private Cloud", label "VPC: 10.8.0.0/20\nAccount: dev-app-1"
+- VPC 4: AWS icon "Amazon Virtual Private Cloud", label "VPC: 10.8.16.0/20\nAccount: dev-app-2"
+
+CONNECTIONS:
+- IPAM → Private Scope: style solid
+- IPAM → Public Scope: style solid
+- Private Scope → Top Pool: style solid
+- Top Pool → Region East: style solid
+- Top Pool → Region West: style solid
+- Top Pool → Region EU: style solid
+- Region East → Prod East: style solid
+- Region East → NonProd East: style solid
+- Prod East → VPC 1: style solid
+- Prod East → VPC 2: style solid
+- NonProd East → VPC 3: style solid
+- NonProd East → VPC 4: style solid
+
+NOTES:
+- Tree flows top-to-bottom, widening at each level
+- Color coding: IPAM=blue, Scopes=purple, Top Pool=green, Regional=amber, Production=red, Non-Production=orange, VPCs=light blue (prod) or light yellow (non-prod)
+- Each level of the tree represents a governance decision (scope → region → environment → allocation)
+- VPC nodes at the bottom are the leaf allocations consumed by workloads

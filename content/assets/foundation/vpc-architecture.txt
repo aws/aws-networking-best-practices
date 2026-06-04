@@ -1,0 +1,26 @@
+DIAGRAM: VPC Architecture
+PURPOSE: Shows a VPC spanning multiple Availability Zones within an AWS Region, with subnets in each AZ demonstrating dual-stack (IPv4 + IPv6) addressing.
+LAYOUT: top-to-bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- AWS Region (us-east-1): outermost container; border style dashed, color orange (#ff9900)
+- VPC (10.0.0.0/16 + IPv6 2001:db8::/56): contains all AZs and subnets; border style solid, color blue (#2563eb), thick border
+- Availability Zone A: contains Subnet 1; border style solid, color light blue
+- Availability Zone B: contains Subnet 2; border style solid, color light blue
+- Availability Zone C: contains Subnet 3; border style solid, color light blue
+
+NODES:
+- Subnet 1: generic subnet icon, label "Subnet: 10.0.1.0/24\nIPv6: 2001:db8:0:1::/64"
+- Subnet 2: generic subnet icon, label "Subnet: 10.0.2.0/24\nIPv6: 2001:db8:0:2::/64"
+- Subnet 3: generic subnet icon, label "Subnet: 10.0.3.0/24\nIPv6: 2001:db8:0:3::/64"
+
+CONNECTIONS:
+- No connections between subnets (they are peers within the VPC)
+
+NOTES:
+- Emphasize the VPC as a thick-bordered blue container spanning all AZs
+- AZs are side by side horizontally within the VPC
+- Subnets are amber/yellow colored nodes within each AZ
+- Show that the VPC is regional (spans all AZs) while subnets are AZ-specific
+- Include both IPv4 and IPv6 CIDR information on labels

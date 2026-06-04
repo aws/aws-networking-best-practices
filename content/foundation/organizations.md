@@ -7,52 +7,10 @@ AWS Organizations enables centralized management and governance of multiple AWS 
 
 A well-structured multi-account strategy isolates workloads, simplifies billing, and enables centralized network management. Without Organizations, every cross-account networking pattern (Transit Gateway sharing, centralized DNS, IPAM delegation, resource sharing via RAM) requires manual trust relationships that don't scale and can't be governed consistently.
 
-``` mermaid
-graph TB
-    subgraph Org["AWS Organization"]
-        Root["Root"]
-        
-        subgraph InfraOU["Infrastructure OU"]
-            NetAcct["Networking Account<br/>Transit Gateway, Direct Connect,<br/>Route 53 Resolver, Cloud WAN"]
-            SharedSvc["Shared Services Account<br/>DNS, Monitoring, CI/CD"]
-        end
-        
-        subgraph SecurityOU["Security OU"]
-            SecTooling["Security Tooling Account<br/>GuardDuty, Security Hub"]
-            LogArchive["Log Archive Account<br/>Flow Logs, CloudTrail"]
-        end
-        
-        subgraph ProdOU["Production OU"]
-            ProdApp1["Prod App A"]
-            ProdApp2["Prod App B"]
-        end
-        
-        subgraph NonProdOU["Non-Production OU"]
-            DevApp1["Dev App A"]
-            StagingApp1["Staging App B"]
-        end
-        
-        Root --> InfraOU
-        Root --> SecurityOU
-        Root --> ProdOU
-        Root --> NonProdOU
-    end
-    
-    style Org fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style InfraOU fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af
-    style SecurityOU fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#9d174d
-    style ProdOU fill:#d1fae5,stroke:#059669,stroke-width:2px,color:#065f46
-    style NonProdOU fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e
-    style Root fill:#ff9900,stroke:#c27400,color:#fff
-    style NetAcct fill:#2563eb,stroke:#1e40af,color:#fff
-    style SharedSvc fill:#3b82f6,stroke:#2563eb,color:#fff
-    style SecTooling fill:#db2777,stroke:#9d174d,color:#fff
-    style LogArchive fill:#ec4899,stroke:#db2777,color:#fff
-    style ProdApp1 fill:#059669,stroke:#065f46,color:#fff
-    style ProdApp2 fill:#059669,stroke:#065f46,color:#fff
-    style DevApp1 fill:#d97706,stroke:#92400e,color:#fff
-    style StagingApp1 fill:#d97706,stroke:#92400e,color:#fff
-```
+![AWS Organizations structure with networking-focused OUs](../assets/foundation/organizations-structure.png)
+/// caption
+AWS Organizations structure — [Drawio Source](../assets/foundation/organizations-structure.drawio)
+///
 
 ## Core Concepts
 

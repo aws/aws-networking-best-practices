@@ -1,0 +1,29 @@
+DIAGRAM: Outbound Control Layers
+PURPOSE: Shows the defense-in-depth pipeline for outbound (egress) traffic controls: from Workload through Security Group, DNS Firewall, Network Firewall, NAT gateway/Egress-only IGW, to the Internet. Each layer adds a distinct filtering capability.
+LAYOUT: top-to-bottom (sequential pipeline)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Outbound Control Layers (defense-in-depth): border style dashed, color blue (#2563eb); contains all nodes
+
+NODES:
+- Workload: generic icon (application), label "Workload\n(application code)"
+- Security Group: generic icon (shield), label "Security Group\n(outbound rules)"
+- DNS Firewall: AWS icon "Amazon Route 53", label "Route 53 DNS Firewall\n(domain-based filtering)"
+- Network Firewall: AWS icon "AWS Network Firewall", label "AWS Network Firewall\n(stateful inspection, IPS)"
+- NAT: AWS icon "Amazon VPC (NAT gateway resource icon)", label "NAT gateway / Egress-only IGW\n(egress path)"
+- Internet: generic icon (cloud/globe), label "Internet"
+
+CONNECTIONS:
+- Workload → Security Group: style solid
+- Security Group → DNS Firewall: style solid
+- DNS Firewall → Network Firewall: style solid
+- Network Firewall → NAT: style solid
+- NAT → Internet: style solid
+
+NOTES:
+- Vertical pipeline flowing from workload (top) to internet (bottom)
+- Each node represents a control layer that can block outbound traffic
+- Purple for workload node, blue for security controls (SG, DNS Firewall, NFW), green for egress path (NAT, Internet)
+- Arrows are solid showing the sequential evaluation order
+- This is a pipeline/flow diagram, not a categorization diagram

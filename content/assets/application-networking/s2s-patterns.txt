@@ -1,0 +1,28 @@
+DIAGRAM: Service-to-Service Patterns
+PURPOSE: Shows the five concerns of synchronous service-to-service communication (discovery, authentication, cross-VPC access, traffic management, observability) plus asynchronous patterns (EventBridge, Step Functions). Organized as architectural concerns, not service choices.
+LAYOUT: top-to-bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Synchronous (request/response): border style dashed, color blue (#2563eb); contains Discovery, Auth, Cross, Traffic, Obs
+- Asynchronous (event-driven): border style dashed, color purple (#7c3aed); contains Events
+
+NODES:
+Synchronous:
+- Discovery: generic icon, label "Service discovery and addressing\nRoute 53 private hosted zones,\nAWS Cloud Map,\ndirect ALB / NLB / VPC Lattice DNS"
+- Auth: AWS icon "AWS Identity and Access Management", label "Authentication and authorization\nVPC Lattice auth policies + SigV4,\nsecurity groups (network-based),\nALB mTLS (client-cert workloads)"
+- Cross: AWS icon "Amazon VPC Lattice", label "Cross-VPC and cross-account access\nVPC Lattice + AWS RAM,\nAWS PrivateLink endpoint services,\npeering / TGW / Cloud WAN with internal LBs"
+- Traffic: generic icon, label "Traffic management\nVPC Lattice weighted routing,\nALB weighted target groups,\nRoute 53 weighted records"
+- Obs: AWS icon "Amazon CloudWatch", label "Observability\nVPC Lattice access logs,\nX-Ray / OpenTelemetry / Application Signals,\nVPC Flow Logs"
+
+Asynchronous:
+- Events: AWS icon "Amazon EventBridge", label "Direct invocation of VPC-based services\nAmazon EventBridge,\nAWS Step Functions HTTP Task\nvia EventBridge connections"
+
+CONNECTIONS:
+- No connections between nodes (these are parallel concerns)
+
+NOTES:
+- Synchronous group (blue) has five stacked nodes representing the five architectural concerns
+- Asynchronous group (purple) has one node for event-driven patterns
+- All nodes are blue-filled in the sync group, purple-filled in the async group
+- This is a patterns/concerns categorization, not a flow diagram

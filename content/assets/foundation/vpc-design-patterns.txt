@@ -1,0 +1,47 @@
+DIAGRAM: VPC Design Patterns
+PURPOSE: Shows three VPC design patterns side by side: (1) VPC per workload, (2) Shared VPC via RAM, and (3) Multi-VPC per account. Helps readers understand the trade-offs between isolation and centralization.
+LAYOUT: left-to-right (three patterns side by side)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Pattern 1 - VPC per workload: border style dashed, color blue (#2563eb)
+- Pattern 2 - Shared VPC (RAM): border style dashed, color green (#059669)
+- Pattern 3 - Multi-VPC per account: border style dashed, color purple (#7c3aed)
+
+NODES:
+Pattern 1:
+- Account A: generic account icon, label "Account A"
+- Account B: generic account icon, label "Account B"
+- VPC A: AWS icon "Amazon Virtual Private Cloud", label "VPC: App A\n10.1.0.0/16"
+- VPC B: AWS icon "Amazon Virtual Private Cloud", label "VPC: App B\n10.2.0.0/16"
+
+Pattern 2:
+- Networking Account: generic account icon, label "Networking Account"
+- Shared VPC: AWS icon "Amazon Virtual Private Cloud", label "Shared VPC\n10.0.0.0/16"
+- Workload Acct 1: generic account icon, label "Workload Acct 1\n(uses shared subnet)"
+- Workload Acct 2: generic account icon, label "Workload Acct 2\n(uses shared subnet)"
+
+Pattern 3:
+- Single Account: generic account icon, label "Single Account"
+- VPC Prod: AWS icon "Amazon Virtual Private Cloud", label "VPC: Prod\n10.10.0.0/16"
+- VPC Dev: AWS icon "Amazon Virtual Private Cloud", label "VPC: Dev\n10.20.0.0/16"
+
+CONNECTIONS:
+Pattern 1:
+- Account A → VPC A: style solid
+- Account B → VPC B: style solid
+
+Pattern 2:
+- Networking Account → Shared VPC: style solid
+- Shared VPC → Workload Acct 1: style solid
+- Shared VPC → Workload Acct 2: style solid
+
+Pattern 3:
+- Single Account → VPC Prod: style solid
+- Single Account → VPC Dev: style solid
+
+NOTES:
+- Three distinct columns, each representing a different architectural pattern
+- Use different colors per pattern for visual distinction (blue, green, purple)
+- Account nodes are lighter colored, VPC nodes are darker/filled
+- This is a comparison diagram — patterns should be equally weighted visually

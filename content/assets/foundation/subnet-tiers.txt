@@ -1,0 +1,42 @@
+DIAGRAM: Subnet Tiers
+PURPOSE: Shows a five-tier subnet architecture within a VPC across three Availability Zones: Firewall, Public, Private, Data, and Infrastructure tiers. Each tier has specific CIDR sizing and purpose, demonstrating production subnet design.
+LAYOUT: top-to-bottom (tiers stacked within each AZ)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- VPC (10.0.0.0/16): outermost container; border style solid, color blue (#2563eb), thick border
+- Availability Zone A: column; border style solid, color gray
+- Availability Zone B: column; border style solid, color gray
+- Availability Zone C: column; border style solid, color gray
+
+NODES:
+AZ-A:
+- Firewall A: label "Firewall\n10.0.100.0/28", color red/pink
+- Public A: label "Public\n10.0.0.0/24", color green
+- Private A: label "Private\n10.0.10.0/23", color amber/yellow
+- Data A: label "Data\n10.0.20.0/24", color indigo/blue
+- Infra A: label "Infrastructure\n10.0.30.0/27", color purple
+
+AZ-B:
+- Firewall B: label "Firewall\n10.0.100.16/28", color red/pink
+- Public B: label "Public\n10.0.1.0/24", color green
+- Private B: label "Private\n10.0.12.0/23", color amber/yellow
+- Data B: label "Data\n10.0.21.0/24", color indigo/blue
+- Infra B: label "Infrastructure\n10.0.30.32/27", color purple
+
+AZ-C:
+- Firewall C: label "Firewall\n10.0.100.32/28", color red/pink
+- Public C: label "Public\n10.0.2.0/24", color green
+- Private C: label "Private\n10.0.14.0/23", color amber/yellow
+- Data C: label "Data\n10.0.22.0/24", color indigo/blue
+- Infra C: label "Infrastructure\n10.0.30.64/27", color purple
+
+CONNECTIONS:
+- No connections between nodes (they represent parallel subnet tiers)
+
+NOTES:
+- Three AZ columns side by side, each containing five stacked subnet tiers
+- Use distinct colors per tier: Firewall=red/pink, Public=green, Private=yellow/amber, Data=indigo, Infrastructure=purple
+- VPC container should be prominent with thick blue border
+- AZ containers in gray to show physical separation
+- Tiers should align horizontally across AZs to show symmetry

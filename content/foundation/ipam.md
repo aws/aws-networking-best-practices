@@ -7,42 +7,10 @@ AWS IPAM (IP Address Management) is the control plane for your organization's IP
 
 The service operates through a hierarchy of pools — collections of CIDR ranges organized by Region, environment, or business unit — with allocation rules that enforce sizing, tagging, and locality constraints. When a team creates a VPC, they request a CIDR from the appropriate pool, and IPAM guarantees a non-overlapping allocation that complies with your organizational standards. No tickets, no manual checks, no spreadsheet updates.
 
-``` mermaid
-graph TB
-    IPAM["AWS IPAM<br/>Centralized IP Management"]
-    
-    IPAM --> PrivScope["Private Scope"]
-    IPAM --> PubScope["Public Scope<br/>(BYOIP)"]
-    
-    PrivScope --> TopPool["Top-Level Pool<br/>10.0.0.0/8"]
-    
-    TopPool --> RegionEast["Regional Pool<br/>10.0.0.0/12<br/>us-east-1"]
-    TopPool --> RegionWest["Regional Pool<br/>10.16.0.0/12<br/>us-west-2"]
-    TopPool --> RegionEU["Regional Pool<br/>10.32.0.0/12<br/>eu-west-1"]
-    
-    RegionEast --> ProdEast["Production Pool<br/>10.0.0.0/13"]
-    RegionEast --> NonProdEast["Non-Production Pool<br/>10.8.0.0/13"]
-    
-    ProdEast --> VPC1["VPC: 10.0.0.0/16<br/>Account: prod-app-1"]
-    ProdEast --> VPC2["VPC: 10.1.0.0/16<br/>Account: prod-app-2"]
-    
-    NonProdEast --> VPC3["VPC: 10.8.0.0/20<br/>Account: dev-app-1"]
-    NonProdEast --> VPC4["VPC: 10.8.16.0/20<br/>Account: dev-app-2"]
-    
-    style IPAM fill:#2563eb,stroke:#1e40af,color:#fff
-    style PrivScope fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style PubScope fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style TopPool fill:#059669,stroke:#047857,color:#fff
-    style RegionEast fill:#f59e0b,stroke:#d97706,color:#fff
-    style RegionWest fill:#f59e0b,stroke:#d97706,color:#fff
-    style RegionEU fill:#f59e0b,stroke:#d97706,color:#fff
-    style ProdEast fill:#dc2626,stroke:#b91c1c,color:#fff
-    style NonProdEast fill:#ea580c,stroke:#c2410c,color:#fff
-    style VPC1 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style VPC2 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style VPC3 fill:#fef3c7,stroke:#f59e0b,color:#000
-    style VPC4 fill:#fef3c7,stroke:#f59e0b,color:#000
-```
+![IPAM pool hierarchy from top-level through regional and environment pools to VPC allocations](../assets/foundation/ipam-pool-hierarchy.png)
+/// caption
+IPAM pool hierarchy — [Drawio Source](../assets/foundation/ipam-pool-hierarchy.drawio)
+///
 
 ## Key capabilities
 

@@ -1,0 +1,27 @@
+DIAGRAM: Segmentation Hierarchy
+PURPOSE: Shows the five layers of network segmentation from strongest (AWS Accounts) to most granular (Application Auth via VPC Lattice), forming a defense-in-depth hierarchy. Each layer provides progressively finer-grained isolation.
+LAYOUT: top-to-bottom (hierarchy flowing downward)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Segmentation Hierarchy: outermost container; border style dashed, color orange (#ff9900)
+
+NODES:
+- Accounts: AWS icon "AWS Organizations", label "AWS Accounts\nStrongest isolation: IAM + network + billing"
+- VPCs: AWS icon "Amazon Virtual Private Cloud", label "VPCs\nNetwork isolation: no implicit cross-VPC routing"
+- Subnets: generic icon, label "Subnets & Route Tables\nRouting-based segmentation within a VPC"
+- Security Groups: generic icon (shield), label "Security Groups\nMicro-segmentation at the resource level"
+- App Auth: AWS icon "Amazon VPC Lattice", label "Application Auth (VPC Lattice)\nIdentity-based, network-position-independent"
+
+CONNECTIONS:
+- Accounts → VPCs: style solid
+- VPCs → Subnets: style solid
+- Subnets → Security Groups: style solid
+- Security Groups → App Auth: style solid
+
+NOTES:
+- Vertical hierarchy from broadest/strongest (top) to finest/most granular (bottom)
+- Color coding: Accounts=green (strongest), VPCs=blue, Subnets=blue, Security Groups=purple, App Auth=purple
+- Arrows flow downward showing the progressive refinement of access control
+- Each level adds defense in depth — a failure at one layer is caught by layers above
+- The orange dashed container groups the entire hierarchy

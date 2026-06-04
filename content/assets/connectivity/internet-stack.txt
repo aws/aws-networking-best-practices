@@ -1,0 +1,32 @@
+DIAGRAM: Internet Connectivity Stack
+PURPOSE: Shows the complete internet connectivity stack in three tiers: Ingress (edge layer, per-VPC entry point, per-VPC L4 inspection), Egress (IPv6 decentralized, IPv4 pattern choice, volume reduction), and Filtering layer (centrally managed, data-plane options).
+LAYOUT: top-to-bottom (three stacked tiers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Ingress (preferred: decentralized): border style dashed, color blue (#2563eb)
+- Egress: border style dashed, color purple (#7c3aed)
+- Filtering layer (both directions): border style dashed, color green (#059669)
+
+NODES:
+Ingress:
+- Edge layer: AWS icon "Amazon CloudFront", label "Edge layer\nAmazon CloudFront, AWS WAF,\nAWS Global Accelerator"
+- Per-VPC entry point: AWS icon "Elastic Load Balancing (ALB resource icon)", label "Per-VPC entry point\nALB / NLB / API Gateway\nCloudFront VPC Origins"
+- Per-VPC inspection: AWS icon "AWS Network Firewall", label "Per-VPC L4 inspection\nAWS Network Firewall or\nGWLB + 3rd-party firewall"
+
+Egress:
+- IPv6: generic icon, label "IPv6 (decentralized by design)\nEgress-only IGW per VPC\nNo managed NAT66"
+- IPv4: AWS icon "Amazon VPC (NAT gateway resource icon)", label "IPv4 (choose pattern)\nDecentralized vs centralized\nby cost, ownership,\ninspection-point placement"
+- Reduce volume: AWS icon "AWS PrivateLink", label "Reduce volume first\nGateway + interface VPC endpoints"
+
+Filtering:
+- Centrally managed: AWS icon "AWS Firewall Manager", label "Centrally managed\nAWS Firewall Manager,\nRoute 53 DNS Firewall"
+- Data plane: AWS icon "AWS Network Firewall", label "Data-plane options\nAWS Network Firewall,\nGWLB + 3rd-party firewall"
+
+CONNECTIONS:
+- No connections (stack diagram showing layer relationships)
+
+NOTES:
+- Three tiers stacked vertically with distinct colors (blue, purple, green)
+- This is the "building your stack" reference view for internet connectivity
+- Each tier shows the key services and patterns for that concern

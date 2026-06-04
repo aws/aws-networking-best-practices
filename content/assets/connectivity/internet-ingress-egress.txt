@@ -1,0 +1,28 @@
+DIAGRAM: Internet Ingress and Egress
+PURPOSE: Shows the two distinct concerns of internet connectivity: Ingress (decentralized preferred, centralized option, edge services) and Egress (IPv6 decentralized by design, IPv4 centralized vs decentralized choice, filtering layer). Separates the architectural decisions for each direction.
+LAYOUT: left-to-right (two side-by-side groups)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Ingress (internet → AWS applications): border style dashed, color blue (#2563eb); contains Decentralized In, Centralized In, Edge services
+- Egress (AWS resources → internet): border style dashed, color purple (#7c3aed); contains IPv6, IPv4, Filtering
+
+NODES:
+Ingress:
+- Decentralized In: generic icon, label "Decentralized\n(preferred)\nEach VPC owns its ingress"
+- Centralized In: generic icon, label "Centralized\nShared ingress VPC for perimeter"
+- Edge services: AWS icon "Amazon CloudFront", label "Edge services\nCloudFront, Global Accelerator, AWS WAF"
+
+Egress:
+- IPv6 Egress: generic icon, label "IPv6\nDecentralized by design\n(egress-only IGW per VPC)"
+- IPv4 Egress: generic icon, label "IPv4\nDecentralized vs centralized\nby cost, ownership, inspection placement"
+- Filtering: AWS icon "AWS Network Firewall", label "Filtering\nAWS Network Firewall, GWLB + 3rd-party,\nRoute 53 DNS Firewall"
+
+CONNECTIONS:
+- No connections between nodes (categorization diagram)
+
+NOTES:
+- Two distinct groups side by side representing the two traffic directions
+- Blue for ingress, purple for egress
+- Each group contains 3 nodes showing the key architectural choices
+- Make it clear these are separate decisions that should be made independently

@@ -1,0 +1,29 @@
+DIAGRAM: External Traffic Observability Layers
+PURPOSE: Shows the layered external traffic observability stack from internet clients through Edge (CloudFront/Route 53 logs), AWS WAF logs, Load Balancer logs (ALB/NLB), down to VPC-level egress monitoring (NAT gateway metrics, Flow Logs) reaching external destinations.
+LAYOUT: top-to-bottom (sequential layers with client at top and destinations at bottom)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- External Traffic Observability Layers: border style dashed, color blue (#2563eb); contains all observability layers
+
+NODES:
+- Client: generic icon (globe/users), label "Internet clients"
+- Edge: AWS icon "Amazon CloudFront", label "CloudFront access logs / real-time logs\n+ Route 53 query logs\n(edge-level: client IP, latency, cache, DNS patterns)"
+- WAF: AWS icon "AWS WAF", label "AWS WAF logs\n(security evaluation: rule matches, allow/block/count)"
+- LB: AWS icon "Elastic Load Balancing", label "ALB access logs / NLB access logs\n(per-request/connection: target latency, response codes, TLS details)"
+- VPC: AWS icon "Amazon VPC (NAT gateway resource icon)", label "NAT gateway CloudWatch metrics\n+ VPC Flow Logs\n(egress volume, connection counts, packet drops)"
+- Destination: generic icon (globe), label "External destinations"
+
+CONNECTIONS:
+- Client → Edge: style solid
+- Edge → WAF: style solid
+- WAF → LB: style solid
+- LB → VPC: style solid
+- VPC → Destination: style solid
+
+NOTES:
+- Vertical pipeline from internet clients (top) through layers to external destinations (bottom)
+- Each layer captures distinct information that other layers cannot see
+- Color: Client/Destination in orange, Edge and LB in blue, WAF in purple, VPC in green
+- This is a flow diagram showing the path traffic takes and where each log source captures data
+- Arrows flow downward showing the sequential path through the stack

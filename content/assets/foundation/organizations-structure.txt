@@ -1,0 +1,34 @@
+DIAGRAM: Organizations Account Structure
+PURPOSE: Shows a typical AWS Organizations hierarchy with Root, OUs (Infrastructure, Security, Production, Non-Production), and the accounts within each OU. Emphasizes the centralized networking account and how OU structure maps to network governance.
+LAYOUT: top-to-bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- AWS Organization: contains all elements; border style dashed, color orange (#ff9900)
+- Infrastructure OU: contains Networking Account, Shared Services Account; border style solid, color blue, light blue fill
+- Security OU: contains Security Tooling Account, Log Archive Account; border style solid, color pink
+- Production OU: contains Prod App A, Prod App B; border style solid, color green
+- Non-Production OU: contains Dev App A, Staging App B; border style solid, color amber/yellow
+
+NODES:
+- Root: AWS icon "AWS Organizations", label "Root"
+- Networking Account: AWS icon "AWS Transit Gateway", label "Networking Account\nTransit Gateway, Direct Connect,\nRoute 53 Resolver, Cloud WAN"
+- Shared Services Account: generic icon, label "Shared Services Account\nDNS, Monitoring, CI/CD"
+- Security Tooling Account: generic icon (shield), label "Security Tooling Account\nGuardDuty, Security Hub"
+- Log Archive Account: AWS icon "Amazon Simple Storage Service", label "Log Archive Account\nFlow Logs, CloudTrail"
+- Prod App A: AWS icon "Amazon EC2", label "Prod App A"
+- Prod App B: AWS icon "Amazon EC2", label "Prod App B"
+- Dev App A: AWS icon "Amazon EC2", label "Dev App A"
+- Staging App B: AWS icon "Amazon EC2", label "Staging App B"
+
+CONNECTIONS:
+- Root → Infrastructure OU: style solid, no label
+- Root → Security OU: style solid, no label
+- Root → Production OU: style solid, no label
+- Root → Non-Production OU: style solid, no label
+
+NOTES:
+- Root node should be prominent at the top (orange fill)
+- Each OU uses a distinct color to show separation of governance domains
+- The Networking Account is the most important node — make it visually prominent
+- Tree/hierarchy layout flowing down from Root

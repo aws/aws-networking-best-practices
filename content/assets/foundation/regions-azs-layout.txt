@@ -1,0 +1,32 @@
+DIAGRAM: Regions and Availability Zones Layout
+PURPOSE: Shows AWS global infrastructure hierarchy — a Region containing multiple Availability Zones (each with subnets and NAT gateways) connected by low-latency fiber, plus a Local Zone extending from the parent Region.
+LAYOUT: top-to-bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- AWS Global Infrastructure: outermost container; border style dashed, color orange (#ff9900)
+- Region (us-west-2): contains all AZs; border style solid, color dark gray
+- AZ-a (usw2-az1): contains Subnet A, NAT GW; border style solid, color blue
+- AZ-b (usw2-az2): contains Subnet B, NAT GW; border style solid, color blue
+- AZ-c (usw2-az3): contains Subnet C, NAT GW; border style solid, color blue
+- Local Zone (us-west-2-lax-1a): contains Subnet LZ; border style solid, color amber
+
+NODES:
+- Subnet A: generic subnet icon, label "Subnet A\n10.0.0.0/24"
+- Subnet B: generic subnet icon, label "Subnet B\n10.0.1.0/24"
+- Subnet C: generic subnet icon, label "Subnet C\n10.0.2.0/24"
+- NAT GW (×3): AWS icon "Amazon VPC (NAT gateway resource icon)", label "NAT GW"
+- Subnet LZ: generic subnet icon, label "Subnet LZ\n10.0.10.0/24"
+
+CONNECTIONS:
+- AZ-a ↔ AZ-b: style dashed, label "Low-latency private fiber"
+- AZ-b ↔ AZ-c: style dashed, label "Low-latency private fiber"
+- AZ-a ↔ AZ-c: style dashed, label "Low-latency private fiber"
+- Region → Local Zone: style dashed, label "Parent Region connectivity"
+
+NOTES:
+- AZs should be arranged horizontally within the Region
+- Each AZ contains a subnet (blue) and a NAT gateway (purple)
+- The Local Zone is shown below or to the side of the Region, connected by a dashed line
+- Emphasize the physical separation between AZs with the fiber connections
+- NAT GW nodes in purple to distinguish from subnets
