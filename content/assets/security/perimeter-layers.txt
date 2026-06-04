@@ -1,0 +1,40 @@
+DIAGRAM: Perimeter Control Layers
+PURPOSE: Shows the layered defense-in-depth model for inbound perimeter controls, from Edge (global) through VPC Boundary, Subnet, down to Resource layer. Traffic flows inward through these layers sequentially, and each layer can independently deny traffic.
+LAYOUT: top-to-bottom (sequential layers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Edge Layer (Global): border style dashed, color orange (#ff9900); contains CloudFront+WAF, Shield, Global Accelerator
+- VPC Boundary Layer: border style dashed, color blue (#2563eb); contains Network Firewall, GWLB, NACLs
+- Subnet Layer: border style dashed, color purple (#7c3aed); contains Security Groups
+- Resource Layer: border style dashed, color green (#059669); contains ENI
+
+NODES:
+Edge:
+- CloudFront + WAF: AWS icon "Amazon CloudFront", label "CloudFront + AWS WAF"
+- Shield: AWS icon "AWS Shield", label "AWS Shield\n(Standard + Advanced)"
+- Global Accelerator: AWS icon "AWS Global Accelerator", label "Global Accelerator"
+
+VPC Boundary:
+- Network Firewall: AWS icon "AWS Network Firewall", label "AWS Network Firewall"
+- GWLB: AWS icon "Elastic Load Balancing (GWLB resource icon)", label "Gateway Load Balancer\n+ Third-party firewalls"
+- NACL: generic icon, label "Network ACLs"
+
+Subnet:
+- Security Groups: generic icon (shield), label "Security Groups"
+
+Resource:
+- ENI: generic icon, label "Elastic Network Interface"
+
+CONNECTIONS:
+- Edge Layer → VPC Boundary Layer: style solid, no label
+- VPC Boundary Layer → Subnet Layer: style solid, no label
+- Subnet Layer → Resource Layer: style solid, no label
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Four layers stacked top-to-bottom showing traffic flowing inward
+- Arrows between layers show sequential evaluation
+- Orange for edge (global AWS), blue for VPC boundary, purple for subnet-level, green for resource-level
+- Each layer can independently block traffic — this is defense in depth
+- The visual should clearly show the narrowing funnel from internet to resource

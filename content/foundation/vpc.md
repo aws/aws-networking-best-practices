@@ -7,33 +7,10 @@ Amazon Virtual Private Cloud (VPC) is your logically isolated network within AWS
 
 A VPC spans all Availability Zones in a Region, provides complete control over IP addressing, routing, and network gateways, and serves as the attachment point for every connectivity service (Transit Gateway, Cloud WAN, VPC Peering, PrivateLink, VPC Lattice). Your VPC design directly determines what connectivity patterns are possible, what address space is available for growth, and how cleanly workloads can be isolated from each other.
 
-``` mermaid
-graph TB
-    subgraph AWS["AWS Region: us-east-1"]
-        subgraph VPC["VPC: 10.0.0.0/16 - IPv6: 2001:db8::/56"]
-            subgraph AZ1["Availability Zone A"]
-                Subnet1["Subnet: 10.0.1.0/24<br/>IPv6: 2001:db8:0:1::/64"]
-            end
-            subgraph AZ2["Availability Zone B"]
-                Subnet2["Subnet: 10.0.2.0/24<br/>IPv6: 2001:db8:0:2::/64"]
-            end
-            subgraph AZ3["Availability Zone C"]
-                Subnet3["Subnet: 10.0.3.0/24<br/>IPv6: 2001:db8:0:3::/64"]
-            end
-        end
-    end
-    
-    Subnet1 ~~~ Subnet2 ~~~ Subnet3
-    
-    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style VPC fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
-    style AZ1 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style AZ2 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style AZ3 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style Subnet1 fill:#fef3c7,stroke:#f59e0b,color:#000
-    style Subnet2 fill:#fef3c7,stroke:#f59e0b,color:#000
-    style Subnet3 fill:#fef3c7,stroke:#f59e0b,color:#000
-```
+![VPC spanning three Availability Zones with dual-stack subnets](../assets/foundation/vpc-architecture.png)
+/// caption
+VPC architecture — [Drawio Source](../assets/foundation/vpc-architecture.drawio)
+///
 
 ## Key capabilities
 
@@ -81,53 +58,10 @@ graph TB
 
 VPC design is not a one-size-fits-all decision. The right pattern depends on your organization's account strategy, team autonomy requirements, compliance boundaries, and operational maturity. Three primary patterns dominate production AWS environments, and most organizations use a combination.
 
-``` mermaid
-graph TB
-    subgraph Pattern1["Pattern: VPC per workload"]
-        direction TB
-        AcctA["Account A"]
-        AcctB["Account B"]
-        VPCA["VPC: App A<br/>10.1.0.0/16"]
-        VPCB["VPC: App B<br/>10.2.0.0/16"]
-        AcctA --> VPCA
-        AcctB --> VPCB
-    end
-    
-    subgraph Pattern2["Pattern: Shared VPC (RAM)"]
-        direction TB
-        NetAcct["Networking Account"]
-        SharedVPC["Shared VPC<br/>10.0.0.0/16"]
-        WL1["Workload Acct 1<br/>(uses shared subnet)"]
-        WL2["Workload Acct 2<br/>(uses shared subnet)"]
-        NetAcct --> SharedVPC
-        SharedVPC --> WL1
-        SharedVPC --> WL2
-    end
-    
-    subgraph Pattern3["Pattern: Multi-VPC per account"]
-        direction TB
-        SingleAcct["Single Account"]
-        VPC1["VPC: Prod<br/>10.10.0.0/16"]
-        VPC2["VPC: Dev<br/>10.20.0.0/16"]
-        SingleAcct --> VPC1
-        SingleAcct --> VPC2
-    end
-    
-    style Pattern1 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Pattern2 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Pattern3 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style VPCA fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPCB fill:#2563eb,stroke:#1e40af,color:#fff
-    style SharedVPC fill:#059669,stroke:#065f46,color:#fff
-    style VPC1 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style VPC2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style AcctA fill:#dbeafe,stroke:#3b82f6,color:#000
-    style AcctB fill:#dbeafe,stroke:#3b82f6,color:#000
-    style NetAcct fill:#d1fae5,stroke:#059669,color:#000
-    style WL1 fill:#d1fae5,stroke:#059669,color:#000
-    style WL2 fill:#d1fae5,stroke:#059669,color:#000
-    style SingleAcct fill:#ede9fe,stroke:#7c3aed,color:#000
-```
+![Three VPC design patterns: VPC per workload, shared VPC via RAM, and multi-VPC per account](../assets/foundation/vpc-design-patterns.png)
+/// caption
+VPC design patterns — [Drawio Source](../assets/foundation/vpc-design-patterns.drawio)
+///
 
 ### VPC per workload (one VPC per application per environment)
 

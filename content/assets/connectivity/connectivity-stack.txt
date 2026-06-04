@@ -1,0 +1,27 @@
+DIAGRAM: Connectivity Stack
+PURPOSE: Shows the recommended connectivity stack in three tiers: Application & Resource Layer (VPC Lattice services, VPC Resources, PrivateLink), Network Layer (Cloud WAN, Transit Gateway), and Targeted Connections (VPC Peering). Represents the building-your-stack view.
+LAYOUT: top-to-bottom (three stacked tiers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Application & Resource Layer: contains Lattice, Resources, PrivateLink; border style dashed, color purple (#7c3aed)
+- Network Layer: contains Cloud WAN, Transit Gateway; border style dashed, color blue (#2563eb)
+- Targeted Connections: contains VPC Peering; border style dashed, color green (#059669)
+
+NODES:
+- VPC Lattice: AWS icon "Amazon VPC Lattice", label "Amazon VPC Lattice\nService-to-service communication\nAuth policies, traffic management"
+- VPC Resources: AWS icon "Amazon VPC Lattice", label "VPC Lattice VPC Resources\nPrivate TCP resource access\nDatabases, on-prem, 3rd-party"
+- PrivateLink: AWS icon "AWS PrivateLink", label "AWS PrivateLink\nPrivate AWS service access\nGateway endpoints for S3/DynamoDB"
+- Cloud WAN: AWS icon "AWS Cloud WAN", label "AWS Cloud WAN\nGlobal network backbone\nPolicy-driven segmentation"
+- Transit Gateway: AWS icon "AWS Transit Gateway", label "AWS Transit Gateway\nRegional hub-and-spoke"
+- VPC Peering: AWS icon "Amazon Virtual Private Cloud", label "VPC Peering\nLow-latency point-to-point\nCost-sensitive workloads"
+
+CONNECTIONS:
+- No connections (stack/tier diagram showing layer relationships)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three tiers stacked vertically: App layer (purple) on top, Network (blue) in middle, Targeted (green) at bottom
+- Each tier represents a different abstraction level
+- Nodes include short descriptions of primary use case
+- This is a reference architecture diagram for planning

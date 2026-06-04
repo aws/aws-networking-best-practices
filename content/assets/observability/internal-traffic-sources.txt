@@ -1,0 +1,50 @@
+DIAGRAM: Internal Traffic Monitoring Sources
+PURPOSE: Shows the internal traffic monitoring architecture: Data Sources (VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to Destinations (S3, CloudWatch Logs, Firehose) and then to Analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics).
+LAYOUT: left-to-right (three-column flow)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Internal Traffic Data Sources: border style dashed, color blue (#2563eb)
+- Analysis & Storage: border style dashed, color green (#059669)
+- Query & Alerting: border style dashed, color purple (#7c3aed)
+
+NODES:
+Data Sources:
+- Flow Logs: AWS icon "Amazon Virtual Private Cloud", label "VPC Flow Logs\nPacket metadata at VPC/subnet/ENI"
+- TGW Logs: AWS icon "AWS Transit Gateway", label "Transit Gateway Flow Logs\nCross-VPC and cross-account traffic"
+- Lattice Logs: AWS icon "Amazon VPC Lattice", label "VPC Lattice Access Logs\nPer-request service-to-service detail"
+- NFW Logs: AWS icon "AWS Network Firewall", label "Network Firewall Logs\nStateful inspection decisions"
+
+Storage:
+- S3: AWS icon "Amazon Simple Storage Service", label "Amazon S3\nCost-effective long-term storage"
+- CloudWatch Logs: AWS icon "Amazon CloudWatch", label "CloudWatch Logs\nReal-time querying"
+- Firehose: generic icon, label "Kinesis Data Firehose\nStreaming delivery"
+
+Analysis:
+- Athena: AWS icon "Amazon Athena", label "Amazon Athena\nSQL over S3 data"
+- CW Insights: AWS icon "Amazon CloudWatch", label "CloudWatch Logs Insights\nReal-time log queries"
+- CW Metrics: AWS icon "Amazon CloudWatch", label "CloudWatch Metrics\nNetwork throughput & errors"
+
+CONNECTIONS:
+- Flow Logs → S3: style solid
+- Flow Logs → CloudWatch Logs: style solid
+- Flow Logs → Firehose: style solid
+- TGW Logs → S3: style solid
+- TGW Logs → CloudWatch Logs: style solid
+- Lattice Logs → S3: style solid
+- Lattice Logs → CloudWatch Logs: style solid
+- Lattice Logs → Firehose: style solid
+- NFW Logs → S3: style solid
+- NFW Logs → CloudWatch Logs: style solid
+- NFW Logs → Firehose: style solid
+- S3 → Athena: style solid
+- CloudWatch Logs → CW Insights: style solid
+- CloudWatch Logs → CW Metrics: style solid
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three-column layout: Sources (left), Storage (middle), Analysis (right)
+- Many-to-many connections from sources to storage destinations
+- One-to-one connections from storage to analysis tools
+- Blue for data sources, green for storage, purple for analysis
+- Show that all sources can deliver to multiple destinations

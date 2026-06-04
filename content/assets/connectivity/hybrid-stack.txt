@@ -1,0 +1,33 @@
+DIAGRAM: Hybrid and Multi-Cloud Stack
+PURPOSE: Shows the recommended hybrid/multi-cloud connectivity stack in three tiers: Client communication (Verified Access, Client VPN), Multi-cloud (AWS Interconnect, Partner-based), and Hybrid connectivity (Direct Connect, VPN, SD-WAN). Represents the building-your-stack view.
+LAYOUT: top-to-bottom (three stacked tiers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Client communication: border style dashed, color green (#059669)
+- Multi-cloud: border style dashed, color purple (#7c3aed)
+- Hybrid connectivity: border style dashed, color blue (#2563eb)
+
+NODES:
+Client:
+- Verified Access: generic icon, label "AWS Verified Access\nZero-trust application access"
+- Client VPN: AWS icon "AWS Client VPN", label "AWS Client VPN\nNetwork-layer user access"
+
+Multi-cloud:
+- Interconnect: generic icon, label "AWS Interconnect\nDirect cloud-to-cloud\n(preferred, where supported)"
+- Partner: AWS icon "AWS Direct Connect", label "Partner-based DX or VPN\nwhere AWS Interconnect unavailable"
+
+Hybrid:
+- Direct Connect: AWS icon "AWS Direct Connect", label "AWS Direct Connect\nPrimary private path"
+- VPN: AWS icon "AWS Site-to-Site VPN", label "AWS Site-to-Site VPN\nFast-start or IPsec over DX\nwhen MACsec unavailable"
+- SD-WAN: generic icon, label "SD-WAN Connect attachments\nfor existing SD-WAN overlays"
+
+CONNECTIONS:
+- No connections (stack/tier reference diagram)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three tiers stacked vertically (green on top, purple middle, blue bottom)
+- This mirrors the hierarchy from user-facing to infrastructure-level
+- Each tier shows the recommended services for that concern
+- Include brief context in labels about when to use each option

@@ -7,54 +7,10 @@ AWS infrastructure is organized into Regions and Availability Zones (Availabilit
 
 The most common networking mistakes aren't service misconfigurations — they're failures to account for how Region and Availability Zone choices cascade into subnet sizing, traffic cost, and blast radius. Understanding this layer deeply prevents those mistakes.
 
-``` mermaid
-graph TB
-    subgraph AWS["AWS Global Infrastructure"]
-        direction TB
-
-        subgraph Region["Region (for example, us-west-2)"]
-            direction LR
-
-            subgraph AZ1["AZ-a  (usw2-az1)"]
-                S1["Subnet A<br/>10.0.0.0/24"]
-                NAT1["NAT GW"]
-            end
-
-            subgraph AZ2["AZ-b  (usw2-az2)"]
-                S2["Subnet B<br/>10.0.1.0/24"]
-                NAT2["NAT GW"]
-            end
-
-            subgraph AZ3["AZ-c  (usw2-az3)"]
-                S3["Subnet C<br/>10.0.2.0/24"]
-                NAT3["NAT GW"]
-            end
-        end
-
-        subgraph LZ["Local Zone (us-west-2-lax-1a)"]
-            SLZ["Subnet LZ<br/>10.0.10.0/24"]
-        end
-    end
-
-    AZ1 <-."Low-latency<br/>private fiber".-> AZ2
-    AZ2 <-."Low-latency<br/>private fiber".-> AZ3
-    AZ1 <-."Low-latency<br/>private fiber".-> AZ3
-    Region -."Parent Region<br/>connectivity".-> LZ
-
-    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style Region fill:none,stroke:#1f2937,stroke-width:2px,color:#1f2937
-    style AZ1 fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af
-    style AZ2 fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af
-    style AZ3 fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af
-    style LZ fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e
-    style S1 fill:#2563eb,stroke:#1e40af,color:#fff
-    style S2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style S3 fill:#2563eb,stroke:#1e40af,color:#fff
-    style SLZ fill:#d97706,stroke:#92400e,color:#fff
-    style NAT1 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style NAT2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style NAT3 fill:#7c3aed,stroke:#6d28d9,color:#fff
-```
+![AWS Region with three Availability Zones and a Local Zone](../assets/foundation/regions-azs-layout.png)
+/// caption
+Regions and Availability Zones — [Drawio Source](../assets/foundation/regions-azs-layout.drawio)
+///
 
 ## AWS Regions
 

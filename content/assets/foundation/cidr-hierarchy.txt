@@ -1,0 +1,39 @@
+DIAGRAM: CIDR Hierarchy
+PURPOSE: Shows a hierarchical CIDR allocation tree from the organization-level root (10.0.0.0/8) down through environment splits (Production/Non-Production), regional allocations, and individual subnets. Demonstrates how contiguous allocation enables route summarization.
+LAYOUT: top-to-bottom (tree structure)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- No explicit group containers — this is a tree diagram
+
+NODES:
+- Root: generic icon, label "10.0.0.0/8\nEntire Organization\n16,777,216 addresses"
+- Production: generic icon, label "10.0.0.0/12\nProduction\n1,048,576 addresses"
+- Non-Production: generic icon, label "10.16.0.0/12\nNon-Production\n1,048,576 addresses"
+- Prod us-east-1: AWS icon "Amazon Virtual Private Cloud", label "10.0.0.0/16\nus-east-1 Production\n65,536 addresses"
+- Prod us-west-2: AWS icon "Amazon Virtual Private Cloud", label "10.1.0.0/16\nus-west-2 Production\n65,536 addresses"
+- Prod eu-west-1: AWS icon "Amazon Virtual Private Cloud", label "10.2.0.0/16\neu-west-1 Production\n65,536 addresses"
+- Dev us-east-1: AWS icon "Amazon Virtual Private Cloud", label "10.16.0.0/16\nus-east-1 Development\n65,536 addresses"
+- Test us-east-1: AWS icon "Amazon Virtual Private Cloud", label "10.17.0.0/16\nus-east-1 Testing\n65,536 addresses"
+- Public Subnet AZ-A: generic subnet icon, label "10.0.0.0/24\nPublic Subnet AZ-A\n256 addresses"
+- Public Subnet AZ-B: generic subnet icon, label "10.0.1.0/24\nPublic Subnet AZ-B\n256 addresses"
+- Private Subnet AZ-A: generic subnet icon, label "10.0.10.0/24\nPrivate Subnet AZ-A\n256 addresses"
+
+CONNECTIONS:
+- Root → Production: style solid
+- Root → Non-Production: style solid
+- Production → Prod us-east-1: style solid
+- Production → Prod us-west-2: style solid
+- Production → Prod eu-west-1: style solid
+- Non-Production → Dev us-east-1: style solid
+- Non-Production → Test us-east-1: style solid
+- Prod us-east-1 → Public Subnet AZ-A: style solid
+- Prod us-east-1 → Public Subnet AZ-B: style solid
+- Prod us-east-1 → Private Subnet AZ-A: style solid
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Tree flows top-to-bottom with widening breadth at each level
+- Color coding: Root=blue, Production=purple, Non-Production=orange, Regional VPCs=green, Dev/Test=amber, Subnets=light blue
+- Each level represents a different organizational scope
+- Show that the hierarchy enables route summarization at each level

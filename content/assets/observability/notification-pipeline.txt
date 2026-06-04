@@ -1,0 +1,53 @@
+DIAGRAM: Notification Pipeline
+PURPOSE: Shows the end-to-end notification pipeline: Event Sources (CloudWatch Metrics, EventBridge Events, AWS Health) → Decision layer (CloudWatch Alarms, EventBridge Rules) → Routing (SNS, AWS Chatbot) → Destinations (Email, Slack/Teams, PagerDuty/Opsgenie, Lambda auto-remediation, SQS ticket creation).
+LAYOUT: left-to-right (four-column pipeline)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Event Sources: border style dashed, color blue (#2563eb)
+- Alarm & Rule Layer: border style dashed, color purple (#7c3aed)
+- Delivery & Routing: border style dashed, color green (#059669)
+- Destinations: border style dashed, color orange (#ff9900)
+
+NODES:
+Sources:
+- CloudWatch: AWS icon "Amazon CloudWatch", label "CloudWatch Metrics\nThreshold & anomaly"
+- EventBridge: AWS icon "Amazon EventBridge", label "EventBridge Events\nState changes"
+- Health: generic icon (heart), label "AWS Health\nService events"
+
+Decision:
+- Alarms: AWS icon "Amazon CloudWatch", label "CloudWatch Alarms\nSimple & composite"
+- Rules: AWS icon "Amazon EventBridge", label "EventBridge Rules\nPattern matching"
+
+Routing:
+- SNS: generic icon, label "Amazon SNS\nFan-out"
+- Chatbot: generic icon (chat), label "AWS Chatbot\nSlack & Teams"
+
+Destinations:
+- Email: generic icon (email), label "Email"
+- Slack: generic icon (chat), label "Slack / Teams"
+- PagerDuty: generic icon (alert), label "PagerDuty / Opsgenie"
+- Lambda: AWS icon "AWS Lambda", label "Lambda\nAuto-remediation"
+- SQS: generic icon (queue), label "SQS\nTicket creation"
+
+CONNECTIONS:
+- CloudWatch → Alarms: style solid
+- EventBridge → Rules: style solid
+- Health → Rules: style solid
+- Alarms → SNS: style solid
+- Rules → SNS: style solid
+- Alarms → Chatbot: style solid
+- Rules → Chatbot: style solid
+- SNS → Email: style solid
+- SNS → PagerDuty: style solid
+- SNS → Lambda: style solid
+- SNS → SQS: style solid
+- Chatbot → Slack: style solid
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Four-column left-to-right pipeline showing the notification flow
+- Sources (blue) feed into Decisions (purple) which route through Delivery (green) to Destinations (orange)
+- Fan-out pattern: SNS delivers to multiple destinations
+- This is a flow/pipeline diagram showing how alerts get from detection to action
+- Keep it readable by clearly separating the four stages

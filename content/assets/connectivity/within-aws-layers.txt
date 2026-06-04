@@ -1,0 +1,26 @@
+DIAGRAM: Within-AWS Connectivity Layers
+PURPOSE: Shows the two layers of within-AWS connectivity: Application & Resource Connectivity (VPC Lattice, VPC Resources, PrivateLink) and Network Connectivity (Cloud WAN, Transit Gateway, VPC Peering). Illustrates that these layers operate in parallel, each addressing different concerns.
+LAYOUT: top-to-bottom (two stacked groups)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Application & Resource Connectivity: contains Lattice, Resources, PrivateLink; border style dashed, color purple (#7c3aed)
+- Network Connectivity: contains Cloud WAN, Transit Gateway, VPC Peering; border style dashed, color blue (#2563eb)
+
+NODES:
+- VPC Lattice: AWS icon "Amazon VPC Lattice", label "Amazon VPC Lattice\nService-to-service communication"
+- VPC Resources: AWS icon "Amazon VPC Lattice", label "VPC Resources\nPrivate resource access"
+- PrivateLink: AWS icon "AWS PrivateLink", label "AWS PrivateLink\nPrivate service access"
+- Cloud WAN: AWS icon "AWS Cloud WAN", label "AWS Cloud WAN\nGlobal network management"
+- Transit Gateway: AWS icon "AWS Transit Gateway", label "AWS Transit Gateway\nRegional hub-and-spoke"
+- VPC Peering: AWS icon "Amazon Virtual Private Cloud", label "VPC Peering\nPoint-to-point"
+
+CONNECTIONS:
+- No arrows between nodes (they are parallel options, not sequential)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Application layer (purple) sits above the Network layer (blue) to show the stack relationship
+- Purple-filled nodes for application-layer services, blue-filled nodes for network-layer services
+- The two groups are visually distinct but not connected — they operate independently
+- This is a categorization diagram, not a flow diagram

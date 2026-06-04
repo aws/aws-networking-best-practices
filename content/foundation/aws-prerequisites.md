@@ -4,39 +4,10 @@ AWS networking does not exist in isolation. Every VPC, route table, and Transit 
 
 This page covers the prerequisites that sit underneath the networking layer. None of them are networking-specific, but all of them shape how your network architecture operates in practice.
 
-``` mermaid
-graph TB
-    subgraph Prerequisites["Non-Networking Foundations"]
-        IAM["IAM<br/>Permissions, cross-account roles,<br/>service-linked roles"]
-        IaC["Infrastructure as Code<br/>CloudFormation, Terraform, CDK"]
-        Quotas["Service Quotas<br/>Limits that gate deployment"]
-        Tagging["Tagging Strategy<br/>Cost allocation, automation,<br/>policy enforcement"]
-        WA["Well-Architected<br/>Security and Reliability pillars"]
-    end
-
-    subgraph Networking["AWS Networking Layer"]
-        VPC["VPCs, Subnets, Route Tables"]
-        Connectivity["Transit Gateway, Cloud WAN, VPC Lattice"]
-        Security["Security Groups, NACLs, Network Firewall"]
-    end
-
-    IAM --> VPC
-    IaC --> VPC
-    Quotas --> Connectivity
-    Tagging --> Connectivity
-    WA --> Security
-
-    style Prerequisites fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Networking fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style IAM fill:#2563eb,stroke:#1e40af,color:#fff
-    style IaC fill:#2563eb,stroke:#1e40af,color:#fff
-    style Quotas fill:#2563eb,stroke:#1e40af,color:#fff
-    style Tagging fill:#2563eb,stroke:#1e40af,color:#fff
-    style WA fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPC fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Connectivity fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Security fill:#7c3aed,stroke:#6d28d9,color:#fff
-```
+![Non-networking foundations that support the AWS networking layer](../assets/foundation/prerequisites-layers.png)
+/// caption
+Non-networking foundations — [Drawio Source](../assets/foundation/prerequisites-layers.drawio)
+///
 
 ## Identity and Access Management (IAM)
 

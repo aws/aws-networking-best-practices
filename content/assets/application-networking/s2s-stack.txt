@@ -1,0 +1,34 @@
+DIAGRAM: Service-to-Service Stack
+PURPOSE: Shows the recommended service-to-service stack in three tiers: Synchronous (Route 53, VPC Lattice, mTLS, PrivateLink), Asynchronous (EventBridge, Step Functions), and Observability (access logs, traces, flow logs).
+LAYOUT: top-to-bottom (three stacked tiers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Synchronous service-to-service: border style dashed, color blue (#2563eb)
+- Asynchronous service-to-service: border style dashed, color purple (#7c3aed)
+- Observability: border style dashed, color green (#059669)
+
+NODES:
+Synchronous:
+- DNS: AWS icon "Amazon Route 53", label "Service discovery\nRoute 53 + Route 53 Profiles\n(AWS Cloud Map for ECS-native)"
+- VPC Lattice: AWS icon "Amazon VPC Lattice", label "Amazon VPC Lattice services\nDiscovery, auth, weighted routing,\ncross-VPC/account through AWS RAM,\nidentity-aware access logs"
+- mTLS: AWS icon "Elastic Load Balancing (ALB resource icon)", label "Mutual TLS\nALB or VPC Lattice TLS passthrough\n(client-cert use cases)"
+- PrivateLink: AWS icon "AWS PrivateLink", label "AWS PrivateLink endpoint services\nTCP exposure to a small set\nof named consumer VPCs"
+
+Asynchronous:
+- EventBridge: AWS icon "Amazon EventBridge", label "Amazon EventBridge\nEvent bus + rules,\nconnections to private APIs"
+- Step Functions: AWS icon "AWS Lambda", label "AWS Step Functions\nHTTP Task to private APIs\nthrough EventBridge connections"
+
+Observability:
+- Logs: generic icon, label "Request-level access logs\nVPC Lattice (identity-aware),\nALB access logs"
+- Traces: generic icon, label "X-Ray / OTel / Application Signals\nPer-request distributed traces"
+- Flow: generic icon, label "VPC Flow Logs\nNetwork-level fallback"
+
+CONNECTIONS:
+- No connections (stack/tier reference diagram)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three tiers stacked vertically (blue, purple, green)
+- Multiple nodes per tier showing the recommended services
+- This is the "building your stack" reference view for service-to-service

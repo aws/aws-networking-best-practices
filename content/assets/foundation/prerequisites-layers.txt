@@ -1,0 +1,31 @@
+DIAGRAM: Prerequisites Layers
+PURPOSE: Shows how non-networking foundations (IAM, IaC, Quotas, Tagging, Well-Architected) underpin the AWS networking layer (VPCs, Connectivity, Security). Illustrates that networking depends on these prerequisites being in place first.
+LAYOUT: top-to-bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Non-Networking Foundations: contains IAM, IaC, Quotas, Tagging, WA; border style dashed, color blue (#2563eb)
+- AWS Networking Layer: contains VPC, Connectivity, Security; border style dashed, color purple (#7c3aed)
+
+NODES:
+- IAM: AWS icon "AWS Identity and Access Management", label "IAM\nPermissions, cross-account roles,\nservice-linked roles"
+- IaC: generic icon (code/template), label "Infrastructure as Code\nCloudFormation, Terraform, CDK"
+- Quotas: generic icon (gauge/limit), label "Service Quotas\nLimits that gate deployment"
+- Tagging: generic icon (tag), label "Tagging Strategy\nCost allocation, automation,\npolicy enforcement"
+- WA: generic icon (checkmark/framework), label "Well-Architected\nSecurity and Reliability pillars"
+- VPC: AWS icon "Amazon Virtual Private Cloud", label "VPCs, Subnets, Route Tables"
+- Connectivity: AWS icon "AWS Transit Gateway", label "Transit Gateway, Cloud WAN, VPC Lattice"
+- Security: AWS icon "AWS Network Firewall", label "Security Groups, NACLs, Network Firewall"
+
+CONNECTIONS:
+- IAM → VPC: style solid, no label
+- IaC → VPC: style solid, no label
+- Quotas → Connectivity: style solid, no label
+- Tagging → Connectivity: style solid, no label
+- WA → Security: style solid, no label
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- The top group (prerequisites) feeds into the bottom group (networking), showing dependency
+- Use blue fill for prerequisite nodes, purple fill for networking nodes
+- Arrows show that each prerequisite enables specific networking capabilities

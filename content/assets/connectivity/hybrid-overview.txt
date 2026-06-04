@@ -1,0 +1,33 @@
+DIAGRAM: Hybrid and Multi-Cloud Overview
+PURPOSE: Shows three distinct connectivity concerns side by side: Hybrid Connectivity (Direct Connect, Site-to-Site VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect, Partner-based), and Client Communication (Client VPN, Verified Access).
+LAYOUT: top-to-bottom (three groups stacked)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Hybrid Connectivity (on-premises ↔ AWS): border style dashed, color blue (#2563eb)
+- Multi-Cloud Connectivity (AWS ↔ other clouds): border style dashed, color purple (#7c3aed)
+- Client Communication (users/devices ↔ AWS applications): border style dashed, color green (#059669)
+
+NODES:
+Hybrid:
+- Direct Connect: AWS icon "AWS Direct Connect", label "AWS Direct Connect\nPrivate circuits"
+- VPN: AWS icon "AWS Site-to-Site VPN", label "AWS Site-to-Site VPN\nEncrypted over internet"
+- SD-WAN: AWS icon "AWS Transit Gateway", label "SD-WAN integration\nvia Transit Gateway or Cloud WAN"
+
+Multi-Cloud:
+- Interconnect: generic icon, label "AWS Interconnect\nDirect cloud-to-cloud"
+- Partner: AWS icon "AWS Direct Connect", label "Partner-based Direct Connect\nor VPN over internet"
+
+Client:
+- Client VPN: AWS icon "AWS Client VPN", label "AWS Client VPN\nNetwork-level user access"
+- Verified Access: generic icon, label "AWS Verified Access\nZero-trust application access"
+
+CONNECTIONS:
+- No connections between nodes (categorization diagram)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three groups stacked vertically or arranged to show the three distinct concerns
+- Each group uses a different color (blue, purple, green)
+- This is a categorization/overview diagram, not a data flow diagram
+- Services within each group are the options available for that concern
