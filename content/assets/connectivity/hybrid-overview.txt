@@ -26,6 +26,7 @@ CONNECTIONS:
 - No connections between nodes (categorization diagram)
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three groups stacked vertically or arranged to show the three distinct concerns
 - Each group uses a different color (blue, purple, green)
 - This is a categorization/overview diagram, not a data flow diagram

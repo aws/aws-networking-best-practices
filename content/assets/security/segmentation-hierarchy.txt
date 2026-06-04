@@ -20,6 +20,7 @@ CONNECTIONS:
 - Security Groups → App Auth: style solid
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Vertical hierarchy from broadest/strongest (top) to finest/most granular (bottom)
 - Color coding: Accounts=green (strongest), VPCs=blue, Subnets=blue, Security Groups=purple, App Auth=purple
 - Arrows flow downward showing the progressive refinement of access control

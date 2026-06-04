@@ -27,6 +27,7 @@ CONNECTIONS:
 - No connections (stack diagram showing layer relationships)
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three tiers stacked vertically with distinct colors (blue, purple, green)
 - This is the "building your stack" reference view for internet connectivity
 - Each tier shows the key services and patterns for that concern

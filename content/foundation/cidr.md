@@ -7,36 +7,10 @@ IP address planning is the single most consequential decision you make early in 
 
 CIDR (Classless Inter-Domain Routing) notation is the language of IP address planning. It replaces the old classful system (Class A, B, C) with variable-length prefixes that let you carve address space into precisely the sizes you need. Every AWS networking service — VPC, Transit Gateway, Cloud WAN, Direct Connect, VPN — speaks CIDR. Mastering it is not optional.
 
-``` mermaid
-graph TB
-    Root["10.0.0.0/8<br/>Entire Organization<br/>16,777,216 addresses"]
-    
-    Root --> Prod["10.0.0.0/12<br/>Production<br/>1,048,576 addresses"]
-    Root --> NonProd["10.16.0.0/12<br/>Non-Production<br/>1,048,576 addresses"]
-    
-    Prod --> ProdEast["10.0.0.0/16<br/>us-east-1 Production<br/>65,536 addresses"]
-    Prod --> ProdWest["10.1.0.0/16<br/>us-west-2 Production<br/>65,536 addresses"]
-    Prod --> ProdEU["10.2.0.0/16<br/>eu-west-1 Production<br/>65,536 addresses"]
-    
-    NonProd --> DevEast["10.16.0.0/16<br/>us-east-1 Development<br/>65,536 addresses"]
-    NonProd --> TestEast["10.17.0.0/16<br/>us-east-1 Testing<br/>65,536 addresses"]
-    
-    ProdEast --> Subnet1["10.0.0.0/24<br/>Public Subnet AZ-A<br/>256 addresses"]
-    ProdEast --> Subnet2["10.0.1.0/24<br/>Public Subnet AZ-B<br/>256 addresses"]
-    ProdEast --> Subnet3["10.0.10.0/24<br/>Private Subnet AZ-A<br/>256 addresses"]
-    
-    style Root fill:#2563eb,stroke:#1e40af,color:#fff
-    style Prod fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style NonProd fill:#ea580c,stroke:#c2410c,color:#fff
-    style ProdEast fill:#059669,stroke:#047857,color:#fff
-    style ProdWest fill:#059669,stroke:#047857,color:#fff
-    style ProdEU fill:#059669,stroke:#047857,color:#fff
-    style DevEast fill:#f59e0b,stroke:#d97706,color:#fff
-    style TestEast fill:#f59e0b,stroke:#d97706,color:#fff
-    style Subnet1 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style Subnet2 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style Subnet3 fill:#dbeafe,stroke:#3b82f6,color:#000
-```
+![Hierarchical CIDR allocation from organization through environment, Region, VPC, to subnet](../assets/foundation/cidr-hierarchy.png)
+/// caption
+Hierarchical CIDR allocation — [Drawio Source](../assets/foundation/cidr-hierarchy.drawio)
+///
 
 ***Key insight:*** *A hierarchical CIDR allocation — organization → environment → Region → VPC → subnet — is not just tidy bookkeeping. It enables route summarization, simplifies firewall rules, and makes your network topology legible to anyone who reads a route table.*
 

@@ -29,6 +29,7 @@ CONNECTIONS:
 - No connections (stack/tier reference diagram)
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three tiers stacked vertically (blue, purple, green)
 - This is the comprehensive "building your container mesh stack" reference
 - Multiple nodes per tier showing all components

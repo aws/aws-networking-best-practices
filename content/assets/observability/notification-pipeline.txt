@@ -45,6 +45,7 @@ CONNECTIONS:
 - Chatbot → Slack: style solid
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Four-column left-to-right pipeline showing the notification flow
 - Sources (blue) feed into Decisions (purple) which route through Delivery (green) to Destinations (orange)
 - Fan-out pattern: SNS delivers to multiple destinations

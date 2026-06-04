@@ -42,6 +42,7 @@ CONNECTIONS:
 - CloudWatch Logs → CW Metrics: style solid
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three-column layout: Sources (left), Storage (middle), Analysis (right)
 - Many-to-many connections from sources to storage destinations
 - One-to-one connections from storage to analysis tools

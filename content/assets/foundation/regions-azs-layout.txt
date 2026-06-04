@@ -25,6 +25,7 @@ CONNECTIONS:
 - Region → Local Zone: style dashed, label "Parent Region connectivity"
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - AZs should be arranged horizontally within the Region
 - Each AZ contains a subnet (blue) and a NAT gateway (purple)
 - The Local Zone is shown below or to the side of the Region, connected by a dashed line

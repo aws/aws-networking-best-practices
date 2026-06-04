@@ -20,6 +20,7 @@ CONNECTIONS:
 - No connections (stack/tier diagram showing layer relationships)
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three tiers stacked vertically: App layer (purple) on top, Network (blue) in middle, Targeted (green) at bottom
 - Each tier represents a different abstraction level
 - Nodes include short descriptions of primary use case

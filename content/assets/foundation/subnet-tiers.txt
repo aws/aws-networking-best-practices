@@ -35,6 +35,7 @@ CONNECTIONS:
 - No connections between nodes (they represent parallel subnet tiers)
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three AZ columns side by side, each containing five stacked subnet tiers
 - Use distinct colors per tier: Firewall=red/pink, Public=green, Private=yellow/amber, Data=indigo, Infrastructure=purple
 - VPC container should be prominent with thick blue border

@@ -28,6 +28,7 @@ CONNECTIONS:
 - Root → Non-Production OU: style solid, no label
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Root node should be prominent at the top (orange fill)
 - Each OU uses a distinct color to show separation of governance domains
 - The Networking Account is the most important node — make it visually prominent

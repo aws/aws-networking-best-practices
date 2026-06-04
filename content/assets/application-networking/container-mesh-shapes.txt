@@ -25,6 +25,7 @@ CONNECTIONS:
 - No connections between nodes (categorization of three patterns)
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three distinct columns/groups representing the three architectural shapes
 - Blue for in-cluster (native AWS), purple for VPC Lattice (managed alternative), green for self-managed mesh
 - Each group contains 2 nodes showing the key components of that shape

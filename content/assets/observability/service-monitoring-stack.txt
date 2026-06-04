@@ -41,6 +41,7 @@ CONNECTIONS:
 - EventBridge → Incident: style solid
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three-column layout: Sources (left), Monitoring (middle), Response (right)
 - Many service metric sources feed into CloudWatch (many-to-one)
 - CloudWatch fans out to alarms and dashboards

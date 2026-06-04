@@ -41,6 +41,7 @@ Pattern 3:
 - Single Account → VPC Dev: style solid
 
 NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three distinct columns, each representing a different architectural pattern
 - Use different colors per pattern for visual distinction (blue, green, purple)
 - Account nodes are lighter colored, VPC nodes are darker/filled
