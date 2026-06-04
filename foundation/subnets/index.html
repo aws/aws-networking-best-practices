@@ -2455,52 +2455,12 @@
 </div>
 <p>Subnets are where routing policy meets IP addressing. Every resource you launch in AWS — <abbr title="Elastic Compute Cloud">EC2</abbr> instances, ECS tasks, EKS pods, Lambda functions, <abbr title="Relational Database Service">RDS</abbr> databases, load balancers, firewall endpoints — lands in a subnet, and that subnet's route table determines what the resource can reach. The subnet is not a security boundary in itself; it is a routing domain. Two subnets in the same <abbr title="Virtual Private Cloud">VPC</abbr> with identical NACLs and security groups behave identically until you attach different route tables to them. Understanding this distinction — that "public" and "private" are properties of the route table, not the subnet — is the single most important mental model for subnet design.</p>
 <p>A well-designed subnet architecture gives you isolation between tiers, predictable IP consumption, room for growth, and clean integration with every connectivity and security service AWS offers. A poorly designed one creates IP exhaustion emergencies, forces workload migrations, and makes firewall and routing policies unnecessarily complex.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph VPC["VPC: 10.0.0.0/16"]
-        subgraph AZA["Availability Zone A"]
-            FWA["Firewall&lt;br/&gt;10.0.100.0/28"]
-            PubA["Public&lt;br/&gt;10.0.0.0/24"]
-            PrivA["Private&lt;br/&gt;10.0.10.0/23"]
-            DataA["Data&lt;br/&gt;10.0.20.0/24"]
-            InfraA["Infrastructure&lt;br/&gt;10.0.30.0/27"]
-        end
-
-        subgraph AZB["Availability Zone B"]
-            FWB["Firewall&lt;br/&gt;10.0.100.16/28"]
-            PubB["Public&lt;br/&gt;10.0.1.0/24"]
-            PrivB["Private&lt;br/&gt;10.0.12.0/23"]
-            DataB["Data&lt;br/&gt;10.0.21.0/24"]
-            InfraB["Infrastructure&lt;br/&gt;10.0.30.32/27"]
-        end
-
-        subgraph AZC["Availability Zone C"]
-            FWC["Firewall&lt;br/&gt;10.0.100.32/28"]
-            PubC["Public&lt;br/&gt;10.0.2.0/24"]
-            PrivC["Private&lt;br/&gt;10.0.14.0/23"]
-            DataC["Data&lt;br/&gt;10.0.22.0/24"]
-            InfraC["Infrastructure&lt;br/&gt;10.0.30.64/27"]
-        end
-    end
-
-    style VPC fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
-    style AZA fill:#f3f4f6,stroke:#9ca3af,stroke-width:2px,color:#000
-    style AZB fill:#f3f4f6,stroke:#9ca3af,stroke-width:2px,color:#000
-    style AZC fill:#f3f4f6,stroke:#9ca3af,stroke-width:2px,color:#000
-    style FWA fill:#fecaca,stroke:#dc2626,color:#000
-    style FWB fill:#fecaca,stroke:#dc2626,color:#000
-    style FWC fill:#fecaca,stroke:#dc2626,color:#000
-    style PubA fill:#dcfce7,stroke:#16a34a,color:#000
-    style PubB fill:#dcfce7,stroke:#16a34a,color:#000
-    style PubC fill:#dcfce7,stroke:#16a34a,color:#000
-    style PrivA fill:#fef3c7,stroke:#f59e0b,color:#000
-    style PrivB fill:#fef3c7,stroke:#f59e0b,color:#000
-    style PrivC fill:#fef3c7,stroke:#f59e0b,color:#000
-    style DataA fill:#e0e7ff,stroke:#6366f1,color:#000
-    style DataB fill:#e0e7ff,stroke:#6366f1,color:#000
-    style DataC fill:#e0e7ff,stroke:#6366f1,color:#000
-    style InfraA fill:#f3e8ff,stroke:#a855f7,color:#000
-    style InfraB fill:#f3e8ff,stroke:#a855f7,color:#000
-    style InfraC fill:#f3e8ff,stroke:#a855f7,color:#000</code></pre>
+<figure>
+<p><img alt="Five-tier subnet architecture across three Availability Zones" src="../../assets/foundation/subnet-tiers.png" /></p>
+<figcaption>
+<p>Five-tier subnet architecture — <a href="../../assets/foundation/subnet-tiers.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="subnet-tier-design-patterns">Subnet tier design patterns<a class="headerlink" href="#subnet-tier-design-patterns" title="Permanent link">&para;</a></h2>
 <p>The classic "public/private/data" three-tier model is a starting point, not a ceiling. Production networks that run firewalls, Transit Gateway, <abbr title="Virtual Private Cloud">VPC</abbr> endpoints, or container workloads benefit from additional tiers that isolate infrastructure concerns from application workloads.</p>
 <p><strong><em>Key insight:</em></strong> Each tier is defined by its route table and the class of resources it hosts — not by a label. A "public" subnet is simply one whose route table has a <code>0.0.0.0/0</code> route pointing at an internet gateway. A "private" subnet routes outbound traffic through a <abbr title="Network Address Translation">NAT</abbr> gateway or has no internet route at all. The subnet resource itself is identical in both cases.</p>
@@ -2878,7 +2838,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 4, 2026 01:11:30 UTC">June 4, 2026</span>
   </span>
 
     

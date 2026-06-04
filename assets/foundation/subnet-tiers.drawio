@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="IPtxOyfXSHu2ncgb-0vl">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-1" parent="1" style="swimlane;startSize=30;fillColor=none;strokeColor=#2563eb;strokeWidth=4;fontColor=#2563eb;fontStyle=1;fontSize=14;html=1;verticalAlign=top;align=center;" value="VPC — 10.0.0.0/16" vertex="1">
+          <mxGeometry height="780" width="700" x="64" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-2" parent="XENH5j4iPQT8_tKtg4ba-1" style="swimlane;startSize=28;fillColor=#f5f5f5;strokeColor=#9e9e9e;fontColor=#555555;fontStyle=1;html=1;verticalAlign=top;align=center;" value="Availability Zone A" vertex="1">
+          <mxGeometry height="720" width="210" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-3" parent="XENH5j4iPQT8_tKtg4ba-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde0e0;strokeColor=#d32f2f;fontColor=#8c1c1c;" value="Firewall&#xa;10.0.100.0/28" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-4" parent="XENH5j4iPQT8_tKtg4ba-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f0d5;strokeColor=#2e7d32;fontColor=#1b5e20;" value="Public&#xa;10.0.0.0/24" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-5" parent="XENH5j4iPQT8_tKtg4ba-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6a700;fontColor=#7a5c00;" value="Private&#xa;10.0.10.0/23" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="304" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-6" parent="XENH5j4iPQT8_tKtg4ba-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbe2f9;strokeColor=#3f51b5;fontColor=#1a237e;" value="Data&#xa;10.0.20.0/24" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="436" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-7" parent="XENH5j4iPQT8_tKtg4ba-2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e9d8f4;strokeColor=#7b1fa2;fontColor=#4a148c;" value="Infrastructure&#xa;10.0.30.0/27" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="568" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-8" parent="XENH5j4iPQT8_tKtg4ba-1" style="swimlane;startSize=28;fillColor=#f5f5f5;strokeColor=#9e9e9e;fontColor=#555555;fontStyle=1;html=1;verticalAlign=top;align=center;" value="Availability Zone B" vertex="1">
+          <mxGeometry height="720" width="210" x="245" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-9" parent="XENH5j4iPQT8_tKtg4ba-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde0e0;strokeColor=#d32f2f;fontColor=#8c1c1c;" value="Firewall&#xa;10.0.100.16/28" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-10" parent="XENH5j4iPQT8_tKtg4ba-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f0d5;strokeColor=#2e7d32;fontColor=#1b5e20;" value="Public&#xa;10.0.1.0/24" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-11" parent="XENH5j4iPQT8_tKtg4ba-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6a700;fontColor=#7a5c00;" value="Private&#xa;10.0.12.0/23" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="304" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-12" parent="XENH5j4iPQT8_tKtg4ba-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbe2f9;strokeColor=#3f51b5;fontColor=#1a237e;" value="Data&#xa;10.0.21.0/24" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="436" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-13" parent="XENH5j4iPQT8_tKtg4ba-8" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e9d8f4;strokeColor=#7b1fa2;fontColor=#4a148c;" value="Infrastructure&#xa;10.0.30.32/27" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="568" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-14" parent="XENH5j4iPQT8_tKtg4ba-1" style="swimlane;startSize=28;fillColor=#f5f5f5;strokeColor=#9e9e9e;fontColor=#555555;fontStyle=1;html=1;verticalAlign=top;align=center;" value="Availability Zone C" vertex="1">
+          <mxGeometry height="720" width="210" x="470" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-15" parent="XENH5j4iPQT8_tKtg4ba-14" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde0e0;strokeColor=#d32f2f;fontColor=#8c1c1c;" value="Firewall&#xa;10.0.100.32/28" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-16" parent="XENH5j4iPQT8_tKtg4ba-14" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5f0d5;strokeColor=#2e7d32;fontColor=#1b5e20;" value="Public&#xa;10.0.2.0/24" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-17" parent="XENH5j4iPQT8_tKtg4ba-14" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6a700;fontColor=#7a5c00;" value="Private&#xa;10.0.14.0/23" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="304" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-18" parent="XENH5j4iPQT8_tKtg4ba-14" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dbe2f9;strokeColor=#3f51b5;fontColor=#1a237e;" value="Data&#xa;10.0.22.0/24" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="436" as="geometry" />
+        </mxCell>
+        <mxCell id="XENH5j4iPQT8_tKtg4ba-19" parent="XENH5j4iPQT8_tKtg4ba-14" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e9d8f4;strokeColor=#7b1fa2;fontColor=#4a148c;" value="Infrastructure&#xa;10.0.30.64/27" vertex="1">
+          <mxGeometry height="120" width="160" x="25" y="568" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -2463,31 +2463,12 @@
 </div>
 <p>Amazon Virtual Private Cloud (<abbr title="Virtual Private Cloud">VPC</abbr>) is your logically isolated network within AWS. Every compute resource, database, container, and Lambda function that needs network connectivity runs inside a <abbr title="Virtual Private Cloud">VPC</abbr>. The <abbr title="Virtual Private Cloud">VPC</abbr> is not just a container for subnets — it is the foundational security boundary, the IP address domain, and the routing context that shapes every networking decision above it. Get <abbr title="Virtual Private Cloud">VPC</abbr> design wrong and you'll spend years working around <abbr title="Classless Inter-Domain Routing">CIDR</abbr> conflicts, connectivity limitations, and operational friction that could have been avoided with upfront planning.</p>
 <p>A <abbr title="Virtual Private Cloud">VPC</abbr> spans all Availability Zones in a Region, provides complete control over IP addressing, routing, and network gateways, and serves as the attachment point for every connectivity service (Transit Gateway, Cloud WAN, <abbr title="Virtual Private Cloud">VPC</abbr> Peering, PrivateLink, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice). Your <abbr title="Virtual Private Cloud">VPC</abbr> design directly determines what connectivity patterns are possible, what address space is available for growth, and how cleanly workloads can be isolated from each other.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph AWS["AWS Region: us-east-1"]
-        subgraph VPC["VPC: 10.0.0.0/16 - IPv6: 2001:db8::/56"]
-            subgraph AZ1["Availability Zone A"]
-                Subnet1["Subnet: 10.0.1.0/24&lt;br/&gt;IPv6: 2001:db8:0:1::/64"]
-            end
-            subgraph AZ2["Availability Zone B"]
-                Subnet2["Subnet: 10.0.2.0/24&lt;br/&gt;IPv6: 2001:db8:0:2::/64"]
-            end
-            subgraph AZ3["Availability Zone C"]
-                Subnet3["Subnet: 10.0.3.0/24&lt;br/&gt;IPv6: 2001:db8:0:3::/64"]
-            end
-        end
-    end
-
-    Subnet1 ~~~ Subnet2 ~~~ Subnet3
-
-    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style VPC fill:#2563eb,stroke:#1e40af,stroke-width:3px,color:#fff
-    style AZ1 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style AZ2 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style AZ3 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style Subnet1 fill:#fef3c7,stroke:#f59e0b,color:#000
-    style Subnet2 fill:#fef3c7,stroke:#f59e0b,color:#000
-    style Subnet3 fill:#fef3c7,stroke:#f59e0b,color:#000</code></pre>
+<figure>
+<p><img alt="VPC spanning three Availability Zones with dual-stack subnets" src="../../assets/foundation/vpc-architecture.png" /></p>
+<figcaption>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> architecture — <a href="../../assets/foundation/vpc-architecture.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -2525,51 +2506,12 @@
 </div>
 <h2 id="vpc-design-patterns"><abbr title="Virtual Private Cloud">VPC</abbr> design patterns<a class="headerlink" href="#vpc-design-patterns" title="Permanent link">&para;</a></h2>
 <p><abbr title="Virtual Private Cloud">VPC</abbr> design is not a one-size-fits-all decision. The right pattern depends on your organization's account strategy, team autonomy requirements, compliance boundaries, and operational maturity. Three primary patterns dominate production AWS environments, and most organizations use a combination.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Pattern1["Pattern: VPC per workload"]
-        direction TB
-        AcctA["Account A"]
-        AcctB["Account B"]
-        VPCA["VPC: App A&lt;br/&gt;10.1.0.0/16"]
-        VPCB["VPC: App B&lt;br/&gt;10.2.0.0/16"]
-        AcctA --&gt; VPCA
-        AcctB --&gt; VPCB
-    end
-
-    subgraph Pattern2["Pattern: Shared VPC (RAM)"]
-        direction TB
-        NetAcct["Networking Account"]
-        SharedVPC["Shared VPC&lt;br/&gt;10.0.0.0/16"]
-        WL1["Workload Acct 1&lt;br/&gt;(uses shared subnet)"]
-        WL2["Workload Acct 2&lt;br/&gt;(uses shared subnet)"]
-        NetAcct --&gt; SharedVPC
-        SharedVPC --&gt; WL1
-        SharedVPC --&gt; WL2
-    end
-
-    subgraph Pattern3["Pattern: Multi-VPC per account"]
-        direction TB
-        SingleAcct["Single Account"]
-        VPC1["VPC: Prod&lt;br/&gt;10.10.0.0/16"]
-        VPC2["VPC: Dev&lt;br/&gt;10.20.0.0/16"]
-        SingleAcct --&gt; VPC1
-        SingleAcct --&gt; VPC2
-    end
-
-    style Pattern1 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Pattern2 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Pattern3 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style VPCA fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPCB fill:#2563eb,stroke:#1e40af,color:#fff
-    style SharedVPC fill:#059669,stroke:#065f46,color:#fff
-    style VPC1 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style VPC2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style AcctA fill:#dbeafe,stroke:#3b82f6,color:#000
-    style AcctB fill:#dbeafe,stroke:#3b82f6,color:#000
-    style NetAcct fill:#d1fae5,stroke:#059669,color:#000
-    style WL1 fill:#d1fae5,stroke:#059669,color:#000
-    style WL2 fill:#d1fae5,stroke:#059669,color:#000
-    style SingleAcct fill:#ede9fe,stroke:#7c3aed,color:#000</code></pre>
+<figure>
+<p><img alt="Three VPC design patterns: VPC per workload, shared VPC via RAM, and multi-VPC per account" src="../../assets/foundation/vpc-design-patterns.png" /></p>
+<figcaption>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> design patterns — <a href="../../assets/foundation/vpc-design-patterns.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h3 id="vpc-per-workload-one-vpc-per-application-per-environment"><abbr title="Virtual Private Cloud">VPC</abbr> per workload (one <abbr title="Virtual Private Cloud">VPC</abbr> per application per environment)<a class="headerlink" href="#vpc-per-workload-one-vpc-per-application-per-environment" title="Permanent link">&para;</a></h3>
 <p>The most common pattern in mature multi-account environments. Each application team owns a dedicated <abbr title="Virtual Private Cloud">VPC</abbr> in their account, sized for their workload. Connectivity to shared services happens through Transit Gateway or Cloud WAN attachments.</p>
 <p><strong>When to use:</strong> Teams need autonomy over their network configuration (security groups, NACLs, route tables). Workloads have different compliance requirements. You want blast radius isolation — a misconfiguration in one <abbr title="Virtual Private Cloud">VPC</abbr> cannot affect another.</p>
@@ -2841,7 +2783,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 4, 2026 01:11:30 UTC">June 4, 2026</span>
   </span>
 
     

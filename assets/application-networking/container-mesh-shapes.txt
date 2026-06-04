@@ -1,0 +1,32 @@
+DIAGRAM: Container Mesh Shapes
+PURPOSE: Shows the three shapes of container service-to-service architecture on AWS: (1) In-cluster container networking (EKS, ECS), (2) Amazon VPC Lattice as an alternative to a mesh, and (3) Self-managed mesh on AWS networking. Helps readers decide which shape fits their requirements.
+LAYOUT: top-to-bottom (three groups side by side or stacked)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- In-cluster container networking: border style dashed, color blue (#2563eb)
+- Amazon VPC Lattice (alternative to a mesh): border style dashed, color purple (#7c3aed)
+- Self-managed mesh on AWS networking: border style dashed, color green (#059669)
+
+NODES:
+In-cluster:
+- EKS: AWS icon "Amazon Elastic Kubernetes Service", label "Amazon EKS\nVPC CNI, Pod Identity / IRSA,\nSG for pods, NetworkPolicy"
+- ECS: AWS icon "Amazon Elastic Container Service", label "Amazon ECS\nawsvpc, ECS Service Connect,\ntask roles"
+
+VPC Lattice:
+- Gateway API: AWS icon "Amazon VPC Lattice", label "AWS Gateway API Controller\nKubernetes Gateway, HTTPRoute,\nGRPCRoute, ServiceImport"
+- Cross-cluster: AWS icon "Amazon VPC Lattice", label "Cross-cluster, cross-VPC,\ncross-account through\nLattice service network\nshared via AWS RAM"
+
+Self-managed mesh:
+- On Lattice: generic icon, label "Mesh on top of\nAmazon VPC Lattice"
+- On Connectivity: AWS icon "AWS Transit Gateway", label "Mesh on top of\npeering, AWS Transit Gateway,\nAWS Cloud WAN"
+
+CONNECTIONS:
+- No connections between nodes (categorization of three patterns)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three distinct columns/groups representing the three architectural shapes
+- Blue for in-cluster (native AWS), purple for VPC Lattice (managed alternative), green for self-managed mesh
+- Each group contains 2 nodes showing the key components of that shape
+- This is a decision/categorization diagram

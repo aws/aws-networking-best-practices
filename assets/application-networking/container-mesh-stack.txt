@@ -1,0 +1,36 @@
+DIAGRAM: Container Mesh Stack
+PURPOSE: Shows the complete container mesh stack in three tiers: In-cluster (EKS + ECS primitives), Cross-cluster via VPC Lattice (service network, Gateway API Controller, Route 53), and Self-managed mesh (Lattice listeners, resource configs, connectivity fallback, ingress/egress).
+LAYOUT: top-to-bottom (three stacked tiers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- In-cluster container networking: border style dashed, color blue (#2563eb)
+- Amazon VPC Lattice (across clusters and VPCs): border style dashed, color purple (#7c3aed)
+- Self-managed service mesh (when needed): border style dashed, color green (#059669)
+
+NODES:
+In-cluster:
+- EKS Stack: AWS icon "Amazon Elastic Kubernetes Service", label "Amazon EKS\nVPC CNI, Pod Identity / IRSA,\nSecurity groups for pods,\nNetworkPolicy"
+- ECS Stack: AWS icon "Amazon Elastic Container Service", label "Amazon ECS\nawsvpc, Service Connect,\nTask IAM roles"
+
+Cross-cluster:
+- Lattice Network: AWS icon "Amazon VPC Lattice", label "VPC Lattice service network\nshared via AWS RAM"
+- Controller: generic icon, label "AWS Gateway API Controller (EKS) /\nVPC Lattice with Amazon ECS"
+- DNS: AWS icon "Amazon Route 53", label "Route 53 alias records\n(consumer-facing names)"
+
+Self-managed mesh:
+- On Lattice: generic icon, label "Mesh data plane on\nVPC Lattice listeners\n(HTTP/HTTPS/gRPC/TLS-on-SNI)"
+- On Resources: generic icon, label "Mesh TCP control plane on\nVPC Lattice resource configurations"
+- On Connectivity: AWS icon "AWS Transit Gateway", label "Residual (UDP, multi-protocol) on\npeering / TGW / Cloud WAN"
+- Ingress: AWS icon "Elastic Load Balancing", label "AWS Load Balancer Controller\n(ingress to mesh)"
+- Egress: AWS icon "AWS PrivateLink", label "VPC endpoints\n(egress from mesh to AWS services)"
+
+CONNECTIONS:
+- No connections (stack/tier reference diagram)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three tiers stacked vertically (blue, purple, green)
+- This is the comprehensive "building your container mesh stack" reference
+- Multiple nodes per tier showing all components
+- The self-managed mesh tier has the most nodes (5) showing the complexity of that choice

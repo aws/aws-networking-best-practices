@@ -1,0 +1,49 @@
+DIAGRAM: Service Monitoring Stack
+PURPOSE: Shows the three-part service monitoring architecture: Networking Service Metrics (TGW, NAT, DX, VPN, ALB, NLB, NFW, Route 53, Lattice) feeding into a Centralized Monitoring Account (CloudWatch metrics, alarms, dashboards) which then triggers Automated Response (EventBridge, SNS, Lambda, Incident Manager).
+LAYOUT: left-to-right (three-column flow)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Networking Service Metrics: border style dashed, color blue (#2563eb); contains all service metric sources
+- Centralized Monitoring Account: border style dashed, color purple (#7c3aed); contains CloudWatch components
+- Automated Response: border style dashed, color green (#059669); contains response targets
+
+NODES:
+Service Metrics:
+- Transit Gateway: AWS icon "AWS Transit Gateway", label "Transit Gateway"
+- NAT gateway: AWS icon "Amazon VPC (NAT gateway resource icon)", label "NAT gateway"
+- Direct Connect: AWS icon "AWS Direct Connect", label "Direct Connect"
+- VPN: AWS icon "AWS Site-to-Site VPN", label "Site-to-Site VPN"
+- ALB: AWS icon "Elastic Load Balancing (ALB resource icon)", label "Application LB"
+- NLB: AWS icon "Elastic Load Balancing (NLB resource icon)", label "Network LB"
+- NFW: AWS icon "AWS Network Firewall", label "Network Firewall"
+- Route 53: AWS icon "Amazon Route 53", label "Route 53 Resolver"
+- Lattice: AWS icon "Amazon VPC Lattice", label "VPC Lattice"
+
+Monitoring:
+- CloudWatch Metrics: AWS icon "Amazon CloudWatch", label "CloudWatch Metrics\nCross-account observability"
+- Alarms: AWS icon "Amazon CloudWatch", label "CloudWatch Alarms\nComposite & anomaly detection"
+- Dashboards: generic icon, label "CloudWatch Dashboards\nCross-account, cross-Region"
+
+Response:
+- EventBridge: AWS icon "Amazon EventBridge", label "EventBridge Rules"
+- SNS: generic icon, label "SNS Notifications"
+- Lambda: AWS icon "AWS Lambda", label "Lambda Remediation"
+- Incident: generic icon, label "Incident Manager"
+
+CONNECTIONS:
+- All Service Metrics → CloudWatch Metrics: style solid (group-to-node)
+- CloudWatch Metrics → Alarms: style solid
+- CloudWatch Metrics → Dashboards: style solid
+- Alarms → EventBridge: style solid
+- EventBridge → SNS: style solid
+- EventBridge → Lambda: style solid
+- EventBridge → Incident: style solid
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three-column layout: Sources (left), Monitoring (middle), Response (right)
+- Many service metric sources feed into CloudWatch (many-to-one)
+- CloudWatch fans out to alarms and dashboards
+- Alarms trigger EventBridge which fans out to multiple response targets
+- Blue for sources, purple for centralized monitoring, green for automated response

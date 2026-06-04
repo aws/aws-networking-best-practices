@@ -2751,40 +2751,12 @@
 </div>
 <p>AWS <abbr title="IP Address Manager">IPAM</abbr> (IP Address Management) is the control plane for your organization's IP address space. It replaces spreadsheets, Confluence pages, and tribal knowledge with a centralized, policy-driven system that plans, allocates, tracks, and monitors IP addresses across every account and Region in your AWS Organization. Without <abbr title="IP Address Manager">IPAM</abbr>, IP address management degrades into a coordination bottleneck: teams file tickets for <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks, networking engineers manually check for overlaps, and nobody has confidence that the next <abbr title="Virtual Private Cloud">VPC</abbr> won't conflict with an existing one. <abbr title="IP Address Manager">IPAM</abbr> eliminates that friction by making allocation automatic, overlap-free, and auditable.</p>
 <p>The service operates through a hierarchy of pools — collections of <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges organized by Region, environment, or business unit — with allocation rules that enforce sizing, tagging, and locality constraints. When a team creates a <abbr title="Virtual Private Cloud">VPC</abbr>, they request a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> from the appropriate pool, and <abbr title="IP Address Manager">IPAM</abbr> guarantees a non-overlapping allocation that complies with your organizational standards. No tickets, no manual checks, no spreadsheet updates.</p>
-<pre class="mermaid"><code>graph TB
-    IPAM["AWS IPAM&lt;br/&gt;Centralized IP Management"]
-
-    IPAM --&gt; PrivScope["Private Scope"]
-    IPAM --&gt; PubScope["Public Scope&lt;br/&gt;(BYOIP)"]
-
-    PrivScope --&gt; TopPool["Top-Level Pool&lt;br/&gt;10.0.0.0/8"]
-
-    TopPool --&gt; RegionEast["Regional Pool&lt;br/&gt;10.0.0.0/12&lt;br/&gt;us-east-1"]
-    TopPool --&gt; RegionWest["Regional Pool&lt;br/&gt;10.16.0.0/12&lt;br/&gt;us-west-2"]
-    TopPool --&gt; RegionEU["Regional Pool&lt;br/&gt;10.32.0.0/12&lt;br/&gt;eu-west-1"]
-
-    RegionEast --&gt; ProdEast["Production Pool&lt;br/&gt;10.0.0.0/13"]
-    RegionEast --&gt; NonProdEast["Non-Production Pool&lt;br/&gt;10.8.0.0/13"]
-
-    ProdEast --&gt; VPC1["VPC: 10.0.0.0/16&lt;br/&gt;Account: prod-app-1"]
-    ProdEast --&gt; VPC2["VPC: 10.1.0.0/16&lt;br/&gt;Account: prod-app-2"]
-
-    NonProdEast --&gt; VPC3["VPC: 10.8.0.0/20&lt;br/&gt;Account: dev-app-1"]
-    NonProdEast --&gt; VPC4["VPC: 10.8.16.0/20&lt;br/&gt;Account: dev-app-2"]
-
-    style IPAM fill:#2563eb,stroke:#1e40af,color:#fff
-    style PrivScope fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style PubScope fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style TopPool fill:#059669,stroke:#047857,color:#fff
-    style RegionEast fill:#f59e0b,stroke:#d97706,color:#fff
-    style RegionWest fill:#f59e0b,stroke:#d97706,color:#fff
-    style RegionEU fill:#f59e0b,stroke:#d97706,color:#fff
-    style ProdEast fill:#dc2626,stroke:#b91c1c,color:#fff
-    style NonProdEast fill:#ea580c,stroke:#c2410c,color:#fff
-    style VPC1 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style VPC2 fill:#dbeafe,stroke:#3b82f6,color:#000
-    style VPC3 fill:#fef3c7,stroke:#f59e0b,color:#000
-    style VPC4 fill:#fef3c7,stroke:#f59e0b,color:#000</code></pre>
+<figure>
+<p><img alt="IPAM pool hierarchy from top-level through regional and environment pools to VPC allocations" src="../../assets/foundation/ipam-pool-hierarchy.png" /></p>
+<figcaption>
+<p><abbr title="IP Address Manager">IPAM</abbr> pool hierarchy — <a href="../../assets/foundation/ipam-pool-hierarchy.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -3192,7 +3164,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 4, 2026 01:11:30 UTC">June 4, 2026</span>
   </span>
 
     

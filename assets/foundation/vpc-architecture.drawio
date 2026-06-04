@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="gKyK6gzJ_MXfdZ3wN6iX">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#ff9900;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;spacingLeft=12;fontColor=#ff9900;fontStyle=1;fontSize=13;container=1;pointerEvents=0;" value="" vertex="1">
+          <mxGeometry height="340" width="700" x="64" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-2" parent="iaizE0PyeSJnmzuQ4t4d-1" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#2563eb;strokeWidth=4;fillColor=#eff6ff;verticalAlign=top;align=left;spacingLeft=12;fontColor=#2563eb;fontStyle=1;fontSize=13;container=1;pointerEvents=0;" value="" vertex="1">
+          <mxGeometry height="280" width="660" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-3" parent="iaizE0PyeSJnmzuQ4t4d-2" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#4a90d9;strokeWidth=1;fillColor=#dbeafe;verticalAlign=top;align=center;fontColor=#1e40af;fontStyle=1;fontSize=12;container=1;pointerEvents=0;" value="Availability Zone A" vertex="1">
+          <mxGeometry height="190" width="200" x="20" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-4" parent="iaizE0PyeSJnmzuQ4t4d-3" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#d6b656;strokeWidth=1.5;fillColor=#fff2cc;fontColor=#7f6000;fontSize=11;verticalAlign=middle;align=center;" value="&lt;b&gt;Subnet&lt;/b&gt;&#xa;10.0.1.0/24&#xa;IPv6: 2001:db8:0:1::/64" vertex="1">
+          <mxGeometry height="120" width="160" x="20" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-5" parent="iaizE0PyeSJnmzuQ4t4d-2" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#4a90d9;strokeWidth=1;fillColor=#dbeafe;verticalAlign=top;align=center;fontColor=#1e40af;fontStyle=1;fontSize=12;container=1;pointerEvents=0;" value="Availability Zone B" vertex="1">
+          <mxGeometry height="190" width="200" x="230" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-6" parent="iaizE0PyeSJnmzuQ4t4d-5" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#d6b656;strokeWidth=1.5;fillColor=#fff2cc;fontColor=#7f6000;fontSize=11;verticalAlign=middle;align=center;" value="&lt;b&gt;Subnet&lt;/b&gt;&#xa;10.0.2.0/24&#xa;IPv6: 2001:db8:0:2::/64" vertex="1">
+          <mxGeometry height="120" width="160" x="20" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-7" parent="iaizE0PyeSJnmzuQ4t4d-2" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#4a90d9;strokeWidth=1;fillColor=#dbeafe;verticalAlign=top;align=center;fontColor=#1e40af;fontStyle=1;fontSize=12;container=1;pointerEvents=0;" value="Availability Zone C" vertex="1">
+          <mxGeometry height="190" width="200" x="440" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-8" parent="iaizE0PyeSJnmzuQ4t4d-7" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#d6b656;strokeWidth=1.5;fillColor=#fff2cc;fontColor=#7f6000;fontSize=11;verticalAlign=middle;align=center;" value="&lt;b&gt;Subnet&lt;/b&gt;&#xa;10.0.3.0/24&#xa;IPv6: 2001:db8:0:3::/64" vertex="1">
+          <mxGeometry height="120" width="160" x="20" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-11" parent="iaizE0PyeSJnmzuQ4t4d-2" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: rgb(37, 99, 235); font-size: 13px; font-weight: 700; text-align: left;&quot;&gt;VPC&lt;/span&gt;&lt;br style=&quot;color: rgb(37, 99, 235); font-size: 13px; font-weight: 700; text-align: left;&quot;&gt;&lt;span style=&quot;color: rgb(37, 99, 235); font-size: 13px; font-weight: 700; text-align: left;&quot;&gt;IPv4: 10.0.0.0/16&lt;/span&gt;&lt;br style=&quot;color: rgb(37, 99, 235); font-size: 13px; font-weight: 700; text-align: left;&quot;&gt;&lt;span style=&quot;color: rgb(37, 99, 235); font-size: 13px; font-weight: 700; text-align: left;&quot;&gt;IPv6: 2001:db8::/56&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="140" x="260" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="iaizE0PyeSJnmzuQ4t4d-12" parent="iaizE0PyeSJnmzuQ4t4d-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;color: rgb(255, 153, 0); font-size: 13px; font-weight: 700; text-align: left;&quot;&gt;AWS Region (us-east-1)&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="160" x="270" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,24 @@
+DIAGRAM: Load-Balancing Stack
+PURPOSE: Shows the load-balancing stack with three tiers: L7 (ALB), L4 (NLB), and Transparent appliance insertion (GWLB). This is the "building your stack" reference view.
+LAYOUT: top-to-bottom (three stacked tiers)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- L7 — Application Load Balancer: border style dashed, color blue (#2563eb)
+- L4 — Network Load Balancer: border style dashed, color purple (#7c3aed)
+- Transparent appliance insertion: border style dashed, color green (#059669)
+
+NODES:
+- ALB: AWS icon "Elastic Load Balancing (ALB resource icon)", label "HTTP, HTTPS, gRPC\nContent-based routing\nTLS / mTLS, AWS WAF\nEC2, IP, Lambda, ALB targets"
+- NLB: AWS icon "Elastic Load Balancing (NLB resource icon)", label "TCP, UDP, TLS, QUIC\nStatic IPs per AZ\nClient IP preservation\nEC2, IP, ALB-as-target\nPrivateLink front"
+- GWLB: AWS icon "Elastic Load Balancing (GWLB resource icon)", label "Third-party firewall, IDS/IPS, DPI\nEncapsulated transparent insertion\nCentralized or per-VPC\nvia GWLB endpoints"
+
+CONNECTIONS:
+- No connections (layer/stack diagram)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- Three tiers stacked vertically (blue on top, purple middle, green bottom)
+- Each tier represents a different OSI layer and use case
+- Single node per tier with comprehensive label
+- Clean, simple reference diagram
