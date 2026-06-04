@@ -29,7 +29,7 @@ fi
 # MkDocs build
 echo "🏗️  Testing MkDocs build..."
 if command -v mkdocs &> /dev/null; then
-    if ! mkdocs build --quiet; then
+    if ! MKDOCS_MATERIAL_DISMISS_NOTICE=1 mkdocs build --quiet; then
         FAILED_CHECKS+=("MkDocs build")
         ERRORS=$((ERRORS+1))
     fi
