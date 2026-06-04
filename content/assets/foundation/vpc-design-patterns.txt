@@ -12,19 +12,19 @@ NODES:
 Pattern 1:
 - Account A: generic account icon, label "Account A"
 - Account B: generic account icon, label "Account B"
-- VPC A: AWS icon "Amazon Virtual Private Cloud", label "VPC: App A\n10.1.0.0/16"
-- VPC B: AWS icon "Amazon Virtual Private Cloud", label "VPC: App B\n10.2.0.0/16"
+- VPC A: AWS icon "Amazon Virtual Private Cloud", label "VPC: App A\n10.1.0.0/16\n2001:db8:1::/56"
+- VPC B: AWS icon "Amazon Virtual Private Cloud", label "VPC: App B\n10.2.0.0/16\n2001:db8:2::/56"
 
 Pattern 2:
 - Networking Account: generic account icon, label "Networking Account"
-- Shared VPC: AWS icon "Amazon Virtual Private Cloud", label "Shared VPC\n10.0.0.0/16"
+- Shared VPC: AWS icon "Amazon Virtual Private Cloud", label "Shared VPC\n10.0.0.0/16\n2001:db8::/56"
 - Workload Acct 1: generic account icon, label "Workload Acct 1\n(uses shared subnet)"
 - Workload Acct 2: generic account icon, label "Workload Acct 2\n(uses shared subnet)"
 
 Pattern 3:
 - Single Account: generic account icon, label "Single Account"
-- VPC Prod: AWS icon "Amazon Virtual Private Cloud", label "VPC: Prod\n10.10.0.0/16"
-- VPC Dev: AWS icon "Amazon Virtual Private Cloud", label "VPC: Dev\n10.20.0.0/16"
+- VPC Prod: AWS icon "Amazon Virtual Private Cloud", label "VPC: Prod\n10.10.0.0/16\n2001:db8:a::/56"
+- VPC Dev: AWS icon "Amazon Virtual Private Cloud", label "VPC: Dev\n10.20.0.0/16\n2001:db8:14::/56"
 
 CONNECTIONS:
 Pattern 1:
@@ -41,7 +41,7 @@ Pattern 3:
 - Single Account → VPC Dev: style solid
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Three distinct columns, each representing a different architectural pattern
 - Use different colors per pattern for visual distinction (blue, green, purple)
 - Account nodes are lighter colored, VPC nodes are darker/filled

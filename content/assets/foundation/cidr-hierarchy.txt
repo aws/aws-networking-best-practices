@@ -1,5 +1,5 @@
-DIAGRAM: CIDR Hierarchy
-PURPOSE: Shows a hierarchical CIDR allocation tree from the organization-level root (10.0.0.0/8) down through environment splits (Production/Non-Production), regional allocations, and individual subnets. Demonstrates how contiguous allocation enables route summarization.
+DIAGRAM: CIDR Hierarchy (Dual-Stack)
+PURPOSE: Shows a hierarchical dual-stack CIDR allocation tree from the organization level down through environment splits, regional allocations, VPCs, and subnets. Each node shows both its IPv4 and IPv6 CIDR. Demonstrates how contiguous allocation enables route summarization for both address families.
 LAYOUT: top-to-bottom (tree structure)
 WIDTH: 700px maximum readable width
 
@@ -7,17 +7,17 @@ GROUPS:
 - No explicit group containers — this is a tree diagram
 
 NODES:
-- Root: generic icon, label "10.0.0.0/8\nEntire Organization\n16,777,216 addresses"
-- Production: generic icon, label "10.0.0.0/12\nProduction\n1,048,576 addresses"
-- Non-Production: generic icon, label "10.16.0.0/12\nNon-Production\n1,048,576 addresses"
-- Prod us-east-1: AWS icon "Amazon Virtual Private Cloud", label "10.0.0.0/16\nus-east-1 Production\n65,536 addresses"
-- Prod us-west-2: AWS icon "Amazon Virtual Private Cloud", label "10.1.0.0/16\nus-west-2 Production\n65,536 addresses"
-- Prod eu-west-1: AWS icon "Amazon Virtual Private Cloud", label "10.2.0.0/16\neu-west-1 Production\n65,536 addresses"
-- Dev us-east-1: AWS icon "Amazon Virtual Private Cloud", label "10.16.0.0/16\nus-east-1 Development\n65,536 addresses"
-- Test us-east-1: AWS icon "Amazon Virtual Private Cloud", label "10.17.0.0/16\nus-east-1 Testing\n65,536 addresses"
-- Public Subnet AZ-A: generic subnet icon, label "10.0.0.0/24\nPublic Subnet AZ-A\n256 addresses"
-- Public Subnet AZ-B: generic subnet icon, label "10.0.1.0/24\nPublic Subnet AZ-B\n256 addresses"
-- Private Subnet AZ-A: generic subnet icon, label "10.0.10.0/24\nPrivate Subnet AZ-A\n256 addresses"
+- Root: generic icon, label "Organization\nIPv4: 10.0.0.0/8\nIPv6: 2001:db8::/32"
+- Production: generic icon, label "Production\nIPv4: 10.0.0.0/12\nIPv6: 2001:db8::/36"
+- Non-Production: generic icon, label "Non-Production\nIPv4: 10.16.0.0/12\nIPv6: 2001:db8:1000::/36"
+- Prod us-east-1: AWS icon "Amazon Virtual Private Cloud", label "us-east-1 Production\nIPv4: 10.0.0.0/16\nIPv6: 2001:db8::/48"
+- Prod us-west-2: AWS icon "Amazon Virtual Private Cloud", label "us-west-2 Production\nIPv4: 10.1.0.0/16\nIPv6: 2001:db8:1::/48"
+- Prod eu-west-1: AWS icon "Amazon Virtual Private Cloud", label "eu-west-1 Production\nIPv4: 10.2.0.0/16\nIPv6: 2001:db8:2::/48"
+- Dev us-east-1: AWS icon "Amazon Virtual Private Cloud", label "us-east-1 Development\nIPv4: 10.16.0.0/16\nIPv6: 2001:db8:1000::/48"
+- Test us-east-1: AWS icon "Amazon Virtual Private Cloud", label "us-east-1 Testing\nIPv4: 10.17.0.0/16\nIPv6: 2001:db8:1001::/48"
+- Public Subnet AZ-A: generic subnet icon, label "Public Subnet AZ-A\nIPv4: 10.0.0.0/24\nIPv6: 2001:db8::0:1::/64"
+- Public Subnet AZ-B: generic subnet icon, label "Public Subnet AZ-B\nIPv4: 10.0.1.0/24\nIPv6: 2001:db8:0:2::/64"
+- Private Subnet AZ-A: generic subnet icon, label "Private Subnet AZ-A\nIPv4: 10.0.10.0/24\nIPv6: 2001:db8:0:a::/64"
 
 CONNECTIONS:
 - Root → Production: style solid
@@ -32,8 +32,9 @@ CONNECTIONS:
 - Prod us-east-1 → Private Subnet AZ-A: style solid
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Tree flows top-to-bottom with widening breadth at each level
+- Each node shows BOTH IPv4 and IPv6 CIDRs together — dual-stack is the default
+- The IPv6 hierarchy mirrors the IPv4 hierarchy with proper subnetting at each level
 - Color coding: Root=blue, Production=purple, Non-Production=orange, Regional VPCs=green, Dev/Test=amber, Subnets=light blue
-- Each level represents a different organizational scope
-- Show that the hierarchy enables route summarization at each level
+- Show that route summarization works for both address families at each level

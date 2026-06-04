@@ -22,7 +22,7 @@ CONNECTIONS:
 - No connections between nodes (these are parallel concerns)
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Synchronous group (blue) has five stacked nodes representing the five architectural concerns
 - Asynchronous group (purple) has one node for event-driven patterns
 - All nodes are blue-filled in the sync group, purple-filled in the async group

@@ -24,7 +24,7 @@ CONNECTIONS:
 - TGW → Workload VPCs: style solid (thick), no label
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Left-to-right flow showing the path from on-premises through AWS
 - On-premises side is gray, AWS side is orange-bordered
 - Dashed lines for overlay/encrypted connections, solid thick lines for AWS-internal connections
