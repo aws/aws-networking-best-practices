@@ -19,7 +19,7 @@ CONNECTIONS:
 - No connections between subnets (they are peers within the VPC)
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Emphasize the VPC as a thick-bordered blue container spanning all AZs
 - AZs are side by side horizontally within the VPC
 - Subnets are amber/yellow colored nodes within each AZ

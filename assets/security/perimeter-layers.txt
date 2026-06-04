@@ -32,7 +32,7 @@ CONNECTIONS:
 - Subnet Layer → Resource Layer: style solid, no label
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Four layers stacked top-to-bottom showing traffic flowing inward
 - Arrows between layers show sequential evaluation
 - Orange for edge (global AWS), blue for VPC boundary, purple for subnet-level, green for resource-level

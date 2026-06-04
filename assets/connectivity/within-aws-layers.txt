@@ -19,7 +19,7 @@ CONNECTIONS:
 - No arrows between nodes (they are parallel options, not sequential)
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - Application layer (purple) sits above the Network layer (blue) to show the stack relationship
 - Purple-filled nodes for application-layer services, blue-filled nodes for network-layer services
 - The two groups are visually distinct but not connected — they operate independently

@@ -19,7 +19,7 @@ CONNECTIONS:
 - No connections (categorization diagram)
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - ALB and NLB are peers in the "Application traffic" subgroup (blue)
 - GWLB is separate in "Inspection insertion" subgroup (purple) to show it serves a fundamentally different purpose
 - VPC Lattice is in a lighter/grayed group to indicate it's covered elsewhere
