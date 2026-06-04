@@ -12,11 +12,11 @@ GROUPS:
 - Local Zone (us-west-2-lax-1a): contains Subnet LZ; border style solid, color amber
 
 NODES:
-- Subnet A: generic subnet icon, label "Subnet A\n10.0.0.0/24"
-- Subnet B: generic subnet icon, label "Subnet B\n10.0.1.0/24"
-- Subnet C: generic subnet icon, label "Subnet C\n10.0.2.0/24"
+- Subnet A: generic subnet icon, label "Subnet A\n10.0.0.0/24\n2001:db8:0:1::/64"
+- Subnet B: generic subnet icon, label "Subnet B\n10.0.1.0/24\n2001:db8:0:2::/64"
+- Subnet C: generic subnet icon, label "Subnet C\n10.0.2.0/24\n2001:db8:0:3::/64"
 - NAT GW (×3): AWS icon "Amazon VPC (NAT gateway resource icon)", label "NAT GW"
-- Subnet LZ: generic subnet icon, label "Subnet LZ\n10.0.10.0/24"
+- Subnet LZ: generic subnet icon, label "Subnet LZ\n10.0.10.0/24\n2001:db8:0:a::/64"
 
 CONNECTIONS:
 - AZ-a ↔ AZ-b: style dashed, label "Low-latency private fiber"
@@ -25,7 +25,7 @@ CONNECTIONS:
 - Region → Local Zone: style dashed, label "Parent Region connectivity"
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - AZs should be arranged horizontally within the Region
 - Each AZ contains a subnet (blue) and a NAT gateway (purple)
 - The Local Zone is shown below or to the side of the Region, connected by a dashed line

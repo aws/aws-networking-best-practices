@@ -29,10 +29,21 @@ content/
 
 #### Technical Requirements
 
-* **File format**: PNG with transparent or white background
-* **Dimensions**: Maximum 1200px wide, maintain aspect ratio
+* **File format**: PNG with transparent background
+* **Dimensions**: Maximum 1200px wide, maintain aspect ratio. Diagrams must remain readable when scaled to 700px width.
 * **File size**: Keep under 500KB for optimal loading
 * **Resolution**: 72-96 DPI for web display
+
+#### Light and dark mode compatibility
+
+Diagrams must be usable on both the light and dark color schemes. To achieve this:
+
+* **Use a transparent background** — not white. This allows the diagram to adapt to both color schemes.
+* **Use `#7E7E7E` for text and lines on the transparent background** — not black (`#000000`) or white (`#FFFFFF`). This gray provides approximately equal contrast against both the light background (`#FFFFFF`) and the dark background (`#1e1e1e`).
+* **Text inside colored nodes** (with filled backgrounds) can use white or another color appropriate for the node's fill — the `#7E7E7E` rule applies only to elements that sit directly on the transparent background.
+
+!!! note "Contrast ratio limitation"
+    The `#7E7E7E` gray achieves approximately 4.1:1 contrast against both the light and dark backgrounds. This is slightly below the WCAG AA minimum of 4.5:1. This is an accepted trade-off — no single color can achieve 4.5:1 contrast against both a white and a near-black background simultaneously (the ranges are mathematically mutually exclusive). The `#7E7E7E` midpoint provides the best balanced readability across both schemes without requiring duplicate image files.
 
 ![Image title](../assets/community/Example.png){ width="300" }
 /// caption

@@ -25,7 +25,7 @@ CONNECTIONS:
 - WA → Security: style solid, no label
 
 NOTES:
-- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #666666 instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000). Text and lines inside colored nodes/shapes can remain as-is (white on colored fill is fine).
 - The top group (prerequisites) feeds into the bottom group (networking), showing dependency
 - Use blue fill for prerequisite nodes, purple fill for networking nodes
 - Arrows show that each prerequisite enables specific networking capabilities
