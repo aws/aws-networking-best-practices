@@ -5,37 +5,10 @@
 
 Connecting AWS to networks outside AWS covers three distinct concerns, and the right answer is rarely a single service. **Hybrid connectivity** brings on-premises data centers and branch offices to AWS through private circuits, encrypted VPN, or SD-WAN overlays. **Multi-cloud connectivity** connects AWS to other public clouds for workloads that span providers. **Client communication to AWS applications** gives users and devices access to specific applications from wherever they are.
 
-``` mermaid
-graph TB
-    subgraph Hybrid["Hybrid Connectivity (on-premises ↔ AWS)"]
-        DX["AWS Direct Connect<br/>Private circuits"]
-        VPN["AWS Site-to-Site VPN<br/>Encrypted over internet"]
-        SDWAN["SD-WAN integration<br/>via Transit Gateway or Cloud WAN"]
-    end
-
-    subgraph Multi["Multi-Cloud Connectivity (AWS ↔ other clouds)"]
-        IC["AWS Interconnect<br/>Direct cloud-to-cloud"]
-        Partner["Partner-based Direct Connect<br/>or VPN over internet"]
-    end
-
-    subgraph Users["Client Communication (users/devices ↔ AWS applications)"]
-        CVPN["AWS Client VPN<br/>Network-level user access"]
-        VA["AWS Verified Access<br/>Zero-trust application access"]
-    end
-
-    Hybrid ~~~ Multi ~~~ Users
-
-    style Hybrid fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Multi fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Users fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style DX fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPN fill:#2563eb,stroke:#1e40af,color:#fff
-    style SDWAN fill:#2563eb,stroke:#1e40af,color:#fff
-    style IC fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Partner fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CVPN fill:#059669,stroke:#047857,color:#fff
-    style VA fill:#059669,stroke:#047857,color:#fff
-```
+![Hybrid and multi-cloud overview showing three concerns: Hybrid Connectivity (Direct Connect, VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect, Partner-based), and Client Communication (Client VPN, Verified Access)](../assets/connectivity/hybrid-overview.png)
+/// caption
+Hybrid and multi-cloud overview — [Drawio Source](../assets/connectivity/hybrid-overview.drawio)
+///
 
 For on-premises connectivity, [AWS Direct Connect](https://aws.amazon.com/directconnect/) delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. [AWS Site-to-Site VPN](https://aws.amazon.com/vpn/site-to-site-vpn/) provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. **SD-WAN integration** uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party SD-WAN overlays into the AWS network plane.
 
@@ -352,38 +325,10 @@ This section is for organizations that already run SD-WAN across their branches 
 
 The integration mechanism is **Connect attachments** on [AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html) or [AWS Cloud WAN](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-connect-attachment.html). A Connect attachment carries multiple Connect peers, each with BGP for dynamic routing between the SD-WAN appliance and AWS. BGP is the standard control plane every SD-WAN vendor speaks. The tunnel protocol, the underlay, and the supported landing service differ between Transit Gateway and AWS Cloud WAN, and those differences shape the integration design; the sections that follow cover them.
 
-``` mermaid
-graph LR
-    subgraph OnPrem["On-premises and branches"]
-        B1["Branch<br/>SD-WAN device"]
-        DC["Data center<br/>SD-WAN device"]
-    end
-
-    subgraph AWS["AWS"]
-        subgraph VPC["Transit VPC"]
-            APP1["SD-WAN appliance<br/>(virtual)"]
-            APP2["SD-WAN appliance<br/>(virtual)"]
-        end
-        TGW["Transit Gateway<br/>or AWS Cloud WAN"]
-        V["Workload VPCs"]
-    end
-
-    B1 -."SD-WAN overlay<br/>(IPsec/SSL)".-> APP1
-    DC -."SD-WAN overlay<br/>(IPsec/SSL)".-> APP2
-    APP1 ==="Connect attachment<br/>(GRE or Tunnel-less, BGP)"===> TGW
-    APP2 ==="Connect attachment<br/>(GRE or Tunnel-less, BGP)"===> TGW
-    TGW === V
-
-    style OnPrem fill:none,stroke:#64748b,stroke-width:2px,stroke-dasharray:5 5,color:#64748b
-    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style VPC fill:none,stroke:#059669,stroke-width:1px,stroke-dasharray:5 5,color:#059669
-    style B1 fill:#64748b,stroke:#475569,color:#fff
-    style DC fill:#64748b,stroke:#475569,color:#fff
-    style APP1 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style APP2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
-    style V fill:#059669,stroke:#047857,color:#fff
-```
+![SD-WAN integration showing on-premises devices connecting through virtual SD-WAN appliances in a Transit VPC to Transit Gateway or Cloud WAN, which routes to workload VPCs](../assets/connectivity/sdwan-integration.png)
+/// caption
+SD-WAN integration — [Drawio Source](../assets/connectivity/sdwan-integration.drawio)
+///
 
 **Integration building blocks**:
 
@@ -684,42 +629,10 @@ Real-world hybrid and multi-cloud architectures combine several of these service
 
 The services covered in this page are complementary layers, not competing alternatives.
 
-``` mermaid
-graph TB
-    subgraph Stack["Hybrid and Multi-Cloud Stack"]
-        direction TB
-
-        subgraph Users2["Client communication"]
-            VA2["AWS Verified Access<br/>Zero-trust application access"]
-            CVPN2["AWS Client VPN<br/>Network-layer user access"]
-        end
-
-        subgraph Multi2["Multi-cloud"]
-            IC2["AWS Interconnect<br/>Direct cloud-to-cloud<br/>(preferred, where supported)"]
-            Partner2["Partner-based DX or VPN<br/>where AWS Interconnect unavailable"]
-        end
-
-        subgraph Hybrid2["Hybrid connectivity"]
-            DX2["AWS Direct Connect<br/>Primary private path"]
-            VPN2["AWS Site-to-Site VPN<br/>Fast-start or IPsec over DX<br/>when MACsec unavailable"]
-            SDWAN2["SD-WAN Connect attachments<br/>for existing SD-WAN overlays"]
-        end
-    end
-
-    Users2 ~~~ Multi2 ~~~ Hybrid2
-
-    style Stack fill:none,stroke:none
-    style Users2 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Multi2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Hybrid2 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style VA2 fill:#059669,stroke:#047857,color:#fff
-    style CVPN2 fill:#059669,stroke:#047857,color:#fff
-    style IC2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Partner2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style DX2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPN2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style SDWAN2 fill:#2563eb,stroke:#1e40af,color:#fff
-```
+![Hybrid and multi-cloud stack showing three tiers: Client communication (Verified Access, Client VPN), Multi-cloud (AWS Interconnect, Partner-based), and Hybrid connectivity (Direct Connect, VPN, SD-WAN)](../assets/connectivity/hybrid-stack.png)
+/// caption
+Hybrid and multi-cloud stack — [Drawio Source](../assets/connectivity/hybrid-stack.drawio)
+///
 
 ### New environments
 

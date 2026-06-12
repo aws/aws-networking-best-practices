@@ -7,31 +7,10 @@ Internet connectivity covers two distinct concerns, and the right pattern for ea
 
 The cross-cutting choice in both directions is **centralized vs. decentralized**: do you concentrate ingress or egress through a shared VPC and a network team, or distribute it per workload to the teams that own each application? The right answer differs by direction. For ingress, decentralized is the preferred default and centralized is reserved for specific cases. For egress, the choice is genuinely a trade-off across cost, operational ownership, and where the inspection point sits, and there is no single right answer.
 
-``` mermaid
-graph TB
-    subgraph Ingress["Ingress (internet → AWS applications)"]
-        Decentralized_In["Decentralized<br/>(preferred)<br/>Each VPC owns its ingress"]
-        Centralized_In["Centralized<br/>Shared ingress VPC for perimeter"]
-        Edge["Edge services<br/>CloudFront, Global Accelerator, AWS WAF"]
-    end
-
-    subgraph Egress["Egress (AWS resources → internet)"]
-        Decentralized_Out["IPv6<br/>Decentralized by design<br/>(egress-only IGW per VPC)"]
-        Centralized_Out["IPv4<br/>Decentralized vs centralized<br/>by cost, ownership, inspection placement"]
-        Filter["Filtering<br/>AWS Network Firewall, GWLB + 3rd-party,<br/>Route 53 DNS Firewall"]
-    end
-
-    Ingress ~~~ Egress
-
-    style Ingress fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Egress fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Decentralized_In fill:#2563eb,stroke:#1e40af,color:#fff
-    style Centralized_In fill:#2563eb,stroke:#1e40af,color:#fff
-    style Edge fill:#2563eb,stroke:#1e40af,color:#fff
-    style Decentralized_Out fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Centralized_Out fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Filter fill:#7c3aed,stroke:#6d28d9,color:#fff
-```
+![Internet ingress and egress overview showing Ingress (decentralized preferred, centralized option, edge services) and Egress (IPv6 decentralized, IPv4 pattern choice, filtering)](../assets/connectivity/internet-ingress-egress.png)
+/// caption
+Internet ingress and egress — [Drawio Source](../assets/connectivity/internet-ingress-egress.drawio)
+///
 
 For ingress, the decentralized pattern keeps each application's internet entry point in the VPC and account that owns the workload. Application teams manage their own load balancers, certificates, and scaling decisions; failure of one team's ingress does not affect others. Centralized protection is still applied uniformly through CloudFront, AWS WAF, and per-VPC layer-3/4 inspection (AWS Network Firewall, or [Gateway Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html) with third-party firewall appliances) — all managed centrally through [AWS Firewall Manager](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html). The AWS edge effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress VPC. Centralized ingress through a shared VPC remains an option, but it adds load-balancer chaining, extra traffic processing cost, and shared-VPC blast radius without delivering protection that the cloud-native decentralized pattern doesn't already provide.
 
@@ -290,44 +269,10 @@ The services this page references, grouped by where they appear:
 
 Real-world internet connectivity strategies combine choices across two largely independent dimensions: ingress (decentralized vs centralized, per workload) and egress (IPv6 stays decentralized; IPv4 is decentralized vs centralized by trade-off). Each decision is made on its own merits.
 
-``` mermaid
-graph TB
-    subgraph Stack["Internet Connectivity Stack"]
-        direction TB
-
-        subgraph Ingress2["Ingress (preferred: decentralized)"]
-            Edge2["Edge layer<br/>Amazon CloudFront, AWS WAF,<br/>AWS Global Accelerator"]
-            Entry2["Per-VPC entry point<br/>ALB / NLB / API Gateway<br/>CloudFront VPC Origins"]
-            InspIn2["Per-VPC L4 inspection<br/>AWS Network Firewall or<br/>GWLB + 3rd-party firewall"]
-        end
-
-        subgraph Egress2["Egress"]
-            V6["IPv6 (decentralized by design)<br/>Egress-only IGW per VPC<br/>No managed NAT66"]
-            V4["IPv4 (choose pattern)<br/>Decentralized vs centralized<br/>by cost, ownership,<br/>inspection-point placement"]
-            Reduce["Reduce volume first<br/>Gateway + interface VPC endpoints"]
-        end
-
-        subgraph Filter3["Filtering layer (both directions)"]
-            Mgmt["Centrally managed<br/>AWS Firewall Manager,<br/>Route 53 DNS Firewall"]
-            DataPlane["Data-plane options<br/>AWS Network Firewall,<br/>GWLB + 3rd-party firewall,<br/>AWS Network Firewall Proxy (preview)"]
-        end
-    end
-
-    Ingress2 ~~~ Egress2 ~~~ Filter3
-
-    style Stack fill:none,stroke:none
-    style Ingress2 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Egress2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Filter3 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Edge2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style Entry2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style InspIn2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style V6 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style V4 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Reduce fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Mgmt fill:#059669,stroke:#047857,color:#fff
-    style DataPlane fill:#059669,stroke:#047857,color:#fff
-```
+![Internet connectivity stack showing three tiers: Ingress (edge layer, per-VPC entry point, per-VPC L4 inspection), Egress (IPv6 decentralized, IPv4 pattern choice, volume reduction), and Filtering layer (centrally managed, data-plane options)](../assets/connectivity/internet-stack.png)
+/// caption
+Internet connectivity stack — [Drawio Source](../assets/connectivity/internet-stack.drawio)
+///
 
 ### New environments
 
