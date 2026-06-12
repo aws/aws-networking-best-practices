@@ -1,0 +1,45 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="8JzUUzG4xJGuHEYkIo5Y">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FxxkjStIGgLeAwxoONQJ-1" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.direct_connect;" value="&lt;b&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Partner-based Direct Connect&lt;br&gt;&lt;/font&gt;&lt;/b&gt;or VPN over internet" vertex="1">
+          <mxGeometry height="78" width="78" x="214" y="375" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=none;strokeColor=none;" value="Hybrid and Multi-Cloud Overview" vertex="1">
+          <mxGeometry height="40" width="660" x="84" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#2563eb;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=0;pointerEvents=0;strokeWidth=2;" value="Hybrid Connectivity  (on-premises ↔ AWS)" vertex="1">
+          <mxGeometry height="220" width="660" x="84" y="80" as="geometry">
+            <mxRectangle height="40" width="290" x="84" y="80" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#7c3aed;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=0;pointerEvents=0;strokeWidth=2;" value="Multi-Cloud Connectivity  (AWS ↔ other clouds)" vertex="1">
+          <mxGeometry height="200" width="660" x="84" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#059669;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=0;pointerEvents=0;strokeWidth=2;" value="Client Communication  (users/devices ↔ AWS applications)" vertex="1">
+          <mxGeometry height="200" width="660" x="84" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-3" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.direct_connect;" value="&lt;b&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;AWS Direct Connect&lt;/font&gt;&lt;/b&gt;&lt;br&gt;Private circuits" vertex="1">
+          <mxGeometry height="78" width="78" x="134" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-4" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.site_to_site_vpn;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;AWS Site-to-Site VPN&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Encrypted over internet" vertex="1">
+          <mxGeometry height="78" width="78" x="374" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-5" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.transit_gateway;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;SD-WAN integration&lt;br&gt;&lt;/b&gt;&lt;/font&gt;via Transit Gateway or Cloud WAN" vertex="1">
+          <mxGeometry height="78" width="78" x="604" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-8" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.direct_connect;" value="&lt;b&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Partner-based Direct Connect&lt;br&gt;&lt;/font&gt;&lt;/b&gt;or VPN over internet" vertex="1">
+          <mxGeometry height="78" width="78" x="504" y="375" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-10" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.client_vpn;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;AWS Client VPN&lt;br&gt;&lt;/b&gt;&lt;/font&gt;Network-level user access" vertex="1">
+          <mxGeometry height="78" width="78" x="214" y="595" as="geometry" />
+        </mxCell>
+        <mxCell id="tqavaUE4pu5MnqtRmGMJ-11" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.verified_access;" value="&lt;b&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;AWS Verified Access&lt;br&gt;&lt;/font&gt;&lt;/b&gt;Zero-trust application access" vertex="1">
+          <mxGeometry height="78" width="78" x="504" y="595" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -2306,35 +2306,12 @@
 <p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>, <a href="../../foundation/organizations/">AWS Organizations</a>, and the <a href="../within-aws/">Within AWS connectivity</a> services (AWS Transit Gateway and AWS Cloud WAN in particular). Review those topics first if you're new to AWS networking fundamentals.</p>
 </div>
 <p>Connecting AWS to networks outside AWS covers three distinct concerns, and the right answer is rarely a single service. <strong>Hybrid connectivity</strong> brings on-premises data centers and branch offices to AWS through private circuits, encrypted <abbr title="Virtual Private Network">VPN</abbr>, or <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays. <strong>Multi-cloud connectivity</strong> connects AWS to other public clouds for workloads that span providers. <strong>Client communication to AWS applications</strong> gives users and devices access to specific applications from wherever they are.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Hybrid["Hybrid Connectivity (on-premises ↔ AWS)"]
-        DX["AWS Direct Connect&lt;br/&gt;Private circuits"]
-        VPN["AWS Site-to-Site VPN&lt;br/&gt;Encrypted over internet"]
-        SDWAN["SD-WAN integration&lt;br/&gt;via Transit Gateway or Cloud WAN"]
-    end
-
-    subgraph Multi["Multi-Cloud Connectivity (AWS ↔ other clouds)"]
-        IC["AWS Interconnect&lt;br/&gt;Direct cloud-to-cloud"]
-        Partner["Partner-based Direct Connect&lt;br/&gt;or VPN over internet"]
-    end
-
-    subgraph Users["Client Communication (users/devices ↔ AWS applications)"]
-        CVPN["AWS Client VPN&lt;br/&gt;Network-level user access"]
-        VA["AWS Verified Access&lt;br/&gt;Zero-trust application access"]
-    end
-
-    Hybrid ~~~ Multi ~~~ Users
-
-    style Hybrid fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Multi fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Users fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style DX fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPN fill:#2563eb,stroke:#1e40af,color:#fff
-    style SDWAN fill:#2563eb,stroke:#1e40af,color:#fff
-    style IC fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Partner fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CVPN fill:#059669,stroke:#047857,color:#fff
-    style VA fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="Hybrid and multi-cloud overview showing three concerns: Hybrid Connectivity (Direct Connect, VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect, Partner-based), and Client Communication (Client VPN, Verified Access)" src="../../assets/connectivity/hybrid-overview.png" /></p>
+<figcaption>
+<p>Hybrid and multi-cloud overview — <a href="../../assets/connectivity/hybrid-overview.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
 <p>For multi-cloud, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.</p>
 <p>For users reaching AWS applications, <a href="https://aws.amazon.com/vpn/client-vpn/">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> provides network-level access into VPCs when applications need traditional IP reachability. <a href="https://aws.amazon.com/verified-access/">AWS Verified Access</a> provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a <abbr title="Virtual Private Network">VPN</abbr> client entirely.</p>
@@ -2592,36 +2569,12 @@
 <h2 id="sd-wan-integration-with-aws-transit-gateway-and-aws-cloud-wan"><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration with AWS Transit Gateway and AWS Cloud WAN<a class="headerlink" href="#sd-wan-integration-with-aws-transit-gateway-and-aws-cloud-wan" title="Permanent link">&para;</a></h2>
 <p>This section is for organizations that already run <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across their branches and data centers and want AWS to participate in that overlay as a first-class site. The <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendor handles the overlay itself (path selection, WAN optimization, site-to-site encryption, orchestration); AWS provides the attach point that brings the overlay into the AWS network plane.</p>
 <p>The integration mechanism is <strong>Connect attachments</strong> on <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html">AWS Transit Gateway</a> or <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-connect-attachment.html">AWS Cloud WAN</a>. A Connect attachment carries multiple Connect peers, each with <abbr title="Border Gateway Protocol">BGP</abbr> for dynamic routing between the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance and AWS. <abbr title="Border Gateway Protocol">BGP</abbr> is the standard control plane every <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendor speaks. The tunnel protocol, the underlay, and the supported landing service differ between Transit Gateway and AWS Cloud WAN, and those differences shape the integration design; the sections that follow cover them.</p>
-<pre class="mermaid"><code>graph LR
-    subgraph OnPrem["On-premises and branches"]
-        B1["Branch&lt;br/&gt;SD-WAN device"]
-        DC["Data center&lt;br/&gt;SD-WAN device"]
-    end
-
-    subgraph AWS["AWS"]
-        subgraph VPC["Transit VPC"]
-            APP1["SD-WAN appliance&lt;br/&gt;(virtual)"]
-            APP2["SD-WAN appliance&lt;br/&gt;(virtual)"]
-        end
-        TGW["Transit Gateway&lt;br/&gt;or AWS Cloud WAN"]
-        V["Workload VPCs"]
-    end
-
-    B1 -."SD-WAN overlay&lt;br/&gt;(IPsec/SSL)".-&gt; APP1
-    DC -."SD-WAN overlay&lt;br/&gt;(IPsec/SSL)".-&gt; APP2
-    APP1 ==="Connect attachment&lt;br/&gt;(GRE or Tunnel-less, BGP)"===&gt; TGW
-    APP2 ==="Connect attachment&lt;br/&gt;(GRE or Tunnel-less, BGP)"===&gt; TGW
-    TGW === V
-
-    style OnPrem fill:none,stroke:#64748b,stroke-width:2px,stroke-dasharray:5 5,color:#64748b
-    style AWS fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style VPC fill:none,stroke:#059669,stroke-width:1px,stroke-dasharray:5 5,color:#059669
-    style B1 fill:#64748b,stroke:#475569,color:#fff
-    style DC fill:#64748b,stroke:#475569,color:#fff
-    style APP1 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style APP2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
-    style V fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="SD-WAN integration showing on-premises devices connecting through virtual SD-WAN appliances in a Transit VPC to Transit Gateway or Cloud WAN, which routes to workload VPCs" src="../../assets/connectivity/sdwan-integration.png" /></p>
+<figcaption>
+<p><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration — <a href="../../assets/connectivity/sdwan-integration.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <p><strong>Integration building blocks</strong>:</p>
 <div class="grid cards">
 <ul>
@@ -2880,40 +2833,12 @@
 <h2 id="building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack<a class="headerlink" href="#building-your-hybrid-and-multi-cloud-stack" title="Permanent link">&para;</a></h2>
 <p>Real-world hybrid and multi-cloud architectures combine several of these services, with each one operating at the layer where it provides the most value.</p>
 <p>The services covered in this page are complementary layers, not competing alternatives.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Stack["Hybrid and Multi-Cloud Stack"]
-        direction TB
-
-        subgraph Users2["Client communication"]
-            VA2["AWS Verified Access&lt;br/&gt;Zero-trust application access"]
-            CVPN2["AWS Client VPN&lt;br/&gt;Network-layer user access"]
-        end
-
-        subgraph Multi2["Multi-cloud"]
-            IC2["AWS Interconnect&lt;br/&gt;Direct cloud-to-cloud&lt;br/&gt;(preferred, where supported)"]
-            Partner2["Partner-based DX or VPN&lt;br/&gt;where AWS Interconnect unavailable"]
-        end
-
-        subgraph Hybrid2["Hybrid connectivity"]
-            DX2["AWS Direct Connect&lt;br/&gt;Primary private path"]
-            VPN2["AWS Site-to-Site VPN&lt;br/&gt;Fast-start or IPsec over DX&lt;br/&gt;when MACsec unavailable"]
-            SDWAN2["SD-WAN Connect attachments&lt;br/&gt;for existing SD-WAN overlays"]
-        end
-    end
-
-    Users2 ~~~ Multi2 ~~~ Hybrid2
-
-    style Stack fill:none,stroke:none
-    style Users2 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Multi2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Hybrid2 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style VA2 fill:#059669,stroke:#047857,color:#fff
-    style CVPN2 fill:#059669,stroke:#047857,color:#fff
-    style IC2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Partner2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style DX2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPN2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style SDWAN2 fill:#2563eb,stroke:#1e40af,color:#fff</code></pre>
+<figure>
+<p><img alt="Hybrid and multi-cloud stack showing three tiers: Client communication (Verified Access, Client VPN), Multi-cloud (AWS Interconnect, Partner-based), and Hybrid connectivity (Direct Connect, VPN, SD-WAN)" src="../../assets/connectivity/hybrid-stack.png" /></p>
+<figcaption>
+<p>Hybrid and multi-cloud stack — <a href="../../assets/connectivity/hybrid-stack.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations building hybrid and multi-cloud connectivity from scratch have the opportunity to adopt the patterns that scale best from day one:</p>
 <ol>
@@ -2954,7 +2879,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 12, 2026 17:42:16 UTC">June 12, 2026</span>
   </span>
 
     

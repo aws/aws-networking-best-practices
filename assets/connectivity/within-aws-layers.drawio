@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="iNOE92y0b9HuOEnQu0MO">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-22" parent="1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.endpoints;" value="" vertex="1">
+          <mxGeometry height="78" width="78" x="375" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-17" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_privatelink;" value="" vertex="1">
+          <mxGeometry height="78" width="78" x="575" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#7E7E7E;" value="Within-AWS Connectivity Layers" vertex="1">
+          <mxGeometry height="36" width="620" x="104" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 6;strokeColor=#7c3aed;strokeWidth=2;fillColor=none;verticalAlign=top;fontColor=#7c3aed;fontSize=13;fontStyle=1;align=left;spacingLeft=12;spacingTop=8;container=0;pointerEvents=0;" value="Application &amp; Resource Connectivity" vertex="1">
+          <mxGeometry height="200" width="620" x="104" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 6;strokeColor=#2563eb;strokeWidth=2;fillColor=none;verticalAlign=top;fontColor=#2563eb;fontSize=13;fontStyle=1;align=left;spacingLeft=12;spacingTop=8;container=0;pointerEvents=0;" value="Network Connectivity" vertex="1">
+          <mxGeometry height="200" width="620" x="104" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-16" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_lattice;" value="" vertex="1">
+          <mxGeometry height="78" width="78" x="175" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-6" parent="1" style="text;html=1;align=center;verticalAlign=top;fontColor=#7E7E7E;fontSize=11;" value="Amazon VPC Lattice&#xa;Service-to-service communication" vertex="1">
+          <mxGeometry height="40" width="140" x="144" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-7" parent="1" style="text;html=1;align=center;verticalAlign=top;fontColor=#7E7E7E;fontSize=11;" value="VPC Resources&#xa;Private resource access" vertex="1">
+          <mxGeometry height="40" width="140" x="344" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-8" parent="1" style="text;html=1;align=center;verticalAlign=top;fontColor=#7E7E7E;fontSize=11;" value="AWS PrivateLink&#xa;Private service access" vertex="1">
+          <mxGeometry height="40" width="140" x="544" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-19" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloud_wan;" value="" vertex="1">
+          <mxGeometry height="78" width="78" x="175" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-20" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.transit_gateway;" value="" vertex="1">
+          <mxGeometry height="78" width="78" x="375" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-21" parent="1" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.peering;" value="" vertex="1">
+          <mxGeometry height="78" width="78" x="575" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-13" parent="1" style="text;html=1;align=center;verticalAlign=top;fontColor=#7E7E7E;fontSize=11;" value="AWS Cloud WAN&#xa;Global network management" vertex="1">
+          <mxGeometry height="40" width="140" x="144" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-14" parent="1" style="text;html=1;align=center;verticalAlign=top;fontColor=#7E7E7E;fontSize=11;" value="AWS Transit Gateway&#xa;Regional hub-and-spoke" vertex="1">
+          <mxGeometry height="40" width="140" x="344" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="jfHuyd7pbY0ZscyfVrLC-15" parent="1" style="text;html=1;align=center;verticalAlign=top;fontColor=#7E7E7E;fontSize=11;" value="VPC Peering&#xa;Point-to-point" vertex="1">
+          <mxGeometry height="40" width="140" x="544" y="440" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
