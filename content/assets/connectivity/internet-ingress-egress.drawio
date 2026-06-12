@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="TBa_rckmb_H_M0izAw8v">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PsTvW8d7JI5_syipf2TD-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#7E7E7E;" value="Internet Ingress and Egress" vertex="1">
+          <mxGeometry height="30" width="660" x="84" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontColor=#7E7E7E;" value="Two independent architectural decisions, one per direction" vertex="1">
+          <mxGeometry height="20" width="660" x="84" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;strokeColor=#2563eb;strokeWidth=2;fillColor=none;verticalAlign=top;fontColor=#2563eb;fontStyle=1;fontSize=12;startSize=28;container=0;collapsible=0;" value="Ingress  (internet → AWS applications)" vertex="1">
+          <mxGeometry height="537" width="320" x="84" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-10" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;strokeColor=#7c3aed;strokeWidth=2;fillColor=none;verticalAlign=top;fontColor=#7c3aed;fontStyle=1;fontSize=12;startSize=28;container=0;collapsible=0;" value="Egress  (AWS resources → internet)" vertex="1">
+          <mxGeometry height="537" width="320" x="424" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-17" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontStyle=2;fontColor=#7E7E7E;" value="These are separate decisions — choose ingress and egress strategies independently." vertex="1">
+          <mxGeometry height="20" width="660" x="84" y="643" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-23" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=light-dark(#7E7E7E,#7E7E7E);" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="644" y="160" as="sourcePoint" />
+            <mxPoint x="784" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1e40af;fontColor=#ffffff;align=center;" value="" vertex="1">
+          <mxGeometry height="120" width="260" x="114" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-5" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.virtual_private_cloud;sketch=0;dashed=0;outlineConnect=0;fillColor=#8C4FFF;strokeColor=#ffffff;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;html=1;" value="Decentralized (preferred)&lt;br&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Each VPC owns its ingress&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="50" width="50" x="219" y="203" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1e40af;fontColor=#ffffff;align=center;" value="" vertex="1">
+          <mxGeometry height="120" width="260" x="114" y="333" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-7" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.virtual_private_cloud;sketch=0;dashed=0;outlineConnect=0;fillColor=#8C4FFF;strokeColor=#ffffff;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=13;fontStyle=1;html=1;" value="&lt;font&gt;&lt;font style=&quot;&quot;&gt;Centralized&lt;/font&gt;&lt;br&gt;&lt;span style=&quot;font-weight: normal;&quot;&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;Shared ingress VPC for perimeter&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="50" width="50" x="219" y="343" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1e40af;fontColor=#ffffff;align=center;" value="" vertex="1">
+          <mxGeometry height="135" width="260" x="114" y="473" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-9" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudfront;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 13px;&quot;&gt;Edge services&lt;/font&gt;&lt;/b&gt;&lt;br&gt;CloudFront, Global Accelerator, AWS WAF" vertex="1">
+          <mxGeometry height="50" width="50" x="219" y="483" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5b21b6;fontColor=#ffffff;align=center;" value="" vertex="1">
+          <mxGeometry height="120" width="260" x="454" y="193" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-12" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.internet_gateway;sketch=0;dashed=0;outlineConnect=0;fillColor=#8C4FFF;strokeColor=#ffffff;aspect=fixed;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;html=1;fontColor=light-dark(#7E7E7E,#7E7E7E);" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;&lt;b&gt;IPv6&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Decentralized by design&lt;br&gt;(egress-only IGW per VPC)" vertex="1">
+          <mxGeometry height="50" width="50" x="559" y="203" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5b21b6;fontColor=#ffffff;align=center;" value="" vertex="1">
+          <mxGeometry height="120" width="260" x="454" y="333" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-14" parent="1" style="shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.nat_gateway;sketch=0;dashed=0;outlineConnect=0;fillColor=#8C4FFF;strokeColor=#ffffff;aspect=fixed;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;fontColor=light-dark(#7E7E7E,#7E7E7E);" value="&lt;b&gt;&lt;font style=&quot;font-size: 13px;&quot;&gt;IPv4&lt;/font&gt;&lt;/b&gt;&lt;br&gt;Decentralized vs centralized&lt;br&gt;by cost, ownership, inspection placement" vertex="1">
+          <mxGeometry height="50" width="50" x="559" y="343" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-15" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#5b21b6;fontColor=#ffffff;align=center;" value="" vertex="1">
+          <mxGeometry height="135" width="260" x="454" y="473" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-16" parent="1" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#DD344C;strokeColor=#ffffff;dashed=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.network_firewall;html=1;labelPosition=center;verticalLabelPosition=bottom;align=center;verticalAlign=top;" value="&lt;font style=&quot;font-size: 13px;&quot;&gt;&lt;b&gt;Filtering&lt;/b&gt;&lt;/font&gt;&lt;br&gt;AWS Network Firewall, GWLB + 3rd-party,&lt;br&gt;Route 53 DNS Firewall" vertex="1">
+          <mxGeometry height="50" width="50" x="559" y="483" as="geometry" />
+        </mxCell>
+        <mxCell id="PsTvW8d7JI5_syipf2TD-24" edge="1" parent="1" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=light-dark(#7E7E7E,#7E7E7E);" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="44" y="160" as="sourcePoint" />
+            <mxPoint x="184" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

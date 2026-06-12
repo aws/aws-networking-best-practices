@@ -5,31 +5,10 @@
 
 Connecting VPCs and services within AWS is rarely a single-service decision. AWS provides six connectivity services that operate at different layers — from AWS Cloud WAN managing global topology across 30+ Regions through a single declarative policy, to Amazon VPC Lattice handling service-to-service HTTP/gRPC communication with IAM-based auth and no CIDR coordination, to VPC Peering providing zero-cost same-Region data transfer between specific VPC pairs. A mature AWS network combines multiple services simultaneously, each at the layer where it provides the most value: network-level connectivity (how VPCs route traffic to each other), application-level service communication (how services discover and talk to each other), and private resource access (how workloads reach specific network resources like databases).
 
-``` mermaid
-graph TB
-    subgraph AppLayer["Application & Resource Connectivity"]
-        Lattice["Amazon VPC Lattice<br/>Service-to-service communication"]
-        Resources["VPC Resources<br/>Private resource access"]
-        PL["AWS PrivateLink<br/>Private service access"]
-    end
-    
-    subgraph NetLayer["Network Connectivity"]
-        CWAN["AWS Cloud WAN<br/>Global network management"]
-        TGW["AWS Transit Gateway<br/>Regional hub-and-spoke"]
-        Peer["VPC Peering<br/>Point-to-point"]
-    end
-    
-    AppLayer ~~~ NetLayer
-    
-    style AppLayer fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style NetLayer fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Lattice fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Resources fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style PL fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CWAN fill:#2563eb,stroke:#1e40af,color:#fff
-    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
-    style Peer fill:#2563eb,stroke:#1e40af,color:#fff
-```
+![Within-AWS connectivity layers showing Application and Resource Connectivity (VPC Lattice, VPC Resources, PrivateLink) and Network Connectivity (Cloud WAN, Transit Gateway, VPC Peering)](../assets/connectivity/within-aws-layers.png)
+/// caption
+Within-AWS connectivity layers — [Drawio Source](../assets/connectivity/within-aws-layers.drawio)
+///
 
 At its simplest, connecting two VPCs can be as straightforward as a [VPC Peering](https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html) connection: direct, low-cost, and effective for point-to-point communication. As the number of VPCs and accounts grows, a hub-and-spoke model with [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/) centralizes routing and simplifies management within a Region. When the network requires consistent segmentation policies, automated attachment operation, and centralized governance, [AWS Cloud WAN](https://aws.amazon.com/cloud-wan/) brings that under a single, policy-driven control plane. This applies whether you operate in one Region or many. AWS Cloud WAN's network policy defines your topology declaratively, so adding VPCs, enforcing segment isolation, and managing routing happens through policy changes rather than manual configuration across individual Transit Gateways.
 
@@ -1009,40 +988,10 @@ Real-world AWS networks combine multiple connectivity services. Rather than choo
 
 The services covered in this page are complementary layers, not competing alternatives.
 
-``` mermaid
-graph TB
-    subgraph Stack["Connectivity Stack"]
-        direction TB
-        
-        subgraph App["Application & Resource Layer"]
-            Lattice2["Amazon VPC Lattice<br/>Service-to-service communication<br/>Auth policies, traffic management"]
-            Resources2["VPC Lattice VPC Resources<br/>Private TCP resource access<br/>Databases, on-prem, 3rd-party"]
-            PL2["AWS PrivateLink<br/>Private AWS service access<br/>Gateway endpoints for S3/DynamoDB"]
-        end
-        
-        subgraph Net["Network Layer"]
-            CWAN2["AWS Cloud WAN<br/>Global network backbone<br/>Policy-driven segmentation"]
-            TGW2["AWS Transit Gateway<br/>Regional hub-and-spoke"]
-        end
-        
-        subgraph Targeted["Targeted Connections"]
-            Peer2["VPC Peering<br/>Low-latency point-to-point<br/>Cost-sensitive workloads"]
-        end
-    end
-    
-    App ~~~ Net ~~~ Targeted
-    
-    style Stack fill:none,stroke:none
-    style App fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Net fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Targeted fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Lattice2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Resources2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style PL2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CWAN2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style TGW2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style Peer2 fill:#059669,stroke:#047857,color:#fff
-```
+![Connectivity stack showing three tiers: Application and Resource Layer (VPC Lattice, VPC Resources, PrivateLink), Network Layer (Cloud WAN, Transit Gateway), and Targeted Connections (VPC Peering)](../assets/connectivity/connectivity-stack.png)
+/// caption
+Connectivity stack — [Drawio Source](../assets/connectivity/connectivity-stack.drawio)
+///
 
 ### New environments
 
