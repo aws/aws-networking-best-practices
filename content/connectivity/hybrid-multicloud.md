@@ -16,9 +16,7 @@ For multi-cloud, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/lat
 
 For users reaching AWS applications, [AWS Client VPN](https://aws.amazon.com/vpn/client-vpn/) provides network-level access into VPCs when applications need traditional IP reachability. [AWS Verified Access](https://aws.amazon.com/verified-access/) provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a VPN client entirely.
 
-Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value.
-
-## Private on-premises connectivity with AWS Direct Connect
+Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see [Building your hybrid and multi-cloud stack](#building-your-hybrid-and-multi-cloud-stack) at the end of this page.## Private on-premises connectivity with AWS Direct Connect
 
 [AWS Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html) provides private, dedicated network connectivity between your on-premises network and AWS. Traffic flows over physical circuits provisioned at a Direct Connect location, bypassing the public internet entirely, so bandwidth is predictable, latency is consistent, and data transfer out of AWS is cheaper than over the internet. Direct Connect is the foundation for most production hybrid deployments, and it integrates with every AWS network service that terminates hybrid traffic: virtual private gateways, Transit Gateway, and AWS Cloud WAN.
 

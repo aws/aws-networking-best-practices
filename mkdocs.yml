@@ -166,6 +166,7 @@ nav:
       - Regions & Availability Zones: foundation/regions-azs.md
       - CIDR Planning: foundation/cidr.md
       - Subnets: foundation/subnets.md
+      - DNS Architecture: foundation/dns.md
       - IPAM: foundation/ipam.md
   - Connectivity:
       - connectivity/index.md
@@ -184,10 +185,10 @@ nav:
       - Network Segmentation: security/segmentation.md
   - Observability:
       - observability/index.md
-      - Notifications: observability/notifications.md
-      - AWS Services: observability/service-monitoring.md
       - Internal Traffic: observability/internal-traffic.md
       - External Traffic: observability/external-traffic.md
+      - AWS Services: observability/service-monitoring.md
+      - Notifications: observability/notifications.md
   - Community:
       - community/index.md
       - How to contribute: community/contribute.md
