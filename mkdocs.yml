@@ -63,7 +63,6 @@ theme:
     - navigation.tracking
     - navigation.indexes
     - navigation.expand
-    - navigation.path
     - navigation.footer
 
 # Additional configuration
