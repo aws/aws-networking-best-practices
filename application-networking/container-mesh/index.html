@@ -2179,41 +2179,12 @@
 <p>In a cloud-native AWS environment, <strong>discovery, identity-based authentication, traffic management, observability, network policy, and multi-cluster reach are already covered by managed services</strong>. What's left for a sidecar mesh are mesh-managed mTLS lifecycle, mesh-CRD-based traffic and resilience policies, and certain cluster-mesh control-plane patterns. None of these are bad reasons to adopt a mesh, they're real requirements for some workloads, but they should be <strong>named contracts</strong>, not the default starting point.</p>
 <p>The multi-cluster row is the one most worth challenging deliberately. Teams reach for cluster-mesh patterns to let independent teams operate their own clusters and still expose services across them. Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice solves the same scaling problem at the network layer: each team owns its own cluster, exports its services to a shared service network, and consumers in other clusters reach them as a Route 53 alias backed by the Lattice service. The team boundaries stay intact without a mesh control plane bridging them.</p>
 <p>If the workload genuinely needs one or more of the mesh-specific gap items, a self-managed mesh is the right call. The rest of this page covers the three shapes container service-to-service architecture takes on AWS: in-cluster primitives, Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice as the alternative to a mesh, and a self-managed mesh on top of AWS networking.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Mesh["Container mesh shapes"]
-        direction TB
-
-        subgraph Shape1["In-cluster container networking"]
-            direction TB
-            EKS1["Amazon EKS&lt;br/&gt;VPC CNI, Pod Identity / IRSA,&lt;br/&gt;SG for pods, NetworkPolicy"]
-            ECS1["Amazon ECS&lt;br/&gt;awsvpc, ECS service connect,&lt;br/&gt;task roles"]
-        end
-
-        subgraph Shape2["Amazon VPC Lattice (alternative to a mesh)"]
-            direction TB
-            GAPI["AWS Gateway API Controller&lt;br/&gt;Kubernetes Gateway, HTTPRoute,&lt;br/&gt;GRPCRoute, ServiceImport"]
-            Cross["Cross-cluster, cross-VPC,&lt;br/&gt;cross-account through&lt;br/&gt;Lattice service network&lt;br/&gt;shared via AWS RAM"]
-        end
-
-        subgraph Shape3["Self-managed mesh on AWS networking"]
-            direction TB
-            OnLattice["Mesh on top of&lt;br/&gt;Amazon VPC Lattice"]
-            OnConnectivity["Mesh on top of&lt;br/&gt;peering, AWS Transit Gateway,&lt;br/&gt;AWS Cloud WAN"]
-        end
-    end
-
-    Shape1 ~~~ Shape2 ~~~ Shape3
-
-    style Mesh fill:none,stroke:none
-    style Shape1 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Shape2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Shape3 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style EKS1 fill:#2563eb,stroke:#1e40af,color:#fff
-    style ECS1 fill:#2563eb,stroke:#1e40af,color:#fff
-    style GAPI fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Cross fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style OnLattice fill:#059669,stroke:#047857,color:#fff
-    style OnConnectivity fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="Container mesh shapes showing three patterns: In-cluster container networking (EKS, ECS), Amazon VPC Lattice as an alternative to a mesh, and Self-managed mesh on AWS networking" src="../../assets/application-networking/container-mesh-shapes.png" /></p>
+<figcaption>
+<p>Container mesh shapes — <a href="../../assets/application-networking/container-mesh-shapes.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="in-cluster-container-networking">In-cluster container networking<a class="headerlink" href="#in-cluster-container-networking" title="Permanent link">&para;</a></h2>
 <p>The first shape isn't really "mesh" at all: it's the in-cluster primitives Amazon ECS and Amazon EKS already give you. Used well, they cover most "I want a mesh inside one cluster" requirements without running a mesh.</p>
 <h3 id="amazon-eks-in-cluster-networking">Amazon EKS in-cluster networking<a class="headerlink" href="#amazon-eks-in-cluster-networking" title="Permanent link">&para;</a></h3>
@@ -2436,49 +2407,12 @@
 </div>
 <h2 id="building-your-container-mesh-stack">Building your container mesh stack<a class="headerlink" href="#building-your-container-mesh-stack" title="Permanent link">&para;</a></h2>
 <p>Container mesh architecture is the layer between connectivity (covered in the <a href="../../connectivity/within-aws/">Within AWS</a> page) and the workload's application logic. The three shapes above are not mutually exclusive: most environments combine in-cluster container networking inside each cluster with Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice across clusters, and adopt a self-managed service mesh only for the workloads where a sidecar mesh is the genuine requirement.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Stack["Container mesh stack"]
-        direction TB
-
-        subgraph InCluster["In-cluster container networking"]
-            direction TB
-            EKSStack["Amazon EKS&lt;br/&gt;Amazon VPC CNI,&lt;br/&gt;Pod Identity / IRSA,&lt;br/&gt;Security groups for pods,&lt;br/&gt;NetworkPolicy"]
-            ECSStack["Amazon ECS&lt;br/&gt;awsvpc,&lt;br/&gt;Service Connect,&lt;br/&gt;Task IAM roles"]
-        end
-
-        subgraph CrossCluster["Amazon VPC Lattice (across clusters and VPCs)"]
-            direction TB
-            LatticeStack["Amazon VPC Lattice service network&lt;br/&gt;shared via AWS RAM"]
-            ControllerStack["AWS Gateway API Controller&lt;br/&gt;(EKS) /&lt;br/&gt;Amazon VPC Lattice with Amazon ECS"]
-            DNSStack["Route 53 alias records&lt;br/&gt;(consumer-facing names)"]
-        end
-
-        subgraph SelfMesh["Self-managed service mesh (when needed)"]
-            direction TB
-            OnLat["Mesh data plane on&lt;br/&gt;VPC Lattice listeners&lt;br/&gt;(HTTP / HTTPS / gRPC / TLS-on-SNI)"]
-            OnRes["Mesh TCP control plane on&lt;br/&gt;VPC Lattice resource configurations&lt;br/&gt;(same service network)"]
-            OnConn["Residual (UDP, multi-protocol) on&lt;br/&gt;peering / AWS Transit Gateway /&lt;br/&gt;AWS Cloud WAN"]
-            Ingress["AWS Load Balancer Controller&lt;br/&gt;(ingress to mesh)"]
-            Egress["VPC endpoints&lt;br/&gt;(egress from mesh to AWS services)"]
-        end
-    end
-
-    InCluster ~~~ CrossCluster ~~~ SelfMesh
-
-    style Stack fill:none,stroke:none
-    style InCluster fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style CrossCluster fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style SelfMesh fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style EKSStack fill:#2563eb,stroke:#1e40af,color:#fff
-    style ECSStack fill:#2563eb,stroke:#1e40af,color:#fff
-    style LatticeStack fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style ControllerStack fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style DNSStack fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style OnLat fill:#059669,stroke:#047857,color:#fff
-    style OnRes fill:#059669,stroke:#047857,color:#fff
-    style OnConn fill:#059669,stroke:#047857,color:#fff
-    style Ingress fill:#059669,stroke:#047857,color:#fff
-    style Egress fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="Container mesh stack showing three tiers: In-cluster (EKS and ECS primitives), Cross-cluster via VPC Lattice (service network, Gateway API Controller, Route 53), and Self-managed mesh (Lattice listeners, resource configs, connectivity fallback)" src="../../assets/application-networking/container-mesh-stack.png" /></p>
+<figcaption>
+<p>Container mesh stack — <a href="../../assets/application-networking/container-mesh-stack.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations building container service-to-service communication on a clean slate can start with a coherent stack from day one:</p>
 <ol>
@@ -2518,7 +2452,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="May 27, 2026 00:28:48 UTC">May 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:32:33 UTC">June 13, 2026</span>
   </span>
 
     

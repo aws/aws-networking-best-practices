@@ -2083,36 +2083,12 @@
 <p>This page is <strong>patterns-first</strong>. Each pattern below has multiple AWS-supported options; the right choice depends on the rest of the architecture. The framing question to keep in mind across the page: <strong>how much of the networking layer do you want to manage yourself?</strong></p>
 <p>Each pattern's options can be assembled from individual building blocks (Amazon Route 53, AWS PrivateLink, <abbr title="Application Load Balancer">ALB</abbr> / <abbr title="Network Load Balancer">NLB</abbr>, <abbr title="Identity and Access Management">IAM</abbr>, CloudWatch, AWS <abbr title="Web Application Firewall">WAF</abbr>) where the application or platform team owns the integration, <em>or</em> covered through <a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</a>, which folds discovery, authentication, cross-<abbr title="Virtual Private Cloud">VPC</abbr> reach, traffic management, and observability into a single managed application networking layer with the connectivity abstracted away. Both shapes are valid.</p>
 <p>The deeper <em>connectivity-side</em> treatment of Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice (service networks, association models, network-team-side best practices) lives in the <a href="../../connectivity/within-aws/">Within AWS</a> page; this page focuses on how application teams <em>use</em> the patterns.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph S2S["Service-to-service patterns"]
-        direction TB
-
-        subgraph Sync["Synchronous (request/response)"]
-            direction TB
-            Discovery["Service discovery and addressing&lt;br/&gt;Route 53 private hosted zones,&lt;br/&gt;AWS Cloud Map,&lt;br/&gt;direct ALB / NLB / Amazon VPC Lattice DNS"]
-            Auth["Authentication and authorization&lt;br/&gt;Amazon VPC Lattice auth policies + SigV4,&lt;br/&gt;security groups (network-based),&lt;br/&gt;ALB mTLS (client-cert workloads)"]
-            Cross["Cross-VPC and cross-account access&lt;br/&gt;Amazon VPC Lattice + AWS RAM,&lt;br/&gt;AWS PrivateLink endpoint services,&lt;br/&gt;peering / TGW / Cloud WAN with internal LBs"]
-            Traffic["Traffic management&lt;br/&gt;Amazon VPC Lattice weighted routing,&lt;br/&gt;ALB weighted target groups,&lt;br/&gt;Route 53 weighted records"]
-            Obs["Observability&lt;br/&gt;Amazon VPC Lattice access logs,&lt;br/&gt;X-Ray / OpenTelemetry / Application Signals,&lt;br/&gt;VPC Flow Logs"]
-        end
-
-        subgraph Async["Asynchronous (event-driven)"]
-            direction TB
-            Events["Direct invocation of VPC-based services&lt;br/&gt;Amazon EventBridge,&lt;br/&gt;AWS Step Functions HTTP Task&lt;br/&gt;via EventBridge connections"]
-        end
-    end
-
-    Sync ~~~ Async
-
-    style S2S fill:none,stroke:none
-    style Sync fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Async fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Discovery fill:#2563eb,stroke:#1e40af,color:#fff
-    style Auth fill:#2563eb,stroke:#1e40af,color:#fff
-    style Cross fill:#2563eb,stroke:#1e40af,color:#fff
-    style Traffic fill:#2563eb,stroke:#1e40af,color:#fff
-    style Obs fill:#2563eb,stroke:#1e40af,color:#fff
-    style Events fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<figure>
+<p><img alt="Service-to-service patterns showing synchronous concerns (discovery, authentication, cross-VPC access, traffic management, observability) and asynchronous patterns (EventBridge, Step Functions)" src="../../assets/application-networking/s2s-patterns.png" /></p>
+<figcaption>
+<p>Service-to-service patterns — <a href="../../assets/application-networking/s2s-patterns.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="synchronous-service-to-service-patterns">Synchronous service-to-service patterns<a class="headerlink" href="#synchronous-service-to-service-patterns" title="Permanent link">&para;</a></h2>
 <p>Synchronous service-to-service communication (a service makes a request, waits for the response) is the most common shape of service interaction inside a typical workload. The patterns below cover the design questions that consistently come up: how the consumer finds the provider, how the two sides authenticate, how the call crosses <abbr title="Virtual Private Cloud">VPC</abbr> and account boundaries, how new versions roll out safely, and how the operator sees what's happening.</p>
 <h3 id="service-discovery-and-addressing">Service discovery and addressing<a class="headerlink" href="#service-discovery-and-addressing" title="Permanent link">&para;</a></h3>
@@ -2627,47 +2603,12 @@
 <p><strong><em>Key insight:</em></strong> <em>The cheapest cross-<abbr title="Virtual Private Cloud">VPC</abbr> service access path depends on two variables: how many consumer VPCs and how much traffic. <abbr title="Virtual Private Cloud">VPC</abbr> Lattice's zero fixed cost makes it cheapest for many-consumer, moderate-traffic patterns. <abbr title="Virtual Private Cloud">VPC</abbr> Peering's zero processing cost makes it cheapest for high-traffic, few-consumer patterns. Transit Gateway's per-GB charge makes it the most expensive option for service-to-service specifically, but it's often already deployed for other connectivity needs.</em></p>
 <h2 id="building-your-service-to-service-stack">Building your service-to-service stack<a class="headerlink" href="#building-your-service-to-service-stack" title="Permanent link">&para;</a></h2>
 <p>Service-to-service architecture is the layer between connectivity (covered in the <a href="../../connectivity/within-aws/">Within AWS</a> page) and application code. The patterns above can be assembled from individual AWS services or covered through Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice as a single managed surface; both shapes are valid, and many environments end up combining them per workload.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Stack["Service-to-Service Stack"]
-        direction TB
-
-        subgraph SyncStack["Synchronous service-to-service"]
-            direction TB
-            DNS["Service discovery&lt;br/&gt;Amazon Route 53 + Route 53 Profiles&lt;br/&gt;(AWS Cloud Map for ECS-native)"]
-            VPCLattice["Amazon VPC Lattice services&lt;br/&gt;Discovery, auth, weighted routing,&lt;br/&gt;cross-VPC and cross-account through AWS RAM,&lt;br/&gt;identity-aware access logs"]
-            mTLS["Mutual TLS&lt;br/&gt;ALB or Amazon VPC Lattice&lt;br/&gt;TLS passthrough&lt;br/&gt;(client-cert use cases)"]
-            PrivateLink["AWS PrivateLink endpoint services&lt;br/&gt;TCP exposure to a small set&lt;br/&gt;of named consumer VPCs"]
-        end
-
-        subgraph AsyncStack["Asynchronous service-to-service"]
-            direction TB
-            EventBridge["Amazon EventBridge&lt;br/&gt;Event bus + rules,&lt;br/&gt;connections to private APIs"]
-            StepFn["AWS Step Functions&lt;br/&gt;HTTP Task to private APIs&lt;br/&gt;through Amazon EventBridge connections"]
-        end
-
-        subgraph Observability["Observability"]
-            direction TB
-            Logs["Request-level access logs&lt;br/&gt;Amazon VPC Lattice (identity-aware),&lt;br/&gt;ALB access logs"]
-            Traces["X-Ray / OTel / Application Signals&lt;br/&gt;Per-request distributed traces"]
-            Flow["VPC Flow Logs&lt;br/&gt;Network-level fallback"]
-        end
-    end
-
-    SyncStack ~~~ AsyncStack ~~~ Observability
-
-    style Stack fill:none,stroke:none
-    style SyncStack fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style AsyncStack fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Observability fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style DNS fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPCLattice fill:#2563eb,stroke:#1e40af,color:#fff
-    style mTLS fill:#2563eb,stroke:#1e40af,color:#fff
-    style PrivateLink fill:#2563eb,stroke:#1e40af,color:#fff
-    style EventBridge fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style StepFn fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Logs fill:#059669,stroke:#047857,color:#fff
-    style Traces fill:#059669,stroke:#047857,color:#fff
-    style Flow fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="Service-to-service stack showing three tiers: Synchronous (Route 53, VPC Lattice, mTLS, PrivateLink), Asynchronous (EventBridge, Step Functions), and Observability (access logs, traces, flow logs)" src="../../assets/application-networking/s2s-stack.png" /></p>
+<figcaption>
+<p>Service-to-service stack — <a href="../../assets/application-networking/s2s-stack.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations building service-to-service communication on a clean slate can start with a coherent stack from day one:</p>
 <ol>
@@ -2709,7 +2650,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:32:33 UTC">June 13, 2026</span>
   </span>
 
     

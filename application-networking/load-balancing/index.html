@@ -2226,40 +2226,12 @@
 <p>AWS Elastic Load Balancing distributes traffic across multiple targets through three managed services: Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>) for L7 HTTP/HTTPS/gRPC with content-based routing across up to 100 listener rules, Network Load Balancer (<abbr title="Network Load Balancer">NLB</abbr>) for L4 <abbr title="Transmission Control Protocol">TCP</abbr>/<abbr title="User Datagram Protocol">UDP</abbr>/<abbr title="Transport Layer Security">TLS</abbr> handling millions of connections per second with sub-millisecond latency and static IPs per Availability Zone, and Gateway Load Balancer (<abbr title="Gateway Load Balancer">GWLB</abbr>) for transparent insertion of third-party firewall appliances using GENEVE encapsulation. These are not interchangeable — each is built for a different traffic class and a different role in the architecture.</p>
 <p>This page covers the three Elastic Load Balancing services as building blocks of an application architecture: what each one does, how to configure it well, when to choose one over the others, and how to combine them with other AWS services.</p>
 <p><a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</a> services <em>also</em> load-balance traffic across targets, with managed health checks and weighted routing. The full treatment of <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, including the load-balancing capabilities of its services, are covered in the <a href="../service-to-service/">Service to Service</a> and <a href="../container-mesh/">Container Mesh</a> pages, because <abbr title="Virtual Private Cloud">VPC</abbr> Lattice's value extends well beyond load balancing into cross-<abbr title="Virtual Private Cloud">VPC</abbr> and cross-account service discovery, <abbr title="Identity and Access Management">IAM</abbr>-based authentication, and service-to-service connectivity. This page focuses on the three Elastic Load Balancing services; references to <abbr title="Virtual Private Cloud">VPC</abbr> Lattice on this page are pointers to where it fits, not deep coverage.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph LB["AWS managed load-balancing services"]
-        direction TB
-
-        subgraph ELB["Elastic Load Balancing — covered on this page"]
-            direction TB
-
-            subgraph AppTraffic["Application traffic distribution"]
-                ALB["Application Load Balancer (ALB)&lt;br/&gt;L7 — HTTP, HTTPS, gRPC&lt;br/&gt;Content-based routing,&lt;br/&gt;TLS termination, mTLS, AWS WAF"]
-                NLB["Network Load Balancer (NLB)&lt;br/&gt;L4 — TCP, UDP, TLS&lt;br/&gt;Ultra-high throughput,&lt;br/&gt;client IP preservation,&lt;br/&gt;static IPs per Availability Zone"]
-            end
-
-            subgraph Inspection["Transparent inspection insertion"]
-                GWLB["Gateway Load Balancer (GWLB)&lt;br/&gt;L3 — encapsulated transparent insertion&lt;br/&gt;Third-party firewall, IDS/IPS,&lt;br/&gt;or DPI appliances"]
-            end
-        end
-
-        subgraph Lattice["Application networking — covered in Service to Service and Container Mesh"]
-            VPCLattice["Amazon VPC Lattice services&lt;br/&gt;Service-to-service load balancing&lt;br/&gt;Cross-VPC and cross-account&lt;br/&gt;auth, discovery, weighted routing"]
-        end
-    end
-
-    AppTraffic ~~~ Inspection
-    ELB ~~~ Lattice
-
-    style LB fill:none,stroke:none
-    style ELB fill:none,stroke:#1f2937,stroke-width:2px,color:#1f2937
-    style AppTraffic fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Inspection fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Lattice fill:none,stroke:#9ca3af,stroke-width:2px,stroke-dasharray:3 5,color:#6b7280
-    style ALB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NLB fill:#2563eb,stroke:#1e40af,color:#fff
-    style GWLB fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style VPCLattice fill:#e5e7eb,stroke:#9ca3af,color:#374151</code></pre>
+<figure>
+<p><img alt="AWS managed load-balancing services showing Elastic Load Balancing (ALB for L7, NLB for L4, GWLB for transparent inspection insertion) and Amazon VPC Lattice as a separate application networking service" src="../../assets/application-networking/load-balancing-services.png" /></p>
+<figcaption>
+<p>Load-balancing services — <a href="../../assets/application-networking/load-balancing-services.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <p>Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>) and Network Load Balancer (<abbr title="Network Load Balancer">NLB</abbr>) distribute application traffic to targets. Gateway Load Balancer (<abbr title="Gateway Load Balancer">GWLB</abbr>) does something fundamentally different: it transparently inserts a fleet of third-party network appliances (firewalls, intrusion detection, deep packet inspection) into the data path. Treating <abbr title="Gateway Load Balancer">GWLB</abbr> as if it were a peer of <abbr title="Application Load Balancer">ALB</abbr> or <abbr title="Network Load Balancer">NLB</abbr> is the most common source of confusion; this page calls out that distinction explicitly. Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice is shown above as a reference because its services also load-balance traffic, but its primary scope is service-to-service application networking rather than <abbr title="Elastic Load Balancer">ELB</abbr>-style load balancing of a single workload — that's why it sits in a separate group on the diagram and gets its full treatment elsewhere in this section.</p>
 <h2 id="application-load-balancer-alb">Application Load Balancer (<abbr title="Application Load Balancer">ALB</abbr>)<a class="headerlink" href="#application-load-balancer-alb" title="Permanent link">&para;</a></h2>
 <p><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html">Application Load Balancer</a> operates at L7. It terminates <abbr title="Transport Layer Security">TLS</abbr>, decodes HTTP/HTTPS and gRPC, and routes each request based on the request itself: host header, path, HTTP method, query string, source IP, and other request attributes. Targets register in target groups and can be <abbr title="Elastic Compute Cloud">EC2</abbr> instances, IP addresses, or AWS Lambda functions. <abbr title="Application Load Balancer">ALB</abbr> sits in the workload <abbr title="Virtual Private Cloud">VPC</abbr>, scales horizontally with no operational management, and integrates natively with <a href="https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html">AWS <abbr title="Web Application Firewall">WAF</abbr></a>, Amazon CloudFront, AWS Global Accelerator, AWS Certificate Manager, Auto Scaling, and the container services (Amazon ECS, Amazon EKS).</p>
@@ -2888,32 +2860,12 @@
 </div>
 <h2 id="building-your-load-balancing-stack">Building your load-balancing stack<a class="headerlink" href="#building-your-load-balancing-stack" title="Permanent link">&para;</a></h2>
 <p>Load balancing in AWS is a layered choice. Pick the right load balancer for each role: <abbr title="Application Load Balancer">ALB</abbr> for L7 application traffic, <abbr title="Network Load Balancer">NLB</abbr> for L4 application traffic, <abbr title="Gateway Load Balancer">GWLB</abbr> only when you have third-party inspection appliances to insert.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Stack["Load-Balancing Stack"]
-        direction TB
-
-        subgraph L7["L7 — Application Load Balancer"]
-            ALB2["HTTP, HTTPS, gRPC&lt;br/&gt;Content-based routing&lt;br/&gt;TLS / mTLS, AWS WAF&lt;br/&gt;EC2, IP, Lambda, ALB targets"]
-        end
-
-        subgraph L4["L4 — Network Load Balancer"]
-            NLB2["TCP, UDP, TLS, QUIC&lt;br/&gt;Static IPs per Availability Zone&lt;br/&gt;Client IP preservation&lt;br/&gt;EC2, IP, ALB-as-target&lt;br/&gt;PrivateLink front"]
-        end
-
-        subgraph L3Insp["Transparent appliance insertion"]
-            GWLB2["Third-party firewall, IDS/IPS, DPI&lt;br/&gt;Encapsulated transparent insertion&lt;br/&gt;Centralized or per-VPC&lt;br/&gt;via GWLB endpoints"]
-        end
-    end
-
-    L7 ~~~ L4 ~~~ L3Insp
-
-    style Stack fill:none,stroke:none
-    style L7 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style L4 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style L3Insp fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style ALB2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style NLB2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style GWLB2 fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="Load-balancing stack showing three tiers: L7 (ALB), L4 (NLB), and Transparent appliance insertion (GWLB)" src="../../assets/application-networking/load-balancing-stack.png" /></p>
+<figcaption>
+<p>Load-balancing stack — <a href="../../assets/application-networking/load-balancing-stack.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations building load balancing on a clean slate can start with the patterns that scale and stay maintainable:</p>
 <ol>
@@ -2956,7 +2908,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:32:33 UTC">June 13, 2026</span>
   </span>
 
     
