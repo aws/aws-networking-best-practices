@@ -14,7 +14,7 @@ At its simplest, connecting two VPCs can be as straightforward as a [VPC Peering
 
 On the application side, [AWS PrivateLink](https://aws.amazon.com/privatelink/) provides private access to AWS services and lets you expose your own services to other accounts through ENI-based endpoints. For communication between your own workloads, [Amazon VPC Lattice](https://aws.amazon.com/vpc/lattice/) offers a higher-level abstraction that handles service discovery, IAM-based access control, and traffic management for HTTP, HTTPS, and gRPC services without requiring network-level coordination between teams. For private access to specific network resources, such as databases, on-premises endpoints, or third-party TCP services, [VPC Lattice VPC Resources](https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-configuration.html) extend the same service-network model to TCP resources.
 
-Most organizations will use more than one of these services simultaneously. The goal is to use each where it provides the most value.
+Most organizations will use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see [Building your connectivity stack](#building-your-connectivity-stack) at the end of this page.
 
 ## Policy-driven network management with AWS Cloud WAN
 

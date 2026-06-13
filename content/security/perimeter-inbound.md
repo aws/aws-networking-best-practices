@@ -189,7 +189,7 @@ Shield Advanced protection is per-resource. If your application uses CloudFront 
 
 AWS Network Firewall provides managed stateful and stateless inspection between your internet gateway and your workload subnets. It supports Suricata-compatible IPS/IDS rules, domain-based filtering (allow/deny traffic to specific FQDNs), TLS Server Name Indication (SNI) inspection, and protocol detection. Deploy firewall endpoints in dedicated subnets and use VPC ingress routing to direct traffic through them.
 
-The typical deployment for inbound inspection places firewall endpoints between the internet gateway and the public subnets hosting your load balancers. The IGW edge route table directs incoming traffic to the firewall endpoint in the same Availability Zone, and the firewall endpoint's subnet route table forwards inspected traffic to the workload subnets.
+The typical deployment for inbound inspection places firewall endpoints between the internet gateway and the public subnets hosting your load balancers. The IGW edge route table directs incoming traffic to the firewall endpoint in the same Availability Zone, and the firewall endpoint's subnet route table forwards inspected traffic to the workload subnets. For the full architectural context on where Network Firewall fits in your ingress and egress paths (centralized vs. per-VPC placement, cost trade-offs, and integration with Transit Gateway or AWS Cloud WAN), see [Internet Connectivity](../connectivity/internet.md).
 
 #### Choose between centralized and per-VPC inspection deliberately
 

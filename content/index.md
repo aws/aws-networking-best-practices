@@ -15,9 +15,11 @@ Enterprise AWS networks are built on five interconnected pillars:
 AWS Network Reference Architecture
 ///
 
-## Architecture Overview
+## Getting started
 
-Start with Foundation to understand the basics, then explore each pillar based on your specific networking requirements.
+If you know what you're trying to accomplish, start with the **[Decision Map](decisions.md)** — it maps common AWS networking questions directly to recommended services, patterns, and trade-offs.
+
+Or, start with Foundation to understand the basics and then explore each pillar based on your specific networking requirements.
 
 <div class="grid cards" markdown>
 

@@ -16,7 +16,7 @@ For multi-cloud, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/lat
 
 For users reaching AWS applications, [AWS Client VPN](https://aws.amazon.com/vpn/client-vpn/) provides network-level access into VPCs when applications need traditional IP reachability. [AWS Verified Access](https://aws.amazon.com/verified-access/) provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a VPN client entirely.
 
-Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value.
+Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see [Building your hybrid and multi-cloud stack](#building-your-hybrid-and-multi-cloud-stack) at the end of this page.
 
 ## Private on-premises connectivity with AWS Direct Connect
 

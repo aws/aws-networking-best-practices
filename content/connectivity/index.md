@@ -4,6 +4,11 @@ This section covers how AWS resources communicate with the internet, with each o
 
 The connectivity patterns you choose shape cost, latency, security boundaries, and operational ownership across your entire AWS environment. Most organizations use more than one connectivity service simultaneously, with each operating at the layer where it provides the most value.
 
+**How these pages relate:** Internet Connectivity covers your external boundary (how traffic enters and leaves AWS). Within AWS covers internal routing and service communication between VPCs and accounts. Hybrid & Multi-Cloud covers connections to networks outside AWS — on-premises data centers, other cloud providers, and remote users. Most architectures touch all three pages: internet for public-facing workloads, within-AWS for the backbone between them, and hybrid for the on-premises and multi-cloud leg.
+
+!!! tip "VPC Lattice coverage"
+    Amazon VPC Lattice appears in two places by design. The [Within AWS](within-aws.md) page covers VPC Lattice from the connectivity and network-team perspective: service networks, association models, and how VPC Lattice fits the connectivity stack. The [Application Networking → Service to Service](../application-networking/service-to-service.md) page covers VPC Lattice from the application-team perspective: service discovery, auth policies, traffic management, and deployment patterns.
+
 ## 1. Internet Connectivity
 
 **Internet connectivity** covers two distinct concerns: **ingress** (how external clients reach your AWS-hosted applications) and **egress** (how your AWS resources reach external services on the internet). The right pattern for each depends on different criteria, and the decisions you make for one rarely apply cleanly to the other.

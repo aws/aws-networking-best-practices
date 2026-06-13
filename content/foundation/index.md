@@ -94,6 +94,19 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 
 ***Best Practice:*** *Implement IPAM before creating your first production VPC. The cost of a single CIDR overlap (which requires VPC recreation to fix) exceeds the cost of IPAM for years.*
 
+## 8. DNS Architecture
+
+**Amazon Route 53 Resolver** handles every DNS query made from within a VPC — answering queries for private hosted zones, forwarding queries for on-premises domains, and resolving public internet names. In a multi-account environment, DNS decisions cascade into service discovery, hybrid connectivity, and security posture. Route 53 Profiles distribute DNS configuration (private hosted zone associations, forwarding rules, DNS Firewall rule groups) at the OU level so every account inherits consistent resolution automatically.
+
+**Key capabilities:**
+
+*   **Route 53 Profiles** — Bundle and share DNS configuration across all accounts in an OU; new accounts inherit automatically
+*   **Private hosted zones** — Internal DNS namespaces visible only to associated VPCs; the foundation of service discovery
+*   **Resolver endpoints** — Inbound (on-premises resolves AWS names) and outbound (AWS resolves on-premises names) for hybrid DNS
+*   **DNS Firewall** — Domain-based filtering at the resolution layer; the cheapest and broadest egress control
+
+***Best Practice:*** *Deploy Route 53 Profiles from day one. Without them, multi-account DNS turns into fragile per-account automation that drifts over time. With them, DNS configuration is a first-class operation that scales with your organization.*
+
 ---
 
 ## Explore Foundation Topics
@@ -155,5 +168,13 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
     Pool hierarchy, allocation rules, compliance monitoring, IaC integration, and hybrid awareness.
 
     [:octicons-arrow-right-24: IPAM](ipam.md)
+
+*   :material-dns: **DNS Architecture**
+
+    ---
+
+    Route 53 Resolver, private hosted zones, Resolver endpoints for hybrid DNS, Route 53 Profiles, and DNS Firewall.
+
+    [:octicons-arrow-right-24: DNS Architecture](dns.md)
 
 </div>
