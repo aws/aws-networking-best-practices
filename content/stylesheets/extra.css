@@ -42,3 +42,8 @@
 }
 
 /* END: Custom admonition for services styling with material icons */
+
+/* Hide redundant site name from sidebar navigation (it duplicates the header) */
+.md-nav__title[for="__drawer"] {
+  display: none;
+}
