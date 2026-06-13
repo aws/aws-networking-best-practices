@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/foundation/">
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/foundation/dns/">
       
       
-        <link rel="prev" href="../decisions/">
+        <link rel="prev" href="../subnets/">
       
       
-        <link rel="next" href="aws-prerequisites/">
+        <link rel="next" href="../ipam/">
       
       
         
       
       
-      <link rel="icon" href="../assets/favicon.ico">
+      <link rel="icon" href="../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Foundation - Networking Best Practices</title>
+        <title>DNS Architecture - Networking Best Practices</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -73,17 +73,17 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Foundation - Networking Best Practices" />
+<meta property="og:title" content="DNS Architecture - Networking Best Practices" />
 <meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
-<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/index.png" />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/dns.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/foundation/" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/foundation/dns/" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="Foundation - Networking Best Practices" />
+<meta property="twitter:title" content="DNS Architecture - Networking Best Practices" />
 <meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
-<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/index.png" />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/dns.png" />
 </head>
   
   
@@ -103,7 +103,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#foundation" class="md-skip">
+        <a href="#dns-architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -119,9 +119,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
       
-  <img src="../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -138,7 +138,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Foundation
+              DNS Architecture
             
           </span>
         </div>
@@ -264,9 +264,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
       
-  <img src="../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     Networking Best Practices
@@ -293,7 +293,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -320,7 +320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
+      <a href="../../decisions/" class="md-nav__link">
         
   
   
@@ -383,7 +383,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -401,7 +401,7 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -427,7 +427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="aws-prerequisites/" class="md-nav__link">
+      <a href="../aws-prerequisites/" class="md-nav__link">
         
   
   
@@ -455,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="organizations/" class="md-nav__link">
+      <a href="../organizations/" class="md-nav__link">
         
   
   
@@ -483,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="vpc/" class="md-nav__link">
+      <a href="../vpc/" class="md-nav__link">
         
   
   
@@ -511,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="regions-azs/" class="md-nav__link">
+      <a href="../regions-azs/" class="md-nav__link">
         
   
   
@@ -539,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cidr/" class="md-nav__link">
+      <a href="../cidr/" class="md-nav__link">
         
   
   
@@ -567,7 +567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="subnets/" class="md-nav__link">
+      <a href="../subnets/" class="md-nav__link">
         
   
   
@@ -592,10 +592,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="dns/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -611,6 +638,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolution-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-account-dns-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account DNS sharing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-route-53-resolver-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use Route 53 Resolver features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -623,7 +775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ipam/" class="md-nav__link">
+      <a href="../ipam/" class="md-nav__link">
         
   
   
@@ -684,7 +836,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../connectivity/" class="md-nav__link ">
+            <a href="../../connectivity/" class="md-nav__link ">
               
   
   
@@ -728,7 +880,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connectivity/internet/" class="md-nav__link">
+      <a href="../../connectivity/internet/" class="md-nav__link">
         
   
   
@@ -756,7 +908,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connectivity/within-aws/" class="md-nav__link">
+      <a href="../../connectivity/within-aws/" class="md-nav__link">
         
   
   
@@ -784,7 +936,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connectivity/hybrid-multicloud/" class="md-nav__link">
+      <a href="../../connectivity/hybrid-multicloud/" class="md-nav__link">
         
   
   
@@ -845,7 +997,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../application-networking/" class="md-nav__link ">
+            <a href="../../application-networking/" class="md-nav__link ">
               
   
   
@@ -889,7 +1041,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../application-networking/load-balancing/" class="md-nav__link">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
         
   
   
@@ -917,7 +1069,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../application-networking/service-to-service/" class="md-nav__link">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
         
   
   
@@ -945,7 +1097,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../application-networking/container-mesh/" class="md-nav__link">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
         
   
   
@@ -1006,7 +1158,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../security/" class="md-nav__link ">
+            <a href="../../security/" class="md-nav__link ">
               
   
   
@@ -1050,7 +1202,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/perimeter-inbound/" class="md-nav__link">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
         
   
   
@@ -1078,7 +1230,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/outbound/" class="md-nav__link">
+      <a href="../../security/outbound/" class="md-nav__link">
         
   
   
@@ -1106,7 +1258,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/segmentation/" class="md-nav__link">
+      <a href="../../security/segmentation/" class="md-nav__link">
         
   
   
@@ -1169,7 +1321,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../observability/" class="md-nav__link ">
+            <a href="../../observability/" class="md-nav__link ">
               
   
   
@@ -1213,7 +1365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/internal-traffic/" class="md-nav__link">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
         
   
   
@@ -1241,7 +1393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/external-traffic/" class="md-nav__link">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
         
   
   
@@ -1269,7 +1421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/service-monitoring/" class="md-nav__link">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
         
   
   
@@ -1297,7 +1449,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/notifications/" class="md-nav__link">
+      <a href="../../observability/notifications/" class="md-nav__link">
         
   
   
@@ -1364,7 +1516,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../community/" class="md-nav__link ">
+            <a href="../../community/" class="md-nav__link ">
               
   
   
@@ -1408,7 +1560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/contribute/" class="md-nav__link">
+      <a href="../../community/contribute/" class="md-nav__link">
         
   
   
@@ -1436,7 +1588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/report-a-correction/" class="md-nav__link">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
         
   
   
@@ -1464,7 +1616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/new-best-practice/" class="md-nav__link">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
         
   
   
@@ -1492,7 +1644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/making-a-pull-request/" class="md-nav__link">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
         
   
   
@@ -1520,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/philosophy/" class="md-nav__link">
+      <a href="../../community/philosophy/" class="md-nav__link">
         
   
   
@@ -1548,7 +1700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/conventions/" class="md-nav__link">
+      <a href="../../community/conventions/" class="md-nav__link">
         
   
   
@@ -1603,10 +1755,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-before-you-start" class="md-nav__link">
+  <a href="#key-capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Before You Start
+        Key capabilities
       
     </span>
   </a>
@@ -1614,10 +1766,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-aws-organizations-and-account-structure" class="md-nav__link">
+  <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. AWS Organizations and Account Structure
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolution-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-account-dns-sharing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-account DNS sharing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ipv6-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPv6 considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-route-53-resolver-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use Route 53 Resolver features
       
     </span>
   </a>
@@ -1625,10 +1838,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-amazon-vpc" class="md-nav__link">
+  <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Amazon VPC
+        Documentation
       
     </span>
   </a>
@@ -1636,65 +1849,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-regions-and-availability-zones" class="md-nav__link">
+  <a href="#related-pages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Regions and Availability Zones
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-ip-address-planning-with-cidr-blocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. IP Address Planning with CIDR Blocks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-subnets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Subnets
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-ip-address-management-ipam" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. IP Address Management (IPAM)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-dns-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. DNS Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#explore-foundation-topics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Explore Foundation Topics
+        Related pages
       
     </span>
   </a>
@@ -1726,7 +1884,7 @@
   
   
     <li class="md-path__item">
-      <a href=".." class="md-path__link">
+      <a href="../.." class="md-path__link">
         
   <span class="md-ellipsis">
     Introduction
@@ -1744,7 +1902,7 @@
     
     
       <li class="md-path__item">
-        <a href="./" class="md-path__link">
+        <a href="../" class="md-path__link">
           
   <span class="md-ellipsis">
     Foundation
@@ -1766,7 +1924,7 @@
 
 
   
-    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/foundation/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/foundation/dns.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1775,150 +1933,159 @@
     
       
     
-    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/foundation/index.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/foundation/dns.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="foundation">Foundation<a class="headerlink" href="#foundation" title="Permanent link">&para;</a></h1>
-<p>This section covers the fundamental building blocks of AWS networking. Understanding these core concepts is essential before implementing connectivity, application networking, security, or observability solutions. Every service and pattern in the rest of this guide builds on the foundation described here.</p>
-<p>The foundation layer answers the questions that come before "how do I connect things?": how is your organization structured, where do your networks live, what address space do they use, and how is that address space governed. Getting these decisions right enables everything above them to work cleanly. Getting them wrong creates constraints that are expensive to fix later.</p>
-<h2 id="1-before-you-start">1. Before You Start<a class="headerlink" href="#1-before-you-start" title="Permanent link">&para;</a></h2>
-<p>Every <abbr title="Virtual Private Cloud">VPC</abbr>, route table, and Transit Gateway attachment lives inside an account, is governed by <abbr title="Identity and Access Management">IAM</abbr> policies, is subject to service quotas, and should be deployed through code. Getting these non-networking foundations right before you touch a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block prevents the class of problems that are hardest to fix later.</p>
-<p><strong>Key topics:</strong></p>
-<ul>
-<li><strong>Identity and Access Management (<abbr title="Identity and Access Management">IAM</abbr>)</strong> — Cross-account roles, service-linked roles, SCPs, and condition keys for network resources</li>
-<li><strong>Infrastructure as Code</strong> — CloudFormation, Terraform, and CDK for network resource management</li>
-<li><strong>Service Quotas</strong> — Limits that gate deployment and must be planned around</li>
-<li><strong>Tagging Strategy</strong> — Cost allocation, automation targeting, and policy enforcement</li>
-<li><strong>Well-Architected Framework</strong> — Security, Reliability, and Cost Optimization pillars applied to networking</li>
-</ul>
-<h2 id="2-aws-organizations-and-account-structure">2. AWS Organizations and Account Structure<a class="headerlink" href="#2-aws-organizations-and-account-structure" title="Permanent link">&para;</a></h2>
-<p><strong>AWS Organizations</strong> is the governance layer that determines how network resources are shared, how security boundaries are enforced, and how teams operate independently without creating connectivity chaos. Without Organizations, every cross-account networking pattern requires manual trust relationships that don't scale.</p>
-<p><strong>Key concepts:</strong></p>
-<ul>
-<li><strong>Organizational Units (OUs)</strong> — Logical groupings that scope RAM shares, SCP enforcement, and attachment automation</li>
-<li><strong>Service Control Policies (SCPs)</strong> — Guardrails that enforce network architecture, not just security</li>
-<li><strong>Centralized Networking Account</strong> — Dedicated account for Transit Gateway, Direct Connect, Route 53 Resolver, and <abbr title="IP Address Manager">IPAM</abbr></li>
-<li><strong>Resource sharing via RAM</strong> — Share networking resources at the OU level for automatic inheritance</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Establish a dedicated networking account before any workload accounts. Every subsequent account will depend on shared networking resources, and retrofitting centralized networking is significantly harder than starting centralized.</em></p>
-<h2 id="3-amazon-vpc">3. Amazon <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#3-amazon-vpc" title="Permanent link">&para;</a></h2>
-<p><strong>Amazon Virtual Private Cloud (<abbr title="Virtual Private Cloud">VPC</abbr>)</strong> is the foundational security boundary, the IP address domain, and the routing context that shapes every networking decision above it. Every compute resource, database, container, and Lambda function that needs network connectivity runs inside a <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
-<p><strong>Key decisions:</strong></p>
-<ul>
-<li><strong><abbr title="Virtual Private Cloud">VPC</abbr> design pattern</strong> — <abbr title="Virtual Private Cloud">VPC</abbr> per workload (most common), shared VPCs via RAM (centralized control), or multi-<abbr title="Virtual Private Cloud">VPC</abbr> per account</li>
-<li><strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizing</strong> — Start with <code>/16</code> for production; never go smaller than <code>/20</code></li>
-<li><strong><abbr title="Internet Protocol version 6">IPv6</abbr> adoption</strong> — Enable dual-stack from day one on new VPCs</li>
-<li><strong>Flow Logs</strong> — Enable at <abbr title="Virtual Private Cloud">VPC</abbr> level for comprehensive security and troubleshooting visibility</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Use custom VPCs for everything. Delete or ignore default VPCs. Deploy an SCP that denies resource creation in default VPCs across your entire Organization.</em></p>
-<h2 id="4-regions-and-availability-zones">4. Regions and Availability Zones<a class="headerlink" href="#4-regions-and-availability-zones" title="Permanent link">&para;</a></h2>
-<p><strong>AWS Regions</strong> are separate geographic areas with fully independent infrastructure. Each Region contains multiple <strong>Availability Zones (Availability Zones)</strong> — physically separated data centers connected by low-latency private fiber. Every networking resource you deploy exists in exactly one Availability Zone, and your multi-<abbr title="Availability Zone">AZ</abbr> strategy determines resilience, cost, and blast radius.</p>
-<p><strong>Key considerations:</strong></p>
-<ul>
-<li><strong>Region selection</strong> — Latency, Direct Connect locations, service availability, compliance, and cost</li>
-<li><strong><abbr title="Availability Zone">AZ</abbr> IDs vs Availability Zone names</strong> — Availability Zone names are mapped randomly per account; use Availability Zone IDs for cross-account coordination</li>
-<li><strong>Multi-<abbr title="Availability Zone">AZ</abbr> patterns</strong> — Deploy every stateful networking resource per-<abbr title="Availability Zone">AZ</abbr>; size for N-1 Availability Zone capacity</li>
-<li><strong>Cross-<abbr title="Availability Zone">AZ</abbr> cost</strong> — per-GB charge in each direction (see <a href="https://aws.amazon.com/vpc/pricing/"><abbr title="Virtual Private Cloud">VPC</abbr> pricing</a>); minimize unnecessary cross-<abbr title="Availability Zone">AZ</abbr> traffic without sacrificing availability</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Deploy production workloads across at least 3 Availability Zones. Size per-<abbr title="Availability Zone">AZ</abbr> capacity so that losing one Availability Zone doesn't overwhelm the remaining two.</em></p>
-<h2 id="5-ip-address-planning-with-cidr-blocks">5. IP Address Planning with <abbr title="Classless Inter-Domain Routing">CIDR</abbr> Blocks<a class="headerlink" href="#5-ip-address-planning-with-cidr-blocks" title="Permanent link">&para;</a></h2>
-<p><strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> (Classless Inter-Domain Routing)</strong> notation defines IP address ranges for your VPCs and subnets. IP address planning is the single most consequential early decision that you cannot easily change later — every <abbr title="Virtual Private Cloud">VPC</abbr>, peering connection, hybrid link, and route table is constrained by the CIDRs you chose at creation time.</p>
-<p><strong>Key principles:</strong></p>
-<ul>
-<li><strong>Allocate contiguously</strong> — Enables route summarization, simplifies firewall rules, and makes topology legible</li>
-<li><strong>Never overlap</strong> — VPCs with overlapping CIDRs cannot be connected via peering, Transit Gateway, or Cloud WAN</li>
-<li><strong>Plan for hybrid</strong> — Coordinate with on-premises ranges before any AWS allocation</li>
-<li><strong>Use 10.0.0.0/8</strong> — Largest contiguous private space; supports deep hierarchical allocation</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Design a hierarchical allocation: Organization → Environment → Region → <abbr title="Virtual Private Cloud">VPC</abbr> → Subnet. This structure enables route summarization at every level and makes your network topology self-documenting.</em></p>
-<h2 id="6-subnets">6. Subnets<a class="headerlink" href="#6-subnets" title="Permanent link">&para;</a></h2>
-<p>A <strong>subnet</strong> is where routing policy meets IP addressing. Every resource you launch lands in a subnet, and that subnet's route table determines what the resource can reach. "Public" and "private" are properties of the route table, not the subnet itself.</p>
-<p><strong>Key patterns:</strong></p>
-<ul>
-<li><strong>Five-tier architecture</strong> — Firewall, public, private (application), data, and infrastructure/transit subnets</li>
-<li><strong>One subnet per Availability Zone per tier</strong> — Consistent across all Availability Zones</li>
-<li><strong>Size for the workload</strong> — <code>/24</code> for most tiers; <code>/22</code> or larger for EKS/ECS container subnets</li>
-<li><strong>Infrastructure subnets</strong> — Dedicated <code>/28</code> subnets for Transit Gateway ENIs, firewall endpoints, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoint ENIs</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Leave numbering gaps in your subnet scheme (0, 10, 20, 30 instead of 0, 1, 2, 3) so you can insert new tiers later without disrupting existing subnets.</em></p>
-<h2 id="7-ip-address-management-ipam">7. IP Address Management (<abbr title="IP Address Manager">IPAM</abbr>)<a class="headerlink" href="#7-ip-address-management-ipam" title="Permanent link">&para;</a></h2>
-<p><strong>AWS <abbr title="IP Address Manager">IPAM</abbr></strong> replaces spreadsheets and tribal knowledge with a centralized, policy-driven system that plans, allocates, tracks, and monitors IP addresses across every account and Region. Without <abbr title="IP Address Manager">IPAM</abbr>, IP address management degrades into a coordination bottleneck that produces overlaps discovered only when you try to connect VPCs.</p>
-<p><strong>Key capabilities:</strong></p>
-<ul>
-<li><strong>Hierarchical pools</strong> — Organization → Region → Environment → Workload, with allocation rules at every level</li>
-<li><strong>Overlap prevention</strong> — Every allocation validated against the entire pool hierarchy</li>
-<li><strong>Compliance monitoring</strong> — Continuous detection of VPCs with manually assigned CIDRs that violate your standards</li>
-<li><strong>IaC integration</strong> — CloudFormation and Terraform reference <abbr title="IP Address Manager">IPAM</abbr> pools instead of hardcoded CIDRs</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Implement <abbr title="IP Address Manager">IPAM</abbr> before creating your first production <abbr title="Virtual Private Cloud">VPC</abbr>. The cost of a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap (which requires <abbr title="Virtual Private Cloud">VPC</abbr> recreation to fix) exceeds the cost of <abbr title="IP Address Manager">IPAM</abbr> for years.</em></p>
-<h2 id="8-dns-architecture">8. <abbr title="Domain Name System">DNS</abbr> Architecture<a class="headerlink" href="#8-dns-architecture" title="Permanent link">&para;</a></h2>
-<p><strong>Amazon Route 53 Resolver</strong> handles every <abbr title="Domain Name System">DNS</abbr> query made from within a <abbr title="Virtual Private Cloud">VPC</abbr> — answering queries for private hosted zones, forwarding queries for on-premises domains, and resolving public internet names. In a multi-account environment, <abbr title="Domain Name System">DNS</abbr> decisions cascade into service discovery, hybrid connectivity, and security posture. Route 53 Profiles distribute <abbr title="Domain Name System">DNS</abbr> configuration (private hosted zone associations, forwarding rules, <abbr title="Domain Name System">DNS</abbr> Firewall rule groups) at the OU level so every account inherits consistent resolution automatically.</p>
-<p><strong>Key capabilities:</strong></p>
-<ul>
-<li><strong>Route 53 Profiles</strong> — Bundle and share <abbr title="Domain Name System">DNS</abbr> configuration across all accounts in an OU; new accounts inherit automatically</li>
-<li><strong>Private hosted zones</strong> — Internal <abbr title="Domain Name System">DNS</abbr> namespaces visible only to associated VPCs; the foundation of service discovery</li>
-<li><strong>Resolver endpoints</strong> — Inbound (on-premises resolves AWS names) and outbound (AWS resolves on-premises names) for hybrid <abbr title="Domain Name System">DNS</abbr></li>
-<li><strong><abbr title="Domain Name System">DNS</abbr> Firewall</strong> — Domain-based filtering at the resolution layer; the cheapest and broadest egress control</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Deploy Route 53 Profiles from day one. Without them, multi-account <abbr title="Domain Name System">DNS</abbr> turns into fragile per-account automation that drifts over time. With them, <abbr title="Domain Name System">DNS</abbr> configuration is a first-class operation that scales with your organization.</em></p>
-<hr />
-<h2 id="explore-foundation-topics">Explore Foundation Topics<a class="headerlink" href="#explore-foundation-topics" title="Permanent link">&para;</a></h2>
+<h1 id="dns-architecture"><abbr title="Domain Name System">DNS</abbr> Architecture<a class="headerlink" href="#dns-architecture" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../organizations/">AWS Organizations</a>, and <a href="../cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>. Review those pages first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Amazon Route 53 Resolver handles every <abbr title="Domain Name System">DNS</abbr> query made from within a <abbr title="Virtual Private Cloud">VPC</abbr> — answering queries for private hosted zones, forwarding queries for on-premises domains over hybrid connections, and resolving public internet names, all without deploying any <abbr title="Domain Name System">DNS</abbr> infrastructure. In a multi-account AWS environment, <abbr title="Domain Name System">DNS</abbr> decisions cascade into service discovery, hybrid connectivity, and security posture: a misconfigured forwarding rule silently breaks resolution for an entire account, an unshared private hosted zone makes a service invisible to consumers in other VPCs, and the absence of <abbr title="Domain Name System">DNS</abbr> Firewall leaves every workload able to resolve (and therefore reach) any domain on the internet.</p>
+<p><abbr title="Domain Name System">DNS</abbr> in AWS operates across three layers that must be designed together: <strong>resolution</strong> (how queries are answered), <strong>sharing</strong> (how <abbr title="Domain Name System">DNS</abbr> configuration reaches all accounts), and <strong>security</strong> (how <abbr title="Domain Name System">DNS</abbr> is used as a control point for outbound traffic). Route 53 Resolver is the resolution engine, Route 53 Profiles distribute configuration at scale, and Route 53 Resolver <abbr title="Domain Name System">DNS</abbr> Firewall applies domain-based filtering at the <abbr title="Domain Name System">DNS</abbr> layer.</p>
+<h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg></span> <strong>Before You Start</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M7 19a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/></svg></span> <strong>Route 53 Resolver</strong></p>
 <hr />
-<p><abbr title="Identity and Access Management">IAM</abbr>, Infrastructure as Code, service quotas, tagging, and Well-Architected principles for networking.</p>
-<p><a href="aws-prerequisites/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Before You Start</a></p>
+<p>The default recursive resolver in every <abbr title="Virtual Private Cloud">VPC</abbr>. Answers queries for private hosted zones, forwards queries for on-premises domains via Resolver endpoints, and resolves public <abbr title="Domain Name System">DNS</abbr> — all automatically.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3v18h-6v-3.5h-2V21H5V3zm-4 4h2V5h-2zm-4 0h2V5h-2zM7 7h2V5H7zm8 4h2V9h-2zm-4 0h2V9h-2zm-4 0h2V9H7zm8 4h2v-2h-2zm-4 0h2v-2h-2zm-4 0h2v-2H7zm8 4h2v-2h-2zm-8 0h2v-2H7zM21 1H3v22h18z"/></svg></span> <strong>AWS Organizations</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg></span> <strong>Route 53 Profiles</strong></p>
 <hr />
-<p>Multi-account governance, SCPs, centralized networking account, and resource sharing via RAM.</p>
-<p><a href="organizations/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> AWS Organizations</a></p>
+<p>Distribute private hosted zone associations, Resolver forwarding rules, and <abbr title="Domain Name System">DNS</abbr> Firewall rule groups across accounts at the OU level. New accounts inherit <abbr title="Domain Name System">DNS</abbr> configuration automatically.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 20q-2.28 0-3.89-1.57Q1 16.85 1 14.58q0-1.95 1.17-3.48 1.18-1.53 3.08-1.95.63-2.3 2.5-3.72Q9.63 4 12 4q2.93 0 4.96 2.04Q19 8.07 19 11q1.73.2 2.86 1.5 1.14 1.28 1.14 3 0 1.88-1.31 3.19T18.5 20m-12-2h12q1.05 0 1.77-.73.73-.72.73-1.77t-.73-1.77Q19.55 13 18.5 13H17v-2q0-2.07-1.46-3.54Q14.08 6 12 6 9.93 6 8.46 7.46 7 8.93 7 11h-.5q-1.45 0-2.47 1.03Q3 13.05 3 14.5T4.03 17q1.02 1 2.47 1m5.5-6"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr></strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3"/></svg></span> <strong>Private hosted zones</strong></p>
 <hr />
-<p><abbr title="Virtual Private Cloud">VPC</abbr> design patterns, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizing, <abbr title="Internet Protocol version 6">IPv6</abbr>, Flow Logs, and the relationship between VPCs and account strategy.</p>
-<p><a href="vpc/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></p>
+<p><abbr title="Domain Name System">DNS</abbr> namespaces visible only to associated VPCs. Used for internal service names, split-horizon <abbr title="Domain Name System">DNS</abbr> (different answers for internal vs. external queries), and custom domain names for <abbr title="Virtual Private Cloud">VPC</abbr> Lattice and PrivateLink endpoints.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.9 17.39c-.26-.8-1.01-1.39-1.9-1.39h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41a7.984 7.984 0 0 1 2.9 12.8M11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1a2 2 0 0 0 2 2m1-16A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg></span> <strong>Regions and Availability Zones</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 15V9h8V4.16L19.84 12 12 19.84V15z"/></svg></span> <strong>Resolver endpoints</strong></p>
 <hr />
-<p>Region selection, Availability Zone IDs, multi-<abbr title="Availability Zone">AZ</abbr> patterns, cross-<abbr title="Availability Zone">AZ</abbr> cost management, and Local Zones.</p>
-<p><a href="regions-azs/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Regions and Availability Zones</a></p>
+<p>Inbound endpoints let on-premises <abbr title="Domain Name System">DNS</abbr> servers resolve AWS private hosted zones. Outbound endpoints let <abbr title="Virtual Private Cloud">VPC</abbr> workloads resolve on-premises domains by forwarding to on-premises <abbr title="Domain Name System">DNS</abbr> servers.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm0 6c1.4 0 2.8 1.1 2.8 2.5V11c.6 0 1.2.6 1.2 1.3v3.5c0 .6-.6 1.2-1.3 1.2H9.2c-.6 0-1.2-.6-1.2-1.3v-3.5c0-.6.6-1.2 1.2-1.2V9.5C9.2 8.1 10.6 7 12 7m0 1.2c-.8 0-1.5.5-1.5 1.3V11h3V9.5c0-.8-.7-1.3-1.5-1.3"/></svg></span> <strong><abbr title="Domain Name System">DNS</abbr> Firewall</strong></p>
 <hr />
-<p>Hierarchical allocation, route summarization, hybrid coordination, <abbr title="Internet Protocol version 6">IPv6</abbr>, and common mistakes.</p>
-<p><a href="cidr/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></p>
+<p>Domain-based filtering at the <abbr title="Domain Name System">DNS</abbr> resolution layer. Block, allow, or alert on queries to specific domains before the workload ever connects. The cheapest and broadest egress control available.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></span> <strong>Subnets</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong>Dual-stack support</strong></p>
 <hr />
-<p>Tier design, route tables, sizing for containers, NACLs, infrastructure subnets, and <abbr title="Virtual Private Cloud">VPC</abbr> sharing.</p>
-<p><a href="subnets/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Subnets</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 11h-2V9h2zM3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm7 2H8v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4z"/></svg></span> <strong><abbr title="IP Address Manager">IPAM</abbr></strong></p>
-<hr />
-<p>Pool hierarchy, allocation rules, compliance monitoring, IaC integration, and hybrid awareness.</p>
-<p><a href="ipam/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="IP Address Manager">IPAM</abbr></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M7 19a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/></svg></span> <strong><abbr title="Domain Name System">DNS</abbr> Architecture</strong></p>
-<hr />
-<p>Route 53 Resolver, private hosted zones, Resolver endpoints for hybrid <abbr title="Domain Name System">DNS</abbr>, Route 53 Profiles, and <abbr title="Domain Name System">DNS</abbr> Firewall.</p>
-<p><a href="dns/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Domain Name System">DNS</abbr> Architecture</a></p>
+<p>Resolver endpoints, forwarding rules, and <abbr title="Domain Name System">DNS</abbr> Firewall all support both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>. AAAA records in private hosted zones work alongside A records for dual-stack workloads.</p>
 </li>
 </ul>
 </div>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="resolution-architecture">Resolution architecture<a class="headerlink" href="#resolution-architecture" title="Permanent link">&para;</a></h3>
+<h4 id="use-route-53-resolver-as-the-sole-dns-resolver-for-all-vpcs">Use Route 53 Resolver as the sole <abbr title="Domain Name System">DNS</abbr> resolver for all VPCs<a class="headerlink" href="#use-route-53-resolver-as-the-sole-dns-resolver-for-all-vpcs" title="Permanent link">&para;</a></h4>
+<p>Every <abbr title="Virtual Private Cloud">VPC</abbr> gets a Route 53 Resolver at the <abbr title="Virtual Private Cloud">VPC</abbr>+2 address automatically. Do not deploy custom <abbr title="Domain Name System">DNS</abbr> servers (BIND, Active Directory <abbr title="Domain Name System">DNS</abbr>, CoreDNS outside of Kubernetes) as the primary resolver for <abbr title="Virtual Private Cloud">VPC</abbr> workloads. Custom resolvers add an operational burden (patching, scaling, monitoring), introduce a single point of failure that Route 53 Resolver does not have, and bypass Route 53 features (<abbr title="Domain Name System">DNS</abbr> Firewall, query logging, Resolver rules). The only justified exception is Active Directory-joined Windows workloads that require AD <abbr title="Domain Name System">DNS</abbr> for domain-joined resolution — and even those should forward non-AD queries back to Route 53 Resolver.</p>
+<h4 id="design-forwarding-rules-for-hybrid-dns-resolution">Design forwarding rules for hybrid <abbr title="Domain Name System">DNS</abbr> resolution<a class="headerlink" href="#design-forwarding-rules-for-hybrid-dns-resolution" title="Permanent link">&para;</a></h4>
+<p>When workloads in AWS need to resolve on-premises domain names (for example, <code>corp.example.com</code>), create Resolver outbound endpoints and forwarding rules that send those queries to on-premises <abbr title="Domain Name System">DNS</abbr> servers over Direct Connect or <abbr title="Virtual Private Network">VPN</abbr>. Conversely, when on-premises workloads need to resolve AWS private hosted zone names, create Resolver inbound endpoints that on-premises <abbr title="Domain Name System">DNS</abbr> servers forward to.</p>
+<p>Design the forwarding rules to be as specific as possible. Forward <code>corp.example.com</code> to on-premises, not <code>.</code> (the root). A wildcard forward rule sends all <abbr title="Domain Name System">DNS</abbr> traffic to on-premises, which adds latency to every query, creates a dependency on hybrid connectivity for all <abbr title="Domain Name System">DNS</abbr> resolution, and bypasses <abbr title="Domain Name System">DNS</abbr> Firewall for forwarded queries.</p>
+<h4 id="deploy-resolver-endpoints-across-multiple-availability-zones">Deploy Resolver endpoints across multiple Availability Zones<a class="headerlink" href="#deploy-resolver-endpoints-across-multiple-availability-zones" title="Permanent link">&para;</a></h4>
+<p>Resolver inbound and outbound endpoints create ENIs in the subnets you specify. Deploy at least two ENIs across two Availability Zones for each endpoint. A single-<abbr title="Availability Zone">AZ</abbr> endpoint is a single point of failure for all <abbr title="Domain Name System">DNS</abbr> resolution that depends on it — which in hybrid environments means all cross-boundary name resolution fails if that Availability Zone has an issue.</p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="Domain Name System">DNS</abbr> is the most failure-sensitive dependency in any network. A 30-second <abbr title="Domain Name System">DNS</abbr> resolution failure causes cascading timeouts across every service that makes outbound calls. Design <abbr title="Domain Name System">DNS</abbr> infrastructure for the same availability standard as your most critical workload.</em></p>
+<h3 id="multi-account-dns-sharing">Multi-account <abbr title="Domain Name System">DNS</abbr> sharing<a class="headerlink" href="#multi-account-dns-sharing" title="Permanent link">&para;</a></h3>
+<h4 id="use-route-53-profiles-for-multi-account-dns-distribution">Use Route 53 Profiles for multi-account <abbr title="Domain Name System">DNS</abbr> distribution<a class="headerlink" href="#use-route-53-profiles-for-multi-account-dns-distribution" title="Permanent link">&para;</a></h4>
+<p>Route 53 Profiles let you bundle private hosted zone associations, Resolver forwarding rules, and <abbr title="Domain Name System">DNS</abbr> Firewall rule groups into a single profile that you share via AWS RAM at the OU level. New accounts added to the OU inherit the full <abbr title="Domain Name System">DNS</abbr> configuration automatically — no custom automation, no cross-account Lambda functions, no manual association steps.</p>
+<p>Without Profiles, sharing <abbr title="Domain Name System">DNS</abbr> configuration across accounts requires per-account private hosted zone associations (one API call per <abbr title="Virtual Private Cloud">VPC</abbr> per hosted zone), per-account forwarding rule shares, and per-account <abbr title="Domain Name System">DNS</abbr> Firewall associations. That automation is fragile and hard to audit. Profiles replace it with a first-class operation.</p>
+<h4 id="centralize-private-hosted-zone-ownership-in-the-networking-account">Centralize private hosted zone ownership in the networking account<a class="headerlink" href="#centralize-private-hosted-zone-ownership-in-the-networking-account" title="Permanent link">&para;</a></h4>
+<p>Create and manage private hosted zones in your centralized networking account. Share them to consuming accounts through Route 53 Profiles. This gives the networking team control over the authoritative <abbr title="Domain Name System">DNS</abbr> namespace while letting application teams create records in delegated sub-zones where appropriate.</p>
+<p>The alternative — letting each account create its own private hosted zones — fragments the namespace, creates resolution conflicts when zones overlap, and makes <abbr title="Domain Name System">DNS</abbr> Firewall and query logging harder to implement consistently.</p>
+<h4 id="design-your-internal-namespace-hierarchy-deliberately">Design your internal namespace hierarchy deliberately<a class="headerlink" href="#design-your-internal-namespace-hierarchy-deliberately" title="Permanent link">&para;</a></h4>
+<p>Choose a single internal domain (for example, <code>internal.example.com</code>) and create sub-zones per environment, Region, or service domain. A well-designed hierarchy makes <abbr title="Domain Name System">DNS</abbr> records self-documenting and enables route-based resolution policies:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>internal.example.com           (root, networking account)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── prod.internal.example.com  (production services)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── dev.internal.example.com   (development services)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── hybrid.internal.example.com (on-premises forwarding)
+</span></code></pre></div>
+<p>Avoid flat namespaces where hundreds of records pile into a single zone. Avoid overly deep hierarchies that create long, unreadable FQDNs. Two to three levels below the root is the sweet spot.</p>
+<h3 id="dns-security"><abbr title="Domain Name System">DNS</abbr> security<a class="headerlink" href="#dns-security" title="Permanent link">&para;</a></h3>
+<h4 id="deploy-dns-firewall-in-every-vpc">Deploy <abbr title="Domain Name System">DNS</abbr> Firewall in every <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#deploy-dns-firewall-in-every-vpc" title="Permanent link">&para;</a></h4>
+<p>Route 53 Resolver <abbr title="Domain Name System">DNS</abbr> Firewall is the cheapest and broadest egress control in AWS. It evaluates every <abbr title="Domain Name System">DNS</abbr> query made from a <abbr title="Virtual Private Cloud">VPC</abbr> against domain lists (managed threat intelligence lists from AWS, or your own custom lists) and can block, allow, or alert. Because virtually all outbound connections start with a <abbr title="Domain Name System">DNS</abbr> lookup, blocking resolution of a malicious domain prevents the connection from ever being attempted.</p>
+<p>Deploy <abbr title="Domain Name System">DNS</abbr> Firewall rule groups via Route 53 Profiles so every <abbr title="Virtual Private Cloud">VPC</abbr> in the organization gets the same baseline protection. Layer with Network Firewall or third-party inspection for traffic that bypasses <abbr title="Domain Name System">DNS</abbr> (hardcoded IPs, <abbr title="Domain Name System">DNS</abbr>-over-HTTPS).</p>
+<p>For detailed <abbr title="Domain Name System">DNS</abbr> Firewall best practices and integration with other egress controls, see <a href="../../security/outbound/">Outbound Controls</a>.</p>
+<h4 id="enable-resolver-query-logging-for-visibility-and-forensics">Enable Resolver query logging for visibility and forensics<a class="headerlink" href="#enable-resolver-query-logging-for-visibility-and-forensics" title="Permanent link">&para;</a></h4>
+<p>Resolver query logging captures every <abbr title="Domain Name System">DNS</abbr> query made from associated VPCs — the query name, type, response code, source IP, and timestamp. Deliver logs to <abbr title="Simple Storage Service">S3</abbr> for cost-effective retention and Athena querying, or to CloudWatch Logs for real-time alerting on suspicious resolution patterns (queries for known C2 domains, high-frequency NXDOMAIN responses, unusual query volumes from a single source).</p>
+<p>Query logging is the <abbr title="Domain Name System">DNS</abbr> equivalent of <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs: it provides a complete record of what your workloads tried to reach by name. Without it, investigating <abbr title="Domain Name System">DNS</abbr>-related incidents (exfiltration over <abbr title="Domain Name System">DNS</abbr> tunneling, C2 callbacks, misconfigured forwarding) requires guesswork.</p>
+<h3 id="ipv6-considerations"><abbr title="Internet Protocol version 6">IPv6</abbr> considerations<a class="headerlink" href="#ipv6-considerations" title="Permanent link">&para;</a></h3>
+<h4 id="configure-dual-stack-resolver-endpoints-from-the-start">Configure dual-stack Resolver endpoints from the start<a class="headerlink" href="#configure-dual-stack-resolver-endpoints-from-the-start" title="Permanent link">&para;</a></h4>
+<p>Resolver inbound and outbound endpoints support <abbr title="Internet Protocol version 6">IPv6</abbr> ENI addresses. If your VPCs are dual-stack, configure Resolver endpoints with both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> addresses so <abbr title="Internet Protocol version 6">IPv6</abbr>-only workloads can forward and resolve without NAT64. On-premises <abbr title="Domain Name System">DNS</abbr> servers forwarding to AWS inbound endpoints need reachability to the endpoint's <abbr title="Internet Protocol version 6">IPv6</abbr> address if the on-premises network is also dual-stack.</p>
+<h4 id="include-aaaa-records-alongside-a-records-in-private-hosted-zones">Include AAAA records alongside A records in private hosted zones<a class="headerlink" href="#include-aaaa-records-alongside-a-records-in-private-hosted-zones" title="Permanent link">&para;</a></h4>
+<p>For every internal service running on dual-stack infrastructure, publish both A and AAAA records in the private hosted zone. Applications that prefer <abbr title="Internet Protocol version 6">IPv6</abbr> (or run <abbr title="Internet Protocol version 6">IPv6</abbr>-only) will use the AAAA record; <abbr title="Internet Protocol version 4">IPv4</abbr>-only consumers use the A record. This is the same principle as dual-stack <abbr title="Virtual Private Cloud">VPC</abbr> design: include <abbr title="Internet Protocol version 6">IPv6</abbr> from the start rather than retrofitting later.</p>
+<h2 id="when-to-use-route-53-resolver-features">When to use Route 53 Resolver features<a class="headerlink" href="#when-to-use-route-53-resolver-features" title="Permanent link">&para;</a></h2>
+<p>Route 53 Resolver is always in use — it's the default resolver in every <abbr title="Virtual Private Cloud">VPC</abbr>. The decision is which additional features to enable:</p>
+<p><strong>Private hosted zones</strong> are the right choice when:</p>
+<ul>
+<li>You need internal <abbr title="Domain Name System">DNS</abbr> names for services, databases, or endpoints that should not be resolvable from the public internet</li>
+<li>You need split-horizon <abbr title="Domain Name System">DNS</abbr> (different answers for the same domain depending on whether the query comes from inside or outside AWS)</li>
+</ul>
+<p><strong>Resolver endpoints and forwarding rules</strong> are the right choice when:</p>
+<ul>
+<li>On-premises workloads need to resolve AWS private hosted zone names (inbound endpoints)</li>
+<li>AWS workloads need to resolve on-premises domain names (outbound endpoints + forwarding rules)</li>
+<li>You operate in a hybrid environment with any <abbr title="Domain Name System">DNS</abbr> dependency crossing the AWS boundary</li>
+</ul>
+<p><strong>Route 53 Profiles</strong> are the right choice when:</p>
+<ul>
+<li>You operate more than a handful of accounts and need consistent <abbr title="Domain Name System">DNS</abbr> configuration across all of them</li>
+<li>You want new accounts to inherit <abbr title="Domain Name System">DNS</abbr> configuration automatically without custom automation</li>
+</ul>
+<p><strong><abbr title="Domain Name System">DNS</abbr> Firewall</strong> is the right choice in every <abbr title="Virtual Private Cloud">VPC</abbr> — there is no scenario where you should not deploy at least the AWS managed threat domain lists.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Route 53 Resolver documentation</strong></p>
+<hr />
+<p>Complete documentation for Resolver endpoints, forwarding rules, query logging, and DNSSEC validation.</p>
+<p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Route 53 Profiles documentation</strong></p>
+<hr />
+<p>How to create, share, and manage Profiles for multi-account <abbr title="Domain Name System">DNS</abbr> configuration distribution.</p>
+<p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/profiles.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Route 53 Resolver <abbr title="Domain Name System">DNS</abbr> Firewall</strong></p>
+<hr />
+<p>Domain-based filtering configuration, managed domain lists, and integration with Firewall Manager.</p>
+<p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>Route 53 blog posts</strong></p>
+<hr />
+<p>Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.</p>
+<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-route-53/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog posts</a></p>
+</li>
+</ul>
+</div>
+<h2 id="related-pages">Related pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
+<p><strong>Relationship to other Foundation topics:</strong></p>
+<ul>
+<li><strong><a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: Every <abbr title="Virtual Private Cloud">VPC</abbr> gets a Route 53 Resolver automatically. <abbr title="Virtual Private Cloud">VPC</abbr> design (number of VPCs, account placement) determines how many private hosted zone associations and Resolver endpoints you need.</li>
+<li><strong><a href="../organizations/">AWS Organizations</a></strong>: Route 53 Profiles share <abbr title="Domain Name System">DNS</abbr> configuration at the OU level. Your OU structure determines how <abbr title="Domain Name System">DNS</abbr> configuration is distributed.</li>
+</ul>
+<p><strong>Relationship to Connectivity topics:</strong></p>
+<ul>
+<li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud Connectivity</a></strong>: Resolver endpoints and forwarding rules are the <abbr title="Domain Name System">DNS</abbr> complement to Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> — they enable name resolution across the hybrid boundary that the connectivity layer provides at the network level.</li>
+</ul>
+<p><strong>Relationship to Security topics:</strong></p>
+<ul>
+<li><strong><a href="../../security/outbound/">Outbound Controls</a></strong>: <abbr title="Domain Name System">DNS</abbr> Firewall is covered in depth on the Outbound Controls page as the first layer of egress defense. This page covers <abbr title="Domain Name System">DNS</abbr> Firewall from the architecture and deployment perspective; Outbound Controls covers it from the security policy perspective.</li>
+</ul>
+<p><strong>Relationship to Application Networking topics:</strong></p>
+<ul>
+<li><strong><a href="../../application-networking/service-to-service/">Service to Service</a></strong>: Private hosted zones and Route 53 alias records are the primary service discovery mechanism covered on that page. <abbr title="Domain Name System">DNS</abbr> architecture decisions directly shape how services find each other.</li>
+</ul>
 
 
 
@@ -1951,7 +2118,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
   </span>
 
     
@@ -2038,7 +2205,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../decisions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Decision Map">
+          <a href="../subnets/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Subnets">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2048,20 +2215,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Decision Map
+                Subnets
               </div>
             </div>
           </a>
         
         
           
-          <a href="aws-prerequisites/" class="md-footer__link md-footer__link--next" aria-label="Next: Before You Start">
+          <a href="../ipam/" class="md-footer__link md-footer__link--next" aria-label="Next: IPAM">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Before You Start
+                IPAM
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2173,10 +2340,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.path", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

@@ -367,6 +367,8 @@
       
         
       
+        
+      
     
     
     
@@ -573,6 +575,34 @@
     
   
     Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Architecture
   
 
     
@@ -1530,14 +1560,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/notifications/" class="md-nav__link">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Notifications
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
   
 
     
@@ -1586,42 +1644,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/internal-traffic/" class="md-nav__link">
+      <a href="../../observability/notifications/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Internal Traffic
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../observability/external-traffic/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    External Traffic
+    Notifications
   
 
     
@@ -2315,7 +2345,7 @@
 <p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
 <p>For multi-cloud, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.</p>
 <p>For users reaching AWS applications, <a href="https://aws.amazon.com/vpn/client-vpn/">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> provides network-level access into VPCs when applications need traditional IP reachability. <a href="https://aws.amazon.com/verified-access/">AWS Verified Access</a> provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a <abbr title="Virtual Private Network">VPN</abbr> client entirely.</p>
-<p>Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value.</p>
+<p>Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see <a href="#building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack</a> at the end of this page.</p>
 <h2 id="private-on-premises-connectivity-with-aws-direct-connect">Private on-premises connectivity with AWS Direct Connect<a class="headerlink" href="#private-on-premises-connectivity-with-aws-direct-connect" title="Permanent link">&para;</a></h2>
 <p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html">AWS Direct Connect</a> provides private, dedicated network connectivity between your on-premises network and AWS. Traffic flows over physical circuits provisioned at a Direct Connect location, bypassing the public internet entirely, so bandwidth is predictable, latency is consistent, and data transfer out of AWS is cheaper than over the internet. Direct Connect is the foundation for most production hybrid deployments, and it integrates with every AWS network service that terminates hybrid traffic: virtual private gateways, Transit Gateway, and AWS Cloud WAN.</p>
 <p><strong>Key capabilities</strong>:</p>
@@ -2879,7 +2909,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 12, 2026 17:42:16 UTC">June 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
   </span>
 
     

@@ -367,6 +367,8 @@
       
         
       
+        
+      
     
     
     
@@ -573,6 +575,34 @@
     
   
     Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../foundation/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Architecture
   
 
     
@@ -1679,14 +1709,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/notifications/" class="md-nav__link">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Notifications
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
   
 
     
@@ -1735,42 +1793,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/internal-traffic/" class="md-nav__link">
+      <a href="../../observability/notifications/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Internal Traffic
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../observability/external-traffic/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    External Traffic
+    Notifications
   
 
     
@@ -2612,7 +2642,7 @@
 </figure>
 <p>At its simplest, connecting two VPCs can be as straightforward as a <a href="https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html"><abbr title="Virtual Private Cloud">VPC</abbr> Peering</a> connection: direct, low-cost, and effective for point-to-point communication. As the number of VPCs and accounts grows, a hub-and-spoke model with <a href="https://aws.amazon.com/transit-gateway/">AWS Transit Gateway</a> centralizes routing and simplifies management within a Region. When the network requires consistent segmentation policies, automated attachment operation, and centralized governance, <a href="https://aws.amazon.com/cloud-wan/">AWS Cloud WAN</a> brings that under a single, policy-driven control plane. This applies whether you operate in one Region or many. AWS Cloud WAN's network policy defines your topology declaratively, so adding VPCs, enforcing segment isolation, and managing routing happens through policy changes rather than manual configuration across individual Transit Gateways.</p>
 <p>On the application side, <a href="https://aws.amazon.com/privatelink/">AWS PrivateLink</a> provides private access to AWS services and lets you expose your own services to other accounts through ENI-based endpoints. For communication between your own workloads, <a href="https://aws.amazon.com/vpc/lattice/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</a> offers a higher-level abstraction that handles service discovery, <abbr title="Identity and Access Management">IAM</abbr>-based access control, and traffic management for HTTP, HTTPS, and gRPC services without requiring network-level coordination between teams. For private access to specific network resources, such as databases, on-premises endpoints, or third-party <abbr title="Transmission Control Protocol">TCP</abbr> services, <a href="https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-configuration.html"><abbr title="Virtual Private Cloud">VPC</abbr> Lattice <abbr title="Virtual Private Cloud">VPC</abbr> Resources</a> extend the same service-network model to <abbr title="Transmission Control Protocol">TCP</abbr> resources.</p>
-<p>Most organizations will use more than one of these services simultaneously. The goal is to use each where it provides the most value.</p>
+<p>Most organizations will use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see <a href="#building-your-connectivity-stack">Building your connectivity stack</a> at the end of this page.</p>
 <h2 id="policy-driven-network-management-with-aws-cloud-wan">Policy-driven network management with AWS Cloud WAN<a class="headerlink" href="#policy-driven-network-management-with-aws-cloud-wan" title="Permanent link">&para;</a></h2>
 <p><a href="https://docs.aws.amazon.com/vpc/latest/cloudwan/what-is-cloudwan.html">AWS Cloud WAN</a> lets you build, manage, and monitor your network through a single declarative policy. Rather than configuring individual Transit Gateways, peering connections, and route tables across Regions and accounts, AWS Cloud WAN centralizes your entire network topology into a JSON policy document. A network policy defines the entire topology: which Regions participate, how attachments are segmented and automatically connected into the network, and how traffic routes between segments. Changes to the policy are versioned and applied through a change set process, and the service takes care of building and updating the underlying infrastructure.</p>
 <p><strong>Key capabilities</strong>:</p>
@@ -3576,7 +3606,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 12, 2026 17:42:16 UTC">June 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
   </span>
 
     
