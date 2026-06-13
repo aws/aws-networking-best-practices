@@ -9,42 +9,10 @@ This page covers the three Elastic Load Balancing services as building blocks of
 
 [Amazon VPC Lattice](https://docs.aws.amazon.com/vpc-lattice/latest/ug/what-is-vpc-lattice.html) services *also* load-balance traffic across targets, with managed health checks and weighted routing. The full treatment of VPC Lattice, including the load-balancing capabilities of its services, are covered in the [Service to Service](service-to-service.md) and [Container Mesh](container-mesh.md) pages, because VPC Lattice's value extends well beyond load balancing into cross-VPC and cross-account service discovery, IAM-based authentication, and service-to-service connectivity. This page focuses on the three Elastic Load Balancing services; references to VPC Lattice on this page are pointers to where it fits, not deep coverage.
 
-``` mermaid
-graph TB
-    subgraph LB["AWS managed load-balancing services"]
-        direction TB
-
-        subgraph ELB["Elastic Load Balancing — covered on this page"]
-            direction TB
-
-            subgraph AppTraffic["Application traffic distribution"]
-                ALB["Application Load Balancer (ALB)<br/>L7 — HTTP, HTTPS, gRPC<br/>Content-based routing,<br/>TLS termination, mTLS, AWS WAF"]
-                NLB["Network Load Balancer (NLB)<br/>L4 — TCP, UDP, TLS<br/>Ultra-high throughput,<br/>client IP preservation,<br/>static IPs per Availability Zone"]
-            end
-
-            subgraph Inspection["Transparent inspection insertion"]
-                GWLB["Gateway Load Balancer (GWLB)<br/>L3 — encapsulated transparent insertion<br/>Third-party firewall, IDS/IPS,<br/>or DPI appliances"]
-            end
-        end
-
-        subgraph Lattice["Application networking — covered in Service to Service and Container Mesh"]
-            VPCLattice["Amazon VPC Lattice services<br/>Service-to-service load balancing<br/>Cross-VPC and cross-account<br/>auth, discovery, weighted routing"]
-        end
-    end
-
-    AppTraffic ~~~ Inspection
-    ELB ~~~ Lattice
-
-    style LB fill:none,stroke:none
-    style ELB fill:none,stroke:#1f2937,stroke-width:2px,color:#1f2937
-    style AppTraffic fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Inspection fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Lattice fill:none,stroke:#9ca3af,stroke-width:2px,stroke-dasharray:3 5,color:#6b7280
-    style ALB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NLB fill:#2563eb,stroke:#1e40af,color:#fff
-    style GWLB fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style VPCLattice fill:#e5e7eb,stroke:#9ca3af,color:#374151
-```
+![AWS managed load-balancing services showing Elastic Load Balancing (ALB for L7, NLB for L4, GWLB for transparent inspection insertion) and Amazon VPC Lattice as a separate application networking service](../assets/application-networking/load-balancing-services.png)
+/// caption
+Load-balancing services — [Drawio Source](../assets/application-networking/load-balancing-services.drawio)
+///
 
 Application Load Balancer (ALB) and Network Load Balancer (NLB) distribute application traffic to targets. Gateway Load Balancer (GWLB) does something fundamentally different: it transparently inserts a fleet of third-party network appliances (firewalls, intrusion detection, deep packet inspection) into the data path. Treating GWLB as if it were a peer of ALB or NLB is the most common source of confusion; this page calls out that distinction explicitly. Amazon VPC Lattice is shown above as a reference because its services also load-balance traffic, but its primary scope is service-to-service application networking rather than ELB-style load balancing of a single workload — that's why it sits in a separate group on the diagram and gets its full treatment elsewhere in this section.
 
@@ -524,34 +492,10 @@ GWLB supports `ipv4` and `dualstack` IP-address types. Dual-stack mode lets clie
 
 Load balancing in AWS is a layered choice. Pick the right load balancer for each role: ALB for L7 application traffic, NLB for L4 application traffic, GWLB only when you have third-party inspection appliances to insert.
 
-``` mermaid
-graph TB
-    subgraph Stack["Load-Balancing Stack"]
-        direction TB
-
-        subgraph L7["L7 — Application Load Balancer"]
-            ALB2["HTTP, HTTPS, gRPC<br/>Content-based routing<br/>TLS / mTLS, AWS WAF<br/>EC2, IP, Lambda, ALB targets"]
-        end
-
-        subgraph L4["L4 — Network Load Balancer"]
-            NLB2["TCP, UDP, TLS, QUIC<br/>Static IPs per Availability Zone<br/>Client IP preservation<br/>EC2, IP, ALB-as-target<br/>PrivateLink front"]
-        end
-
-        subgraph L3Insp["Transparent appliance insertion"]
-            GWLB2["Third-party firewall, IDS/IPS, DPI<br/>Encapsulated transparent insertion<br/>Centralized or per-VPC<br/>via GWLB endpoints"]
-        end
-    end
-
-    L7 ~~~ L4 ~~~ L3Insp
-
-    style Stack fill:none,stroke:none
-    style L7 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style L4 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style L3Insp fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style ALB2 fill:#2563eb,stroke:#1e40af,color:#fff
-    style NLB2 fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style GWLB2 fill:#059669,stroke:#047857,color:#fff
-```
+![Load-balancing stack showing three tiers: L7 (ALB), L4 (NLB), and Transparent appliance insertion (GWLB)](../assets/application-networking/load-balancing-stack.png)
+/// caption
+Load-balancing stack — [Drawio Source](../assets/application-networking/load-balancing-stack.drawio)
+///
 
 ### New environments
 

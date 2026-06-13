@@ -1,0 +1,40 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="IMwTOzEkv1ikap6Ih9Pl">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#7E7E7E;" value="Load-Balancing Stack" vertex="1">
+          <mxGeometry height="40" width="620" x="104" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#2563eb;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;spacingLeft=16;spacingTop=12;fontColor=#2563eb;fontStyle=1;fontSize=14;" value="L7 — Application Load Balancer" vertex="1">
+          <mxGeometry height="200" width="620" x="104" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-3" parent="H2Zl6LEEVMl0jFbHQJK2-2" style="sketch=0;outlineConnect=0;fontColor=#7E7E7E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.application_load_balancer;" value="ALB" vertex="1">
+          <mxGeometry height="78" width="78" x="40" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-4" parent="H2Zl6LEEVMl0jFbHQJK2-2" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#2563eb;spacingLeft=8;" value="HTTP, HTTPS, gRPC&#xa;Content-based routing&#xa;TLS / mTLS, AWS WAF&#xa;EC2, IP, Lambda, ALB targets" vertex="1">
+          <mxGeometry height="100" width="430" x="160" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#7c3aed;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;spacingLeft=16;spacingTop=12;fontColor=#7c3aed;fontStyle=1;fontSize=14;" value="L4 — Network Load Balancer" vertex="1">
+          <mxGeometry height="220" width="620" x="104" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-6" parent="H2Zl6LEEVMl0jFbHQJK2-5" style="sketch=0;outlineConnect=0;fontColor=#7E7E7E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.network_load_balancer;" value="NLB" vertex="1">
+          <mxGeometry height="78" width="78" x="40" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-7" parent="H2Zl6LEEVMl0jFbHQJK2-5" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#7c3aed;spacingLeft=8;" value="TCP, UDP, TLS, QUIC&#xa;Static IPs per AZ&#xa;Client IP preservation&#xa;EC2, IP, ALB-as-target&#xa;PrivateLink front" vertex="1">
+          <mxGeometry height="120" width="430" x="160" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#059669;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;spacingLeft=16;spacingTop=12;fontColor=#059669;fontStyle=1;fontSize=14;" value="Transparent appliance insertion" vertex="1">
+          <mxGeometry height="200" width="620" x="104" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-9" parent="H2Zl6LEEVMl0jFbHQJK2-8" style="sketch=0;outlineConnect=0;fontColor=#7E7E7E;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.gateway_load_balancer;" value="GWLB" vertex="1">
+          <mxGeometry height="78" width="78" x="40" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="H2Zl6LEEVMl0jFbHQJK2-10" parent="H2Zl6LEEVMl0jFbHQJK2-8" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontColor=#059669;spacingLeft=8;" value="Third-party firewall, IDS/IPS, DPI&#xa;Encapsulated transparent insertion&#xa;Centralized or per-VPC&#xa;via GWLB endpoints" vertex="1">
+          <mxGeometry height="100" width="430" x="160" y="55" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

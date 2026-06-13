@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="L4e9TfHERWeluPg4Kl2O">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#7E7E7E;fillColor=none;strokeColor=none;" value="Service-to-Service Communication Patterns" vertex="1">
+          <mxGeometry height="40" width="620" x="104" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;strokeColor=#2563eb;strokeWidth=2;fillColor=none;fontColor=#2563eb;fontStyle=1;fontSize=14;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=1;collapsible=0;" value="Synchronous (request / response)" vertex="1">
+          <mxGeometry height="660" width="620" x="104" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-3" parent="Joiq_5bunEIMIDCFy6Gk-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1d4ed8;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;spacingLeft=70;" value="&lt;b&gt;Service discovery and addressing&lt;/b&gt;&lt;br&gt;Route 53 private hosted zones,&lt;br&gt;AWS Cloud Map,&lt;br&gt;direct ALB / NLB / VPC Lattice DNS" vertex="1">
+          <mxGeometry height="110" width="580" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-5" parent="Joiq_5bunEIMIDCFy6Gk-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1d4ed8;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;spacingLeft=70;" value="&lt;b&gt;Authentication and authorization&lt;/b&gt;&lt;br&gt;VPC Lattice auth policies + SigV4,&lt;br&gt;security groups (network-based),&lt;br&gt;ALB mTLS (client-cert workloads)" vertex="1">
+          <mxGeometry height="110" width="580" x="20" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-6" parent="Joiq_5bunEIMIDCFy6Gk-2" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#DD344C;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.identity_and_access_management;" value="" vertex="1">
+          <mxGeometry height="46" width="46" x="37" y="192" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-7" parent="Joiq_5bunEIMIDCFy6Gk-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1d4ed8;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;spacingLeft=70;" value="&lt;b&gt;Cross-VPC and cross-account access&lt;/b&gt;&lt;br&gt;VPC Lattice + AWS RAM,&lt;br&gt;AWS PrivateLink endpoint services,&lt;br&gt;peering / TGW / Cloud WAN with internal LBs" vertex="1">
+          <mxGeometry height="110" width="580" x="20" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-8" parent="Joiq_5bunEIMIDCFy6Gk-2" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_lattice;" value="" vertex="1">
+          <mxGeometry height="46" width="46" x="37" y="312" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-9" parent="Joiq_5bunEIMIDCFy6Gk-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1d4ed8;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;spacingLeft=70;" value="&lt;b&gt;Traffic management&lt;/b&gt;&lt;br&gt;VPC Lattice weighted routing,&lt;br&gt;ALB weighted target groups,&lt;br&gt;Route 53 weighted records" vertex="1">
+          <mxGeometry height="110" width="580" x="20" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-10" parent="Joiq_5bunEIMIDCFy6Gk-2" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=light-dark(#7E7E7E,#7E7E7E);strokeColor=#2563eb;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.elastic_load_balancing;" value="" vertex="1">
+          <mxGeometry height="46" width="46" x="36" y="432" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-11" parent="Joiq_5bunEIMIDCFy6Gk-2" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1d4ed8;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;spacingLeft=70;" value="&lt;b&gt;Observability&lt;/b&gt;&lt;br&gt;VPC Lattice access logs,&lt;br&gt;X-Ray / OpenTelemetry / Application Signals,&lt;br&gt;VPC Flow Logs" vertex="1">
+          <mxGeometry height="110" width="580" x="20" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-12" parent="Joiq_5bunEIMIDCFy6Gk-2" style="sketch=0;points=[];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;" value="" vertex="1">
+          <mxGeometry height="46" width="46" x="36" y="552" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-16" parent="Joiq_5bunEIMIDCFy6Gk-2" style="image;aspect=fixed;perimeter=ellipsePerimeter;html=1;align=center;shadow=0;dashed=0;fontColor=#4277BB;labelBackgroundColor=default;fontSize=12;spacingTop=3;image=img/lib/ibm/infrastructure/service_discovery_configuration.svg;fillColor=light-dark(#7E7E7E,#7E7E7E);" value="" vertex="1">
+          <mxGeometry height="48" width="48" x="36" y="71" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;strokeColor=#7c3aed;strokeWidth=2;fillColor=none;fontColor=#7c3aed;fontStyle=1;fontSize=14;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=1;collapsible=0;" value="Asynchronous (event-driven)" vertex="1">
+          <mxGeometry height="170" width="620" x="104" y="770" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-14" parent="Joiq_5bunEIMIDCFy6Gk-13" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6d28d9;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;spacingLeft=70;" value="&lt;b&gt;Direct invocation of VPC-based services&lt;/b&gt;&lt;br&gt;Amazon EventBridge,&lt;br&gt;AWS Step Functions HTTP Task&lt;br&gt;via EventBridge connections" vertex="1">
+          <mxGeometry height="110" width="580" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Joiq_5bunEIMIDCFy6Gk-15" parent="Joiq_5bunEIMIDCFy6Gk-13" style="sketch=0;points=[];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge;" value="" vertex="1">
+          <mxGeometry height="46" width="46" x="36" y="72" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
