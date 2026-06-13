@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="LbdYRcwIyC_-UJbwMOT4">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#7E7E7E;" value="AWS Load Balancing Services" vertex="1">
+          <mxGeometry height="36" width="620" x="104" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=0;strokeColor=#555555;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;fontStyle=1;fontColor=#7E7E7E;spacingTop=8;spacingLeft=8;container=0;" value="Elastic Load Balancing (covered on this page)" vertex="1">
+          <mxGeometry height="460" width="620" x="104" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=3 3;strokeColor=#9e9e9e;strokeWidth=1;fillColor=none;verticalAlign=top;align=left;fontStyle=1;fontColor=light-dark(#7E7E7E,#7E7E7E);spacingTop=8;spacingLeft=8;container=0;" value="Application networking (covered in Service to Service and Container Mesh)" vertex="1">
+          <mxGeometry height="209" width="620" x="104" y="571" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;strokeColor=#2563eb;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;fontStyle=1;fontColor=#2563eb;spacingTop=6;spacingLeft=8;container=0;" value="Application traffic distribution" vertex="1">
+          <mxGeometry height="200" width="580" x="124" y="128" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=6 4;strokeColor=#7c3aed;strokeWidth=2;fillColor=none;verticalAlign=top;align=left;fontStyle=1;fontColor=#7c3aed;spacingTop=6;spacingLeft=8;container=0;" value="Transparent inspection insertion" vertex="1">
+          <mxGeometry height="188" width="580" x="124" y="342" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--4" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.application_load_balancer;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;Application Load Balancer (ALB)&lt;br&gt;&lt;/b&gt;&lt;/font&gt;L7 — HTTP, HTTPS, gRPC&lt;br&gt;Content-based routing,&lt;br&gt;TLS termination, mTLS, AWS WAF" vertex="1">
+          <mxGeometry height="78" width="78" x="244" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--5" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.network_load_balancer;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;Network Load Balancer (NLB)&lt;br&gt;&lt;/b&gt;&lt;/font&gt;L4 — TCP, UDP, TLS&lt;br&gt;Ultra-high throughput,&lt;br&gt;client IP preservation,&lt;br&gt;static IPs per AZ" vertex="1">
+          <mxGeometry height="78" width="78" x="504" y="172" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--7" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.gateway_load_balancer;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;Gateway Load Balancer (GWLB)&lt;br&gt;&lt;/b&gt;&lt;/font&gt;L3 — encapsulated transparent insertion&lt;br&gt;Third-party firewall, IDS/IPS,&lt;br&gt;or DPI appliances" vertex="1">
+          <mxGeometry height="78" width="78" x="375" y="383" as="geometry" />
+        </mxCell>
+        <mxCell id="FaazrkETuW4ZkCN6Gvk--9" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=11;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_lattice;opacity=70;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;&lt;b&gt;Amazon VPC Lattice services&lt;br&gt;&lt;/b&gt;&lt;/font&gt;Service-to-service load balancing&lt;br&gt;Cross-VPC and cross-account&lt;br&gt;auth, discovery, weighted routing" vertex="1">
+          <mxGeometry height="71.1877729257642" width="71.1877729257642" x="378" y="629.0555555555555" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

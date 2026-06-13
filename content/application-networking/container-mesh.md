@@ -26,43 +26,10 @@ The multi-cluster row is the one most worth challenging deliberately. Teams reac
 
 If the workload genuinely needs one or more of the mesh-specific gap items, a self-managed mesh is the right call. The rest of this page covers the three shapes container service-to-service architecture takes on AWS: in-cluster primitives, Amazon VPC Lattice as the alternative to a mesh, and a self-managed mesh on top of AWS networking.
 
-``` mermaid
-graph TB
-    subgraph Mesh["Container mesh shapes"]
-        direction TB
-
-        subgraph Shape1["In-cluster container networking"]
-            direction TB
-            EKS1["Amazon EKS<br/>VPC CNI, Pod Identity / IRSA,<br/>SG for pods, NetworkPolicy"]
-            ECS1["Amazon ECS<br/>awsvpc, ECS service connect,<br/>task roles"]
-        end
-
-        subgraph Shape2["Amazon VPC Lattice (alternative to a mesh)"]
-            direction TB
-            GAPI["AWS Gateway API Controller<br/>Kubernetes Gateway, HTTPRoute,<br/>GRPCRoute, ServiceImport"]
-            Cross["Cross-cluster, cross-VPC,<br/>cross-account through<br/>Lattice service network<br/>shared via AWS RAM"]
-        end
-
-        subgraph Shape3["Self-managed mesh on AWS networking"]
-            direction TB
-            OnLattice["Mesh on top of<br/>Amazon VPC Lattice"]
-            OnConnectivity["Mesh on top of<br/>peering, AWS Transit Gateway,<br/>AWS Cloud WAN"]
-        end
-    end
-
-    Shape1 ~~~ Shape2 ~~~ Shape3
-
-    style Mesh fill:none,stroke:none
-    style Shape1 fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Shape2 fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Shape3 fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style EKS1 fill:#2563eb,stroke:#1e40af,color:#fff
-    style ECS1 fill:#2563eb,stroke:#1e40af,color:#fff
-    style GAPI fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Cross fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style OnLattice fill:#059669,stroke:#047857,color:#fff
-    style OnConnectivity fill:#059669,stroke:#047857,color:#fff
-```
+![Container mesh shapes showing three patterns: In-cluster container networking (EKS, ECS), Amazon VPC Lattice as an alternative to a mesh, and Self-managed mesh on AWS networking](../assets/application-networking/container-mesh-shapes.png)
+/// caption
+Container mesh shapes — [Drawio Source](../assets/application-networking/container-mesh-shapes.drawio)
+///
 
 ## In-cluster container networking
 
@@ -328,51 +295,10 @@ Multi-cluster mesh patterns (Istio multi-primary, Cilium Cluster Mesh, and simil
 
 Container mesh architecture is the layer between connectivity (covered in the [Within AWS](../connectivity/within-aws.md) page) and the workload's application logic. The three shapes above are not mutually exclusive: most environments combine in-cluster container networking inside each cluster with Amazon VPC Lattice across clusters, and adopt a self-managed service mesh only for the workloads where a sidecar mesh is the genuine requirement.
 
-``` mermaid
-graph TB
-    subgraph Stack["Container mesh stack"]
-        direction TB
-
-        subgraph InCluster["In-cluster container networking"]
-            direction TB
-            EKSStack["Amazon EKS<br/>Amazon VPC CNI,<br/>Pod Identity / IRSA,<br/>Security groups for pods,<br/>NetworkPolicy"]
-            ECSStack["Amazon ECS<br/>awsvpc,<br/>Service Connect,<br/>Task IAM roles"]
-        end
-
-        subgraph CrossCluster["Amazon VPC Lattice (across clusters and VPCs)"]
-            direction TB
-            LatticeStack["Amazon VPC Lattice service network<br/>shared via AWS RAM"]
-            ControllerStack["AWS Gateway API Controller<br/>(EKS) /<br/>Amazon VPC Lattice with Amazon ECS"]
-            DNSStack["Route 53 alias records<br/>(consumer-facing names)"]
-        end
-
-        subgraph SelfMesh["Self-managed service mesh (when needed)"]
-            direction TB
-            OnLat["Mesh data plane on<br/>VPC Lattice listeners<br/>(HTTP / HTTPS / gRPC / TLS-on-SNI)"]
-            OnRes["Mesh TCP control plane on<br/>VPC Lattice resource configurations<br/>(same service network)"]
-            OnConn["Residual (UDP, multi-protocol) on<br/>peering / AWS Transit Gateway /<br/>AWS Cloud WAN"]
-            Ingress["AWS Load Balancer Controller<br/>(ingress to mesh)"]
-            Egress["VPC endpoints<br/>(egress from mesh to AWS services)"]
-        end
-    end
-
-    InCluster ~~~ CrossCluster ~~~ SelfMesh
-
-    style Stack fill:none,stroke:none
-    style InCluster fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style CrossCluster fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style SelfMesh fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style EKSStack fill:#2563eb,stroke:#1e40af,color:#fff
-    style ECSStack fill:#2563eb,stroke:#1e40af,color:#fff
-    style LatticeStack fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style ControllerStack fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style DNSStack fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style OnLat fill:#059669,stroke:#047857,color:#fff
-    style OnRes fill:#059669,stroke:#047857,color:#fff
-    style OnConn fill:#059669,stroke:#047857,color:#fff
-    style Ingress fill:#059669,stroke:#047857,color:#fff
-    style Egress fill:#059669,stroke:#047857,color:#fff
-```
+![Container mesh stack showing three tiers: In-cluster (EKS and ECS primitives), Cross-cluster via VPC Lattice (service network, Gateway API Controller, Route 53), and Self-managed mesh (Lattice listeners, resource configs, connectivity fallback)](../assets/application-networking/container-mesh-stack.png)
+/// caption
+Container mesh stack — [Drawio Source](../assets/application-networking/container-mesh-stack.drawio)
+///
 
 ### New environments
 

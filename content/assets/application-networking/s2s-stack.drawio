@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="vs3U-wLQ5C6uX8YAr1wS">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-1" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=light-dark(#7E7E7E,#7E7E7E);" value="Service-to-Service Stack" vertex="1">
+          <mxGeometry height="40" width="620" x="104" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-2" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=light-dark(#7E7E7E,#7E7E7E);" value="Recommended building-your-stack reference view" vertex="1">
+          <mxGeometry height="24" width="620" x="104" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#2563eb;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=0;" value="Synchronous service-to-service" vertex="1">
+          <mxGeometry height="200" width="700" x="64" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#7c3aed;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=0;" value="Asynchronous service-to-service" vertex="1">
+          <mxGeometry height="190" width="700" x="64" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#059669;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=left;spacingLeft=12;spacingTop=8;container=0;" value="Observability" vertex="1">
+          <mxGeometry height="200" width="700" x="64" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-4" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.route_53;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;Service discovery&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Route 53 + Route 53 Profiles&lt;br&gt;(AWS Cloud Map for ECS-native)" vertex="1">
+          <mxGeometry height="60" width="60" x="128.99870967741936" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-5" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_lattice;" value="&lt;b&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Amazon VPC Lattice services&lt;/font&gt;&lt;/b&gt;&lt;br&gt;Discovery, auth, weighted routing,&lt;br&gt;cross-VPC/account through AWS RAM,&lt;br&gt;identity-aware access logs" vertex="1">
+          <mxGeometry height="60" width="60" x="299.0009677419355" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-6" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.application_load_balancer;" value="&lt;b&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;Mutual TLS&lt;/font&gt;&lt;/b&gt;&lt;br&gt;ALB or VPC Lattice TLS passthrough&lt;br&gt;(client-cert use cases)" vertex="1">
+          <mxGeometry height="60" width="60" x="469.00419354838715" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-7" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#8C4FFF;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.vpc_privatelink;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;AWS PrivateLink endpoint services&lt;/b&gt;&lt;/font&gt;&lt;br&gt;TCP exposure to a small set&lt;br&gt;of named consumer VPCs" vertex="1">
+          <mxGeometry height="60" width="60" x="638.9996774193548" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-9" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.eventbridge;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;Amazon EventBridge&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Event bus + rules,&lt;br&gt;connections to private APIs" vertex="1">
+          <mxGeometry height="60" width="60" x="215.13387096774196" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-10" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;strokeColor=#ffffff;fillColor=#E7157B;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fontSize=9;fontStyle=0;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.step_functions;html=1;labelPosition=center;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;AWS Step Functions&lt;/b&gt;&lt;/font&gt;&lt;br&gt;HTTP Task to private APIs&lt;br&gt;through EventBridge connections" vertex="1">
+          <mxGeometry height="65" width="67.74" x="545.13" y="375" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-12" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=#E7157B;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.cloudwatch_logs;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;Request-level access logs&lt;/b&gt;&lt;/font&gt;&lt;br&gt;VPC Lattice (identity-aware),&lt;br&gt;ALB access logs" vertex="1">
+          <mxGeometry height="45" width="60" x="189.00193548387097" y="593" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-13" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);fillColor=#C925D1;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.xray;" value="&lt;b&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;X-Ray / OTel / Application Signals&lt;/font&gt;&lt;/b&gt;&lt;br&gt;Per-request distributed traces" vertex="1">
+          <mxGeometry height="60" width="60" x="384.0035483870968" y="585.5" as="geometry" />
+        </mxCell>
+        <mxCell id="8RRIKLBRZwjD_pKYMO21-14" parent="1" style="sketch=0;outlineConnect=0;fontColor=light-dark(#7E7E7E,#7E7E7E);gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=9;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.flow_logs;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;b&gt;VPC Flow Logs&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Network-level fallback" vertex="1">
+          <mxGeometry height="60" width="60" x="578.9954838709677" y="585.5" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
