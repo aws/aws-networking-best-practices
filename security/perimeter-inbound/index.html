@@ -2062,43 +2062,12 @@
 <p>Perimeter controls protect your network boundaries from unauthorized inbound access. In AWS, the perimeter is not a single firewall at the edge — it is a series of layered controls that operate at different levels of the stack, from the global edge network down to individual elastic network interfaces. Each layer serves a distinct purpose, and the combination of all layers is what delivers defense in depth. Relying on any single layer is a design failure; the goal is overlapping controls where a misconfiguration at one layer is caught by another.</p>
 <p>The key architectural decision is not which perimeter control to use — you will use several simultaneously — but how to organize them across accounts and VPCs. In a multi-account environment, centralized policy management (through AWS Firewall Manager) ensures consistent baselines, while the enforcement points themselves are distributed across workload VPCs. This separation of policy definition from policy enforcement is what makes perimeter security scalable without creating operational bottlenecks.</p>
 <p>This page covers the controls that protect inbound traffic. For outbound filtering and egress controls, see <a href="../outbound/">Outbound Controls</a>. For internal segmentation between workloads, see <a href="../segmentation/">Network Segmentation</a>.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Edge["Edge Layer (Global)"]
-        CloudFront["CloudFront + AWS WAF"]
-        Shield["AWS Shield&lt;br/&gt;(Standard + Advanced)"]
-        GA["Global Accelerator"]
-    end
-
-    subgraph VPCBoundary["VPC Boundary Layer"]
-        NFW["AWS Network Firewall"]
-        GWLB["Gateway Load Balancer&lt;br/&gt;+ Third-party firewalls"]
-        NACL["Network ACLs"]
-    end
-
-    subgraph Subnet["Subnet Layer"]
-        SG["Security Groups"]
-    end
-
-    subgraph Resource["Resource Layer"]
-        ENI["Elastic Network Interface"]
-    end
-
-    Edge --&gt; VPCBoundary
-    VPCBoundary --&gt; Subnet
-    Subnet --&gt; Resource
-
-    style Edge fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style VPCBoundary fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Subnet fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Resource fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style CloudFront fill:#ff9900,stroke:#cc7a00,color:#fff
-    style Shield fill:#ff9900,stroke:#cc7a00,color:#fff
-    style GA fill:#ff9900,stroke:#cc7a00,color:#fff
-    style NFW fill:#2563eb,stroke:#1e40af,color:#fff
-    style GWLB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NACL fill:#2563eb,stroke:#1e40af,color:#fff
-    style SG fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style ENI fill:#059669,stroke:#065f46,color:#fff</code></pre>
+<figure>
+<p><img alt="Perimeter control layers showing defense-in-depth from Edge (CloudFront, WAF, Shield, Global Accelerator) through VPC Boundary (Network Firewall, GWLB, NACLs), Subnet (Security Groups), to Resource (ENI)" src="../../assets/security/perimeter-layers.png" /></p>
+<figcaption>
+<p>Perimeter control layers — <a href="../../assets/security/perimeter-layers.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <p>Traffic flows inward through these layers sequentially. A request from the internet first hits the edge (CloudFront, Shield, Global Accelerator), then enters the <abbr title="Virtual Private Cloud">VPC</abbr> where Network Firewall or <abbr title="Gateway Load Balancer">GWLB</abbr>-based inspection can evaluate it, passes through Network ACLs at the subnet boundary, and finally reaches the security group attached to the target resource's ENI. Each layer can deny traffic independently — a packet blocked at any layer never reaches the layers below it.</p>
 <h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
@@ -2517,7 +2486,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 01:15:29 UTC">June 17, 2026</span>
   </span>
 
     

@@ -2376,27 +2376,12 @@
 <p>Network segmentation is not optional — it is the foundational security control that limits blast radius when (not if) a breach occurs. Every AWS network should be segmented at multiple layers, from account-level isolation down to per-resource security groups. The question is never "should I segment?" but "how many layers of segmentation do I need, and which mechanisms enforce each layer?"</p>
 <p>AWS provides segmentation at five distinct layers, each with different enforcement characteristics, operational overhead, and cost implications. The strongest boundaries are at the top (accounts), and the most granular controls are at the bottom (application-layer auth). A well-designed network uses multiple layers simultaneously — defense in depth applied to network architecture.</p>
 <p>This page is organized around the segmentation hierarchy: from the strongest isolation boundaries (accounts) down to the most granular controls (identity-based application auth). Each layer adds defense in depth, and no single layer is sufficient on its own.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Hierarchy["Segmentation Hierarchy"]
-        direction TB
-        Accounts["AWS Accounts&lt;br/&gt;Strongest isolation: IAM + network + billing"]
-        VPCs["VPCs&lt;br/&gt;Network isolation: no implicit cross-VPC routing"]
-        Subnets["Subnets &amp; Route Tables&lt;br/&gt;Routing-based segmentation within a VPC"]
-        SGs["Security Groups&lt;br/&gt;Micro-segmentation at the resource level"]
-        AppAuth["Application Auth (VPC Lattice)&lt;br/&gt;Identity-based, network-position-independent"]
-    end
-
-    Accounts --&gt; VPCs
-    VPCs --&gt; Subnets
-    Subnets --&gt; SGs
-    SGs --&gt; AppAuth
-
-    style Hierarchy fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style Accounts fill:#059669,stroke:#047857,color:#fff
-    style VPCs fill:#2563eb,stroke:#1e40af,color:#fff
-    style Subnets fill:#2563eb,stroke:#1e40af,color:#fff
-    style SGs fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style AppAuth fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<figure>
+<p><img alt="Segmentation hierarchy showing five layers from strongest (AWS Accounts) to most granular (Application Auth via VPC Lattice)" src="../../assets/security/segmentation-hierarchy.png" /></p>
+<figcaption>
+<p>Segmentation hierarchy — <a href="../../assets/security/segmentation-hierarchy.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <div class="grid cards">
 <ul>
 <li>
@@ -2927,7 +2912,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 01:15:29 UTC">June 17, 2026</span>
   </span>
 
     
