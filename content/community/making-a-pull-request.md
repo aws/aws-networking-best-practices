@@ -114,18 +114,18 @@ Thank you for helping improve AWS networking guidance for the community.
 
 First, clone the repository.
 
-```
+```bash
 git clone https://github.com/YOUR-USERNAME/aws-networking-best-practices
 cd aws-networking-best-practices
 ```
 
-Next, create a new [Python virtual environment][venv] and
-[activate][venv-activate] it:
+Then source the setup script to create a Python virtual environment and install all dependencies:
 
+```bash
+source ./scripts/setup.sh
 ```
-python3 -m venv venv
-source venv/bin/activate
-```
+
+That's it. The script creates a `venv` directory (already in `.gitignore`), installs everything from `requirements.txt`, and activates the virtual environment in your current shell.
 
 !!! note "Ensure pip always runs in a virtual environment"
 
@@ -137,24 +137,12 @@ source venv/bin/activate
     you may want to add this to your `.bashrc` or `.zshrc` and
     re-start your shell:
 
-```
+```bash
 export PIP_REQUIRE_VIRTUALENV=true
 ```
 
   [venv]: https://docs.python.org/3/library/venv.html
   [venv-activate]: https://docs.python.org/3/library/venv.html#how-venvs-work
-
-Then, install all Python dependencies:
-
-```
-pip install \
-        mkdocs-material \
-        mkdocs-git-revision-date-localized-plugin \
-        mkdocs-git-committers-plugin-2 \
-        "mkdocs-material[imaging]" \
-        yamllint \
-        mdx-spanner
-```
 
 ### Live Preview
 
@@ -197,18 +185,10 @@ This script runs the same checks as our automated PR validation, including:
 
 ### Required Dependencies
 
-Install these tools for full validation:
-
-**Node.js packages:**
+The setup script handles all Python packages. You also need these Node.js tools for full validation:
 
 ```bash
 npm install -g markdownlint-cli2 markdown-link-check cspell
-```
-
-**Python packages:**
-
-```bash
-pip install yamllint mkdocs-material
 ```
 
 !!! tip "Skip missing tools"
