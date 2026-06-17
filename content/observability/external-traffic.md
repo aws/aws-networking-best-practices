@@ -9,30 +9,10 @@ The challenge is not a lack of data sources — AWS provides logging at every la
 
 The organizing principle is **layered external observability**: each layer captures what the layers above and below cannot see, and the combination gives you full-path visibility without redundant collection.
 
-``` mermaid
-graph TB
-    subgraph External["External Traffic Observability Layers"]
-        direction TB
-        Edge["CloudFront access logs / real-time logs<br/>+ Route 53 query logs<br/>(edge-level: client IP, latency, cache, DNS patterns)"]
-        AWSWAF["AWS WAF logs<br/>(security evaluation: rule matches, allow/block/count)"]
-        LB["ALB access logs / NLB access logs<br/>(per-request/connection: target latency, response codes, TLS details)"]
-        VPC["NAT gateway CloudWatch metrics<br/>+ VPC Flow Logs<br/>(egress volume, connection counts, packet drops)"]
-    end
-
-    Client["Internet clients"] --> Edge
-    Edge --> AWSWAF
-    AWSWAF --> LB
-    LB --> VPC
-    VPC --> Destination["External destinations"]
-
-    style External fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Edge fill:#2563eb,stroke:#1e40af,color:#fff
-    style AWSWAF fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style LB fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPC fill:#059669,stroke:#047857,color:#fff
-    style Client fill:#ff9900,stroke:#cc7a00,color:#fff
-    style Destination fill:#ff9900,stroke:#cc7a00,color:#fff
-```
+![External traffic observability layers showing the layered stack from internet clients through Edge (CloudFront/Route 53 logs), AWS WAF logs, Load Balancer logs (ALB/NLB), down to VPC-level egress monitoring (NAT gateway metrics, Flow Logs) reaching external destinations](../assets/observability/external-traffic-layers.png)
+/// caption
+External traffic observability layers — [Drawio Source](../assets/observability/external-traffic-layers.drawio)
+///
 
 Each layer captures distinct information: CloudFront logs show what the client experienced at the edge (cache hit or miss, edge latency, protocol version). AWS WAF logs show which requests were evaluated and what security decisions were made. ALB/NLB logs show what happened between the load balancer and your targets (target response time, backend errors). NAT gateway metrics and VPC Flow Logs show what your workloads sent outbound and how much it cost. No single layer gives you the full picture — the combination does.
 

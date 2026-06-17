@@ -9,61 +9,10 @@ This page focuses on the operational health of AWS networking services: the Clou
 
 Service monitoring in a multi-account AWS environment requires a deliberate architecture. Metrics live in the account that owns the resource, but the networking team needs a unified view across all accounts and Regions. The patterns here assume a centralized monitoring account with cross-account CloudWatch dashboards and a shared EventBridge bus for networking events.
 
-``` mermaid
-graph TB
-    subgraph Sources["Networking Service Metrics"]
-        TGW["Transit Gateway"]
-        NAT["NAT gateway"]
-        DX["Direct Connect"]
-        VPN["Site-to-Site VPN"]
-        ALB["Application LB"]
-        NLB["Network LB"]
-        NFW["Network Firewall"]
-        R53["Route 53 Resolver"]
-        Lattice["VPC Lattice"]
-    end
-
-    subgraph Monitoring["Centralized Monitoring Account"]
-        CW["CloudWatch Metrics<br/>Cross-account observability"]
-        Alarms["CloudWatch Alarms<br/>Composite & anomaly detection"]
-        Dash["CloudWatch Dashboards<br/>Cross-account, cross-Region"]
-    end
-
-    subgraph Action["Automated Response"]
-        EB["EventBridge Rules"]
-        SNS["SNS Notifications"]
-        Lambda["Lambda Remediation"]
-        Incident["Incident Manager"]
-    end
-
-    Sources --> CW
-    CW --> Alarms
-    CW --> Dash
-    Alarms --> EB
-    EB --> SNS
-    EB --> Lambda
-    EB --> Incident
-
-    style Sources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Monitoring fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Action fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
-    style NAT fill:#2563eb,stroke:#1e40af,color:#fff
-    style DX fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPN fill:#2563eb,stroke:#1e40af,color:#fff
-    style ALB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NLB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NFW fill:#2563eb,stroke:#1e40af,color:#fff
-    style R53 fill:#2563eb,stroke:#1e40af,color:#fff
-    style Lattice fill:#2563eb,stroke:#1e40af,color:#fff
-    style CW fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Alarms fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Dash fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style EB fill:#059669,stroke:#047857,color:#fff
-    style SNS fill:#059669,stroke:#047857,color:#fff
-    style Lambda fill:#059669,stroke:#047857,color:#fff
-    style Incident fill:#059669,stroke:#047857,color:#fff
-```
+![Service monitoring stack showing networking service metrics (Transit Gateway, NAT gateway, Direct Connect, VPN, ALB, NLB, Network Firewall, Route 53, VPC Lattice) feeding into a centralized monitoring account (CloudWatch metrics, alarms, dashboards) which triggers automated response (EventBridge, SNS, Lambda, Incident Manager)](../assets/observability/service-monitoring-stack.png)
+/// caption
+Service monitoring stack — [Drawio Source](../assets/observability/service-monitoring-stack.drawio)
+///
 
 ## Critical metrics by service
 

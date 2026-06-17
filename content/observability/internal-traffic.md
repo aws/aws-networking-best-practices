@@ -9,56 +9,10 @@ Internal traffic monitoring in AWS is not a single tool — it's a layered appro
 
 This page is organized around data sources and the decisions you face when building internal traffic visibility: what to enable, where to send the data, how to query it cost-effectively, and how to correlate across sources.
 
-``` mermaid
-graph TB
-    subgraph DataSources["Internal Traffic Data Sources"]
-        FlowLogs["VPC Flow Logs<br/>Packet metadata at VPC/subnet/ENI"]
-        TGWLogs["Transit Gateway Flow Logs<br/>Cross-VPC and cross-account traffic"]
-        LatticeLogs["VPC Lattice Access Logs<br/>Per-request service-to-service detail"]
-        NFWLogs["Network Firewall Logs<br/>Stateful inspection decisions"]
-    end
-
-    subgraph Destinations["Analysis & Storage"]
-        S3["Amazon S3<br/>Cost-effective long-term storage"]
-        CWLogs["CloudWatch Logs<br/>Real-time querying"]
-        Firehose["Kinesis Data Firehose<br/>Streaming delivery"]
-    end
-
-    subgraph Analysis["Query & Alerting"]
-        Athena["Amazon Athena<br/>SQL over S3 data"]
-        CWInsights["CloudWatch Logs Insights<br/>Real-time log queries"]
-        CWMetrics["CloudWatch Metrics<br/>Network throughput & errors"]
-    end
-
-    FlowLogs --> S3
-    FlowLogs --> CWLogs
-    FlowLogs --> Firehose
-    TGWLogs --> S3
-    TGWLogs --> CWLogs
-    LatticeLogs --> S3
-    LatticeLogs --> CWLogs
-    LatticeLogs --> Firehose
-    NFWLogs --> S3
-    NFWLogs --> CWLogs
-    NFWLogs --> Firehose
-    S3 --> Athena
-    CWLogs --> CWInsights
-    CWLogs --> CWMetrics
-
-    style DataSources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Destinations fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Analysis fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style FlowLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style TGWLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style LatticeLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style NFWLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style S3 fill:#059669,stroke:#065f46,color:#fff
-    style CWLogs fill:#059669,stroke:#065f46,color:#fff
-    style Firehose fill:#059669,stroke:#065f46,color:#fff
-    style Athena fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CWInsights fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CWMetrics fill:#7c3aed,stroke:#6d28d9,color:#fff
-```
+![Internal traffic monitoring sources showing data sources (VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to destinations (S3, CloudWatch Logs, Firehose) and then to analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics)](../assets/observability/internal-traffic-sources.png)
+/// caption
+Internal traffic monitoring sources — [Drawio Source](../assets/observability/internal-traffic-sources.drawio)
+///
 
 ## Key capabilities
 
