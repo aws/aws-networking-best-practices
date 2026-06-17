@@ -2096,54 +2096,12 @@
 <p>Understanding what traffic flows between your internal resources is the foundation of network security, cost optimization, and troubleshooting in AWS. Security groups and NACLs define what's <em>allowed</em> — internal traffic monitoring tells you what's <em>actually happening</em>. Without it, you're operating blind: unable to detect lateral movement, unable to identify unexpected cross-<abbr title="Availability Zone">AZ</abbr> data transfer costs, and unable to troubleshoot connectivity failures beyond "it doesn't work."</p>
 <p>Internal traffic monitoring in AWS is not a single tool — it's a layered approach. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs provide packet-level metadata at the network layer. Transit Gateway Flow Logs give you centralized cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility. <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs capture per-request application-layer detail. Network Firewall logs record stateful inspection decisions. Each data source answers different questions, and a production environment needs most of them working together.</p>
 <p>This page is organized around data sources and the decisions you face when building internal traffic visibility: what to enable, where to send the data, how to query it cost-effectively, and how to correlate across sources.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph DataSources["Internal Traffic Data Sources"]
-        FlowLogs["VPC Flow Logs&lt;br/&gt;Packet metadata at VPC/subnet/ENI"]
-        TGWLogs["Transit Gateway Flow Logs&lt;br/&gt;Cross-VPC and cross-account traffic"]
-        LatticeLogs["VPC Lattice Access Logs&lt;br/&gt;Per-request service-to-service detail"]
-        NFWLogs["Network Firewall Logs&lt;br/&gt;Stateful inspection decisions"]
-    end
-
-    subgraph Destinations["Analysis &amp; Storage"]
-        S3["Amazon S3&lt;br/&gt;Cost-effective long-term storage"]
-        CWLogs["CloudWatch Logs&lt;br/&gt;Real-time querying"]
-        Firehose["Kinesis Data Firehose&lt;br/&gt;Streaming delivery"]
-    end
-
-    subgraph Analysis["Query &amp; Alerting"]
-        Athena["Amazon Athena&lt;br/&gt;SQL over S3 data"]
-        CWInsights["CloudWatch Logs Insights&lt;br/&gt;Real-time log queries"]
-        CWMetrics["CloudWatch Metrics&lt;br/&gt;Network throughput &amp; errors"]
-    end
-
-    FlowLogs --&gt; S3
-    FlowLogs --&gt; CWLogs
-    FlowLogs --&gt; Firehose
-    TGWLogs --&gt; S3
-    TGWLogs --&gt; CWLogs
-    LatticeLogs --&gt; S3
-    LatticeLogs --&gt; CWLogs
-    LatticeLogs --&gt; Firehose
-    NFWLogs --&gt; S3
-    NFWLogs --&gt; CWLogs
-    NFWLogs --&gt; Firehose
-    S3 --&gt; Athena
-    CWLogs --&gt; CWInsights
-    CWLogs --&gt; CWMetrics
-
-    style DataSources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Destinations fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Analysis fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style FlowLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style TGWLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style LatticeLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style NFWLogs fill:#2563eb,stroke:#1e40af,color:#fff
-    style S3 fill:#059669,stroke:#065f46,color:#fff
-    style CWLogs fill:#059669,stroke:#065f46,color:#fff
-    style Firehose fill:#059669,stroke:#065f46,color:#fff
-    style Athena fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CWInsights fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style CWMetrics fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
+<figure>
+<p><img alt="Internal traffic monitoring sources showing data sources (VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to destinations (S3, CloudWatch Logs, Firehose) and then to analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics)" src="../../assets/observability/internal-traffic-sources.png" /></p>
+<figcaption>
+<p>Internal traffic monitoring sources — <a href="../../assets/observability/internal-traffic-sources.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="key-capabilities">Key capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -2608,7 +2566,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 23:41:30 UTC">June 17, 2026</span>
   </span>
 
     

@@ -2162,59 +2162,12 @@
 <p>Monitoring network traffic (covered in <a href="../internal-traffic/">Internal Traffic</a> and <a href="../external-traffic/">External Traffic</a>) tells you what's flowing through your network. Monitoring the networking <em>services themselves</em> tells you whether the infrastructure carrying that traffic is healthy. A Transit Gateway with blackhole drops, a <abbr title="Network Address Translation">NAT</abbr> gateway exhausting its port allocation, or a Direct Connect connection flapping between states — these are service-level failures that traffic monitoring alone won't catch until users are already affected.</p>
 <p>This page focuses on the operational health of AWS networking services: the CloudWatch metrics that matter, the alarms you should configure from day one, and the automation patterns that turn monitoring signals into remediation actions. The goal is to detect degradation in the networking plane before it becomes an outage, and to respond automatically where possible.</p>
 <p>Service monitoring in a multi-account AWS environment requires a deliberate architecture. Metrics live in the account that owns the resource, but the networking team needs a unified view across all accounts and Regions. The patterns here assume a centralized monitoring account with cross-account CloudWatch dashboards and a shared EventBridge bus for networking events.</p>
-<pre class="mermaid"><code>graph TB
-    subgraph Sources["Networking Service Metrics"]
-        TGW["Transit Gateway"]
-        NAT["NAT gateway"]
-        DX["Direct Connect"]
-        VPN["Site-to-Site VPN"]
-        ALB["Application LB"]
-        NLB["Network LB"]
-        NFW["Network Firewall"]
-        R53["Route 53 Resolver"]
-        Lattice["VPC Lattice"]
-    end
-
-    subgraph Monitoring["Centralized Monitoring Account"]
-        CW["CloudWatch Metrics&lt;br/&gt;Cross-account observability"]
-        Alarms["CloudWatch Alarms&lt;br/&gt;Composite &amp; anomaly detection"]
-        Dash["CloudWatch Dashboards&lt;br/&gt;Cross-account, cross-Region"]
-    end
-
-    subgraph Action["Automated Response"]
-        EB["EventBridge Rules"]
-        SNS["SNS Notifications"]
-        Lambda["Lambda Remediation"]
-        Incident["Incident Manager"]
-    end
-
-    Sources --&gt; CW
-    CW --&gt; Alarms
-    CW --&gt; Dash
-    Alarms --&gt; EB
-    EB --&gt; SNS
-    EB --&gt; Lambda
-    EB --&gt; Incident
-
-    style Sources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Monitoring fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Action fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style TGW fill:#2563eb,stroke:#1e40af,color:#fff
-    style NAT fill:#2563eb,stroke:#1e40af,color:#fff
-    style DX fill:#2563eb,stroke:#1e40af,color:#fff
-    style VPN fill:#2563eb,stroke:#1e40af,color:#fff
-    style ALB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NLB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NFW fill:#2563eb,stroke:#1e40af,color:#fff
-    style R53 fill:#2563eb,stroke:#1e40af,color:#fff
-    style Lattice fill:#2563eb,stroke:#1e40af,color:#fff
-    style CW fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Alarms fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Dash fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style EB fill:#059669,stroke:#047857,color:#fff
-    style SNS fill:#059669,stroke:#047857,color:#fff
-    style Lambda fill:#059669,stroke:#047857,color:#fff
-    style Incident fill:#059669,stroke:#047857,color:#fff</code></pre>
+<figure>
+<p><img alt="Service monitoring stack showing networking service metrics (Transit Gateway, NAT gateway, Direct Connect, VPN, ALB, NLB, Network Firewall, Route 53, VPC Lattice) feeding into a centralized monitoring account (CloudWatch metrics, alarms, dashboards) which triggers automated response (EventBridge, SNS, Lambda, Incident Manager)" src="../../assets/observability/service-monitoring-stack.png" /></p>
+<figcaption>
+<p>Service monitoring stack — <a href="../../assets/observability/service-monitoring-stack.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="critical-metrics-by-service">Critical metrics by service<a class="headerlink" href="#critical-metrics-by-service" title="Permanent link">&para;</a></h2>
 <p>Not all CloudWatch metrics deserve an alarm. The table below identifies the metrics that signal real operational problems — the ones you should alarm on from day one, before the first production workload routes through the service.</p>
 <h3 id="transit-gateway">Transit Gateway<a class="headerlink" href="#transit-gateway" title="Permanent link">&para;</a></h3>
@@ -2841,7 +2794,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 23:41:30 UTC">June 17, 2026</span>
   </span>
 
     

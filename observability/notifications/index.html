@@ -1996,60 +1996,12 @@
 <p>The best monitoring in the world is worthless if nobody sees the alert. Notifications bridge the gap between detecting a problem and getting the right person to act on it. For networking specifically, the stakes are high: a <abbr title="Virtual Private Network">VPN</abbr> tunnel down, a Direct Connect <abbr title="Border Gateway Protocol">BGP</abbr> session flap, or a Network Firewall dropping traffic affects every workload that depends on that path. The difference between a five-minute blip and a two-hour outage is almost always how fast the notification reaches someone who can respond.</p>
 <p>This page covers the notification pipeline end-to-end: from the metric or event that signals a problem, through the alarm or rule that decides it matters, to the delivery mechanism that reaches the right team at the right time. The organizing principle is <strong>signal over noise</strong> — the number one operational failure in monitoring is alert fatigue, where teams ignore alerts because too many of them are false positives or low-priority noise.</p>
 <p>Notifications in a multi-account AWS environment require deliberate architecture. Events originate in workload accounts, but the networking team typically operates from a centralized monitoring account. Cross-account event forwarding, centralized alarm aggregation, and Organization-wide health event visibility are not optional extras — they are the baseline for any production network.</p>
-<pre class="mermaid"><code>graph LR
-    subgraph Sources["Event Sources"]
-        CW["CloudWatch Metrics&lt;br/&gt;Threshold &amp; anomaly"]
-        EB["EventBridge Events&lt;br/&gt;State changes"]
-        Health["AWS Health&lt;br/&gt;Service events"]
-    end
-
-    subgraph Decision["Alarm &amp; Rule Layer"]
-        Alarm["CloudWatch Alarms&lt;br/&gt;Simple &amp; composite"]
-        Rule["EventBridge Rules&lt;br/&gt;Pattern matching"]
-    end
-
-    subgraph Routing["Delivery &amp; Routing"]
-        SNS["Amazon SNS&lt;br/&gt;Fan-out"]
-        Chatbot["AWS Chatbot&lt;br/&gt;Slack &amp; Teams"]
-    end
-
-    subgraph Destinations["Destinations"]
-        Email["Email"]
-        Slack["Slack / Teams"]
-        PD["PagerDuty / Opsgenie"]
-        Lambda["Lambda&lt;br/&gt;Auto-remediation"]
-        SQS["SQS&lt;br/&gt;Ticket creation"]
-    end
-
-    CW --&gt; Alarm
-    EB --&gt; Rule
-    Health --&gt; Rule
-    Alarm --&gt; SNS
-    Rule --&gt; SNS
-    Alarm --&gt; Chatbot
-    Rule --&gt; Chatbot
-    SNS --&gt; Email
-    SNS --&gt; PD
-    SNS --&gt; Lambda
-    SNS --&gt; SQS
-    Chatbot --&gt; Slack
-
-    style Sources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Decision fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Routing fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Destinations fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style CW fill:#2563eb,stroke:#1e40af,color:#fff
-    style EB fill:#2563eb,stroke:#1e40af,color:#fff
-    style Health fill:#2563eb,stroke:#1e40af,color:#fff
-    style Alarm fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Rule fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style SNS fill:#059669,stroke:#047857,color:#fff
-    style Chatbot fill:#059669,stroke:#047857,color:#fff
-    style Email fill:#ff9900,stroke:#c27400,color:#fff
-    style Slack fill:#ff9900,stroke:#c27400,color:#fff
-    style PD fill:#ff9900,stroke:#c27400,color:#fff
-    style Lambda fill:#ff9900,stroke:#c27400,color:#fff
-    style SQS fill:#ff9900,stroke:#c27400,color:#fff</code></pre>
+<figure>
+<p><img alt="Notification pipeline showing event sources (CloudWatch Metrics, EventBridge Events, AWS Health) flowing through the alarm and rule layer (CloudWatch Alarms, EventBridge Rules) to delivery and routing (SNS, AWS Chatbot) and finally to destinations (Email, Slack/Teams, PagerDuty/Opsgenie, Lambda auto-remediation, SQS ticket creation)" src="../../assets/observability/notification-pipeline.png" /></p>
+<figcaption>
+<p>Notification pipeline — <a href="../../assets/observability/notification-pipeline.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
 <h2 id="key-capabilities">Key Capabilities<a class="headerlink" href="#key-capabilities" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -2339,7 +2291,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 22:08:21 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 23:41:30 UTC">June 17, 2026</span>
   </span>
 
     
