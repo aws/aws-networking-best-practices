@@ -31,7 +31,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 | Encrypted connectivity to on-premises with no wait times | **AWS Site-to-Site VPN** — IPsec over internet, up in minutes, up to 5 Gbps per Large tunnel | Internet-based: latency and throughput are unpredictable. Not a substitute for Direct Connect for production hybrid | [Hybrid & Multi-Cloud](connectivity/hybrid-multicloud.md) |
 | Connect AWS to Google Cloud privately | **AWS Interconnect** — managed direct cloud-to-cloud, MACsec encrypted, minutes to provision | Currently supports AWS ↔ Google Cloud only; expanding. Use partner-based Direct Connect for unsupported pairs | [Hybrid & Multi-Cloud](connectivity/hybrid-multicloud.md) |
 | Integrate existing SD-WAN with AWS | **Transit Gateway Connect or Cloud WAN Tunnel-less Connect** — GRE/Tunnel-less attachments with BGP | Requires SD-WAN virtual appliances in a transit VPC (or on-prem with DX underlay for TGW Connect) | [Hybrid & Multi-Cloud](connectivity/hybrid-multicloud.md) |
-| Give remote users access to applications | **AWS Verified Access** (preferred) — zero-trust, per-request identity + device posture, no VPN client | Use Client VPN only when applications genuinely need network-layer IP reachability (SSH, RDP, legacy protocols) | [Hybrid & Multi-Cloud](connectivity/hybrid-multicloud.md) |
+| Give remote users access to applications | **AWS Verified Access** (preferred) — zero-trust, per-request identity + device posture, no VPN client | Use Client VPN only when applications genuinely need network-layer IP reachability (SSH, RDP, legacy protocols) | [Remote Access](connectivity/remote-access.md) |
 
 ## Securing network traffic
 

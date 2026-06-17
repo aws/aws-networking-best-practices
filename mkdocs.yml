@@ -172,6 +172,7 @@ nav:
       - Internet: connectivity/internet.md
       - Within AWS: connectivity/within-aws.md
       - Hybrid & Multi-Cloud: connectivity/hybrid-multicloud.md
+      - Remote Access: connectivity/remote-access.md
   - Application Networking:
       - application-networking/index.md
       - Load Balancing: application-networking/load-balancing.md

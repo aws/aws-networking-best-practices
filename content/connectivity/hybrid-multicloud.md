@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This section assumes familiarity with [Amazon VPC](../foundation/vpc.md), [CIDR Planning](../foundation/cidr.md), [AWS Organizations](../foundation/organizations.md), and the [Within AWS connectivity](within-aws.md) services (AWS Transit Gateway and AWS Cloud WAN in particular). Review those topics first if you're new to AWS networking fundamentals.
 
-Connecting AWS to networks outside AWS covers three distinct concerns, and the right answer is rarely a single service. **Hybrid connectivity** brings on-premises data centers and branch offices to AWS through private circuits, encrypted VPN, or SD-WAN overlays. **Multi-cloud connectivity** connects AWS to other public clouds for workloads that span providers. **Client communication to AWS applications** gives users and devices access to specific applications from wherever they are.
+Connecting AWS to networks outside AWS covers two distinct concerns, and the right answer is rarely a single service. **Hybrid connectivity** brings on-premises data centers and branch offices to AWS through private circuits, encrypted VPN, or SD-WAN overlays. **Multi-cloud connectivity** connects AWS to other public clouds for workloads that span providers.
 
 ![Hybrid and multi-cloud overview showing three concerns: Hybrid Connectivity (Direct Connect, VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect, Partner-based), and Client Communication (Client VPN, Verified Access)](../assets/connectivity/hybrid-overview.png)
 /// caption
@@ -13,8 +13,6 @@ Hybrid and multi-cloud overview — [Drawio Source](../assets/connectivity/hybri
 For on-premises connectivity, [AWS Direct Connect](https://aws.amazon.com/directconnect/) delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. [AWS Site-to-Site VPN](https://aws.amazon.com/vpn/site-to-site-vpn/) provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. **SD-WAN integration** uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party SD-WAN overlays into the AWS network plane.
 
 For multi-cloud, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site VPN between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.
-
-For users reaching AWS applications, [AWS Client VPN](https://aws.amazon.com/vpn/client-vpn/) provides network-level access into VPCs when applications need traditional IP reachability. [AWS Verified Access](https://aws.amazon.com/verified-access/) provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a VPN client entirely.
 
 Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see [Building your hybrid and multi-cloud stack](#building-your-hybrid-and-multi-cloud-stack) at the end of this page.
 
@@ -560,69 +558,6 @@ Use this when AWS Interconnect isn't available and the workload can tolerate int
 
 </div>
 
-## Client communication to AWS applications
-
-Users and devices reaching AWS applications over the internet have two AWS-native options. [AWS Client VPN](https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html) brings clients into a VPC at the network layer, so the applications they reach look as if they're on a local network. [AWS Verified Access](https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html) takes the opposite approach: instead of putting the user on the network, it puts the application behind a zero-trust policy engine that authenticates and authorizes every request based on identity and device posture, with no VPN client involved.
-
-Both services have a place, but the recommendation for new application access use cases is to start with AWS Verified Access. Zero-trust application access scales better across large numbers of applications and users, removes the operational burden of maintaining VPN clients and endpoint certificates, and enforces per-request policies that are hard to replicate at the network layer.
-
-### AWS Client VPN
-
-AWS Client VPN is a managed OpenVPN-compatible service that gives end users a network-level connection into a VPC. Each connected client receives an IP address from a client CIDR you configure, and can reach resources in the associated VPC (and, through transit paths, other VPCs and on-premises networks). Authentication supports Active Directory, SAML-based federation with identity providers such as AWS IAM Identity Center, and certificate-based mutual authentication.
-
-Client VPN fits when applications genuinely need network-layer reachability: administrators using SSH or RDP to reach EC2 instances, developers using tools that require direct IP connectivity, or legacy applications that authenticate clients by IP address. It also fits established workflows where users are already trained on a VPN client and the applications haven't been refactored for identity-aware access.
-
-Operational considerations:
-
-* **Split-tunnel by default**. Unless a specific compliance requirement justifies full-tunnel, use split-tunnel so only AWS-destined traffic goes through Client VPN and general internet traffic exits the client's local network directly. Full-tunnel multiplies egress cost and concentrates load on the VPN endpoint.
-* **Authorization rules, not route tables alone**. Client VPN authorization rules control which users can reach which destinations. Route tables alone allow traffic to flow; without matching authorization rules, users can still be blocked from destinations that their role shouldn't reach.
-* **Scale by endpoint, not by Availability Zone alone**. A Client VPN endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.
-
-### AWS Verified Access
-
-AWS Verified Access provides zero-trust access to corporate applications without a VPN client. Users reach an application through a browser or an application-specific client, and Verified Access evaluates every request against a policy that combines identity (from AWS IAM Identity Center or a third-party identity provider) and device posture (from an integrated device-trust provider such as CrowdStrike or a mobile-device-management vendor). Requests that don't satisfy the policy are rejected. Requests that satisfy it are forwarded to the application.
-
-Verified Access supports both web-based applications (HTTP/HTTPS) and non-web applications reached over TCP, SSH, or RDP, so it covers most of the use cases that previously required Client VPN. The policies are centrally managed in AWS, expressed in Cedar policy language, and evaluated per-request, which gives you fine-grained control that network-layer access can't provide (for example, blocking access when a device's posture check fails even though the user is authenticated).
-
-For new application access use cases, AWS Verified Access is the preferred option because:
-
-* **No VPN client to deploy, distribute, or maintain on endpoints.** Users reach applications through standard clients they already use (browsers or protocol-specific clients).
-* **Per-request policy evaluation** with identity and device posture, instead of the all-or-nothing trust model of a network connection.
-* **Comprehensive logging** of every access attempt (allow and deny), with reason, user, and device context. This is harder to reconstruct from VPN connection logs plus application logs separately.
-* **Simpler operational model** at scale. Onboarding a new application means adding a Verified Access endpoint and a policy, rather than expanding VPN authorization rules and re-propagating routes.
-
-Where Verified Access doesn't fit today, Client VPN remains available, and the two can coexist during migration. The [Client VPN and Verified Access interoperability patterns](https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/) cover starting with Client VPN, adding Verified Access for new applications, migrating existing applications to Verified Access, and consolidating on Verified Access over time.
-
-### Documentation
-
-<div class="grid cards" markdown>
-
-*   :material-file-document: **AWS Client VPN documentation**
-
-    ---
-
-    Complete service documentation covering endpoints, authentication methods, authorization rules, and split-tunnel configuration.
-
-    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html)
-
-*   :material-file-document-outline: **AWS Verified Access documentation**
-
-    ---
-
-    Complete service documentation covering endpoints, policies in Cedar, identity and device trust providers, and supported application types.
-
-    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html)
-
-*   :material-post: **AWS Client VPN and Verified Access interoperability patterns**
-
-    ---
-
-    Four migration and interoperability patterns for running Client VPN and Verified Access side by side during a transition.
-
-    [:octicons-arrow-right-24: Blog post](https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/)
-
-</div>
-
 ## Building your hybrid and multi-cloud stack
 
 Real-world hybrid and multi-cloud architectures combine several of these services, with each one operating at the layer where it provides the most value.
@@ -642,7 +577,7 @@ Organizations building hybrid and multi-cloud connectivity from scratch have the
 2. **VPN where it adds value**: AWS Site-to-Site VPN on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.
 3. **Multi-cloud**: AWS Interconnect where supported, sharing the same Direct Connect Gateway as the on-premises Direct Connect. Partner-based Direct Connect or Site-to-Site VPN between clouds only where AWS Interconnect coverage isn't there yet.
 4. **SD-WAN integration**: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs SD-WAN across branches and wants that overlay to extend into AWS.
-5. **Application access**: AWS Verified Access for new applications. AWS Client VPN only where protocol or workflow requirements genuinely need network-layer access.
+5. **Application access**: See [Remote Access](remote-access.md) for AWS Verified Access and AWS Client VPN guidance.
 
 ### Existing environments
 
@@ -652,4 +587,4 @@ Organizations running established hybrid patterns have working foundations that 
 2. **AWS Site-to-Site VPN** remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated VPN for sites distant from the Region.
 3. **Partner-based Direct Connect to another cloud** keeps working and should not be ripped out for its own sake. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.
 4. **SD-WAN integrations** on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so SD-WAN traffic doesn't have to move all at once.
-5. **AWS Client VPN** can coexist with AWS Verified Access during migration. The recommended direction is to add new applications to Verified Access, migrate existing applications as their lifecycle allows, and gradually reduce Client VPN usage to the cases that genuinely require network-layer access.
+5. **AWS Client VPN** can coexist with AWS Verified Access during migration. See [Remote Access](remote-access.md) for the recommended migration path.
