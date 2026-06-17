@@ -119,14 +119,13 @@ git clone https://github.com/YOUR-USERNAME/aws-networking-best-practices
 cd aws-networking-best-practices
 ```
 
-Then run the setup script to create a Python virtual environment and install all dependencies:
+Then source the setup script to create a Python virtual environment and install all dependencies:
 
 ```bash
-./scripts/setup.sh
-source venv/bin/activate
+source ./scripts/setup.sh
 ```
 
-That's it. The script creates a `venv` directory (already in `.gitignore`), installs everything from `requirements.txt`, and prints next steps.
+That's it. The script creates a `venv` directory (already in `.gitignore`), installs everything from `requirements.txt`, and activates the virtual environment in your current shell.
 
 !!! note "Ensure pip always runs in a virtual environment"
 
