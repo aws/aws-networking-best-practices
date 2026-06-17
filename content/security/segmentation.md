@@ -9,29 +9,10 @@ AWS provides segmentation at five distinct layers, each with different enforceme
 
 This page is organized around the segmentation hierarchy: from the strongest isolation boundaries (accounts) down to the most granular controls (identity-based application auth). Each layer adds defense in depth, and no single layer is sufficient on its own.
 
-``` mermaid
-graph TB
-    subgraph Hierarchy["Segmentation Hierarchy"]
-        direction TB
-        Accounts["AWS Accounts<br/>Strongest isolation: IAM + network + billing"]
-        VPCs["VPCs<br/>Network isolation: no implicit cross-VPC routing"]
-        Subnets["Subnets & Route Tables<br/>Routing-based segmentation within a VPC"]
-        SGs["Security Groups<br/>Micro-segmentation at the resource level"]
-        AppAuth["Application Auth (VPC Lattice)<br/>Identity-based, network-position-independent"]
-    end
-
-    Accounts --> VPCs
-    VPCs --> Subnets
-    Subnets --> SGs
-    SGs --> AppAuth
-
-    style Hierarchy fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style Accounts fill:#059669,stroke:#047857,color:#fff
-    style VPCs fill:#2563eb,stroke:#1e40af,color:#fff
-    style Subnets fill:#2563eb,stroke:#1e40af,color:#fff
-    style SGs fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style AppAuth fill:#7c3aed,stroke:#6d28d9,color:#fff
-```
+![Segmentation hierarchy showing five layers from strongest (AWS Accounts) to most granular (Application Auth via VPC Lattice)](../assets/security/segmentation-hierarchy.png)
+/// caption
+Segmentation hierarchy — [Drawio Source](../assets/security/segmentation-hierarchy.drawio)
+///
 
 <div class="grid cards" markdown>
 

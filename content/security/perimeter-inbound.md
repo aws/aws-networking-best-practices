@@ -9,45 +9,10 @@ The key architectural decision is not which perimeter control to use — you wil
 
 This page covers the controls that protect inbound traffic. For outbound filtering and egress controls, see [Outbound Controls](outbound.md). For internal segmentation between workloads, see [Network Segmentation](segmentation.md).
 
-``` mermaid
-graph TB
-    subgraph Edge["Edge Layer (Global)"]
-        CloudFront["CloudFront + AWS WAF"]
-        Shield["AWS Shield<br/>(Standard + Advanced)"]
-        GA["Global Accelerator"]
-    end
-
-    subgraph VPCBoundary["VPC Boundary Layer"]
-        NFW["AWS Network Firewall"]
-        GWLB["Gateway Load Balancer<br/>+ Third-party firewalls"]
-        NACL["Network ACLs"]
-    end
-
-    subgraph Subnet["Subnet Layer"]
-        SG["Security Groups"]
-    end
-
-    subgraph Resource["Resource Layer"]
-        ENI["Elastic Network Interface"]
-    end
-
-    Edge --> VPCBoundary
-    VPCBoundary --> Subnet
-    Subnet --> Resource
-
-    style Edge fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style VPCBoundary fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Subnet fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Resource fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style CloudFront fill:#ff9900,stroke:#cc7a00,color:#fff
-    style Shield fill:#ff9900,stroke:#cc7a00,color:#fff
-    style GA fill:#ff9900,stroke:#cc7a00,color:#fff
-    style NFW fill:#2563eb,stroke:#1e40af,color:#fff
-    style GWLB fill:#2563eb,stroke:#1e40af,color:#fff
-    style NACL fill:#2563eb,stroke:#1e40af,color:#fff
-    style SG fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style ENI fill:#059669,stroke:#065f46,color:#fff
-```
+![Perimeter control layers showing defense-in-depth from Edge (CloudFront, WAF, Shield, Global Accelerator) through VPC Boundary (Network Firewall, GWLB, NACLs), Subnet (Security Groups), to Resource (ENI)](../assets/security/perimeter-layers.png)
+/// caption
+Perimeter control layers — [Drawio Source](../assets/security/perimeter-layers.drawio)
+///
 
 Traffic flows inward through these layers sequentially. A request from the internet first hits the edge (CloudFront, Shield, Global Accelerator), then enters the VPC where Network Firewall or GWLB-based inspection can evaluate it, passes through Network ACLs at the subnet boundary, and finally reaches the security group attached to the target resource's ENI. Each layer can deny traffic independently — a packet blocked at any layer never reaches the layers below it.
 
