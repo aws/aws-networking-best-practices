@@ -16,7 +16,7 @@
         <link rel="prev" href="../within-aws/">
       
       
-        <link rel="next" href="../../application-networking/">
+        <link rel="next" href="../remote-access/">
       
       
         
@@ -672,6 +672,8 @@
       
         
       
+        
+      
     
     
     
@@ -1055,56 +1057,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#client-communication-to-aws-applications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client communication to AWS applications
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Client communication to AWS applications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#aws-client-vpn" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS Client VPN
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#aws-verified-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS Verified Access
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documentation_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#building-your-hybrid-and-multi-cloud-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1147,6 +1099,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2161,56 +2141,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#client-communication-to-aws-applications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Client communication to AWS applications
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Client communication to AWS applications">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#aws-client-vpn" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS Client VPN
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#aws-verified-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS Verified Access
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documentation_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#building-your-hybrid-and-multi-cloud-stack" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2287,7 +2217,7 @@
 <p class="admonition-title">Prerequisites</p>
 <p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>, <a href="../../foundation/organizations/">AWS Organizations</a>, and the <a href="../within-aws/">Within AWS connectivity</a> services (AWS Transit Gateway and AWS Cloud WAN in particular). Review those topics first if you're new to AWS networking fundamentals.</p>
 </div>
-<p>Connecting AWS to networks outside AWS covers three distinct concerns, and the right answer is rarely a single service. <strong>Hybrid connectivity</strong> brings on-premises data centers and branch offices to AWS through private circuits, encrypted <abbr title="Virtual Private Network">VPN</abbr>, or <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays. <strong>Multi-cloud connectivity</strong> connects AWS to other public clouds for workloads that span providers. <strong>Client communication to AWS applications</strong> gives users and devices access to specific applications from wherever they are.</p>
+<p>Connecting AWS to networks outside AWS covers two distinct concerns, and the right answer is rarely a single service. <strong>Hybrid connectivity</strong> brings on-premises data centers and branch offices to AWS through private circuits, encrypted <abbr title="Virtual Private Network">VPN</abbr>, or <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays. <strong>Multi-cloud connectivity</strong> connects AWS to other public clouds for workloads that span providers.</p>
 <figure>
 <p><img alt="Hybrid and multi-cloud overview showing three concerns: Hybrid Connectivity (Direct Connect, VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect, Partner-based), and Client Communication (Client VPN, Verified Access)" src="../../assets/connectivity/hybrid-overview.png" /></p>
 <figcaption>
@@ -2296,7 +2226,6 @@
 </figure>
 <p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
 <p>For multi-cloud, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.</p>
-<p>For users reaching AWS applications, <a href="https://aws.amazon.com/vpn/client-vpn/">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> provides network-level access into VPCs when applications need traditional IP reachability. <a href="https://aws.amazon.com/verified-access/">AWS Verified Access</a> provides zero-trust application-level access with identity and device posture checks on every request, and is the preferred option for new application access use cases because it typically removes the need for a <abbr title="Virtual Private Network">VPN</abbr> client entirely.</p>
 <p>Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see <a href="#building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack</a> at the end of this page.</p>
 <h2 id="private-on-premises-connectivity-with-aws-direct-connect">Private on-premises connectivity with AWS Direct Connect<a class="headerlink" href="#private-on-premises-connectivity-with-aws-direct-connect" title="Permanent link">&para;</a></h2>
 <p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html">AWS Direct Connect</a> provides private, dedicated network connectivity between your on-premises network and AWS. Traffic flows over physical circuits provisioned at a Direct Connect location, bypassing the public internet entirely, so bandwidth is predictable, latency is consistent, and data transfer out of AWS is cheaper than over the internet. Direct Connect is the foundation for most production hybrid deployments, and it integrates with every AWS network service that terminates hybrid traffic: virtual private gateways, Transit Gateway, and AWS Cloud WAN.</p>
@@ -2766,52 +2695,6 @@
 </li>
 </ul>
 </div>
-<h2 id="client-communication-to-aws-applications">Client communication to AWS applications<a class="headerlink" href="#client-communication-to-aws-applications" title="Permanent link">&para;</a></h2>
-<p>Users and devices reaching AWS applications over the internet have two AWS-native options. <a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> brings clients into a <abbr title="Virtual Private Cloud">VPC</abbr> at the network layer, so the applications they reach look as if they're on a local network. <a href="https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html">AWS Verified Access</a> takes the opposite approach: instead of putting the user on the network, it puts the application behind a zero-trust policy engine that authenticates and authorizes every request based on identity and device posture, with no <abbr title="Virtual Private Network">VPN</abbr> client involved.</p>
-<p>Both services have a place, but the recommendation for new application access use cases is to start with AWS Verified Access. Zero-trust application access scales better across large numbers of applications and users, removes the operational burden of maintaining <abbr title="Virtual Private Network">VPN</abbr> clients and endpoint certificates, and enforces per-request policies that are hard to replicate at the network layer.</p>
-<h3 id="aws-client-vpn">AWS Client <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#aws-client-vpn" title="Permanent link">&para;</a></h3>
-<p>AWS Client <abbr title="Virtual Private Network">VPN</abbr> is a managed OpenVPN-compatible service that gives end users a network-level connection into a <abbr title="Virtual Private Cloud">VPC</abbr>. Each connected client receives an IP address from a client <abbr title="Classless Inter-Domain Routing">CIDR</abbr> you configure, and can reach resources in the associated <abbr title="Virtual Private Cloud">VPC</abbr> (and, through transit paths, other VPCs and on-premises networks). Authentication supports Active Directory, SAML-based federation with identity providers such as AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center, and certificate-based mutual authentication.</p>
-<p>Client <abbr title="Virtual Private Network">VPN</abbr> fits when applications genuinely need network-layer reachability: administrators using SSH or RDP to reach <abbr title="Elastic Compute Cloud">EC2</abbr> instances, developers using tools that require direct IP connectivity, or legacy applications that authenticate clients by IP address. It also fits established workflows where users are already trained on a <abbr title="Virtual Private Network">VPN</abbr> client and the applications haven't been refactored for identity-aware access.</p>
-<p>Operational considerations:</p>
-<ul>
-<li><strong>Split-tunnel by default</strong>. Unless a specific compliance requirement justifies full-tunnel, use split-tunnel so only AWS-destined traffic goes through Client <abbr title="Virtual Private Network">VPN</abbr> and general internet traffic exits the client's local network directly. Full-tunnel multiplies egress cost and concentrates load on the <abbr title="Virtual Private Network">VPN</abbr> endpoint.</li>
-<li><strong>Authorization rules, not route tables alone</strong>. Client <abbr title="Virtual Private Network">VPN</abbr> authorization rules control which users can reach which destinations. Route tables alone allow traffic to flow; without matching authorization rules, users can still be blocked from destinations that their role shouldn't reach.</li>
-<li><strong>Scale by endpoint, not by Availability Zone alone</strong>. A Client <abbr title="Virtual Private Network">VPN</abbr> endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state.</li>
-</ul>
-<h3 id="aws-verified-access">AWS Verified Access<a class="headerlink" href="#aws-verified-access" title="Permanent link">&para;</a></h3>
-<p>AWS Verified Access provides zero-trust access to corporate applications without a <abbr title="Virtual Private Network">VPN</abbr> client. Users reach an application through a browser or an application-specific client, and Verified Access evaluates every request against a policy that combines identity (from AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center or a third-party identity provider) and device posture (from an integrated device-trust provider such as CrowdStrike or a mobile-device-management vendor). Requests that don't satisfy the policy are rejected. Requests that satisfy it are forwarded to the application.</p>
-<p>Verified Access supports both web-based applications (HTTP/HTTPS) and non-web applications reached over <abbr title="Transmission Control Protocol">TCP</abbr>, SSH, or RDP, so it covers most of the use cases that previously required Client <abbr title="Virtual Private Network">VPN</abbr>. The policies are centrally managed in AWS, expressed in Cedar policy language, and evaluated per-request, which gives you fine-grained control that network-layer access can't provide (for example, blocking access when a device's posture check fails even though the user is authenticated).</p>
-<p>For new application access use cases, AWS Verified Access is the preferred option because:</p>
-<ul>
-<li><strong>No <abbr title="Virtual Private Network">VPN</abbr> client to deploy, distribute, or maintain on endpoints.</strong> Users reach applications through standard clients they already use (browsers or protocol-specific clients).</li>
-<li><strong>Per-request policy evaluation</strong> with identity and device posture, instead of the all-or-nothing trust model of a network connection.</li>
-<li><strong>Comprehensive logging</strong> of every access attempt (allow and deny), with reason, user, and device context. This is harder to reconstruct from <abbr title="Virtual Private Network">VPN</abbr> connection logs plus application logs separately.</li>
-<li><strong>Simpler operational model</strong> at scale. Onboarding a new application means adding a Verified Access endpoint and a policy, rather than expanding <abbr title="Virtual Private Network">VPN</abbr> authorization rules and re-propagating routes.</li>
-</ul>
-<p>Where Verified Access doesn't fit today, Client <abbr title="Virtual Private Network">VPN</abbr> remains available, and the two can coexist during migration. The <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/">Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access interoperability patterns</a> cover starting with Client <abbr title="Virtual Private Network">VPN</abbr>, adding Verified Access for new applications, migrating existing applications to Verified Access, and consolidating on Verified Access over time.</p>
-<h3 id="documentation_4">Documentation<a class="headerlink" href="#documentation_4" title="Permanent link">&para;</a></h3>
-<div class="grid cards">
-<ul>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr> documentation</strong></p>
-<hr />
-<p>Complete service documentation covering endpoints, authentication methods, authorization rules, and split-tunnel configuration.</p>
-<p><a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>AWS Verified Access documentation</strong></p>
-<hr />
-<p>Complete service documentation covering endpoints, policies in Cedar, identity and device trust providers, and supported application types.</p>
-<p><a href="https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access interoperability patterns</strong></p>
-<hr />
-<p>Four migration and interoperability patterns for running Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access side by side during a transition.</p>
-<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog post</a></p>
-</li>
-</ul>
-</div>
 <h2 id="building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack<a class="headerlink" href="#building-your-hybrid-and-multi-cloud-stack" title="Permanent link">&para;</a></h2>
 <p>Real-world hybrid and multi-cloud architectures combine several of these services, with each one operating at the layer where it provides the most value.</p>
 <p>The services covered in this page are complementary layers, not competing alternatives.</p>
@@ -2828,7 +2711,7 @@
 <li><strong><abbr title="Virtual Private Network">VPN</abbr> where it adds value</strong>: AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.</li>
 <li><strong>Multi-cloud</strong>: AWS Interconnect where supported, sharing the same Direct Connect Gateway as the on-premises Direct Connect. Partner-based Direct Connect or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds only where AWS Interconnect coverage isn't there yet.</li>
 <li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong>: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across branches and wants that overlay to extend into AWS.</li>
-<li><strong>Application access</strong>: AWS Verified Access for new applications. AWS Client <abbr title="Virtual Private Network">VPN</abbr> only where protocol or workflow requirements genuinely need network-layer access.</li>
+<li><strong>Application access</strong>: See <a href="../remote-access/">Remote Access</a> for AWS Verified Access and AWS Client <abbr title="Virtual Private Network">VPN</abbr> guidance.</li>
 </ol>
 <h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations running established hybrid patterns have working foundations that don't need to be replaced:</p>
@@ -2837,7 +2720,7 @@
 <li><strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong> remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated <abbr title="Virtual Private Network">VPN</abbr> for sites distant from the Region.</li>
 <li><strong>Partner-based Direct Connect to another cloud</strong> keeps working and should not be ripped out for its own sake. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.</li>
 <li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integrations</strong> on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic doesn't have to move all at once.</li>
-<li><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> can coexist with AWS Verified Access during migration. The recommended direction is to add new applications to Verified Access, migrate existing applications as their lifecycle allows, and gradually reduce Client <abbr title="Virtual Private Network">VPN</abbr> usage to the cases that genuinely require network-layer access.</li>
+<li><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> can coexist with AWS Verified Access during migration. See <a href="../remote-access/">Remote Access</a> for the recommended migration path.</li>
 </ol>
 
 
@@ -2861,7 +2744,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 00:18:24 UTC">June 17, 2026</span>
   </span>
 
     
@@ -2975,13 +2858,13 @@
         
         
           
-          <a href="../../application-networking/" class="md-footer__link md-footer__link--next" aria-label="Next: Application Networking">
+          <a href="../remote-access/" class="md-footer__link md-footer__link--next" aria-label="Next: Remote Access">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Application Networking
+                Remote Access
               </div>
             </div>
             <div class="md-footer__button md-icon">

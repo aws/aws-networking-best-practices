@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/foundation/">
+        <link rel="canonical" href="https://aws.github.io/aws/aws-networking-best-practices/connectivity/remote-access/">
       
       
-        <link rel="prev" href="../decisions/">
+        <link rel="prev" href="../hybrid-multicloud/">
       
       
-        <link rel="next" href="aws-prerequisites/">
+        <link rel="next" href="../../application-networking/">
       
       
         
       
       
-      <link rel="icon" href="../assets/favicon.ico">
+      <link rel="icon" href="../../assets/favicon.ico">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Foundation - Networking Best Practices</title>
+        <title>Remote Access - Networking Best Practices</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
   
@@ -73,17 +73,17 @@
     
   
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Foundation - Networking Best Practices" />
+<meta property="og:title" content="Remote Access - Networking Best Practices" />
 <meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
-<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/index.png" />
+<meta property="og:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/connectivity/remote-access.png" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/foundation/" />
+<meta property="og:url" content="https://aws.github.io/aws/aws-networking-best-practices/connectivity/remote-access/" />
 <meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:title" content="Foundation - Networking Best Practices" />
+<meta property="twitter:title" content="Remote Access - Networking Best Practices" />
 <meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
-<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/foundation/index.png" />
+<meta property="twitter:image" content="https://aws.github.io/aws/aws-networking-best-practices/assets/images/social/connectivity/remote-access.png" />
 </head>
   
   
@@ -103,7 +103,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#foundation" class="md-skip">
+        <a href="#remote-access" class="md-skip">
           Skip to content
         </a>
       
@@ -119,9 +119,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+    <a href="../.." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
       
-  <img src="../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -138,7 +138,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Foundation
+              Remote Access
             
           </span>
         </div>
@@ -264,9 +264,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+    <a href="../.." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
       
-  <img src="../assets/logo.png" alt="logo">
+  <img src="../../assets/logo.png" alt="logo">
 
     </a>
     Networking Best Practices
@@ -293,7 +293,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -320,7 +320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
+      <a href="../../decisions/" class="md-nav__link">
         
   
   
@@ -344,8 +344,6 @@
       
   
   
-    
-  
   
   
     
@@ -375,15 +373,17 @@
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../../foundation/" class="md-nav__link ">
               
   
   
@@ -401,13 +401,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_3" id="__nav_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -427,7 +427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="aws-prerequisites/" class="md-nav__link">
+      <a href="../../foundation/aws-prerequisites/" class="md-nav__link">
         
   
   
@@ -455,7 +455,7 @@
   
   
     <li class="md-nav__item">
-      <a href="organizations/" class="md-nav__link">
+      <a href="../../foundation/organizations/" class="md-nav__link">
         
   
   
@@ -483,7 +483,7 @@
   
   
     <li class="md-nav__item">
-      <a href="vpc/" class="md-nav__link">
+      <a href="../../foundation/vpc/" class="md-nav__link">
         
   
   
@@ -511,7 +511,7 @@
   
   
     <li class="md-nav__item">
-      <a href="regions-azs/" class="md-nav__link">
+      <a href="../../foundation/regions-azs/" class="md-nav__link">
         
   
   
@@ -539,7 +539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="cidr/" class="md-nav__link">
+      <a href="../../foundation/cidr/" class="md-nav__link">
         
   
   
@@ -567,7 +567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="subnets/" class="md-nav__link">
+      <a href="../../foundation/subnets/" class="md-nav__link">
         
   
   
@@ -595,7 +595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="dns/" class="md-nav__link">
+      <a href="../../foundation/dns/" class="md-nav__link">
         
   
   
@@ -623,7 +623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ipam/" class="md-nav__link">
+      <a href="../../foundation/ipam/" class="md-nav__link">
         
   
   
@@ -655,6 +655,8 @@
       
   
   
+    
+  
   
   
     
@@ -676,17 +678,15 @@
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../connectivity/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -710,7 +710,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -730,7 +730,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connectivity/internet/" class="md-nav__link">
+      <a href="../internet/" class="md-nav__link">
         
   
   
@@ -758,7 +758,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connectivity/within-aws/" class="md-nav__link">
+      <a href="../within-aws/" class="md-nav__link">
         
   
   
@@ -786,7 +786,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../connectivity/hybrid-multicloud/" class="md-nav__link">
+      <a href="../hybrid-multicloud/" class="md-nav__link">
         
   
   
@@ -811,10 +811,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../connectivity/remote-access/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Access
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -830,6 +857,115 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#aws-client-vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Client VPN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Client VPN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-client-vpn-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Client VPN Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-verified-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Verified Access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Verified Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-verified-access-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Verified Access Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-each-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use each service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -875,7 +1011,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../application-networking/" class="md-nav__link ">
+            <a href="../../application-networking/" class="md-nav__link ">
               
   
   
@@ -919,7 +1055,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../application-networking/load-balancing/" class="md-nav__link">
+      <a href="../../application-networking/load-balancing/" class="md-nav__link">
         
   
   
@@ -947,7 +1083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../application-networking/service-to-service/" class="md-nav__link">
+      <a href="../../application-networking/service-to-service/" class="md-nav__link">
         
   
   
@@ -975,7 +1111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../application-networking/container-mesh/" class="md-nav__link">
+      <a href="../../application-networking/container-mesh/" class="md-nav__link">
         
   
   
@@ -1036,7 +1172,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../security/" class="md-nav__link ">
+            <a href="../../security/" class="md-nav__link ">
               
   
   
@@ -1080,7 +1216,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/perimeter-inbound/" class="md-nav__link">
+      <a href="../../security/perimeter-inbound/" class="md-nav__link">
         
   
   
@@ -1108,7 +1244,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/outbound/" class="md-nav__link">
+      <a href="../../security/outbound/" class="md-nav__link">
         
   
   
@@ -1136,7 +1272,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../security/segmentation/" class="md-nav__link">
+      <a href="../../security/segmentation/" class="md-nav__link">
         
   
   
@@ -1199,7 +1335,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../observability/" class="md-nav__link ">
+            <a href="../../observability/" class="md-nav__link ">
               
   
   
@@ -1243,7 +1379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/internal-traffic/" class="md-nav__link">
+      <a href="../../observability/internal-traffic/" class="md-nav__link">
         
   
   
@@ -1271,7 +1407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/external-traffic/" class="md-nav__link">
+      <a href="../../observability/external-traffic/" class="md-nav__link">
         
   
   
@@ -1299,7 +1435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/service-monitoring/" class="md-nav__link">
+      <a href="../../observability/service-monitoring/" class="md-nav__link">
         
   
   
@@ -1327,7 +1463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/notifications/" class="md-nav__link">
+      <a href="../../observability/notifications/" class="md-nav__link">
         
   
   
@@ -1394,7 +1530,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../community/" class="md-nav__link ">
+            <a href="../../community/" class="md-nav__link ">
               
   
   
@@ -1438,7 +1574,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/contribute/" class="md-nav__link">
+      <a href="../../community/contribute/" class="md-nav__link">
         
   
   
@@ -1466,7 +1602,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/report-a-correction/" class="md-nav__link">
+      <a href="../../community/report-a-correction/" class="md-nav__link">
         
   
   
@@ -1494,7 +1630,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/new-best-practice/" class="md-nav__link">
+      <a href="../../community/new-best-practice/" class="md-nav__link">
         
   
   
@@ -1522,7 +1658,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/making-a-pull-request/" class="md-nav__link">
+      <a href="../../community/making-a-pull-request/" class="md-nav__link">
         
   
   
@@ -1550,7 +1686,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/philosophy/" class="md-nav__link">
+      <a href="../../community/philosophy/" class="md-nav__link">
         
   
   
@@ -1578,7 +1714,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../community/conventions/" class="md-nav__link">
+      <a href="../../community/conventions/" class="md-nav__link">
         
   
   
@@ -1633,10 +1769,66 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#1-before-you-start" class="md-nav__link">
+  <a href="#aws-client-vpn" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Before You Start
+        AWS Client VPN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Client VPN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-client-vpn-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Client VPN Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aws-verified-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Verified Access
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWS Verified Access">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws-verified-access-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS Verified Access Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-each-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use each service
       
     </span>
   </a>
@@ -1644,10 +1836,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-aws-organizations-and-account-structure" class="md-nav__link">
+  <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. AWS Organizations and Account Structure
+        Documentation
       
     </span>
   </a>
@@ -1655,76 +1847,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-amazon-vpc" class="md-nav__link">
+  <a href="#related-pages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Amazon VPC
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-regions-and-availability-zones" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Regions and Availability Zones
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-ip-address-planning-with-cidr-blocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. IP Address Planning with CIDR Blocks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-subnets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Subnets
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-ip-address-management-ipam" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. IP Address Management (IPAM)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-dns-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. DNS Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#explore-foundation-topics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Explore Foundation Topics
+        Related pages
       
     </span>
   </a>
@@ -1748,7 +1874,7 @@
 
 
   
-    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/foundation/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/connectivity/remote-access.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
     </a>
@@ -1757,150 +1883,111 @@
     
       
     
-    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/foundation/index.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/connectivity/remote-access.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
     </a>
   
 
 
-<h1 id="foundation">Foundation<a class="headerlink" href="#foundation" title="Permanent link">&para;</a></h1>
-<p>This section covers the fundamental building blocks of AWS networking. Understanding these core concepts is essential before implementing connectivity, application networking, security, or observability solutions. Every service and pattern in the rest of this guide builds on the foundation described here.</p>
-<p>The foundation layer answers the questions that come before "how do I connect things?": how is your organization structured, where do your networks live, what address space do they use, and how is that address space governed. Getting these decisions right enables everything above them to work cleanly. Getting them wrong creates constraints that are expensive to fix later.</p>
-<h2 id="1-before-you-start">1. Before You Start<a class="headerlink" href="#1-before-you-start" title="Permanent link">&para;</a></h2>
-<p>Every <abbr title="Virtual Private Cloud">VPC</abbr>, route table, and Transit Gateway attachment lives inside an account, is governed by <abbr title="Identity and Access Management">IAM</abbr> policies, is subject to service quotas, and should be deployed through code. Getting these non-networking foundations right before you touch a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block prevents the class of problems that are hardest to fix later.</p>
-<p><strong>Key topics:</strong></p>
+<h1 id="remote-access">Remote Access<a class="headerlink" href="#remote-access" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a> and <a href="../../foundation/organizations/">AWS Organizations</a>. Review those topics first if you're new to AWS networking fundamentals.</p>
+</div>
+<p>Giving authorized users and devices access to internal AWS applications is a distinct architectural concern from infrastructure connectivity. AWS provides two services that address it from opposite directions: <a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html">AWS Client <abbr title="Virtual Private Network">VPN</abbr></a> places the user on the network so they can reach applications by IP, while <a href="https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html">AWS Verified Access</a> places the application behind a zero-trust policy engine that authenticates and authorizes every request based on identity and device posture, with no <abbr title="Virtual Private Network">VPN</abbr> client involved. Both services work independently of whether your environment has hybrid connectivity — a pure-cloud organization needs remote access just as much as one with Direct Connect circuits.</p>
+<p>For new application access use cases, AWS Verified Access is the preferred option. Zero-trust application access scales better across large numbers of applications and users, removes the operational burden of maintaining <abbr title="Virtual Private Network">VPN</abbr> clients and endpoint certificates, and enforces per-request policies that are hard to replicate at the network layer.</p>
+<h2 id="aws-client-vpn">AWS Client <abbr title="Virtual Private Network">VPN</abbr><a class="headerlink" href="#aws-client-vpn" title="Permanent link">&para;</a></h2>
+<p>AWS Client <abbr title="Virtual Private Network">VPN</abbr> is a managed OpenVPN-compatible service that gives end users a network-level connection into a <abbr title="Virtual Private Cloud">VPC</abbr>. Each connected client receives an IP address from a client <abbr title="Classless Inter-Domain Routing">CIDR</abbr> you configure, and can reach resources in the associated <abbr title="Virtual Private Cloud">VPC</abbr> (and, through transit paths, other VPCs and on-premises networks). Authentication supports Active Directory, SAML-based federation with identity providers such as AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center, and certificate-based mutual authentication.</p>
+<p>Client <abbr title="Virtual Private Network">VPN</abbr> fits when applications genuinely need network-layer reachability: administrators using SSH or RDP to reach <abbr title="Elastic Compute Cloud">EC2</abbr> instances, developers using tools that require direct IP connectivity, or legacy applications that authenticate clients by IP address. It also fits established workflows where users are already trained on a <abbr title="Virtual Private Network">VPN</abbr> client and the applications haven't been refactored for identity-aware access.</p>
+<h3 id="aws-client-vpn-best-practices">AWS Client <abbr title="Virtual Private Network">VPN</abbr> Best Practices<a class="headerlink" href="#aws-client-vpn-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="use-split-tunnel-by-default">Use split-tunnel by default<a class="headerlink" href="#use-split-tunnel-by-default" title="Permanent link">&para;</a></h4>
+<p>Unless a specific compliance requirement justifies full-tunnel, use split-tunnel so only AWS-destined traffic goes through Client <abbr title="Virtual Private Network">VPN</abbr> and general internet traffic exits the client's local network directly. Full-tunnel multiplies egress cost and concentrates load on the <abbr title="Virtual Private Network">VPN</abbr> endpoint. Split-tunnel also improves the user experience — latency-sensitive traffic (video calls, streaming) stays on the local internet path.</p>
+<h4 id="define-authorization-rules-not-just-routes">Define authorization rules, not just routes<a class="headerlink" href="#define-authorization-rules-not-just-routes" title="Permanent link">&para;</a></h4>
+<p>Client <abbr title="Virtual Private Network">VPN</abbr> authorization rules control which users can reach which destinations. Route tables alone allow traffic to flow; without matching authorization rules, users can still reach destinations that their role shouldn't access. Design authorization rules around job functions: administrators get SSH/RDP access to management subnets, developers get access to application VPCs, and general users get access only to the specific applications they need.</p>
+<h4 id="plan-the-client-cidr-to-avoid-conflicts">Plan the client <abbr title="Classless Inter-Domain Routing">CIDR</abbr> to avoid conflicts<a class="headerlink" href="#plan-the-client-cidr-to-avoid-conflicts" title="Permanent link">&para;</a></h4>
+<p>The client <abbr title="Classless Inter-Domain Routing">CIDR</abbr> (the IP range assigned to connected <abbr title="Virtual Private Network">VPN</abbr> clients) must not overlap with the <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, any peered VPCs, on-premises networks, or other <abbr title="Virtual Private Network">VPN</abbr> client pools. Use a dedicated range from your <abbr title="IP Address Manager">IPAM</abbr> plan — a <code>/16</code> from the <code>172.16.0.0/12</code> space is a common choice that avoids conflicts with the <code>10.0.0.0/8</code> space typically used for VPCs and on-premises.</p>
+<h4 id="scale-by-endpoint-count-not-just-availability-zone">Scale by endpoint count, not just Availability Zone<a class="headerlink" href="#scale-by-endpoint-count-not-just-availability-zone" title="Permanent link">&para;</a></h4>
+<p>A Client <abbr title="Virtual Private Network">VPN</abbr> endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state. Monitor <code>ActiveConnectionsCount</code> and <code>CrlDaysToExpiry</code> in CloudWatch. For organizations with thousands of concurrent users, consider multiple endpoints segmented by user population or application group.</p>
+<h2 id="aws-verified-access">AWS Verified Access<a class="headerlink" href="#aws-verified-access" title="Permanent link">&para;</a></h2>
+<p>AWS Verified Access provides zero-trust access to corporate applications without a <abbr title="Virtual Private Network">VPN</abbr> client. Users reach an application through a browser or an application-specific client, and Verified Access evaluates every request against a policy that combines identity (from AWS <abbr title="Identity and Access Management">IAM</abbr> Identity Center or a third-party identity provider) and device posture (from an integrated device-trust provider such as CrowdStrike or a mobile-device-management vendor). Requests that don't satisfy the policy are rejected. Requests that satisfy it are forwarded to the application.</p>
+<p>Verified Access supports both web-based applications (HTTP/HTTPS) and non-web applications reached over <abbr title="Transmission Control Protocol">TCP</abbr>, SSH, or RDP, so it covers most of the use cases that previously required Client <abbr title="Virtual Private Network">VPN</abbr>. The policies are centrally managed in AWS, expressed in Cedar policy language, and evaluated per-request, which gives you fine-grained control that network-layer access can't provide (for example, blocking access when a device's posture check fails even though the user is authenticated).</p>
+<h3 id="aws-verified-access-best-practices">AWS Verified Access Best Practices<a class="headerlink" href="#aws-verified-access-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="start-with-verified-access-for-every-new-application-access-use-case">Start with Verified Access for every new application access use case<a class="headerlink" href="#start-with-verified-access-for-every-new-application-access-use-case" title="Permanent link">&para;</a></h4>
+<p>For new application access use cases, AWS Verified Access is the preferred option because:</p>
 <ul>
-<li><strong>Identity and Access Management (<abbr title="Identity and Access Management">IAM</abbr>)</strong> — Cross-account roles, service-linked roles, SCPs, and condition keys for network resources</li>
-<li><strong>Infrastructure as Code</strong> — CloudFormation, Terraform, and CDK for network resource management</li>
-<li><strong>Service Quotas</strong> — Limits that gate deployment and must be planned around</li>
-<li><strong>Tagging Strategy</strong> — Cost allocation, automation targeting, and policy enforcement</li>
-<li><strong>Well-Architected Framework</strong> — Security, Reliability, and Cost Optimization pillars applied to networking</li>
+<li><strong>No <abbr title="Virtual Private Network">VPN</abbr> client to deploy, distribute, or maintain on endpoints.</strong> Users reach applications through standard clients they already use (browsers or protocol-specific clients).</li>
+<li><strong>Per-request policy evaluation</strong> with identity and device posture, instead of the all-or-nothing trust model of a network connection.</li>
+<li><strong>Comprehensive logging</strong> of every access attempt (allow and deny), with reason, user, and device context. This is harder to reconstruct from <abbr title="Virtual Private Network">VPN</abbr> connection logs plus application logs separately.</li>
+<li><strong>Simpler operational model</strong> at scale. Onboarding a new application means adding a Verified Access endpoint and a policy, rather than expanding <abbr title="Virtual Private Network">VPN</abbr> authorization rules and re-propagating routes.</li>
 </ul>
-<h2 id="2-aws-organizations-and-account-structure">2. AWS Organizations and Account Structure<a class="headerlink" href="#2-aws-organizations-and-account-structure" title="Permanent link">&para;</a></h2>
-<p><strong>AWS Organizations</strong> is the governance layer that determines how network resources are shared, how security boundaries are enforced, and how teams operate independently without creating connectivity chaos. Without Organizations, every cross-account networking pattern requires manual trust relationships that don't scale.</p>
-<p><strong>Key concepts:</strong></p>
+<h4 id="integrate-device-trust-from-day-one">Integrate device trust from day one<a class="headerlink" href="#integrate-device-trust-from-day-one" title="Permanent link">&para;</a></h4>
+<p>Verified Access policies are most valuable when they combine identity <em>and</em> device posture. Connect a device-trust provider (CrowdStrike, Jamf, or another MDM/EDR vendor) at deployment time, not as a later enhancement. A policy that only checks identity is little better than a traditional SSO check; adding device posture (Is the OS patched? Is disk encryption enabled? Is the EDR agent running?) is what makes Verified Access genuinely zero-trust.</p>
+<h4 id="use-cedar-policies-for-fine-grained-auditable-access-control">Use Cedar policies for fine-grained, auditable access control<a class="headerlink" href="#use-cedar-policies-for-fine-grained-auditable-access-control" title="Permanent link">&para;</a></h4>
+<p>Cedar, the policy language Verified Access uses, supports conditions on user attributes, group membership, device posture signals, and request attributes (IP, time, application). Write explicit policies per application rather than broad "allow all authenticated users" rules. Fine-grained policies are easier to audit, easier to explain to compliance teams, and reduce the blast radius of a compromised credential.</p>
+<h4 id="migrate-from-client-vpn-incrementally">Migrate from Client <abbr title="Virtual Private Network">VPN</abbr> incrementally<a class="headerlink" href="#migrate-from-client-vpn-incrementally" title="Permanent link">&para;</a></h4>
+<p>Where Verified Access doesn't fit today, Client <abbr title="Virtual Private Network">VPN</abbr> remains available, and the two can coexist during migration. The recommended pattern:</p>
+<ol>
+<li>Deploy Verified Access for new applications from day one</li>
+<li>Migrate existing applications to Verified Access as their lifecycle allows (typically during the next major update or security review)</li>
+<li>Gradually reduce Client <abbr title="Virtual Private Network">VPN</abbr> scope to the cases that genuinely require network-layer access (SSH, RDP, legacy protocols)</li>
+<li>Consolidate on Verified Access over time as the application portfolio modernizes</li>
+</ol>
+<p>The <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/">Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access interoperability patterns</a> cover these migration paths in detail.</p>
+<h2 id="when-to-use-each-service">When to use each service<a class="headerlink" href="#when-to-use-each-service" title="Permanent link">&para;</a></h2>
+<p><strong>AWS Verified Access</strong> is the right choice when:</p>
 <ul>
-<li><strong>Organizational Units (OUs)</strong> — Logical groupings that scope RAM shares, SCP enforcement, and attachment automation</li>
-<li><strong>Service Control Policies (SCPs)</strong> — Guardrails that enforce network architecture, not just security</li>
-<li><strong>Centralized Networking Account</strong> — Dedicated account for Transit Gateway, Direct Connect, Route 53 Resolver, and <abbr title="IP Address Manager">IPAM</abbr></li>
-<li><strong>Resource sharing via RAM</strong> — Share networking resources at the OU level for automatic inheritance</li>
+<li>Users need access to web applications (HTTP/HTTPS) or <abbr title="Transmission Control Protocol">TCP</abbr>/SSH/RDP services</li>
+<li>You want per-request identity and device posture evaluation</li>
+<li>You want to eliminate <abbr title="Virtual Private Network">VPN</abbr> client deployment and maintenance</li>
+<li>You're onboarding new applications to remote access</li>
 </ul>
-<p><strong><em>Best Practice:</em></strong> <em>Establish a dedicated networking account before any workload accounts. Every subsequent account will depend on shared networking resources, and retrofitting centralized networking is significantly harder than starting centralized.</em></p>
-<h2 id="3-amazon-vpc">3. Amazon <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#3-amazon-vpc" title="Permanent link">&para;</a></h2>
-<p><strong>Amazon Virtual Private Cloud (<abbr title="Virtual Private Cloud">VPC</abbr>)</strong> is the foundational security boundary, the IP address domain, and the routing context that shapes every networking decision above it. Every compute resource, database, container, and Lambda function that needs network connectivity runs inside a <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
-<p><strong>Key decisions:</strong></p>
+<p><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> is the right choice when:</p>
 <ul>
-<li><strong><abbr title="Virtual Private Cloud">VPC</abbr> design pattern</strong> — <abbr title="Virtual Private Cloud">VPC</abbr> per workload (most common), shared VPCs via RAM (centralized control), or multi-<abbr title="Virtual Private Cloud">VPC</abbr> per account</li>
-<li><strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizing</strong> — Start with <code>/16</code> for production; never go smaller than <code>/20</code></li>
-<li><strong><abbr title="Internet Protocol version 6">IPv6</abbr> adoption</strong> — Enable dual-stack from day one on new VPCs</li>
-<li><strong>Flow Logs</strong> — Enable at <abbr title="Virtual Private Cloud">VPC</abbr> level for comprehensive security and troubleshooting visibility</li>
+<li>Applications require full network-layer IP reachability (not just application-level access)</li>
+<li>Users need access to broad network ranges rather than specific applications</li>
+<li>Legacy protocols or workflows depend on the user having a routable IP inside the <abbr title="Virtual Private Cloud">VPC</abbr></li>
+<li>The organization has established <abbr title="Virtual Private Network">VPN</abbr>-based workflows that haven't been migrated yet</li>
 </ul>
-<p><strong><em>Best Practice:</em></strong> <em>Use custom VPCs for everything. Delete or ignore default VPCs. Deploy an SCP that denies resource creation in default VPCs across your entire Organization.</em></p>
-<h2 id="4-regions-and-availability-zones">4. Regions and Availability Zones<a class="headerlink" href="#4-regions-and-availability-zones" title="Permanent link">&para;</a></h2>
-<p><strong>AWS Regions</strong> are separate geographic areas with fully independent infrastructure. Each Region contains multiple <strong>Availability Zones (Availability Zones)</strong> — physically separated data centers connected by low-latency private fiber. Every networking resource you deploy exists in exactly one Availability Zone, and your multi-<abbr title="Availability Zone">AZ</abbr> strategy determines resilience, cost, and blast radius.</p>
-<p><strong>Key considerations:</strong></p>
-<ul>
-<li><strong>Region selection</strong> — Latency, Direct Connect locations, service availability, compliance, and cost</li>
-<li><strong><abbr title="Availability Zone">AZ</abbr> IDs vs Availability Zone names</strong> — Availability Zone names are mapped randomly per account; use Availability Zone IDs for cross-account coordination</li>
-<li><strong>Multi-<abbr title="Availability Zone">AZ</abbr> patterns</strong> — Deploy every stateful networking resource per-<abbr title="Availability Zone">AZ</abbr>; size for N-1 Availability Zone capacity</li>
-<li><strong>Cross-<abbr title="Availability Zone">AZ</abbr> cost</strong> — per-GB charge in each direction (see <a href="https://aws.amazon.com/vpc/pricing/"><abbr title="Virtual Private Cloud">VPC</abbr> pricing</a>); minimize unnecessary cross-<abbr title="Availability Zone">AZ</abbr> traffic without sacrificing availability</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Deploy production workloads across at least 3 Availability Zones. Size per-<abbr title="Availability Zone">AZ</abbr> capacity so that losing one Availability Zone doesn't overwhelm the remaining two.</em></p>
-<h2 id="5-ip-address-planning-with-cidr-blocks">5. IP Address Planning with <abbr title="Classless Inter-Domain Routing">CIDR</abbr> Blocks<a class="headerlink" href="#5-ip-address-planning-with-cidr-blocks" title="Permanent link">&para;</a></h2>
-<p><strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> (Classless Inter-Domain Routing)</strong> notation defines IP address ranges for your VPCs and subnets. IP address planning is the single most consequential early decision that you cannot easily change later — every <abbr title="Virtual Private Cloud">VPC</abbr>, peering connection, hybrid link, and route table is constrained by the CIDRs you chose at creation time.</p>
-<p><strong>Key principles:</strong></p>
-<ul>
-<li><strong>Allocate contiguously</strong> — Enables route summarization, simplifies firewall rules, and makes topology legible</li>
-<li><strong>Never overlap</strong> — VPCs with overlapping CIDRs cannot be connected via peering, Transit Gateway, or Cloud WAN</li>
-<li><strong>Plan for hybrid</strong> — Coordinate with on-premises ranges before any AWS allocation</li>
-<li><strong>Use 10.0.0.0/8</strong> — Largest contiguous private space; supports deep hierarchical allocation</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Design a hierarchical allocation: Organization → Environment → Region → <abbr title="Virtual Private Cloud">VPC</abbr> → Subnet. This structure enables route summarization at every level and makes your network topology self-documenting.</em></p>
-<h2 id="6-subnets">6. Subnets<a class="headerlink" href="#6-subnets" title="Permanent link">&para;</a></h2>
-<p>A <strong>subnet</strong> is where routing policy meets IP addressing. Every resource you launch lands in a subnet, and that subnet's route table determines what the resource can reach. "Public" and "private" are properties of the route table, not the subnet itself.</p>
-<p><strong>Key patterns:</strong></p>
-<ul>
-<li><strong>Five-tier architecture</strong> — Firewall, public, private (application), data, and infrastructure/transit subnets</li>
-<li><strong>One subnet per Availability Zone per tier</strong> — Consistent across all Availability Zones</li>
-<li><strong>Size for the workload</strong> — <code>/24</code> for most tiers; <code>/22</code> or larger for EKS/ECS container subnets</li>
-<li><strong>Infrastructure subnets</strong> — Dedicated <code>/28</code> subnets for Transit Gateway ENIs, firewall endpoints, and <abbr title="Virtual Private Cloud">VPC</abbr> endpoint ENIs</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Leave numbering gaps in your subnet scheme (0, 10, 20, 30 instead of 0, 1, 2, 3) so you can insert new tiers later without disrupting existing subnets.</em></p>
-<h2 id="7-ip-address-management-ipam">7. IP Address Management (<abbr title="IP Address Manager">IPAM</abbr>)<a class="headerlink" href="#7-ip-address-management-ipam" title="Permanent link">&para;</a></h2>
-<p><strong>AWS <abbr title="IP Address Manager">IPAM</abbr></strong> replaces spreadsheets and tribal knowledge with a centralized, policy-driven system that plans, allocates, tracks, and monitors IP addresses across every account and Region. Without <abbr title="IP Address Manager">IPAM</abbr>, IP address management degrades into a coordination bottleneck that produces overlaps discovered only when you try to connect VPCs.</p>
-<p><strong>Key capabilities:</strong></p>
-<ul>
-<li><strong>Hierarchical pools</strong> — Organization → Region → Environment → Workload, with allocation rules at every level</li>
-<li><strong>Overlap prevention</strong> — Every allocation validated against the entire pool hierarchy</li>
-<li><strong>Compliance monitoring</strong> — Continuous detection of VPCs with manually assigned CIDRs that violate your standards</li>
-<li><strong>IaC integration</strong> — CloudFormation and Terraform reference <abbr title="IP Address Manager">IPAM</abbr> pools instead of hardcoded CIDRs</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Implement <abbr title="IP Address Manager">IPAM</abbr> before creating your first production <abbr title="Virtual Private Cloud">VPC</abbr>. The cost of a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap (which requires <abbr title="Virtual Private Cloud">VPC</abbr> recreation to fix) exceeds the cost of <abbr title="IP Address Manager">IPAM</abbr> for years.</em></p>
-<h2 id="8-dns-architecture">8. <abbr title="Domain Name System">DNS</abbr> Architecture<a class="headerlink" href="#8-dns-architecture" title="Permanent link">&para;</a></h2>
-<p><strong>Amazon Route 53 Resolver</strong> handles every <abbr title="Domain Name System">DNS</abbr> query made from within a <abbr title="Virtual Private Cloud">VPC</abbr> — answering queries for private hosted zones, forwarding queries for on-premises domains, and resolving public internet names. In a multi-account environment, <abbr title="Domain Name System">DNS</abbr> decisions cascade into service discovery, hybrid connectivity, and security posture. Route 53 Profiles distribute <abbr title="Domain Name System">DNS</abbr> configuration (private hosted zone associations, forwarding rules, <abbr title="Domain Name System">DNS</abbr> Firewall rule groups) at the OU level so every account inherits consistent resolution automatically.</p>
-<p><strong>Key capabilities:</strong></p>
-<ul>
-<li><strong>Route 53 Profiles</strong> — Bundle and share <abbr title="Domain Name System">DNS</abbr> configuration across all accounts in an OU; new accounts inherit automatically</li>
-<li><strong>Private hosted zones</strong> — Internal <abbr title="Domain Name System">DNS</abbr> namespaces visible only to associated VPCs; the foundation of service discovery</li>
-<li><strong>Resolver endpoints</strong> — Inbound (on-premises resolves AWS names) and outbound (AWS resolves on-premises names) for hybrid <abbr title="Domain Name System">DNS</abbr></li>
-<li><strong><abbr title="Domain Name System">DNS</abbr> Firewall</strong> — Domain-based filtering at the resolution layer; the cheapest and broadest egress control</li>
-</ul>
-<p><strong><em>Best Practice:</em></strong> <em>Deploy Route 53 Profiles from day one. Without them, multi-account <abbr title="Domain Name System">DNS</abbr> turns into fragile per-account automation that drifts over time. With them, <abbr title="Domain Name System">DNS</abbr> configuration is a first-class operation that scales with your organization.</em></p>
-<hr />
-<h2 id="explore-foundation-topics">Explore Foundation Topics<a class="headerlink" href="#explore-foundation-topics" title="Permanent link">&para;</a></h2>
+<p>AWS Client <abbr title="Virtual Private Network">VPN</abbr> is <strong>not</strong> the long-term answer for application access. For any new application, start with Verified Access and use Client <abbr title="Virtual Private Network">VPN</abbr> only for the genuine network-layer cases.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 4H3a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2M3 19V6h8v13zm18 0h-8V6h8zm-7-9.5h6V11h-6zm0 2.5h6v1.5h-6zm0 2.5h6V16h-6z"/></svg></span> <strong>Before You Start</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr> documentation</strong></p>
 <hr />
-<p><abbr title="Identity and Access Management">IAM</abbr>, Infrastructure as Code, service quotas, tagging, and Well-Architected principles for networking.</p>
-<p><a href="aws-prerequisites/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Before You Start</a></p>
+<p>Complete service documentation covering endpoints, authentication methods, authorization rules, and split-tunnel configuration.</p>
+<p><a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-user/what-is.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3v18h-6v-3.5h-2V21H5V3zm-4 4h2V5h-2zm-4 0h2V5h-2zM7 7h2V5H7zm8 4h2V9h-2zm-4 0h2V9h-2zm-4 0h2V9H7zm8 4h2v-2h-2zm-4 0h2v-2h-2zm-4 0h2v-2H7zm8 4h2v-2h-2zm-8 0h2v-2H7zM21 1H3v22h18z"/></svg></span> <strong>AWS Organizations</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>AWS Verified Access documentation</strong></p>
 <hr />
-<p>Multi-account governance, SCPs, centralized networking account, and resource sharing via RAM.</p>
-<p><a href="organizations/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> AWS Organizations</a></p>
+<p>Complete service documentation covering endpoints, policies in Cedar, identity and device trust providers, and supported application types.</p>
+<p><a href="https://docs.aws.amazon.com/verified-access/latest/ug/what-is-verified-access.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.5 20q-2.28 0-3.89-1.57Q1 16.85 1 14.58q0-1.95 1.17-3.48 1.18-1.53 3.08-1.95.63-2.3 2.5-3.72Q9.63 4 12 4q2.93 0 4.96 2.04Q19 8.07 19 11q1.73.2 2.86 1.5 1.14 1.28 1.14 3 0 1.88-1.31 3.19T18.5 20m-12-2h12q1.05 0 1.77-.73.73-.72.73-1.77t-.73-1.77Q19.55 13 18.5 13H17v-2q0-2.07-1.46-3.54Q14.08 6 12 6 9.93 6 8.46 7.46 7 8.93 7 11h-.5q-1.45 0-2.47 1.03Q3 13.05 3 14.5T4.03 17q1.02 1 2.47 1m5.5-6"/></svg></span> <strong>Amazon <abbr title="Virtual Private Cloud">VPC</abbr></strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access interoperability patterns</strong></p>
 <hr />
-<p><abbr title="Virtual Private Cloud">VPC</abbr> design patterns, <abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizing, <abbr title="Internet Protocol version 6">IPv6</abbr>, Flow Logs, and the relationship between VPCs and account strategy.</p>
-<p><a href="vpc/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></p>
+<p>Four migration and interoperability patterns for running Client <abbr title="Virtual Private Network">VPN</abbr> and Verified Access side by side during a transition.</p>
+<p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog post</a></p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.9 17.39c-.26-.8-1.01-1.39-1.9-1.39h-1v-3a1 1 0 0 0-1-1H8v-2h2a1 1 0 0 0 1-1V7h2a2 2 0 0 0 2-2v-.41a7.984 7.984 0 0 1 2.9 12.8M11 19.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.22.21-1.79L9 15v1a2 2 0 0 0 2 2m1-16A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2"/></svg></span> <strong>Regions and Availability Zones</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>AWS Verified Access pricing</strong></p>
 <hr />
-<p>Region selection, Availability Zone IDs, multi-<abbr title="Availability Zone">AZ</abbr> patterns, cross-<abbr title="Availability Zone">AZ</abbr> cost management, and Local Zones.</p>
-<p><a href="regions-azs/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Regions and Availability Zones</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 9h-2V7h2zm7 11v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1zM9 5H7v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-4z"/></svg></span> <strong><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</strong></p>
-<hr />
-<p>Hierarchical allocation, route summarization, hybrid coordination, <abbr title="Internet Protocol version 6">IPv6</abbr>, and common mistakes.</p>
-<p><a href="cidr/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4v2h1a1 1 0 0 1 1 1h7v2h-7a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1H2v-2h7a1 1 0 0 1 1-1h1v-2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg></span> <strong>Subnets</strong></p>
-<hr />
-<p>Tier design, route tables, sizing for containers, NACLs, infrastructure subnets, and <abbr title="Virtual Private Cloud">VPC</abbr> sharing.</p>
-<p><a href="subnets/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Subnets</a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 11h-2V9h2zM3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zm7 2H8v10h2zm2 10h2v-4h2a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4z"/></svg></span> <strong><abbr title="IP Address Manager">IPAM</abbr></strong></p>
-<hr />
-<p>Pool hierarchy, allocation rules, compliance monitoring, IaC integration, and hybrid awareness.</p>
-<p><a href="ipam/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="IP Address Manager">IPAM</abbr></a></p>
-</li>
-<li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 9a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1M7 19a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2m13-6H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1"/></svg></span> <strong><abbr title="Domain Name System">DNS</abbr> Architecture</strong></p>
-<hr />
-<p>Route 53 Resolver, private hosted zones, Resolver endpoints for hybrid <abbr title="Domain Name System">DNS</abbr>, Route 53 Profiles, and <abbr title="Domain Name System">DNS</abbr> Firewall.</p>
-<p><a href="dns/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Domain Name System">DNS</abbr> Architecture</a></p>
+<p>Per-application-hour and per-GB data processing charges for Verified Access endpoints.</p>
+<p><a href="https://aws.amazon.com/verified-access/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
 </li>
 </ul>
 </div>
+<h2 id="related-pages">Related pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
+<p><strong>Relationship to other Connectivity topics:</strong></p>
+<ul>
+<li><strong><a href="../hybrid-multicloud/">Hybrid &amp; Multi-Cloud Connectivity</a></strong> — Hybrid connectivity provides the infrastructure-level path between on-premises and AWS. Remote access provides the user-level path to applications. The two are independent: Verified Access and Client <abbr title="Virtual Private Network">VPN</abbr> work without any hybrid connectivity in place.</li>
+</ul>
+<p><strong>Relationship to Security topics:</strong></p>
+<ul>
+<li><strong><a href="../../security/segmentation/">Network Segmentation</a></strong> — Verified Access auth policies provide identity-based segmentation at the application boundary. Client <abbr title="Virtual Private Network">VPN</abbr> authorization rules provide network-level segmentation for <abbr title="Virtual Private Network">VPN</abbr> users.</li>
+</ul>
 
 
 
@@ -1923,7 +2010,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 00:18:24 UTC">June 17, 2026</span>
   </span>
 
     
@@ -1933,7 +2020,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="January 15, 2026 22:59:49 UTC">January 15, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 00:18:24 UTC">June 17, 2026</span>
   </span>
 
     
@@ -2020,7 +2107,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../decisions/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Decision Map">
+          <a href="../hybrid-multicloud/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Hybrid &amp; Multi-Cloud">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2030,20 +2117,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Decision Map
+                Hybrid & Multi-Cloud
               </div>
             </div>
           </a>
         
         
           
-          <a href="aws-prerequisites/" class="md-footer__link md-footer__link--next" aria-label="Next: Before You Start">
+          <a href="../../application-networking/" class="md-footer__link md-footer__link--next" aria-label="Next: Application Networking">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Before You Start
+                Application Networking
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2155,10 +2242,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

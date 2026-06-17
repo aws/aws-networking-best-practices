@@ -672,6 +672,8 @@
       
         
       
+        
+      
     
     
     
@@ -792,6 +794,34 @@
     
   
     Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Access
   
 
     
@@ -1636,6 +1666,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#4-remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Remote Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#explore-connectivity-topics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1682,7 +1723,7 @@
 <h1 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h1>
 <p>This section covers how AWS resources communicate with the internet, with each other, and with networks outside AWS. Connectivity is the layer between your foundational infrastructure (VPCs, subnets, IP addressing) and the application networking services that run on top of it.</p>
 <p>The connectivity patterns you choose shape cost, latency, security boundaries, and operational ownership across your entire AWS environment. Most organizations use more than one connectivity service simultaneously, with each operating at the layer where it provides the most value.</p>
-<p><strong>How these pages relate:</strong> Internet Connectivity covers your external boundary (how traffic enters and leaves AWS). Within AWS covers internal routing and service communication between VPCs and accounts. Hybrid &amp; Multi-Cloud covers connections to networks outside AWS — on-premises data centers, other cloud providers, and remote users. Most architectures touch all three pages: internet for public-facing workloads, within-AWS for the backbone between them, and hybrid for the on-premises and multi-cloud leg.</p>
+<p><strong>How these pages relate:</strong> Internet Connectivity covers your external boundary (how traffic enters and leaves AWS). Within AWS covers internal routing and service communication between VPCs and accounts. Hybrid &amp; Multi-Cloud covers connections to networks outside AWS — on-premises data centers and other cloud providers. Remote Access covers how authorized users and devices reach internal applications. Most architectures touch all four pages: internet for public-facing workloads, within-AWS for the backbone between them, hybrid for the on-premises and multi-cloud leg, and remote access for workforce connectivity.</p>
 <div class="admonition tip">
 <p class="admonition-title"><abbr title="Virtual Private Cloud">VPC</abbr> Lattice coverage</p>
 <p>Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice appears in two places by design. The <a href="within-aws/">Within AWS</a> page covers <abbr title="Virtual Private Cloud">VPC</abbr> Lattice from the connectivity and network-team perspective: service networks, association models, and how <abbr title="Virtual Private Cloud">VPC</abbr> Lattice fits the connectivity stack. The <a href="../application-networking/service-to-service/">Application Networking → Service to Service</a> page covers <abbr title="Virtual Private Cloud">VPC</abbr> Lattice from the application-team perspective: service discovery, auth policies, traffic management, and deployment patterns.</p>
@@ -1709,17 +1750,23 @@
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>These services are complementary layers, not competing alternatives. Build a connectivity stack where each service operates at the layer where it provides the most value.</em></p>
 <h2 id="3-hybrid-and-multi-cloud-connectivity">3. Hybrid and Multi-Cloud Connectivity<a class="headerlink" href="#3-hybrid-and-multi-cloud-connectivity" title="Permanent link">&para;</a></h2>
-<p><strong>Hybrid and multi-cloud connectivity</strong> covers three distinct concerns: connecting on-premises data centers and branch offices to AWS (hybrid), connecting AWS to other public clouds (multi-cloud), and giving users and devices access to specific AWS applications (client communication).</p>
+<p><strong>Hybrid and multi-cloud connectivity</strong> covers two distinct concerns: connecting on-premises data centers and branch offices to AWS (hybrid) and connecting AWS to other public clouds (multi-cloud).</p>
 <p><strong>Key services:</strong></p>
 <ul>
 <li><strong>AWS Direct Connect</strong> — Private, dedicated circuits for predictable bandwidth and latency; the foundation for most production hybrid deployments</li>
 <li><strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong> — Encrypted IPsec connectivity over the internet; fastest way to establish hybrid connectivity</li>
 <li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> — Transit Gateway Connect or AWS Cloud WAN Connect attachments for existing <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays</li>
 <li><strong>AWS Interconnect</strong> — Managed direct cloud-to-cloud connections (currently AWS ↔ Google Cloud, expanding)</li>
-<li><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> — Network-level user access into VPCs</li>
-<li><strong>AWS Verified Access</strong> — Zero-trust application-level access (preferred for new application access use cases)</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em>Most organizations use more than one of these services simultaneously. Direct Connect for the primary private path, <abbr title="Virtual Private Network">VPN</abbr> for fast-start or encryption overlay, and Verified Access for application access.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>Most organizations use more than one of these services simultaneously. Direct Connect for the primary private path, <abbr title="Virtual Private Network">VPN</abbr> for fast-start or encryption overlay, and <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> Connect for existing branch overlays.</em></p>
+<h2 id="4-remote-access">4. Remote Access<a class="headerlink" href="#4-remote-access" title="Permanent link">&para;</a></h2>
+<p><strong>Remote access</strong> addresses how authorized users and devices reach internal AWS applications. This is a distinct decision domain from infrastructure connectivity — it serves identity and security teams rather than network engineering, and works independently of whether your environment has hybrid connectivity.</p>
+<p><strong>Key services:</strong></p>
+<ul>
+<li><strong>AWS Verified Access</strong> — Zero-trust application-level access with per-request identity and device posture evaluation; the preferred option for new use cases</li>
+<li><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> — Network-level user access into VPCs for cases that genuinely require IP reachability</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Start with AWS Verified Access for every new application access use case. Use Client <abbr title="Virtual Private Network">VPN</abbr> only when the application genuinely requires the user to have a routable IP inside the <abbr title="Virtual Private Cloud">VPC</abbr>.</em></p>
 <hr />
 <h2 id="explore-connectivity-topics">Explore Connectivity Topics<a class="headerlink" href="#explore-connectivity-topics" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
@@ -1739,8 +1786,14 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 17.5c0 .89.18 1.73.5 2.5h-7c-1.5 0-2.81-.5-3.89-1.57C1.54 17.38 1 16.09 1 14.58q0-1.95 1.17-3.48C3.34 9.57 4 9.43 5.25 9.15c.42-1.53 1.25-2.77 2.5-3.72S10.42 4 12 4c1.95 0 3.6.68 4.96 2.04S19 9.05 19 11h.1c-3.4.23-6.1 3.05-6.1 6.5m6-4V12l-2.25 2.25L19 16.5V15a2.5 2.5 0 0 1 2.5 2.5c0 .4-.09.78-.26 1.12l1.09 1.09c.42-.63.67-1.39.67-2.21 0-2.21-1.79-4-4-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5c0-.4.09-.78.26-1.12l-1.09-1.09c-.42.63-.67 1.39-.67 2.21 0 2.21 1.79 4 4 4V23l2.25-2.25L19 18.5z"/></svg></span> <strong>Hybrid &amp; Multi-Cloud Connectivity</strong></p>
 <hr />
-<p>Direct Connect, Site-to-Site <abbr title="Virtual Private Network">VPN</abbr>, <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr>, AWS Interconnect, Client <abbr title="Virtual Private Network">VPN</abbr>, and Verified Access.</p>
+<p>Direct Connect, Site-to-Site <abbr title="Virtual Private Network">VPN</abbr>, <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr>, and AWS Interconnect for on-premises and multi-cloud infrastructure connectivity.</p>
 <p><a href="hybrid-multicloud/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Hybrid &amp; Multi-Cloud Connectivity</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 8c0-2.21 1.79-4 4-4s4 1.79 4 4-1.79 4-4 4-4-1.79-4-4m6 10.2c0-.96.5-1.86 1.2-2.46v-.24c0-.39.07-.76.18-1.12-1.03-.24-2.17-.38-3.38-.38-4.42 0-8 1.79-8 4v2h10zm10 .1v3.5c0 .6-.6 1.2-1.3 1.2h-5.5c-.6 0-1.2-.6-1.2-1.3v-3.5c0-.6.6-1.2 1.2-1.2v-1.5c0-1.4 1.4-2.5 2.8-2.5s2.8 1.1 2.8 2.5V17c.6 0 1.2.6 1.2 1.3m-2.5-2.8c0-.8-.7-1.3-1.5-1.3s-1.5.5-1.5 1.3V17h3z"/></svg></span> <strong>Remote Access</strong></p>
+<hr />
+<p>AWS Verified Access for zero-trust application access and AWS Client <abbr title="Virtual Private Network">VPN</abbr> for network-level user connectivity.</p>
+<p><a href="remote-access/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Remote Access</a></p>
 </li>
 </ul>
 </div>
@@ -1766,7 +1819,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 00:18:24 UTC">June 17, 2026</span>
   </span>
 
     
