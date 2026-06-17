@@ -15,45 +15,40 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Fetch base branch
-        run: git fetch origin ${{ github.event.pull_request.base.ref }}
       - name: Generate markdown preview
         uses: actions/github-script@v7
         with:
           script: |
-            const { execSync } = require('child_process');
-            
-            const baseBranch = '${{ github.event.pull_request.base.ref }}';
-            const changedFiles = execSync(`git diff --name-only origin/${baseBranch}...HEAD`)
-              .toString().trim().split('\n').filter(f => f.endsWith('.md'));
-            
+            // Fetch the list of changed files from the PR via API (no untrusted checkout)
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100
+            });
+
+            const changedFiles = files.filter(f => f.filename.endsWith('.md') && f.filename.startsWith('content/'));
+
             // Skip preview if multiple markdown files detected (handled by pr-guidelines workflow)
             if (changedFiles.length > 1) {
               console.log(`Skipping preview for ${changedFiles.length} files - multiple file warning will be shown instead`);
               return;
             }
-            
+
             for (const file of changedFiles) {
-              const diffOutput = execSync(`git diff origin/${baseBranch}...HEAD -- "${file}"`)
-                .toString();
-              
               function processMarkdown(lines) {
                 return lines.map(line => {
                   // Fix relative image paths to GitHub raw URLs
-                  line = line.replace(/!\[([^\]]*)\]\(\.\.\/assets\/([^)]+)\)/g, 
+                  line = line.replace(/!\[([^\]]*)\]\(\.\.\/assets\/([^)]+)\)/g,
                     '![$1](https://github.com/aws/aws-networking-best-practices/raw/main/content/assets/$2)');
-                  
+
                   // Convert MkDocs image attributes to HTML
-                  line = line.replace(/!\[([^\]]*)\]\(([^)]+)\)\{[^}]*width="([^"]+)"[^}]*\}/g, 
+                  line = line.replace(/!\[([^\]]*)\]\(([^)]+)\)\{[^}]*width="([^"]+)"[^}]*\}/g,
                     '<img src="$2" alt="$1" width="$3">');
-                  
+
                   // Remove MkDocs caption syntax and convert to simple text
                   line = line.replace(/^\/\/\/ caption$/gm, '**Caption:**');
-                  
+
                   // Convert Material Design icons to emoji equivalents
                   const iconMap = {
                     ':material-eye-check:': '👁️✅',
@@ -67,57 +62,58 @@ jobs:
                     ':octicons-arrow-right-24:': '→',
                     ':material-star-plus-outline:': '⭐'
                   };
-                  
+
                   // Replace icons with emoji equivalents
                   Object.entries(iconMap).forEach(([icon, emoji]) => {
                     line = line.replace(new RegExp(icon.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), emoji);
                   });
-                  
+
                   // Clean up table formatting for better GitHub display
                   if (line.includes('|') && line.includes(':material-') || line.includes(':fontawesome-') || line.includes(':octicons-')) {
-                    // Additional cleanup for any remaining icon syntax in tables
                     line = line.replace(/:([a-z-]+):/g, '🔹');
                   }
-                  
+
                   return line;
                 }).join('\n');
               }
-              
-              const addedLines = diffOutput.split('\n')
-                .filter(line => line.startsWith('+') && !line.startsWith('+++'))
-                .map(line => line.substring(1));
-              
-              const removedLines = diffOutput.split('\n')
-                .filter(line => line.startsWith('-') && !line.startsWith('---'))
-                .map(line => line.substring(1));
-              
-              const totalChanges = addedLines.length + removedLines.length;
-              
+
+              const totalChanges = file.additions + file.deletions;
+
               if (totalChanges > 50) {
                 await github.rest.issues.createComment({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  body: `## 📄 Large Changes Detected in \`${file}\`\n\nThis file has ${totalChanges} lines of changes, which may be difficult to review.\n\n**Recommendation:** Consider splitting this PR into smaller, focused changes to:\n- Improve review quality\n- Reduce cognitive load\n- Enable more thorough feedback\n\nIf these changes must be together, please explain why in the PR description.`
+                  body: `## 📄 Large Changes Detected in \`${file.filename}\`\n\nThis file has ${totalChanges} lines of changes, which may be difficult to review.\n\n**Recommendation:** Consider splitting this PR into smaller, focused changes to:\n- Improve review quality\n- Reduce cognitive load\n- Enable more thorough feedback\n\nIf these changes must be together, please explain why in the PR description.`
                 });
-              } else if (addedLines.length > 0 || removedLines.length > 0) {
-                let body = `## 📖 Preview: \`${file}\`\n\n`;
-                
-                if (addedLines.length > 0) {
-                  const processedNew = processMarkdown(addedLines);
-                  body += `### New Content\n\n${processedNew}\n\n`;
+              } else if (file.patch) {
+                const addedLines = file.patch.split('\n')
+                  .filter(line => line.startsWith('+') && !line.startsWith('+++'))
+                  .map(line => line.substring(1));
+
+                const removedLines = file.patch.split('\n')
+                  .filter(line => line.startsWith('-') && !line.startsWith('---'))
+                  .map(line => line.substring(1));
+
+                if (addedLines.length > 0 || removedLines.length > 0) {
+                  let body = `## 📖 Preview: \`${file.filename}\`\n\n`;
+
+                  if (addedLines.length > 0) {
+                    const processedNew = processMarkdown(addedLines);
+                    body += `### New Content\n\n${processedNew}\n\n`;
+                  }
+
+                  if (removedLines.length > 0) {
+                    const processedOld = processMarkdown(removedLines);
+                    body += `<details>\n<summary>👁️ Show replaced content</summary>\n\n${processedOld}\n\n</details>`;
+                  }
+
+                  await github.rest.issues.createComment({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: body
+                  });
                 }
-                
-                if (removedLines.length > 0) {
-                  const processedOld = processMarkdown(removedLines);
-                  body += `<details>\n<summary>👁️ Show replaced content</summary>\n\n${processedOld}\n\n</details>`;
-                }
-                
-                await github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: body
-                });
               }
             }
