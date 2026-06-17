@@ -9,62 +9,10 @@ This page covers the notification pipeline end-to-end: from the metric or event 
 
 Notifications in a multi-account AWS environment require deliberate architecture. Events originate in workload accounts, but the networking team typically operates from a centralized monitoring account. Cross-account event forwarding, centralized alarm aggregation, and Organization-wide health event visibility are not optional extras — they are the baseline for any production network.
 
-``` mermaid
-graph LR
-    subgraph Sources["Event Sources"]
-        CW["CloudWatch Metrics<br/>Threshold & anomaly"]
-        EB["EventBridge Events<br/>State changes"]
-        Health["AWS Health<br/>Service events"]
-    end
-
-    subgraph Decision["Alarm & Rule Layer"]
-        Alarm["CloudWatch Alarms<br/>Simple & composite"]
-        Rule["EventBridge Rules<br/>Pattern matching"]
-    end
-
-    subgraph Routing["Delivery & Routing"]
-        SNS["Amazon SNS<br/>Fan-out"]
-        Chatbot["AWS Chatbot<br/>Slack & Teams"]
-    end
-
-    subgraph Destinations["Destinations"]
-        Email["Email"]
-        Slack["Slack / Teams"]
-        PD["PagerDuty / Opsgenie"]
-        Lambda["Lambda<br/>Auto-remediation"]
-        SQS["SQS<br/>Ticket creation"]
-    end
-
-    CW --> Alarm
-    EB --> Rule
-    Health --> Rule
-    Alarm --> SNS
-    Rule --> SNS
-    Alarm --> Chatbot
-    Rule --> Chatbot
-    SNS --> Email
-    SNS --> PD
-    SNS --> Lambda
-    SNS --> SQS
-    Chatbot --> Slack
-
-    style Sources fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Decision fill:none,stroke:#7c3aed,stroke-width:2px,stroke-dasharray:5 5,color:#7c3aed
-    style Routing fill:none,stroke:#059669,stroke-width:2px,stroke-dasharray:5 5,color:#059669
-    style Destinations fill:none,stroke:#ff9900,stroke-width:2px,stroke-dasharray:5 5,color:#ff9900
-    style CW fill:#2563eb,stroke:#1e40af,color:#fff
-    style EB fill:#2563eb,stroke:#1e40af,color:#fff
-    style Health fill:#2563eb,stroke:#1e40af,color:#fff
-    style Alarm fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Rule fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style SNS fill:#059669,stroke:#047857,color:#fff
-    style Chatbot fill:#059669,stroke:#047857,color:#fff
-    style Email fill:#ff9900,stroke:#c27400,color:#fff
-    style Slack fill:#ff9900,stroke:#c27400,color:#fff
-    style PD fill:#ff9900,stroke:#c27400,color:#fff
-    style Lambda fill:#ff9900,stroke:#c27400,color:#fff
-    style SQS fill:#ff9900,stroke:#c27400,color:#fff
-```
+![Notification pipeline showing event sources (CloudWatch Metrics, EventBridge Events, AWS Health) flowing through the alarm and rule layer (CloudWatch Alarms, EventBridge Rules) to delivery and routing (SNS, AWS Chatbot) and finally to destinations (Email, Slack/Teams, PagerDuty/Opsgenie, Lambda auto-remediation, SQS ticket creation)](../assets/observability/notification-pipeline.png)
+/// caption
+Notification pipeline — [Drawio Source](../assets/observability/notification-pipeline.drawio)
+///
 
 ## Key Capabilities
 
