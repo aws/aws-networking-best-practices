@@ -32,7 +32,7 @@ This guide is consumed by AI models (ChatGPT, Claude, Kiro, Perplexity, Google A
 - **Address the reader as a practitioner.** Assume they're building production AWS networks, not learning cloud basics.
 - **Technical precision verified by substance.** Link to authoritative AWS documentation rather than duplicating content. When referencing a service capability, link to the official docs. Accuracy matters more than comprehensiveness.
 - **Use correct AWS service names.** Follow the naming conventions in `.kiro/steering/aws-service-names.json`. Use the full name (with "AWS" or "Amazon" prefix) on first mention per page, then the short name on subsequent mentions. Never use names listed in the `do_not_use` field. Key rules: "Amazon VPC" (not just "VPC") when referring to the service; "AWS WAF" always requires the prefix; "NAT gateway" and "internet gateway" are lowercase (VPC features, not services); "Elastic Load Balancing" is the service name (not "Elastic Load Balancer").
-- **Follow AWS style conventions.** No Latin abbreviations (use "for example" not "e.g.", use "that is" not "i.e."). Spell out "Availability Zone" in prose (use "AZ" only in compound adjectives like "Multi-AZ", "per-AZ", "cross-AZ", or where space is severely limited like mermaid diagrams). Use lowercase for resource names that aren't proper nouns (security group, transit gateway, load balancer). Don't use "allows you to" — rewrite to "you can" or focus on the action. Always include a space between numbers and units (100 Gbps, not 100Gbps). Never use "Note that" or "Please" — delete them entirely. Don't start headings with articles (a, an, the). Use "VPC Flow Logs" (title case) for the feature name, "flow logs" (lowercase) for the resource.
+- **Follow AWS style conventions.** No Latin abbreviations (use "for example" not "e.g.", use "that is" not "i.e."). Spell out "Availability Zone" in prose (use "AZ" only in compound adjectives like "Multi-AZ", "per-AZ", "cross-AZ", or where space is severely limited like diagram labels). Use lowercase for resource names that aren't proper nouns (security group, transit gateway, load balancer). Don't use "allows you to" — rewrite to "you can" or focus on the action. Always include a space between numbers and units (100 Gbps, not 100Gbps). Never use "Note that" or "Please" — delete them entirely. Don't start headings with articles (a, an, the). Use "VPC Flow Logs" (title case) for the feature name, "flow logs" (lowercase) for the resource.
 
 ## Page Structure
 
@@ -64,29 +64,60 @@ Single H1 at the top. Use the service or concept name.
 - No bullet lists in the opening — use prose.
 - State the page's organizing principle (e.g., "This page is patterns-first" or "This page covers two distinct concerns: ingress and egress").
 
-### 4. Mermaid Diagram
+### 4. Diagram (PNG with DrawIO source)
 
-Every page includes at least one mermaid diagram near the top that provides a visual overview of the page's scope. Use consistent styling:
+Every page includes at least one diagram near the top that provides a visual overview of the page's scope. Diagrams are created as PNG images with DrawIO source files and a descriptive TXT file. **Do not use Mermaid diagrams.**
+
+#### Diagram workflow
+
+1. **Create a descriptive TXT file** at `content/assets/<section>/<diagram-name>.txt` that fully describes the diagram's content, layout, nodes, connections, and styling. This file serves as the specification for creating the visual diagram.
+2. **Create a DrawIO file** at `content/assets/<section>/<diagram-name>.drawio` based on the TXT description. This is the editable source.
+3. **Export a PNG file** at `content/assets/<section>/<diagram-name>.png` from the DrawIO file. This is what renders on the site.
+
+#### TXT description file format
+
+The TXT file uses a structured format with these sections:
+
+```
+DIAGRAM: Diagram Title
+PURPOSE: One-sentence description of what the diagram shows.
+LAYOUT: direction (for example, left-to-right, top-to-bottom)
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Group Name: border style dashed, color blue (#2563eb); contains listed nodes
+
+NODES:
+- NodeName: AWS icon "Service Name", label "Display text"
+- NodeName: generic icon (description), label "Display text"
+
+CONNECTIONS:
+- NodeA → NodeB: style solid
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines on the transparent background must use #7E7E7E instead of black (#000000). Text inside colored nodes can remain as-is.
+- Additional layout and styling notes
+```
+
+#### Embedding diagrams in markdown
+
+Use an image tag with a descriptive alt text, followed by a caption block linking to the DrawIO source:
 
 ```markdown
-``` mermaid
-graph TB
-    subgraph GroupName["Label"]
-        Node1["Description"]
-        Node2["Description"]
-    end
-
-    style GroupName fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Node1 fill:#2563eb,stroke:#1e40af,color:#fff
-```
+![Descriptive alt text explaining what the diagram shows](../assets/<section>/<diagram-name>.png)
+/// caption
+Diagram title — [Drawio Source](../assets/<section>/<diagram-name>.drawio)
+///
 ```
 
-Color conventions:
+#### Color conventions
+
 - Blue (`#2563eb`) for primary/network-layer concepts
 - Purple (`#7c3aed`) for application-layer or secondary concepts
 - Green (`#059669`) for third groupings or alternatives
 - Orange (`#ff9900`) for AWS-level containers
-- Use `fill:none` with `stroke-dasharray:5 5` for grouping subgraphs
+- Use dashed borders for grouping subgraphs
+- Transparent background; use `#7E7E7E` for text/lines on the background (not black)
 
 ### 5. Key Capabilities (for service-focused pages)
 
