@@ -9,32 +9,10 @@ The core principle is simple: **default-deny outbound, allow by exception**. Mos
 
 AWS provides multiple layers for egress filtering, each operating at a different level of the stack. The right approach is not to pick one — it's to layer them so that a gap in one control is caught by the next.
 
-``` mermaid
-graph TB
-    subgraph Layers["Outbound Control Layers (defense-in-depth)"]
-        direction TB
-        Workload["Workload<br/>(application code)"]
-        SG["Security Group<br/>(outbound rules)"]
-        DNS["Route 53 DNS Firewall<br/>(domain-based filtering)"]
-        NFW["AWS Network Firewall<br/>(stateful inspection, IPS)"]
-        NAT["NAT gateway / Egress-only IGW<br/>(egress path)"]
-        Internet["Internet"]
-    end
-
-    Workload --> SG
-    SG --> DNS
-    DNS --> NFW
-    NFW --> NAT
-    NAT --> Internet
-
-    style Layers fill:none,stroke:#2563eb,stroke-width:2px,stroke-dasharray:5 5,color:#2563eb
-    style Workload fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style SG fill:#2563eb,stroke:#1e40af,color:#fff
-    style DNS fill:#2563eb,stroke:#1e40af,color:#fff
-    style NFW fill:#2563eb,stroke:#1e40af,color:#fff
-    style NAT fill:#059669,stroke:#047857,color:#fff
-    style Internet fill:#059669,stroke:#047857,color:#fff
-```
+![Outbound control layers showing defense-in-depth pipeline from Workload through Security Group, DNS Firewall, Network Firewall, NAT gateway, to Internet](../assets/security/outbound-layers.png)
+/// caption
+Outbound control layers — [Drawio Source](../assets/security/outbound-layers.drawio)
+///
 
 Each layer adds a distinct capability: security groups enforce port and protocol restrictions at the instance level, DNS Firewall blocks resolution of unauthorized domains before a connection is ever attempted, Network Firewall inspects the actual traffic for protocol violations and known-bad signatures, and the egress path (NAT gateway or egress-only IGW) shapes where traffic exits. Together, they form a pipeline where each layer catches what the previous one cannot.
 
