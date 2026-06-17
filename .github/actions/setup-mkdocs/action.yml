@@ -13,11 +13,4 @@ runs:
         python-version: ${{ inputs.python-version }}
     - name: Install MkDocs dependencies
       shell: bash
-      run: |
-        pip install \
-          mkdocs-material \
-          mkdocs-git-revision-date-localized-plugin \
-          mkdocs-git-committers-plugin-2 \
-          "mkdocs-material[imaging]" \
-          "pymdown-extensions>=10.0" \
-          "mdx-spanner"
+      run: pip install -r requirements.txt
