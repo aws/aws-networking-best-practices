@@ -11,7 +11,7 @@ This page maps common AWS networking questions to the right service, pattern, an
 | Connect exactly two VPCs with high throughput and zero same-AZ data processing/transfer cost | **VPC Peering** — lowest latency, no bandwidth limit, no per-GB charge for same-AZ traffic, non-transitive | Doesn't scale past a handful of pairs; CIDRs cannot overlap | [Connectivity Within AWS](connectivity/within-aws.md) |
 | Expose an HTTP/gRPC service to other VPCs and accounts | **VPC Lattice Services** — cross-VPC without peering or TGW, IAM auth policies, weighted routing, overlapping CIDRs | Operates at L7 only (HTTP/HTTPS/gRPC) | [Connectivity Within AWS](connectivity/within-aws.md) |
 | Give another account private TCP access to a database or on-prem endpoint | **VPC Lattice VPC Resources** — resource configurations with custom domain names and DNS as target without NLB required, overlapping CIDRs, expose range of ports | Unidirectional (consumer → resource only); TCP only | [Connectivity Within AWS](connectivity/within-aws.md) |
-| Expose a TCP service behind NBL to consumer VPCs | **AWS PrivateLink endpoint service** — NLB-backed, per-consumer interface endpoint, ENI-based | Scales linearly with consumer count (one endpoint per consumer VPC); no auth policies | [Connectivity Within AWS](connectivity/within-aws.md) |
+| Expose a TCP service behind an NLB to consumer VPCs | **AWS PrivateLink endpoint service** — NLB-backed, per-consumer interface endpoint, ENI-based | Scales linearly with consumer count (one endpoint per consumer VPC); no auth policies | [Connectivity Within AWS](connectivity/within-aws.md) |
 
 ## Reaching the internet
 

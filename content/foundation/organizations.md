@@ -237,9 +237,9 @@ Organizations is the governance layer that enables every other multi-account net
 
     ---
 
-    Prescriptive guidance for setting up multi-account environments with networking, security, and governance foundations.
+    Automate account creation by using the Landing Zone Accelerator on AWS.
 
-    [:octicons-arrow-right-24: Guide](https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-aws-environment/building-landing-zones.html)
+    [:octicons-arrow-right-24: Guide](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/automate-account-creation-lza.html)
 
 *   :material-share-variant: **AWS Resource Access Manager**
 
