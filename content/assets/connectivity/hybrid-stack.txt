@@ -1,26 +1,29 @@
 DIAGRAM: Hybrid and Multi-Cloud Stack
-PURPOSE: Shows the recommended hybrid/multi-cloud connectivity stack in three tiers: Client communication (Verified Access, Client VPN), Multi-cloud (AWS Interconnect, Partner-based), and Hybrid connectivity (Direct Connect, VPN, SD-WAN). Represents the building-your-stack view.
+PURPOSE: Shows the recommended hybrid/multi-cloud connectivity stack in three tiers: Client communication (Verified Access, Client VPN), Multi-cloud (AWS Interconnect - multicloud, Partner-based), and Hybrid connectivity (Direct Connect, VPN, SD-WAN). Represents the building-your-stack view.
 LAYOUT: top-to-bottom (three stacked tiers)
 WIDTH: 700px maximum readable width
 
+TITLE:
+- Text heading above the tiers, label "Hybrid & Multi-Cloud Connectivity Stack"
+
 GROUPS:
-- Client communication: border style dashed, color green (#059669)
-- Multi-cloud: border style dashed, color purple (#7c3aed)
-- Hybrid connectivity: border style dashed, color blue (#2563eb)
+- Client communication: top tier; border style dashed, color green (#059669)
+- Multi-cloud: middle tier; border style dashed, color purple (#7c3aed)
+- Hybrid connectivity: bottom tier; border style dashed, color blue (#2563eb)
 
 NODES:
-Client:
-- Verified Access: generic icon, label "AWS Verified Access\nZero-trust application access"
-- Client VPN: AWS icon "AWS Client VPN", label "AWS Client VPN\nNetwork-layer user access"
+Client communication:
+- Verified Access: AWS icon "AWS Verified Access", fill green (#059669), label "AWS Verified Access\nZero-trust application access"
+- Client VPN: AWS icon "AWS Client VPN", fill purple (#8C4FFF), label "AWS Client VPN\nNetwork-layer user access"
 
 Multi-cloud:
-- Interconnect: generic icon, label "AWS Interconnect\nDirect cloud-to-cloud\n(preferred, where supported)"
-- Partner: AWS icon "AWS Direct Connect", label "Partner-based DX or VPN\nwhere AWS Interconnect unavailable"
+- Interconnect: AWS Interconnect product icon (embedded image, not a Direct Connect icon), label "AWS Interconnect - multicloud\nfor select CSP\n(preferred)"
+- Partner: AWS icon "AWS Direct Connect", fill purple (#8C4FFF), label "Partner-based DX or VPN\nwhere AWS Interconnect unavailable"
 
-Hybrid:
-- Direct Connect: AWS icon "AWS Direct Connect", label "AWS Direct Connect\nPrimary private path"
-- VPN: AWS icon "AWS Site-to-Site VPN", label "AWS Site-to-Site VPN\nFast-start or IPsec over DX\nwhen MACsec unavailable"
-- SD-WAN: generic icon, label "SD-WAN Connect attachments\nfor existing SD-WAN overlays"
+Hybrid connectivity:
+- Direct Connect: AWS icon "AWS Direct Connect", fill purple (#8C4FFF), label "AWS Direct Connect\nPrimary private path"
+- VPN: AWS icon "AWS Site-to-Site VPN", fill purple (#8C4FFF), label "AWS Site-to-Site VPN\nFast-start or IPsec over DX\nwhen MACsec unavailable"
+- SD-WAN: AWS icon "AWS Transit Gateway", fill blue (#2563eb), label "SD-WAN Connect attachments\nfor existing SD-WAN overlays"
 
 CONNECTIONS:
 - No connections (stack/tier reference diagram)
@@ -31,3 +34,6 @@ NOTES:
 - This mirrors the hierarchy from user-facing to infrastructure-level
 - Each tier shows the recommended services for that concern
 - Include brief context in labels about when to use each option
+- All icons are 78x78 with labels below, centered
+- The two-node tiers (Client communication, Multi-cloud) share the same two column positions so nodes align vertically across tiers; the three-node Hybrid tier is evenly distributed across the same width
+- The Interconnect node uses the dedicated AWS Interconnect icon as an embedded image because the shape is not in the drawio AWS icon library; every other node uses a library AWS resource icon

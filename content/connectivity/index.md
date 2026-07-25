@@ -45,7 +45,7 @@ The connectivity patterns you choose shape cost, latency, security boundaries, a
 *   **AWS Direct Connect** — Private, dedicated circuits for predictable bandwidth and latency; the foundation for most production hybrid deployments
 *   **AWS Site-to-Site VPN** — Encrypted IPsec connectivity over the internet; fastest way to establish hybrid connectivity
 *   **SD-WAN integration** — Transit Gateway Connect or AWS Cloud WAN Connect attachments for existing SD-WAN overlays
-*   **AWS Interconnect** — Managed direct cloud-to-cloud connections (currently AWS ↔ Google Cloud, expanding)
+*   **AWS Interconnect** — Managed direct cloud-to-cloud connections to supported cloud providers
 
 ***Key insight:*** *Most organizations use more than one of these services simultaneously. Direct Connect for the primary private path, VPN for fast-start or encryption overlay, and SD-WAN Connect for existing branch overlays.*
 
