@@ -1019,10 +1019,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#direct-cloud-to-cloud-connectivity-with-aws-interconnect" class="md-nav__link">
+  <a href="#aws-interconnect-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Direct cloud-to-cloud connectivity with AWS Interconnect
+        AWS Interconnect Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-interconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Interconnect
       
     </span>
   </a>
@@ -2103,10 +2114,21 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#direct-cloud-to-cloud-connectivity-with-aws-interconnect" class="md-nav__link">
+  <a href="#aws-interconnect-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Direct cloud-to-cloud connectivity with AWS Interconnect
+        AWS Interconnect Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-aws-interconnect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use AWS Interconnect
       
     </span>
   </a>
@@ -2225,7 +2247,7 @@
 </figcaption>
 </figure>
 <p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
-<p>For multi-cloud, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.</p>
+<p>For multi-cloud, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet support your other cloud, but they carry more operational overhead — a Region-pair gap alone is usually solved by extending inside each cloud instead.</p>
 <p>Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see <a href="#building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack</a> at the end of this page.</p>
 <h2 id="private-on-premises-connectivity-with-aws-direct-connect">Private on-premises connectivity with AWS Direct Connect<a class="headerlink" href="#private-on-premises-connectivity-with-aws-direct-connect" title="Permanent link">&para;</a></h2>
 <p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html">AWS Direct Connect</a> provides private, dedicated network connectivity between your on-premises network and AWS. Traffic flows over physical circuits provisioned at a Direct Connect location, bypassing the public internet entirely, so bandwidth is predictable, latency is consistent, and data transfer out of AWS is cheaper than over the internet. Direct Connect is the foundation for most production hybrid deployments, and it integrates with every AWS network service that terminates hybrid traffic: virtual private gateways, Transit Gateway, and AWS Cloud WAN.</p>
@@ -2549,10 +2571,9 @@
 </ul>
 </div>
 <h2 id="multi-cloud-connectivity">Multi-cloud connectivity<a class="headerlink" href="#multi-cloud-connectivity" title="Permanent link">&para;</a></h2>
-<p>Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's VPCs historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and <abbr title="Border Gateway Protocol">BGP</abbr> configuration on both sides. <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.</p>
-<p>This section covers all of the multi-cloud options, with AWS Interconnect recommended as the default where it's available and the partner-based alternatives documented for cases where AWS Interconnect doesn't yet cover your Region pair or your other cloud.</p>
-<h3 id="direct-cloud-to-cloud-connectivity-with-aws-interconnect">Direct cloud-to-cloud connectivity with AWS Interconnect<a class="headerlink" href="#direct-cloud-to-cloud-connectivity-with-aws-interconnect" title="Permanent link">&para;</a></h3>
-<p>AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's VPCs. Today, AWS Interconnect - Multi-cloud supports connections between AWS and Google Cloud in a set of paired AWS and Google Cloud Regions. Coverage continues to expand; consult the <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect documentation</a> for the current list of supported Regions. On the AWS side, an Interconnect attaches to a Direct Connect Gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway. On the other cloud's side, the service attaches to that cloud's equivalent construct.</p>
+<p>Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and <abbr title="Border Gateway Protocol">BGP</abbr> configuration on both sides. <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.</p>
+<p>AWS Interconnect is the default wherever a supported Region pair exists. Where one doesn't, extend a supported pair from inside each cloud before reaching for a partner-based cross-connect or an internet <abbr title="Virtual Private Network">VPN</abbr> — a coverage gap is usually a routing problem, not a reason to build the path yourself.</p>
+<p>AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's networks. AWS Interconnect - multicloud is Region-paired: each Interconnect ties one AWS Region to one Region in the peer cloud, and you provision an Interconnect per pair you need to reach. The set of supported cloud providers and Region pairs is expanding — check <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html">Regional availability</a> for the current list before designing around a specific pair. On the AWS side, an Interconnect attaches to a Direct Connect Gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.</p>
 <p>Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstracts away physical cross-connects, <abbr title="Border Gateway Protocol">BGP</abbr> configuration, and VLAN provisioning. You select the AWS Region, the peer cloud's Region, the required bandwidth, and the provider, and AWS and the provider provision both sides automatically. Capacity can be scaled up or down without re-provisioning.</p>
 <p><strong>Key capabilities</strong>:</p>
 <div class="grid cards">
@@ -2560,17 +2581,17 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 17.5c0 .89.18 1.73.5 2.5h-7c-1.5 0-2.81-.5-3.89-1.57C1.54 17.38 1 16.09 1 14.58q0-1.95 1.17-3.48C3.34 9.57 4 9.43 5.25 9.15c.42-1.53 1.25-2.77 2.5-3.72S10.42 4 12 4c1.95 0 3.6.68 4.96 2.04S19 9.05 19 11h.1c-3.4.23-6.1 3.05-6.1 6.5m6-4V12l-2.25 2.25L19 16.5V15a2.5 2.5 0 0 1 2.5 2.5c0 .4-.09.78-.26 1.12l1.09 1.09c.42-.63.67-1.39.67-2.21 0-2.21-1.79-4-4-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5c0-.4.09-.78.26-1.12l-1.09-1.09c-.42.63-.67 1.39-.67 2.21 0 2.21 1.79 4 4 4V23l2.25-2.25L19 18.5z"/></svg></span> <strong>Direct AWS ↔ other-cloud connectivity</strong></p>
 <hr />
-<p>A single managed object (the <em>interconnect</em>) connects an AWS Direct Connect Gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.</p>
+<p>A single managed object (the <em>interconnect</em>) connects a Direct Connect Gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4 9 4zm-9 10c3.75-1 7-5.46 7-9.78V6.3l-7-3.12L5 6.3v4.92C5 15.54 8.25 20 12 21m2.8-10V9.5C14.8 8.1 13.4 7 12 7S9.2 8.1 9.2 9.5V11c-.6 0-1.2.6-1.2 1.2v3.5c0 .7.6 1.3 1.2 1.3h5.5c.7 0 1.3-.6 1.3-1.2v-3.5c0-.7-.6-1.3-1.2-1.3m-1.3 0h-3V9.5c0-.8.7-1.3 1.5-1.3s1.5.5 1.5 1.3z"/></svg></span> <strong>MACsec encryption by default</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4 9 4zm-9 10c3.75-1 7-5.46 7-9.78V6.3l-7-3.12L5 6.3v4.92C5 15.54 8.25 20 12 21m2.8-10V9.5C14.8 8.1 13.4 7 12 7S9.2 8.1 9.2 9.5V11c-.6 0-1.2.6-1.2 1.2v3.5c0 .7.6 1.3 1.2 1.3h5.5c.7 0 1.3-.6 1.3-1.2v-3.5c0-.7-.6-1.3-1.2-1.3m-1.3 0h-3V9.5c0-.8.7-1.3 1.5-1.3s1.5.5 1.5 1.3z"/></svg></span> <strong>Fully managed MACsec encryption</strong></p>
 <hr />
-<p>Every physical link is encrypted with IEEE 802.1AE MACsec between the AWS router and the provider's router. Traffic only flows when encryption is active, so there is no unencrypted path.</p>
+<p>Every physical link is encrypted with IEEE 802.1AE MACsec between the AWS router and the provider's router, and AWS and the provider own the key lifecycle — there is no CKN/CAK pair for you to generate, rotate, or associate, and no bandwidth tier that lacks the capability. Traffic only flows when the encryption session is active, so no unencrypted path exists.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M.41 13.41 6 19l1.41-1.42L1.83 12m20.41-6.42L11.66 16.17 7.5 12l-1.43 1.41L11.66 19l12-12M18 7l-1.41-1.42-6.35 6.35 1.42 1.41z"/></svg></span> <strong>Built-in maximum resiliency</strong></p>
 <hr />
-<p>Every Interconnect is provisioned across redundant devices in at least two physically distinct facilities with independent power and networking. Multi-cloud connections use a four-connection model with ECMP load balancing, so at least one link stays up during planned maintenance or a device failure.</p>
+<p>Every Interconnect is provisioned across redundant devices in at least two physically distinct facilities with independent power and networking. Multicloud connections use a four-connection model with ECMP load balancing, so at least one link stays up during planned maintenance or a device failure. A single Interconnect carries a <strong>99.99% monthly uptime <a href="https://aws.amazon.com/interconnect/sla/">SLA</a></strong>.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41s-1.03.39-1.42.01A9.97 9.97 0 0 1 2 13 10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"/></svg></span> <strong>Elastic bandwidth</strong></p>
@@ -2580,7 +2601,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect Gateway as the AWS attach point</strong></p>
 <hr />
-<p>The AWS side of the Interconnect attaches to a Direct Connect Gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway. The same Direct Connect Gateway can anchor on-premises Direct Connect and multi-cloud Interconnect, so both paths share one global routing construct.</p>
+<p>The AWS side of the Interconnect attaches to a Direct Connect Gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8m0 2a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-6-6m-1 2h1.5v3.78l2.33 2.33-1.06 1.06L14 12.4zM2 18a1 1 0 0 1-1-1 1 1 0 0 1 1-1h3.83c.31.71.71 1.38 1.17 2zm1-5a1 1 0 0 1-1-1 1 1 0 0 1 1-1h2.05L5 12l.05 1zm1-5a1 1 0 0 1-1-1 1 1 0 0 1 1-1h3c-.46.62-.86 1.29-1.17 2z"/></svg></span> <strong>Fast provisioning</strong></p>
@@ -2589,25 +2610,80 @@
 </li>
 </ul>
 </div>
-<h4 id="aws-interconnect-best-practices">AWS Interconnect Best Practices<a class="headerlink" href="#aws-interconnect-best-practices" title="Permanent link">&para;</a></h4>
-<h5 id="use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers">Use AWS Interconnect as the default for supported Region pairs and providers<a class="headerlink" href="#use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers" title="Permanent link">&para;</a></h5>
-<p>Where AWS Interconnect supports the AWS Region and peer cloud Region you need, it should be the default choice. The operational difference versus the partner-based Direct Connect alternative is substantial: no cross-connect, no <abbr title="Border Gateway Protocol">BGP</abbr> on your routers, no provider coordination during capacity changes, and MACsec encryption on every link by default.</p>
-<p>The primary reason to consider the alternatives is coverage. AWS Interconnect - Multi-cloud currently supports AWS-to-Google Cloud, and that support is expanding. For Region pairs not yet in the supported list, or for cloud pairs where AWS Interconnect is not yet available, the partner-based approach or internet-based <abbr title="Virtual Private Network">VPN</abbr> remain the options.</p>
-<h5 id="use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region">Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region<a class="headerlink" href="#use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region" title="Permanent link">&para;</a></h5>
-<p>When AWS Interconnect is reached through a Direct Connect Gateway attached to a virtual private gateway or a Transit Gateway, the reachable Interconnect is "local" to that AWS Region: a Transit Gateway in one AWS Region can only reach the Interconnect whose paired Google Cloud Region is itself paired with that same AWS Region. When the Direct Connect Gateway is attached to <strong>AWS Cloud WAN</strong>, any Core Network Edge in the global network can reach any Interconnect on that Direct Connect Gateway, so one Interconnect can serve workloads across every AWS Region participating in the core network.</p>
-<p>The peer cloud's side is a different story: the Google Cloud Region an Interconnect pairs with is fixed by the Interconnect itself. Reaching a specific Google Cloud Region still requires an Interconnect for that Region, regardless of what AWS Cloud WAN does on the AWS side.</p>
-<h5 id="plan-ipv6-from-the-start_3">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start_3" title="Permanent link">&para;</a></h5>
+<h3 id="aws-interconnect-best-practices">AWS Interconnect Best Practices<a class="headerlink" href="#aws-interconnect-best-practices" title="Permanent link">&para;</a></h3>
+<h4 id="use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers">Use AWS Interconnect as the default for supported Region pairs and providers<a class="headerlink" href="#use-aws-interconnect-as-the-default-for-supported-region-pairs-and-providers" title="Permanent link">&para;</a></h4>
+<p>Where AWS Interconnect supports the AWS Region and peer cloud Region you need, it should be the default choice. The operational difference versus the partner-based Direct Connect alternative is substantial: no cross-connect, no <abbr title="Border Gateway Protocol">BGP</abbr> on your routers, no provider coordination during capacity changes, and MACsec on every link with no keys for you to manage.</p>
+<p>The reason to look elsewhere is coverage, so check <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html">Regional availability</a> rather than assuming a pair is listed. If it isn't, ask whether a supported pair can reach your Regions from inside each cloud (see <a href="#no-supported-pair-for-the-regions-you-need">No supported pair for the Regions you need</a>) before abandoning AWS Interconnect. The partner-based approach and internet-based <abbr title="Virtual Private Network">VPN</abbr> are for clouds that aren't supported at all, or where the backbone path works but an existing colocation or carrier footprint makes one more cross-connect more efficient than inter-Region data transfer on two backbones.</p>
+<h4 id="treat-a-single-interconnect-as-the-resilient-unit">Treat a single Interconnect as the resilient unit<a class="headerlink" href="#treat-a-single-interconnect-as-the-resilient-unit" title="Permanent link">&para;</a></h4>
+<p>The 99.99% <a href="https://aws.amazon.com/interconnect/sla/">SLA</a> applies to one Interconnect because the redundancy is inside the object — a four-connection ECMP fabric across at least two facilities, pre-provisioned by AWS and the provider. Direct Connect reaches the same commitment only through a Multi-Site Redundant Deployment you need to manage; a single Direct Connect connection sits on a 95% tier. The mistake is importing that Resiliency Toolkit habit and provisioning a second Interconnect on the same Region pair for redundancy. That doubles cost without raising the commitment, because both ride the same fabric. Add Interconnects only for a different Region pair.</p>
+<p>What stays yours is everything behind the demarcation point: the Direct Connect Gateway association, the Transit Gateway or Core Network Edge, and the workload. SLA eligibility requires the endpoint to span two or more Availability Zones, so a single-<abbr title="Availability Zone">AZ</abbr> target is both an availability risk and outside the commitment.</p>
+<p><strong><em>Key insight:</em></strong> <em>AWS Interconnect turns resiliency from something you architect into something you inherit. The design question moves from "how many circuits and locations" to "is everything behind the Direct Connect Gateway as available as the Interconnect in front of it."</em></p>
+<h4 id="use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region">Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region<a class="headerlink" href="#use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region" title="Permanent link">&para;</a></h4>
+<p>A virtual private gateway or Transit Gateway can only reach an Interconnect in its own AWS Region, even through a Direct Connect Gateway. Attach that Direct Connect Gateway to <strong>AWS Cloud WAN</strong> instead and the constraint disappears: any Core Network Edge can reach any Interconnect, so one Interconnect serves workloads in every Region in the core network.</p>
+<p>The regional constraint is enforced, not advisory: attaching an Interconnect to a Direct Connect Gateway that is already associated to a Transit Gateway in a remote Region fails outright.</p>
+<p>The peer cloud's side is a different story: the peer cloud Region an Interconnect pairs with is fixed by the Interconnect itself, and AWS Cloud WAN does nothing to change that. Landing traffic in a different peer cloud Region means either an Interconnect paired with that Region, or a hop from the paired Region using whatever cross-Region connectivity that cloud offers — which is for you to verify on their side, not something AWS Cloud WAN can do for you. See <a href="#no-supported-pair-for-the-regions-you-need">No supported pair for the Regions you need</a> for when that hop is the right answer.</p>
+<h4 id="watch-the-pricing-tier-as-the-interconnects-reach-grows">Watch the pricing tier as the Interconnect's reach grows<a class="headerlink" href="#watch-the-pricing-tier-as-the-interconnects-reach-grows" title="Permanent link">&para;</a></h4>
+<p>AWS Interconnect has no per-GB data transfer charge. You pay an hourly rate set by two inputs: the bandwidth you provision, and a <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/interconnect-pricing.html">pricing tier</a> from 1 (local) to 5 (maximum scope) reflecting the geographic distance between the Interconnect's local Region and the Regions whose traffic uses it. The Interconnect is subscribed to the lowest tier covering every path in use, so the farthest Region sets the price for all of them. A locally associated Transit Gateway or virtual private gateway is always Tier 1, since the association can only be in the Interconnect's local Region. For AWS Cloud WAN, the routing benefit carries a cost consequence. Adding a Core Network Edge re-evaluates the tier, so a new AWS Region can move an Interconnect several tiers up.</p>
+<p>For proof-of-concept work, AWS Interconnect - multicloud includes one free local (Tier 1) 500 Mbps interconnect per AWS Region per generally available cloud provider. This free tier covers the AWS side only — check the other provider's pricing.</p>
+<h4 id="plan-ipv6-from-the-start_3">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start_3" title="Permanent link">&para;</a></h4>
 <p>AWS Interconnect supports both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions to the Direct Connect Gateway. Enable <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on the Interconnect from the beginning so that when the peer cloud's <abbr title="Internet Protocol version 6">IPv6</abbr> support catches up on your workloads' side, the transport is ready.</p>
-<h4 id="when-to-use-aws-interconnect">When to use AWS Interconnect<a class="headerlink" href="#when-to-use-aws-interconnect" title="Permanent link">&para;</a></h4>
+<h3 id="when-to-use-aws-interconnect">When to use AWS Interconnect<a class="headerlink" href="#when-to-use-aws-interconnect" title="Permanent link">&para;</a></h3>
 <p>AWS Interconnect is the right choice when:</p>
 <ul>
-<li>You need private, predictable connectivity between AWS and another cloud provider, and the required AWS and peer cloud Regions are supported.</li>
+<li>The AWS and peer cloud Regions you need are a supported pair, or reachable from one within each cloud.</li>
 <li>You want encrypted cloud-to-cloud traffic without running and maintaining IPsec tunnels.</li>
-<li>You want to avoid the operational burden of provisioning cross-connects at a colocation and coordinating <abbr title="Border Gateway Protocol">BGP</abbr> and VLAN configuration between two cloud providers and a facility.</li>
-<li>You plan to scale bandwidth up or down as multi-cloud workloads evolve, rather than committing to a static capacity at a colocation.</li>
+<li>You want to avoid cross-connects at a colocation and <abbr title="Border Gateway Protocol">BGP</abbr> and VLAN coordination across two clouds and a facility.</li>
+<li>You expect bandwidth to change as workloads evolve, rather than committing to static capacity.</li>
 </ul>
+<p>AWS Interconnect is <strong>not</strong> the right choice when:</p>
+<ul>
+<li>The cloud you need isn't supported at all — use <a href="#partner-based-aws-direct-connect-to-another-cloud">partner-based Direct Connect</a> or <a href="#aws-site-to-site-vpn-between-clouds">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds</a> instead.</li>
+<li>You already run a colocation footprint or carrier fabric reaching both clouds, and one more cross-connect costs less than inter-Region data transfer on both sides.</li>
+<li>The extra hop through a paired Region breaks your latency budget.</li>
+</ul>
+<h4 id="no-supported-pair-for-the-regions-you-need">No supported pair for the Regions you need<a class="headerlink" href="#no-supported-pair-for-the-regions-you-need" title="Permanent link">&para;</a></h4>
+<p>An unsupported Region pair is not the same as an unsupported cloud. Land the Interconnect at a pair that <em>is</em> supported and carry each leg the rest of the way inside each cloud.</p>
+<p>On the AWS side this is solved: a Direct Connect Gateway attached to an AWS Cloud WAN core network lets any Core Network Edge reach any Interconnect on that gateway, so the Interconnect's Region doesn't have to be the Region your workload runs in. With Transit Gateway instead, inter-Region Transit Gateway peering gets you from the workload Region to the Region whose Interconnect is local. Both routes cost something: the AWS Cloud WAN route can raise the Interconnect's pricing tier, and the Transit Gateway peering route adds inter-Region data transfer charges.</p>
+<p>On the peer cloud side, check that provider's documentation for how it carries traffic between its own Regions. The mechanisms, constraints, and charges differ by cloud, so confirm the target Region is reachable from the paired Region — and at what cost — before committing to this design.</p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Extend inside each cloud</th>
+<th>Third-party interconnection provider</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parties to manage</td>
+<td>AWS and the peer cloud, one Interconnect object</td>
+<td>You, the external connectivity provider, and both clouds</td>
+</tr>
+<tr>
+<td>Cost shape</td>
+<td>Hourly Interconnect charge at the tier the farthest Region sets, with no per-GB on the Interconnect itself, plus (optionally) each cloud's inter-Region data transfer</td>
+<td>Provider port and fabric fees plus each cloud's private-connectivity charges</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Predictable, but adds the hop through the paired Region</td>
+<td>Can be shorter where the connectivity provider has presence near both target Regions</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>MACsec on the Interconnect hop; each cross-Region leg stays on that cloud's own network</td>
+<td>Yours to build, either MACsec in all ports or IPsec overlay</td>
+</tr>
+<tr>
+<td>Provisioning</td>
+<td>Minutes, through cloud consoles and APIs</td>
+<td>Days to weeks, with cross-connects and <abbr title="Border Gateway Protocol">BGP</abbr></td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>A missing Region pair is a routing problem before it is a sourcing problem. Ask whether each cloud can carry the last leg internally before taking on a third party, cross-connects, and your own <abbr title="Border Gateway Protocol">BGP</abbr>.</em></p>
 <h3 id="other-multi-cloud-options">Other multi-cloud options<a class="headerlink" href="#other-multi-cloud-options" title="Permanent link">&para;</a></h3>
-<p>Where AWS Interconnect isn't available (unsupported cloud, unsupported Region pair, or existing commitments at a colocation), two established patterns remain valid.</p>
+<p>These patterns apply where AWS Interconnect doesn't reach: clouds that aren't supported at all, or cases where the backbone path is technically viable but the economics or latency favor building the path yourself.</p>
 <h4 id="partner-based-aws-direct-connect-to-another-cloud">Partner-based AWS Direct Connect to another cloud<a class="headerlink" href="#partner-based-aws-direct-connect-to-another-cloud" title="Permanent link">&para;</a></h4>
 <p>The long-established pattern: provision an AWS Direct Connect connection at a Direct Connect location that also houses a peer cloud's equivalent service (Google Cloud Partner Interconnect, Microsoft Azure ExpressRoute, Oracle FastConnect), order a cross-connect or use a virtual interconnection partner's fabric to bridge the two, and configure <abbr title="Border Gateway Protocol">BGP</abbr> on each side to advertise prefixes between the clouds.</p>
 <p>This gives you private, high-bandwidth connectivity in Regions and cloud pairs that AWS Interconnect doesn't yet support, and it can be the right choice where you already have Direct Connect circuits and a colocation footprint and want to extend the same facility to connect a second cloud.</p>
@@ -2665,8 +2741,20 @@
 <td>Elastic on each cloud</td>
 </tr>
 <tr>
+<td>Cost shape</td>
+<td>Hourly per Interconnect by bandwidth and distance tier, no per-GB</td>
+<td>Port hours, cross-connect fees, and data transfer out</td>
+<td>Hourly per connection plus data transfer</td>
+</tr>
+<tr>
+<td>SLA</td>
+<td><a href="https://aws.amazon.com/interconnect/sla/">99.99%</a> per Interconnect</td>
+<td>Depends on your deployment model: 99.99% multi-site redundant, 99.9% multi-site non-redundant, 95% single connection</td>
+<td><a href="https://aws.amazon.com/vpn/site-to-site-vpn-sla/">99.95%</a> per <abbr title="Virtual Private Network">VPN</abbr> connection</td>
+</tr>
+<tr>
 <td>Coverage today</td>
-<td>AWS ↔ Google Cloud, expanding</td>
+<td>Selected AWS Region pairs with supported clouds, expanding</td>
 <td>All major clouds, subject to colocation footprint</td>
 <td>All major clouds</td>
 </tr>
@@ -2684,13 +2772,13 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Interconnect documentation</strong></p>
 <hr />
-<p>Complete service documentation covering both the Multi-cloud and last-mile offerings, concepts, attach points, and supported Region pairs.</p>
+<p>Complete service documentation covering both the multicloud and last mile offerings, concepts, attach points, and supported Region pairs.</p>
 <p><a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>AWS Interconnect pricing</strong></p>
 <hr />
-<p>Per-hour charges by bandwidth tier, plus data transfer. Shared cross-connect fees are included in the managed service, unlike the partner-based alternative.</p>
+<p>Hourly charges set by provisioned bandwidth and a distance-based pricing tier, with no per-GB data transfer. Cross-connect fees are included in the managed service, unlike the partner-based alternative.</p>
 <p><a href="https://aws.amazon.com/interconnect/multicloud/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
 </li>
 </ul>
@@ -2744,7 +2832,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 00:18:24 UTC">June 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 25, 2026 22:45:46 UTC">July 25, 2026</span>
   </span>
 
     
