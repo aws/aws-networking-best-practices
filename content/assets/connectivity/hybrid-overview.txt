@@ -1,5 +1,5 @@
 DIAGRAM: Hybrid and Multi-Cloud Overview
-PURPOSE: Shows three distinct connectivity concerns side by side: Hybrid Connectivity (Direct Connect, Site-to-Site VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect, Partner-based), and Client Communication (Client VPN, Verified Access).
+PURPOSE: Shows three distinct connectivity concerns side by side: Hybrid Connectivity (Direct Connect, Site-to-Site VPN, SD-WAN), Multi-Cloud Connectivity (AWS Interconnect - multicloud, Partner-based), and Client Communication (Client VPN, Verified Access).
 LAYOUT: top-to-bottom (three groups stacked)
 WIDTH: 700px maximum readable width
 
@@ -15,12 +15,12 @@ Hybrid:
 - SD-WAN: AWS icon "AWS Transit Gateway", label "SD-WAN integration\nvia Transit Gateway or Cloud WAN"
 
 Multi-Cloud:
-- Interconnect: generic icon, label "AWS Interconnect\nDirect cloud-to-cloud"
+- Interconnect: AWS Interconnect product icon (embedded image, not a Direct Connect icon), label "AWS Interconnect - multicloud\nfor select CSP"
 - Partner: AWS icon "AWS Direct Connect", label "Partner-based Direct Connect\nor VPN over internet"
 
 Client:
 - Client VPN: AWS icon "AWS Client VPN", label "AWS Client VPN\nNetwork-level user access"
-- Verified Access: generic icon, label "AWS Verified Access\nZero-trust application access"
+- Verified Access: AWS icon "AWS Verified Access", label "AWS Verified Access\nZero-trust application access"
 
 CONNECTIONS:
 - No connections between nodes (categorization diagram)
