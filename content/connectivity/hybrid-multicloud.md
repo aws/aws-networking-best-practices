@@ -12,7 +12,7 @@ Hybrid and multi-cloud overview — [Drawio Source](../assets/connectivity/hybri
 
 For on-premises connectivity, [AWS Direct Connect](https://aws.amazon.com/directconnect/) delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. [AWS Site-to-Site VPN](https://aws.amazon.com/vpn/site-to-site-vpn/) provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. **SD-WAN integration** uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party SD-WAN overlays into the AWS network plane.
 
-For multi-cloud, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site VPN between clouds) remain valid where AWS Interconnect doesn't yet cover your Region pair or cloud pair, but they carry more operational overhead.
+For multi-cloud, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site VPN between clouds) remain valid where AWS Interconnect doesn't yet support your other cloud, but they carry more operational overhead — a Region-pair gap alone is usually solved by extending inside each cloud instead.
 
 Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see [Building your hybrid and multi-cloud stack](#building-your-hybrid-and-multi-cloud-stack) at the end of this page.
 
@@ -418,13 +418,11 @@ Configure IPv6 BGP sessions alongside IPv4 on every Connect peer from the beginn
 
 ## Multi-cloud connectivity
 
-Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's VPCs historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and BGP configuration on both sides. [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.
+Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and BGP configuration on both sides. [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.
 
-This section covers all of the multi-cloud options, with AWS Interconnect recommended as the default where it's available and the partner-based alternatives documented for cases where AWS Interconnect doesn't yet cover your Region pair or your other cloud.
+AWS Interconnect is the default wherever a supported Region pair exists. Where one doesn't, extend a supported pair from inside each cloud before reaching for a partner-based cross-connect or an internet VPN — a coverage gap is usually a routing problem, not a reason to build the path yourself.
 
-### Direct cloud-to-cloud connectivity with AWS Interconnect
-
-AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's VPCs. Today, AWS Interconnect - Multi-cloud supports connections between AWS and Google Cloud in a set of paired AWS and Google Cloud Regions. Coverage continues to expand; consult the [AWS Interconnect documentation](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) for the current list of supported Regions. On the AWS side, an Interconnect attaches to a Direct Connect Gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway. On the other cloud's side, the service attaches to that cloud's equivalent construct.
+AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's networks. AWS Interconnect - multicloud is Region-paired: each Interconnect ties one AWS Region to one Region in the peer cloud, and you provision an Interconnect per pair you need to reach. The set of supported cloud providers and Region pairs is expanding — check [Regional availability](https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html) for the current list before designing around a specific pair. On the AWS side, an Interconnect attaches to a Direct Connect Gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.
 
 Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstracts away physical cross-connects, BGP configuration, and VLAN provisioning. You select the AWS Region, the peer cloud's Region, the required bandwidth, and the provider, and AWS and the provider provision both sides automatically. Capacity can be scaled up or down without re-provisioning.
 
@@ -436,19 +434,19 @@ Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstract
 
     ---
 
-    A single managed object (the *interconnect*) connects an AWS Direct Connect Gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.
+    A single managed object (the *interconnect*) connects a Direct Connect Gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.
 
-*   :material-shield-lock-outline: **MACsec encryption by default**
+*   :material-shield-lock-outline: **Fully managed MACsec encryption**
 
     ---
 
-    Every physical link is encrypted with IEEE 802.1AE MACsec between the AWS router and the provider's router. Traffic only flows when encryption is active, so there is no unencrypted path.
+    Every physical link is encrypted with IEEE 802.1AE MACsec between the AWS router and the provider's router, and AWS and the provider own the key lifecycle — there is no CKN/CAK pair for you to generate, rotate, or associate, and no bandwidth tier that lacks the capability. Traffic only flows when the encryption session is active, so no unencrypted path exists.
 
 *   :material-check-all: **Built-in maximum resiliency**
 
     ---
 
-    Every Interconnect is provisioned across redundant devices in at least two physically distinct facilities with independent power and networking. Multi-cloud connections use a four-connection model with ECMP load balancing, so at least one link stays up during planned maintenance or a device failure.
+    Every Interconnect is provisioned across redundant devices in at least two physically distinct facilities with independent power and networking. Multicloud connections use a four-connection model with ECMP load balancing, so at least one link stays up during planned maintenance or a device failure. A single Interconnect carries a **99.99% monthly uptime [SLA](https://aws.amazon.com/interconnect/sla/)**.
 
 *   :material-speedometer: **Elastic bandwidth**
 
@@ -460,7 +458,7 @@ Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstract
 
     ---
 
-    The AWS side of the Interconnect attaches to a Direct Connect Gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway. The same Direct Connect Gateway can anchor on-premises Direct Connect and multi-cloud Interconnect, so both paths share one global routing construct.
+    The AWS side of the Interconnect attaches to a Direct Connect Gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.
 
 *   :material-clock-fast: **Fast provisioning**
 
@@ -470,36 +468,76 @@ Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstract
 
 </div>
 
-#### AWS Interconnect Best Practices
+### AWS Interconnect Best Practices
 
-##### Use AWS Interconnect as the default for supported Region pairs and providers
+#### Use AWS Interconnect as the default for supported Region pairs and providers
 
-Where AWS Interconnect supports the AWS Region and peer cloud Region you need, it should be the default choice. The operational difference versus the partner-based Direct Connect alternative is substantial: no cross-connect, no BGP on your routers, no provider coordination during capacity changes, and MACsec encryption on every link by default.
+Where AWS Interconnect supports the AWS Region and peer cloud Region you need, it should be the default choice. The operational difference versus the partner-based Direct Connect alternative is substantial: no cross-connect, no BGP on your routers, no provider coordination during capacity changes, and MACsec on every link with no keys for you to manage.
 
-The primary reason to consider the alternatives is coverage. AWS Interconnect - Multi-cloud currently supports AWS-to-Google Cloud, and that support is expanding. For Region pairs not yet in the supported list, or for cloud pairs where AWS Interconnect is not yet available, the partner-based approach or internet-based VPN remain the options.
+The reason to look elsewhere is coverage, so check [Regional availability](https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html) rather than assuming a pair is listed. If it isn't, ask whether a supported pair can reach your Regions from inside each cloud (see [No supported pair for the Regions you need](#no-supported-pair-for-the-regions-you-need)) before abandoning AWS Interconnect. The partner-based approach and internet-based VPN are for clouds that aren't supported at all, or where the backbone path works but an existing colocation or carrier footprint makes one more cross-connect more efficient than inter-Region data transfer on two backbones.
 
-##### Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region
+#### Treat a single Interconnect as the resilient unit
 
-When AWS Interconnect is reached through a Direct Connect Gateway attached to a virtual private gateway or a Transit Gateway, the reachable Interconnect is "local" to that AWS Region: a Transit Gateway in one AWS Region can only reach the Interconnect whose paired Google Cloud Region is itself paired with that same AWS Region. When the Direct Connect Gateway is attached to **AWS Cloud WAN**, any Core Network Edge in the global network can reach any Interconnect on that Direct Connect Gateway, so one Interconnect can serve workloads across every AWS Region participating in the core network.
+The 99.99% [SLA](https://aws.amazon.com/interconnect/sla/) applies to one Interconnect because the redundancy is inside the object — a four-connection ECMP fabric across at least two facilities, pre-provisioned by AWS and the provider. Direct Connect reaches the same commitment only through a Multi-Site Redundant Deployment you need to manage; a single Direct Connect connection sits on a 95% tier. The mistake is importing that Resiliency Toolkit habit and provisioning a second Interconnect on the same Region pair for redundancy. That doubles cost without raising the commitment, because both ride the same fabric. Add Interconnects only for a different Region pair.
 
-The peer cloud's side is a different story: the Google Cloud Region an Interconnect pairs with is fixed by the Interconnect itself. Reaching a specific Google Cloud Region still requires an Interconnect for that Region, regardless of what AWS Cloud WAN does on the AWS side.
+What stays yours is everything behind the demarcation point: the Direct Connect Gateway association, the Transit Gateway or Core Network Edge, and the workload. SLA eligibility requires the endpoint to span two or more Availability Zones, so a single-AZ target is both an availability risk and outside the commitment.
 
-##### Plan IPv6 from the start
+***Key insight:*** *AWS Interconnect turns resiliency from something you architect into something you inherit. The design question moves from "how many circuits and locations" to "is everything behind the Direct Connect Gateway as available as the Interconnect in front of it."*
+
+#### Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region
+
+A virtual private gateway or Transit Gateway can only reach an Interconnect in its own AWS Region, even through a Direct Connect Gateway. Attach that Direct Connect Gateway to **AWS Cloud WAN** instead and the constraint disappears: any Core Network Edge can reach any Interconnect, so one Interconnect serves workloads in every Region in the core network.
+
+The regional constraint is enforced, not advisory: attaching an Interconnect to a Direct Connect Gateway that is already associated to a Transit Gateway in a remote Region fails outright.
+
+The peer cloud's side is a different story: the peer cloud Region an Interconnect pairs with is fixed by the Interconnect itself, and AWS Cloud WAN does nothing to change that. Landing traffic in a different peer cloud Region means either an Interconnect paired with that Region, or a hop from the paired Region using whatever cross-Region connectivity that cloud offers — which is for you to verify on their side, not something AWS Cloud WAN can do for you. See [No supported pair for the Regions you need](#no-supported-pair-for-the-regions-you-need) for when that hop is the right answer.
+
+#### Watch the pricing tier as the Interconnect's reach grows
+
+AWS Interconnect has no per-GB data transfer charge. You pay an hourly rate set by two inputs: the bandwidth you provision, and a [pricing tier](https://docs.aws.amazon.com/interconnect/latest/userguide/interconnect-pricing.html) from 1 (local) to 5 (maximum scope) reflecting the geographic distance between the Interconnect's local Region and the Regions whose traffic uses it. The Interconnect is subscribed to the lowest tier covering every path in use, so the farthest Region sets the price for all of them. A locally associated Transit Gateway or virtual private gateway is always Tier 1, since the association can only be in the Interconnect's local Region. For AWS Cloud WAN, the routing benefit carries a cost consequence. Adding a Core Network Edge re-evaluates the tier, so a new AWS Region can move an Interconnect several tiers up.
+
+For proof-of-concept work, AWS Interconnect - multicloud includes one free local (Tier 1) 500 Mbps interconnect per AWS Region per generally available cloud provider. This free tier covers the AWS side only — check the other provider's pricing.
+
+#### Plan IPv6 from the start
 
 AWS Interconnect supports both IPv4 and IPv6 BGP sessions to the Direct Connect Gateway. Enable IPv6 alongside IPv4 on the Interconnect from the beginning so that when the peer cloud's IPv6 support catches up on your workloads' side, the transport is ready.
 
-#### When to use AWS Interconnect
+### When to use AWS Interconnect
 
 AWS Interconnect is the right choice when:
 
-* You need private, predictable connectivity between AWS and another cloud provider, and the required AWS and peer cloud Regions are supported.
+* The AWS and peer cloud Regions you need are a supported pair, or reachable from one within each cloud.
 * You want encrypted cloud-to-cloud traffic without running and maintaining IPsec tunnels.
-* You want to avoid the operational burden of provisioning cross-connects at a colocation and coordinating BGP and VLAN configuration between two cloud providers and a facility.
-* You plan to scale bandwidth up or down as multi-cloud workloads evolve, rather than committing to a static capacity at a colocation.
+* You want to avoid cross-connects at a colocation and BGP and VLAN coordination across two clouds and a facility.
+* You expect bandwidth to change as workloads evolve, rather than committing to static capacity.
+
+AWS Interconnect is **not** the right choice when:
+
+* The cloud you need isn't supported at all — use [partner-based Direct Connect](#partner-based-aws-direct-connect-to-another-cloud) or [Site-to-Site VPN between clouds](#aws-site-to-site-vpn-between-clouds) instead.
+* You already run a colocation footprint or carrier fabric reaching both clouds, and one more cross-connect costs less than inter-Region data transfer on both sides.
+* The extra hop through a paired Region breaks your latency budget.
+
+#### No supported pair for the Regions you need
+
+An unsupported Region pair is not the same as an unsupported cloud. Land the Interconnect at a pair that *is* supported and carry each leg the rest of the way inside each cloud.
+
+On the AWS side this is solved: a Direct Connect Gateway attached to an AWS Cloud WAN core network lets any Core Network Edge reach any Interconnect on that gateway, so the Interconnect's Region doesn't have to be the Region your workload runs in. With Transit Gateway instead, inter-Region Transit Gateway peering gets you from the workload Region to the Region whose Interconnect is local. Both routes cost something: the AWS Cloud WAN route can raise the Interconnect's pricing tier, and the Transit Gateway peering route adds inter-Region data transfer charges.
+
+On the peer cloud side, check that provider's documentation for how it carries traffic between its own Regions. The mechanisms, constraints, and charges differ by cloud, so confirm the target Region is reachable from the paired Region — and at what cost — before committing to this design.
+
+| Consideration | Extend inside each cloud | Third-party interconnection provider |
+| --- | --- | --- |
+| Parties to manage | AWS and the peer cloud, one Interconnect object | You, the external connectivity provider, and both clouds |
+| Cost shape | Hourly Interconnect charge at the tier the farthest Region sets, with no per-GB on the Interconnect itself, plus (optionally) each cloud's inter-Region data transfer | Provider port and fabric fees plus each cloud's private-connectivity charges |
+| Latency | Predictable, but adds the hop through the paired Region | Can be shorter where the connectivity provider has presence near both target Regions |
+| Encryption | MACsec on the Interconnect hop; each cross-Region leg stays on that cloud's own network | Yours to build, either MACsec in all ports or IPsec overlay |
+| Provisioning | Minutes, through cloud consoles and APIs | Days to weeks, with cross-connects and BGP |
+
+***Key insight:*** *A missing Region pair is a routing problem before it is a sourcing problem. Ask whether each cloud can carry the last leg internally before taking on a third party, cross-connects, and your own BGP.*
 
 ### Other multi-cloud options
 
-Where AWS Interconnect isn't available (unsupported cloud, unsupported Region pair, or existing commitments at a colocation), two established patterns remain valid.
+These patterns apply where AWS Interconnect doesn't reach: clouds that aren't supported at all, or cases where the backbone path is technically viable but the economics or latency favor building the path yourself.
 
 #### Partner-based AWS Direct Connect to another cloud
 
@@ -533,7 +571,9 @@ Use this when AWS Interconnect isn't available and the workload can tolerate int
 | Encryption | MACsec by default | Your responsibility (typically IPsec overlay) | IPsec over internet |
 | Provisioning time | Minutes | Days to weeks | Minutes |
 | Capacity changes | Elastic, on demand | Requires cross-connect re-provisioning | Elastic on each cloud |
-| Coverage today | AWS ↔ Google Cloud, expanding | All major clouds, subject to colocation footprint | All major clouds |
+| Cost shape | Hourly per Interconnect by bandwidth and distance tier, no per-GB | Port hours, cross-connect fees, and data transfer out | Hourly per connection plus data transfer |
+| SLA | [99.99%](https://aws.amazon.com/interconnect/sla/) per Interconnect | Depends on your deployment model: 99.99% multi-site redundant, 99.9% multi-site non-redundant, 95% single connection | [99.95%](https://aws.amazon.com/vpn/site-to-site-vpn-sla/) per VPN connection |
+| Coverage today | Selected AWS Region pairs with supported clouds, expanding | All major clouds, subject to colocation footprint | All major clouds |
 | Best for | Supported cloud pairs and Regions, production multi-cloud workloads | Cloud pairs and Regions not yet covered by AWS Interconnect, existing colocation deployments | Low-volume or short-lived workloads where the cloud pair or Region is not yet covered by AWS Interconnect |
 
 ### Documentation
@@ -544,7 +584,7 @@ Use this when AWS Interconnect isn't available and the workload can tolerate int
 
     ---
 
-    Complete service documentation covering both the Multi-cloud and last-mile offerings, concepts, attach points, and supported Region pairs.
+    Complete service documentation covering both the multicloud and last mile offerings, concepts, attach points, and supported Region pairs.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html)
 
@@ -552,7 +592,7 @@ Use this when AWS Interconnect isn't available and the workload can tolerate int
 
     ---
 
-    Per-hour charges by bandwidth tier, plus data transfer. Shared cross-connect fees are included in the managed service, unlike the partner-based alternative.
+    Hourly charges set by provisioned bandwidth and a distance-based pricing tier, with no per-GB data transfer. Cross-connect fees are included in the managed service, unlike the partner-based alternative.
 
     [:octicons-arrow-right-24: Pricing](https://aws.amazon.com/interconnect/multicloud/pricing/)
 
