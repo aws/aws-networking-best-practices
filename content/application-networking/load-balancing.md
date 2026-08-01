@@ -298,7 +298,7 @@ NLB supports dual-stack and IPv6-only listeners, and [listener rules](https://do
 * **Default to dual-stack for new NLBs**, with a listener rule sending IPv6 sources to an IPv6 target group and IPv4 sources to an IPv4 target group. Same-family routing avoids protocol translation, so the original client IP survives end to end for both families, provided `preserve_client_ip` is on. Set the default action to your fallback family, since traffic matching no rule falls through to it.
 * **Weigh consolidation against isolation**. One dual-stack NLB carries both families, roughly doubling its load and putting both in one failure domain. Two per-family NLBs cost more in hours and LCUs but fail independently. Consolidate for simplicity; split when either family's scale or availability warrants its own blast radius.
 * **Allow health checks over both families**. Each target group probes over its own address family, so target security groups need IPv4 and IPv6 health-check traffic permitted.
-* **For IPv6 UDP listeners that need source IP preservation, enable the IPv6 source NAT prefix** on the NLB. Without it, UDP IPv6 source IPs cannot be preserved through to the target.
+* **UDP listeners need extra setup on a dual-stack NLB**. The UDP listener requires an IPv6 target group, so create that before you split UDP traffic by family. If those listeners also need source IP preservation, enable the IPv6 source NAT prefix; without it, UDP IPv6 source IPs cannot be preserved through to the target.
 
 #### Use security groups on the NLB and remember the at-creation rule
 
