@@ -2078,6 +2078,12 @@
 <td><a href="../observability/notifications/">Notifications</a></td>
 </tr>
 <tr>
+<td>Verify which prefixes AWS and my on-premises routers are actually exchanging</td>
+<td><strong>Direct Connect <abbr title="Border Gateway Protocol">BGP</abbr> route visibility</strong> — accepted and advertised routes per VIF with AS path, community values, and install time, via console, <code>ListVirtualInterfaceRoutes</code>, or CLI</td>
+<td>Point-in-time view scoped to the VIF; it does not show what transit gateway or Cloud WAN did with the route afterwards. Alarm on <code>VirtualInterfaceBgpPrefixes*</code> metrics to know when to look</td>
+<td><a href="../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a></td>
+</tr>
+<tr>
 <td>Understand egress costs and destinations</td>
 <td><strong>AWS Cost and Usage Reports</strong> (per-resource data transfer line items) + <strong>CloudWatch metrics</strong> (BytesOutToDestination, ActiveConnectionCount) + <strong><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs</strong> (destination IPs, bytes per flow)</td>
 <td>CUR shows cost attribution but is delayed; Flow Logs give real-time destination detail but no cost data — combine both for full picture</td>
@@ -2168,7 +2174,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 1, 2026 20:36:19 UTC">August 1, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 1, 2026 20:38:07 UTC">August 1, 2026</span>
   </span>
 
     

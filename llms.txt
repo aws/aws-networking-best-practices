@@ -46,7 +46,7 @@ Visibility into network traffic, service health, and automated alerting.
 
 - [Internal Traffic Monitoring](observability/internal-traffic.md): VPC Flow Logs (enable on every VPC, custom format, deliver to S3 for cost), Transit Gateway Flow Logs (cross-VPC visibility from single config), VPC Lattice access logs (identity-aware per-request), Athena for large-scale analysis.
 - [External Traffic Monitoring](observability/external-traffic.md): CloudFront logs (edge client experience), ALB/NLB access logs (always enable, free to generate), WAF logs (security evaluation), NAT Gateway metrics (egress cost visibility), Route 53 query logs (DNS patterns).
-- [AWS Services Monitoring](observability/service-monitoring.md): Critical CloudWatch metrics per service (Transit Gateway, NAT Gateway, Direct Connect, VPN, ALB, NLB, Network Firewall, Route 53 Resolver, VPC Lattice), composite alarms to reduce noise, anomaly detection, quota monitoring at 80%.
+- [AWS Services Monitoring](observability/service-monitoring.md): Critical CloudWatch metrics per service (Transit Gateway, NAT Gateway, Direct Connect including BGP session state and prefix counts, VPN, ALB, NLB, Network Firewall, Route 53 Resolver, VPC Lattice), composite alarms to reduce noise, anomaly detection, quota monitoring at 80%.
 - [Notifications](observability/notifications.md): Alarm design (signal over noise), composite alarms for alert fatigue prevention, severity tiers (P1 immediate, P2 business hours, P3 informational), EventBridge for state-change notifications, cross-account event forwarding.
 
 ## Key Decision Patterns

@@ -2302,16 +2302,47 @@
 </ul>
 <p>Most production environments run all three: one or more Transit VIFs as the backbone, Private VIFs for a small number of demanding workloads, and Public VIF where AWS public endpoint traffic is significant (<abbr title="Simple Storage Service">S3</abbr> as the most common use case).</p>
 <h4 id="use-bgp-attributes-for-traffic-engineering-across-multiple-direct-connect-paths">Use <abbr title="Border Gateway Protocol">BGP</abbr> attributes for traffic engineering across multiple Direct Connect paths<a class="headerlink" href="#use-bgp-attributes-for-traffic-engineering-across-multiple-direct-connect-paths" title="Permanent link">&para;</a></h4>
-<p>When you have multiple Direct Connect connections, <abbr title="Border Gateway Protocol">BGP</abbr> attributes let you shape how traffic flows: primary vs. secondary paths, load distribution across circuits, and symmetric return traffic. The supported attributes are <strong>Local Preference communities</strong> (on routes from AWS, higher wins), <strong>AS_PATH prepending</strong> (on routes you advertise, longer is less preferred), <strong>MED</strong> (on routes you advertise, lower wins when AS_PATH ties), and <strong>longest prefix match</strong> (which always overrides the attributes above).</p>
-<p>For VIFs terminating on a Direct Connect Gateway, the on-side configuration happens on your on-premises router. The VIF and Direct Connect Gateway themselves don't have configurable <abbr title="Border Gateway Protocol">BGP</abbr> policy knobs, so traffic engineering is primarily an on-premises exercise. For AWS Cloud WAN deployments, Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> add an AWS-side control point: you can filter, summarize, and manipulate <abbr title="Border Gateway Protocol">BGP</abbr> attributes on routes between Cloud WAN segments and Direct Connect Gateway attachments from the policy rather than only from the on-premises router.</p>
+<p>When you have multiple Direct Connect connections, <abbr title="Border Gateway Protocol">BGP</abbr> attributes and communities let you shape how traffic flows. You set them on the routes you advertise to AWS, and which ones apply depends on the VIF type:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>VIF types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Local Preference communities</strong> (<code>7224:7300</code> high, <code>7224:7200</code> medium, <code>7224:7100</code> low) — the priority AWS gives each return path</td>
+<td>Private, transit</td>
+</tr>
+<tr>
+<td><strong>MED</strong> — breaks AS_PATH ties, though AWS advises against relying on it</td>
+<td>Private, transit</td>
+</tr>
+<tr>
+<td><strong>Scope communities</strong> (<code>7224:9100</code> local Region, <code>7224:9200</code> continent, <code>7224:9300</code> global) — how far AWS propagates your prefixes, not which path wins</td>
+<td>Public</td>
+</tr>
+<tr>
+<td><strong>AS_PATH prepending</strong> — longer is less preferred, but stripped on a public VIF using a private ASN</td>
+<td>All</td>
+</tr>
+<tr>
+<td><strong>Longest prefix match</strong> — overrides everything above</td>
+<td>All</td>
+</tr>
+</tbody>
+</table>
+<p>Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect Gateway has configurable <abbr title="Border Gateway Protocol">BGP</abbr> policy knobs. For AWS Cloud WAN deployments, Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> add an AWS-side control point, filtering, summarizing, and manipulating <abbr title="Border Gateway Protocol">BGP</abbr> attributes on Direct Connect Gateway attachment routes from the policy. Verify the result from the AWS side by <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html">viewing the <abbr title="Border Gateway Protocol">BGP</abbr> routes</a> on the VIF, where accepted routes show the communities AWS actually received with each prefix.</p>
 <h4 id="enable-bfd-for-sub-second-failover">Enable BFD for sub-second failover<a class="headerlink" href="#enable-bfd-for-sub-second-failover" title="Permanent link">&para;</a></h4>
 <p><abbr title="Border Gateway Protocol">BGP</abbr> hold timers alone detect a failed neighbor in around 90 seconds by default (three times the 30-second keep-alive interval). That's too long for most production hybrid workloads. <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/enable_bfd.html">Bidirectional Forwarding Detection (BFD)</a> runs a lightweight liveness check alongside the <abbr title="Border Gateway Protocol">BGP</abbr> session and tears the session down as soon as the forwarding path fails, typically within about a second.</p>
 <p>AWS enables asynchronous BFD on every Direct Connect <abbr title="Border Gateway Protocol">BGP</abbr> session automatically, with a 300 ms detection timer and a multiplier of 3 (roughly 900 ms to declare the session down). On your side, enable BFD with compatible timers on the on-premises router to complete the negotiation. Without BFD active on both ends, failover on a connection, VIF, or peer device issue still falls back to <abbr title="Border Gateway Protocol">BGP</abbr> hold timers, and the outage window is tens of seconds rather than sub-second.</p>
 <p>BFD is especially important in multi-circuit or active/passive designs where the whole point of the redundancy is quick failover. Confirm that BFD is up on every session as part of turn-up validation, and alarm on BFD state the same way you alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state.</p>
 <h4 id="plan-ipv6-from-the-start">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start" title="Permanent link">&para;</a></h4>
 <p>Every VIF type supports <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions. Configure <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on each VIF from the beginning, even if your on-premises hosts are <abbr title="Internet Protocol version 4">IPv4</abbr>-only today. The AWS side supports dual-stack; the hard part is the on-premises rollout, and having the AWS side ready means you can adopt <abbr title="Internet Protocol version 6">IPv6</abbr> when the on-premises network is ready without reopening VIF configuration.</p>
-<h4 id="monitor-bgp-and-vif-metrics-actively">Monitor <abbr title="Border Gateway Protocol">BGP</abbr> and VIF metrics actively<a class="headerlink" href="#monitor-bgp-and-vif-metrics-actively" title="Permanent link">&para;</a></h4>
-<p>Direct Connect publishes CloudWatch metrics for <abbr title="Border Gateway Protocol">BGP</abbr> session state, connection state, and per-VIF ingress and egress bytes and packets. Alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state flapping and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when <abbr title="Border Gateway Protocol">BGP</abbr> should balance them). Fast detection of <abbr title="Border Gateway Protocol">BGP</abbr> state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.</p>
+<h4 id="monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves">Monitor <abbr title="Border Gateway Protocol">BGP</abbr> and VIF metrics, and verify the routes themselves<a class="headerlink" href="#monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves" title="Permanent link">&para;</a></h4>
+<p>Direct Connect publishes CloudWatch metrics for <abbr title="Border Gateway Protocol">BGP</abbr> session state (<code>VirtualInterfaceBgpStatus</code>), prefix counts in each direction (<code>VirtualInterfaceBgpPrefixesAccepted</code> and <code>VirtualInterfaceBgpPrefixesAdvertised</code>), connection state, and per-VIF ingress and egress bytes and packets. Alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state flapping, on a drop in accepted prefix count against its baseline, and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when <abbr title="Border Gateway Protocol">BGP</abbr> should balance them). Fast detection of <abbr title="Border Gateway Protocol">BGP</abbr> state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.</p>
+<p>Prefix counts tell you how many routes moved, not which. <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html"><abbr title="Border Gateway Protocol">BGP</abbr> route visibility</a> shows the routes on each VIF in both directions, accepted and advertised, each with its AS path, community values, and install time. Alarm on the metrics, then read the route list to find the prefix that changed. It also answers what the metrics cannot, such as whether <abbr title="Internet Protocol version 6">IPv6</abbr> prefixes are being exchanged alongside <abbr title="Internet Protocol version 4">IPv4</abbr>, and on public VIFs whether a prefix was dropped by the inbound policy that requires you to own and register everything you advertise.</p>
 <h3 id="when-to-use-aws-direct-connect">When to use AWS Direct Connect<a class="headerlink" href="#when-to-use-aws-direct-connect" title="Permanent link">&para;</a></h3>
 <p>Direct Connect is the right choice whenever any of the following applies:</p>
 <ul>
@@ -2832,7 +2863,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 25, 2026 22:45:46 UTC">July 25, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 1, 2026 20:38:07 UTC">August 1, 2026</span>
   </span>
 
     
