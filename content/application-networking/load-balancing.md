@@ -254,13 +254,16 @@ NLB target groups support three target types (instance, IP, and ALB-as-target) a
 | EKS via the AWS Load Balancer Controller | IP (default) | Routes directly to pod IPs through the Amazon VPC CNI plugin. Required for Fargate pods; recommended for new clusters. The legacy `NodePort` model uses instance targets but is no longer the default. The controller provisions NLBs from `Service` resources of type `LoadBalancer` and from Kubernetes Gateway API `TCPRoute`, `UDPRoute`, and `TLSRoute` resources. |
 | Workload needs an L4 entry point (static IPs or PrivateLink exposure) plus L7 routing | ALB-as-target | An NLB forwards to an ALB target group. Use this when both NLB-level features (static IPs, PrivateLink front) and ALB-level routing rules are required for the same workload. |
 
-#### Design health checks for the protocol
+#### Design health checks and target lifecycle together
 
-NLB health checks happen at the target group level and probe each target independently. Match the health-check protocol to what the application can reliably attest to:
+NLB health checks happen at the target group level and probe each target independently, and the draining and deregistration settings decide what happens once a target fails. Treat them as one loop: detect, drain, remove.
 
 * **For TCP/UDP/TLS target groups, use HTTP or HTTPS probes when the target speaks them**, even if the listener is L4. An HTTP probe to a dedicated `/health` path that exercises the target's dependencies gives a far richer signal than a TCP-only probe (which only confirms the port is open).
 * **Use TCP probes when the target doesn't expose an HTTP health endpoint**. Recognize that a TCP success only means "the port accepts connections" — not "the application is ready". Pair TCP health checks with application-level alarms on metrics that reflect actual readiness.
 * **Tune interval and threshold to the application's recovery time**. NLB health checks default to 30-second intervals and 5 healthy / 2 unhealthy thresholds; that's right for many workloads but wrong for slow-starting backends or for protocols where a single failure should not pull a target out of rotation.
+* **Use the unhealthy draining interval** to control how long the NLB waits before fully marking a target unhealthy, which gives the application a chance to recover from transient issues.
+* **Set deregistration delay** (default 300 seconds) to match the longest expected connection. For short TCP requests, lower it. For long-lived TCP connections, raise it or enable connection termination for unhealthy targets so deployments don't stall.
+* **Enable connection termination for unhealthy targets** when the workload should drop in-flight connections to a target that fails its health check, instead of waiting for the connection to close on its own.
 
 #### Plan for Availability Zone resilience
 
@@ -288,6 +291,15 @@ NLB preserves the client source IP by default for instance targets and for UDP/T
 * **Some legacy instance types do not support client IP preservation**. Register those as IP targets with client IP preservation disabled, and use Proxy Protocol v2 when the application needs the client IP.
 * **Client IP preservation has no effect on AWS PrivateLink ingress**. The source IP is always the NLB's private IP regardless of the setting.
 
+#### Plan IPv6 as a first-class option
+
+NLB supports dual-stack and IPv6-only listeners, and [listener rules](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-listeners.html) route each address family to its own target group on a single dual-stack NLB.
+
+* **Default to dual-stack for new NLBs**, with a listener rule sending IPv6 sources to an IPv6 target group and IPv4 sources to an IPv4 target group. Same-family routing avoids protocol translation, so the original client IP survives end to end for both families, provided `preserve_client_ip` is on. Set the default action to your fallback family, since traffic matching no rule falls through to it.
+* **Weigh consolidation against isolation**. One dual-stack NLB carries both families, roughly doubling its load and putting both in one failure domain. Two per-family NLBs cost more in hours and LCUs but fail independently. Consolidate for simplicity; split when either family's scale or availability warrants its own blast radius.
+* **Allow health checks over both families**. Each target group probes over its own address family, so target security groups need IPv4 and IPv6 health-check traffic permitted.
+* **UDP listeners need extra setup on a dual-stack NLB**. The UDP listener requires an IPv6 target group, so create that before you split UDP traffic by family. If those listeners also need source IP preservation, enable the IPv6 source NAT prefix; without it, UDP IPv6 source IPs cannot be preserved through to the target.
+
 #### Use security groups on the NLB and remember the at-creation rule
 
 NLB supports security groups attached directly to the load balancer, which lets you control who can reach the NLB without consuming per-target security group rule quota.
@@ -313,14 +325,7 @@ Several L4-level features on NLB cover concerns that would otherwise need extra 
 * **Connection idle timeout** is 350 seconds by default for TCP flows and is configurable from 60 to 6000 seconds. Tune up for long-lived TCP connections (database synchronization, persistent message buses) so the NLB doesn't tear down sessions that the application still expects to be open. UDP flows have a fixed 120-second idle timeout (not configurable). TLS listeners have a fixed 350-second idle timeout (not configurable).
 * **QUIC and TCP_QUIC listeners** support QUIC-native workloads with built-in TLS, fewer round trips for connection establishment, and connection migration across networks. Use these when the workload is QUIC-native (some HTTP/3 implementations, modern transport-layer applications).
 * **Sticky sessions for TCP target groups** (source-IP affinity) route a client repeatedly to the same target. Use this only when the application maintains in-memory state per source IP that isn't externalized to a cache or database.
-* **For IPv6 UDP listeners that need source IP preservation, enable the IPv6 source NAT prefix** on the NLB. Without it, UDP IPv6 source IPs cannot be preserved through to the target. This is the IPv6 equivalent of the IPv4 client IP preservation behavior.
 * **Use Elastic IPs for public NLBs that clients allow-list**. Elastic IPs survive NLB recreation; ephemeral public IPs do not, and an unplanned NLB recreation breaks every client that allow-listed the old address.
-
-#### Tune target lifecycle for clean deployments
-
-* **Set deregistration delay** (default 300 seconds) to match the longest expected connection. For short TCP requests, lower it. For long-lived TCP connections, raise it or enable connection termination for unhealthy targets so deployments don't stall.
-* **Enable connection termination for unhealthy targets** when the workload should drop in-flight connections to a target that fails its health check, instead of waiting for the connection to close on its own.
-* **Use the unhealthy draining interval** to control how long the NLB waits before fully marking a target unhealthy, which gives the application a chance to recover from transient issues.
 
 #### Operate the NLB with the right defaults
 
