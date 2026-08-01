@@ -88,9 +88,17 @@ Most production environments run all three: one or more Transit VIFs as the back
 
 #### Use BGP attributes for traffic engineering across multiple Direct Connect paths
 
-When you have multiple Direct Connect connections, BGP attributes let you shape how traffic flows: primary vs. secondary paths, load distribution across circuits, and symmetric return traffic. The supported attributes are **Local Preference communities** (on routes from AWS, higher wins), **AS_PATH prepending** (on routes you advertise, longer is less preferred), **MED** (on routes you advertise, lower wins when AS_PATH ties), and **longest prefix match** (which always overrides the attributes above).
+When you have multiple Direct Connect connections, BGP attributes and communities let you shape how traffic flows. You set them on the routes you advertise to AWS, and which ones apply depends on the VIF type:
 
-For VIFs terminating on a Direct Connect Gateway, the on-side configuration happens on your on-premises router. The VIF and Direct Connect Gateway themselves don't have configurable BGP policy knobs, so traffic engineering is primarily an on-premises exercise. For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point: you can filter, summarize, and manipulate BGP attributes on routes between Cloud WAN segments and Direct Connect Gateway attachments from the policy rather than only from the on-premises router.
+| Attribute | VIF types |
+| --- | --- |
+| **Local Preference communities** (`7224:7300` high, `7224:7200` medium, `7224:7100` low) — the priority AWS gives each return path | Private, transit |
+| **MED** — breaks AS_PATH ties, though AWS advises against relying on it | Private, transit |
+| **Scope communities** (`7224:9100` local Region, `7224:9200` continent, `7224:9300` global) — how far AWS propagates your prefixes, not which path wins | Public |
+| **AS_PATH prepending** — longer is less preferred, but stripped on a public VIF using a private ASN | All |
+| **Longest prefix match** — overrides everything above | All |
+
+Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect Gateway has configurable BGP policy knobs. For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point, filtering, summarizing, and manipulating BGP attributes on Direct Connect Gateway attachment routes from the policy. Verify the result from the AWS side by [viewing the BGP routes](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) on the VIF, where accepted routes show the communities AWS actually received with each prefix.
 
 #### Enable BFD for sub-second failover
 
@@ -104,9 +112,11 @@ BFD is especially important in multi-circuit or active/passive designs where the
 
 Every VIF type supports IPv6 BGP sessions. Configure IPv6 alongside IPv4 on each VIF from the beginning, even if your on-premises hosts are IPv4-only today. The AWS side supports dual-stack; the hard part is the on-premises rollout, and having the AWS side ready means you can adopt IPv6 when the on-premises network is ready without reopening VIF configuration.
 
-#### Monitor BGP and VIF metrics actively
+#### Monitor BGP and VIF metrics, and verify the routes themselves
 
-Direct Connect publishes CloudWatch metrics for BGP session state, connection state, and per-VIF ingress and egress bytes and packets. Alarm on BGP session state flapping and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when BGP should balance them). Fast detection of BGP state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.
+Direct Connect publishes CloudWatch metrics for BGP session state (`VirtualInterfaceBgpStatus`), prefix counts in each direction (`VirtualInterfaceBgpPrefixesAccepted` and `VirtualInterfaceBgpPrefixesAdvertised`), connection state, and per-VIF ingress and egress bytes and packets. Alarm on BGP session state flapping, on a drop in accepted prefix count against its baseline, and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when BGP should balance them). Fast detection of BGP state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.
+
+Prefix counts tell you how many routes moved, not which. [BGP route visibility](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) shows the routes on each VIF in both directions, accepted and advertised, each with its AS path, community values, and install time. Alarm on the metrics, then read the route list to find the prefix that changed. It also answers what the metrics cannot, such as whether IPv6 prefixes are being exchanged alongside IPv4, and on public VIFs whether a prefix was dropped by the inbound policy that requires you to own and register everything you advertise.
 
 ### When to use AWS Direct Connect
 

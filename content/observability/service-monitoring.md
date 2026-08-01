@@ -24,6 +24,7 @@ Not all CloudWatch metrics deserve an alarm. The table below identifies the metr
 | --- | --- | --- |
 | `PacketDropCountBlackhole` | Traffic is being sent to a route that leads nowhere. Indicates a missing or misconfigured route table entry. | > 0 for 2 consecutive periods |
 | `PacketDropCountNoRoute` | No matching route exists for the destination. Often caused by missing route propagation or a detached attachment. | > 0 for 2 consecutive periods |
+| `PacketDropCountNoPolicy` | Traffic arrived on an attachment associated with a policy table but matched no rule, so it was dropped. Almost always a missing catch-all rule. | > 0 for 2 consecutive periods |
 | `BytesIn` / `BytesOut` | Baseline throughput. Sudden drops indicate connectivity loss; sustained growth signals capacity planning needs. | Anomaly detection band (2 standard deviations) |
 | `AttachmentCount` | Track attachment growth against the per-Region quota (default 5,000). | > 80% of quota |
 
@@ -44,6 +45,9 @@ Not all CloudWatch metrics deserve an alarm. The table below identifies the metr
 | Metric | Why it matters | Alarm condition |
 | --- | --- | --- |
 | `ConnectionState` | Binary: the physical connection is up or down. State changes indicate fiber cuts, router failures, or maintenance events. | State != 1 (up) for 1 period |
+| `VirtualInterfaceBgpStatus` | Per-VIF BGP session state, 1 up / 0 down. The physical connection can be up while the BGP session is down, so this is distinct from `ConnectionState`. | != 1 for 1 period |
+| `VirtualInterfaceBgpPrefixesAccepted` | Prefixes accepted from the on-premises peer. A drop means routes were withdrawn while the session stayed up. | Drop below baseline, or anomaly detection band |
+| `VirtualInterfaceBgpPrefixesAdvertised` | Prefixes AWS advertises to the peer. A drop points at a change on the AWS side, such as a detached attachment or a removed VPC association. | Drop below baseline, or anomaly detection band |
 | `VirtualInterfaceBpsEgress` / `VirtualInterfaceBpsIngress` | Per-VIF throughput. Approaching the port capacity means you need to add capacity or shift traffic. | > 80% of port speed sustained over 5 minutes |
 | `ConnectionBpsEgress` / `ConnectionBpsIngress` | Aggregate connection throughput. | > 80% of port speed sustained over 5 minutes |
 | `ConnectionLightLevelTx` / `ConnectionLightLevelRx` | Optical signal strength. Degrading light levels predict physical failures before they happen. | Outside acceptable dBm range for the optic type |
