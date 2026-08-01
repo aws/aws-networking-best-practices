@@ -24,6 +24,7 @@ Not all CloudWatch metrics deserve an alarm. The table below identifies the metr
 | --- | --- | --- |
 | `PacketDropCountBlackhole` | Traffic is being sent to a route that leads nowhere. Indicates a missing or misconfigured route table entry. | > 0 for 2 consecutive periods |
 | `PacketDropCountNoRoute` | No matching route exists for the destination. Often caused by missing route propagation or a detached attachment. | > 0 for 2 consecutive periods |
+| `PacketDropCountNoPolicy` | Traffic arrived on an attachment associated with a policy table but matched no rule, so it was dropped. Almost always a missing catch-all rule. | > 0 for 2 consecutive periods |
 | `BytesIn` / `BytesOut` | Baseline throughput. Sudden drops indicate connectivity loss; sustained growth signals capacity planning needs. | Anomaly detection band (2 standard deviations) |
 | `AttachmentCount` | Track attachment growth against the per-Region quota (default 5,000). | > 80% of quota |
 

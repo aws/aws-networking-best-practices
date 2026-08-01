@@ -176,8 +176,9 @@ Both provide routing-domain-based segmentation, but they differ in scope and man
 | **Management** | Declarative network policy | Manual route table configuration per TGW |
 | **Automation** | Tag-based attachment acceptance | Manual or custom automation |
 | **Service insertion** | Built-in policy construct | Manual routing through inspection VPCs |
+| **Traffic classification** | Destination-based within a segment | Destination-based, plus optional 5-tuple Policy-Based Routing (source and destination CIDR, port, protocol) |
 | **Cost** | Core network edge + attachment + data processing | TGW attachment + data processing |
-| **Best for** | Organizations with 10+ accounts, multi-Region, or needing centralized governance | Single-Region, smaller environments, or during migration to Cloud WAN |
+| **Best for** | Organizations with 10+ accounts, multi-Region, or needing centralized governance | Single-Region environments, during migration to Cloud WAN, or when segmentation must key off source, port, or protocol |
 
 For new multi-account deployments, Cloud WAN segments are the recommended approach. For existing Transit Gateway environments, you can peer TGW with Cloud WAN and migrate incrementally (see [Connectivity Within AWS](../connectivity/within-aws.md) for migration guidance).
 

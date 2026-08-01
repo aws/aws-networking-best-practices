@@ -586,7 +586,7 @@ With a single service network association, the consumer reaches all three. The c
 
 ## Regional hub-and-spoke with AWS Transit Gateway
 
-[AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html) is the established regional hub-and-spoke service for interconnecting VPCs, VPN connections, and Direct Connect gateways through a central point. Instead of creating individual peering connections between every VPC pair (which grows quadratically), each VPC connects once to the hub and inherits routing through Transit Gateway route tables. If your organization already runs Transit Gateway, it continues to be a solid foundation, and it integrates with AWS Cloud WAN when you're ready to scale to a global, policy-driven network.
+[AWS Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html) is the established regional hub-and-spoke service for interconnecting VPCs, VPN connections, and Direct Connect gateways through a central point. Instead of creating individual peering connections between every VPC pair (which grows quadratically), each VPC connects once to the hub and inherits routing through Transit Gateway route tables. Route table lookups are destination-based; [Policy-Based Routing](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-policy-tables.html) adds an optional classification step that selects *which* route table handles a flow, matching on source and destination CIDR, port, and protocol, at no additional charge. If your organization already runs Transit Gateway, it continues to be a solid foundation, and it integrates with AWS Cloud WAN when you're ready to scale to a global, policy-driven network.
 
 **Key capabilities**:
 
@@ -598,11 +598,11 @@ With a single service network association, the consumer reaches all three. The c
 
     A single Transit Gateway per Region interconnects up to 5,000 attachments (VPCs, VPN, Direct Connect, peering, Connect).
 
-*   :material-routes: **Route tables and segmentation**
+*   :material-routes: **Route tables and policy tables**
 
     ---
 
-    Multiple route tables per Transit Gateway let you carve the network into isolated domains (for example, production, development, shared services) and control which attachments reach which others.
+    Multiple route tables per Transit Gateway carve the network into isolated domains (for example, production, development, shared services). Policy tables add first-match rules that pick the route table per flow using source and destination CIDR, port, and protocol.
 
 *   :material-earth: **Inter-Region peering**
 
@@ -634,7 +634,7 @@ With a single service network association, the consumer reaches all three. The c
 
 #### Use separate route tables for segmentation
 
-Don't rely on the default route table. Create route tables aligned with your security or environment boundaries (for example, `production`, `non-production`, `shared-services`, `inspection`) and associate each attachment with the route table that represents its role. Route propagation and static routes between those route tables define which attachments can reach which others, giving you network-level segmentation without a second Transit Gateway.
+Don't rely on the default route table. Create route tables aligned with your security or environment boundaries (for example, `production`, `non-production`, `shared-services`, `inspection`) and associate each attachment with the route table that represents its role. Route propagation and static routes between those route tables define which attachments can reach which others, giving you network-level segmentation without a second Transit Gateway. Route tables segment by origin: one attachment, one table. Where routing must differ by traffic type instead, [Policy-Based Routing](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-policy-tables.html) classifies flows onto these same route tables.
 
 #### Deploy in a dedicated networking account and share via AWS RAM
 
@@ -648,13 +648,19 @@ Create small `/28` subnets in each Availability Zone specifically for the Transi
 
 Enable route propagation only where needed. Propagating every attachment's routes into every route table is convenient but defeats segmentation. Static routes and selective propagation together give you explicit control over what each attachment can reach.
 
+#### Order policy rules from specific to broad, and always end with a catch-all
+
+Rules are evaluated in ascending order, first match wins, so a broad rule at a low number shadows the more specific rules at higher numbers. Leave gaps in the numbering (100, 200, 300) so you can insert rules later without renumbering, and finish with a catch-all matching everything: unmatched traffic is dropped, so an empty policy table is a blackhole for the whole attachment.
+
+Entry quotas are low, so keep the rule set to deliberate exceptions. Check the routing impact before associating a policy table with a Site-to-Site VPN or Connect attachment, which stops route advertisement to that BGP peer; Direct Connect is unaffected. Customer-managed entries are not supported on Transit Gateway-to-Cloud WAN peering attachments, where read-only system entries enforce Cloud WAN's segment isolation instead.
+
 #### Plan for IPv6 from the start
 
-Enable dual-stack on Transit Gateway attachments and propagate IPv6 routes alongside IPv4. Retrofitting IPv6 after attachments are in place requires revisiting every route table.
+Enable dual-stack on Transit Gateway attachments and propagate IPv6 routes alongside IPv4. Retrofitting IPv6 after attachments are in place requires revisiting every route table and policy rule: an IPv4-only steering rule won't match IPv6 traffic, which then falls through to your catch-all and silently bypasses the inspection path.
 
 #### Enable Amazon CloudWatch metrics and Transit Gateway Flow Logs
 
-Track `BytesIn`, `BytesOut`, `PacketDropCountBlackhole`, and `PacketDropCountNoRoute` in Amazon CloudWatch at minimum; blackhole and no-route drops usually point directly to a missing or incorrect route table entry. Enable [Transit Gateway Flow Logs](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html) on the Transit Gateway itself (not just per-VPC flow logs) to get a single, central view of traffic across every attachment, which is faster to query during an incident than stitching together logs from each VPC.
+Track `BytesIn`, `BytesOut`, `PacketDropCountBlackhole`, and `PacketDropCountNoRoute` in Amazon CloudWatch at minimum; blackhole and no-route drops usually point directly to a missing or incorrect route table entry. Add `PacketDropCountNoPolicy` if you use policy tables; it increments when traffic matches no policy rule, which almost always means a missing catch-all rule. Enable [Transit Gateway Flow Logs](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html) on the Transit Gateway itself (not just per-VPC flow logs) to get a single, central view of traffic across every attachment, which is faster to query during an incident than stitching together logs from each VPC.
 
 ### When to use AWS Transit Gateway
 
@@ -663,7 +669,7 @@ Transit Gateway is a good fit for organizations that need regional hub-and-spoke
 Consider Transit Gateway when:
 
 * You're connecting VPCs within a single Region or a small number of Regions.
-* You need hub-and-spoke routing with segmentation via route tables.
+* You need hub-and-spoke routing with segmentation via route tables, or you need forwarding decisions based on source, port, or protocol rather than destination alone.
 * You want a proven service with a large ecosystem of reference architectures and existing tooling.
 * You have VPN or Direct Connect hybrid connectivity to terminate on the same hub as your VPC attachments.
 
@@ -1007,7 +1013,7 @@ Organizations building a new multi-account AWS network have the opportunity to s
 
 Organizations running Transit Gateway and PrivateLink have working foundations that don't need to be replaced:
 
-1. **Transit Gateway** remains fully supported and capable. Focus on optimizing route table segmentation and monitoring. Evaluate AWS Cloud WAN when multi-Region management complexity grows. AWS Cloud WAN peers with existing Transit Gateways, so adoption can happen incrementally without disrupting current connectivity.
+1. **Transit Gateway** remains fully supported and capable. Focus on optimizing route table segmentation and monitoring, and consider policy tables where you need selective inspection or source-based path selection without re-architecting attachments. Evaluate AWS Cloud WAN when multi-Region management complexity grows. AWS Cloud WAN peers with existing Transit Gateways, so adoption can happen incrementally without disrupting current connectivity.
 2. **PrivateLink** gateway and interface endpoints for AWS services remain the right pattern regardless of your network connectivity approach.
 3. **VPC Lattice services** can be adopted for new HTTP/HTTPS/gRPC service-to-service communication alongside existing PrivateLink endpoint services. No migration required for what's already working.
 4. **VPC Resources** are a natural replacement for PrivateLink endpoint services fronting TCP resources (databases, message brokers, on-premises endpoints). Migrate incrementally by creating resource configurations alongside existing endpoint services, shifting consumers, and decommissioning the NLB-backed endpoint services once migration is complete.
