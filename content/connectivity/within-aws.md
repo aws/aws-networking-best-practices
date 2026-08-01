@@ -650,7 +650,9 @@ Enable route propagation only where needed. Propagating every attachment's route
 
 #### Order policy rules from specific to broad, and always end with a catch-all
 
-Rules are evaluated in ascending order, first match wins, so a broad rule at a low number shadows the specific rules above it. Leave gaps in the numbering (100, 200, 300) so you can insert rules later without renumbering, and finish with a catch-all matching everything: unmatched traffic is dropped, so an empty policy table is a blackhole for the whole attachment. Entry quotas are low, so keep the rule set to deliberate exceptions. Check the routing impact before associating a policy table with a Site-to-Site VPN or Connect attachment, which stops route advertisement to that BGP peer; Direct Connect is unaffected.
+Rules are evaluated in ascending order, first match wins, so a broad rule at a low number shadows the more specific rules at higher numbers. Leave gaps in the numbering (100, 200, 300) so you can insert rules later without renumbering, and finish with a catch-all matching everything: unmatched traffic is dropped, so an empty policy table is a blackhole for the whole attachment. 
+
+Entry quotas are low, so keep the rule set to deliberate exceptions. Check the routing impact before associating a policy table with a Site-to-Site VPN or Connect attachment, which stops route advertisement to that BGP peer; Direct Connect is unaffected. Customer-managed entries are not supported on Transit Gateway-to-Cloud WAN peering attachments, where read-only system entries enforce Cloud WAN's segment isolation instead.
 
 #### Plan for IPv6 from the start
 
