@@ -88,9 +88,17 @@ Most production environments run all three: one or more Transit VIFs as the back
 
 #### Use BGP attributes for traffic engineering across multiple Direct Connect paths
 
-When you have multiple Direct Connect connections, BGP attributes and communities let you shape how traffic flows: primary vs. secondary paths, load distribution across circuits, and symmetric return traffic. You set them on the routes you advertise to AWS: **Local Preference communities** set the priority AWS gives each path (`7224:7300` high, `7224:7200` medium, `7224:7100` low), **AS_PATH prepending** makes a path less preferred, and **MED** breaks AS_PATH ties. **Longest prefix match** overrides all of them. On public VIFs, **scope communities** (`7224:9100` local Region, `7224:9200` continent, `7224:9300` global) control how far AWS propagates your prefixes rather than which path wins.
+When you have multiple Direct Connect connections, BGP attributes and communities let you shape how traffic flows. You set them on the routes you advertise to AWS, and which ones apply depends on the VIF type:
 
-Traffic engineering is primarily an on-premises exercise, neither the VIF nor the Direct Connect Gateway has configurable BGP policy knobs. For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point: you can filter, summarize, and manipulate BGP attributes on routes between Cloud WAN segments and Direct Connect Gateway attachments from the policy. Verify the result from the AWS side by [viewing the BGP routes](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) on the VIF, where accepted routes show the communities AWS actually received with each prefix.
+| Attribute | VIF types |
+| --- | --- |
+| **Local Preference communities** (`7224:7300` high, `7224:7200` medium, `7224:7100` low) — the priority AWS gives each return path | Private, transit |
+| **MED** — breaks AS_PATH ties, though AWS advises against relying on it | Private, transit |
+| **Scope communities** (`7224:9100` local Region, `7224:9200` continent, `7224:9300` global) — how far AWS propagates your prefixes, not which path wins | Public |
+| **AS_PATH prepending** — longer is less preferred, but stripped on a public VIF using a private ASN | All |
+| **Longest prefix match** — overrides everything above | All |
+
+Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect Gateway has configurable BGP policy knobs. For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point, filtering, summarizing, and manipulating BGP attributes on Direct Connect Gateway attachment routes from the policy. Verify the result from the AWS side by [viewing the BGP routes](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) on the VIF, where accepted routes show the communities AWS actually received with each prefix.
 
 #### Enable BFD for sub-second failover
 
