@@ -1,7 +1,7 @@
 ---
 # Project information
 site_name: Networking Best Practices
-site_url: https://aws.github.io/aws/aws-networking-best-practices/
+site_url: https://aws.github.io/aws-networking-best-practices/
 site_description: >-
   AWS Networking Architecture guidance and best practices by the AWS user
   community, vetted by AWS Networking Specialist.
