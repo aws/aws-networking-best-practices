@@ -30,7 +30,7 @@ jobs:
       - run: mkdocs gh-deploy --force
       - name: Send GitHub Action data to a Slack workflow
         if: always()
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v4.0.0
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: webhook-trigger

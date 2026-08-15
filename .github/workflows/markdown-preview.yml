@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Generate markdown preview
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             // Fetch the list of changed files from the PR via API (no untrusted checkout)
