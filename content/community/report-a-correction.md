@@ -23,7 +23,7 @@ A good title should be a short, one-sentence description of the issue, contain
 all relevant information and, in particular, keywords to simplify the search in
 our issue tracker.
 
-| <!-- --> | Example  |
+| <!-- --> | Example |
 | -------- | -------- |
 | :material-check:{ style="color: #4DB6AC" } **Clear** | Clarify the use of DX for multi cloud scenarios |
 | :material-close:{ style="color: #EF5350" } **Unclear** | Missing information in the docs |

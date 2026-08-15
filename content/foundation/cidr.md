@@ -30,12 +30,12 @@ The prefix length determines how many addresses the block contains: a `/16` has 
 ### Common CIDR Block Sizes
 
 | CIDR | Addresses | Usable in Subnet* | Typical Use |
-|------|-----------|-------------------|-------------|
-| /16  | 65,536    | 65,531            | Large VPC for enterprise environments, gives maximum room for subnets |
-| /20  | 4,096     | 4,091             | Medium VPC, departmental or single-workload VPCs |
-| /24  | 256       | 251               | Standard subnet size, balances density with manageability |
-| /26  | 64        | 59                | Smaller subnets for firewall endpoints, NAT gateway, or TGW attachments |
-| /28  | 16        | 11                | Minimum VPC or subnet size, used for specific services only |
+| --- | --- | --- | --- |
+| /16 | 65,536 | 65,531 | Large VPC for enterprise environments, gives maximum room for subnets |
+| /20 | 4,096 | 4,091 | Medium VPC, departmental or single-workload VPCs |
+| /24 | 256 | 251 | Standard subnet size, balances density with manageability |
+| /26 | 64 | 59 | Smaller subnets for firewall endpoints, NAT gateway, or TGW attachments |
+| /28 | 16 | 11 | Minimum VPC or subnet size, used for specific services only |
 
 *AWS reserves 5 IP addresses in each subnet (first four and last one).
 
@@ -44,7 +44,7 @@ The prefix length determines how many addresses the block contains: a `/16` has 
 These are the private IP ranges available for your VPCs:
 
 | Range | CIDR | Addresses | Recommendation |
-|-------|------|-----------|----------------|
+| ------- | ------ | ----------- | ---------------- |
 | 10.0.0.0 – 10.255.255.255 | 10.0.0.0/8 | 16,777,216 | **Preferred for most organizations.** Largest contiguous space, supports deep hierarchical allocation. |
 | 172.16.0.0 – 172.31.255.255 | 172.16.0.0/12 | 1,048,576 | Good secondary range. Often already used by on-premises networks. |
 | 192.168.0.0 – 192.168.255.255 | 192.168.0.0/16 | 65,536 | Avoid for production AWS use. Too small for multi-account environments and commonly used by home networks and VPN clients, causing overlap issues. |
@@ -122,7 +122,7 @@ Assign each Region a dedicated block within your organizational allocation. This
 **Example multi-Region scheme** (within `10.0.0.0/9` for AWS):
 
 | Region | CIDR Block | Purpose |
-|--------|-----------|---------|
+| -------- | ----------- | --------- |
 | us-east-1 | 10.0.0.0/12 | Primary Region |
 | us-west-2 | 10.16.0.0/12 | DR / Secondary |
 | eu-west-1 | 10.32.0.0/12 | European workloads |
@@ -148,7 +148,7 @@ IPv6 in AWS VPCs works differently from IPv4 and requires separate planning:
 **IPv6 CIDR source options:**
 
 | Source | Use Case | Consideration |
-|--------|----------|---------------|
+| -------- | ---------- | --------------- |
 | Amazon-provided | Default for most workloads | Addresses are assigned from Amazon's pool; change if you disassociate |
 | BYOIP (Bring Your Own IP) | Enterprises with existing IPv6 allocations | Requires RIR registration and ROA; provides address portability |
 | IPAM-managed Amazon pool | Multi-account with consistent allocation | Allocates from Amazon's pool but through IPAM for governance |
@@ -178,7 +178,7 @@ Secondary CIDRs are **not** a substitute for proper initial planning. They add c
 #### Avoid common CIDR planning mistakes
 
 | Mistake | Why It Hurts | Prevention |
-|---------|-------------|------------|
+| --------- | ------------- | ------------ |
 | Using `192.168.0.0/16` for production | Overlaps with home networks, VPN clients, and many on-premises environments | Use `10.0.0.0/8` for AWS production |
 | Allocating `/24` VPCs "to save space" | Exhausts subnet capacity quickly; no room for multi-AZ or EKS | Default to `/16` for production, `/20` minimum for non-production |
 | No reserved space for future Regions | Forces non-contiguous allocation when expanding | Reserve 50%+ of your total allocation |
@@ -193,7 +193,7 @@ CIDR planning is not an isolated activity — it directly enables or constrains 
 The table below shows how CIDR decisions interact with key AWS networking services.
 
 | Combination | CIDR Planning Enables | Other Service Provides |
-|---|---|---|
+| --- | --- | --- |
 | **CIDR + IPAM** | Hierarchical allocation scheme, size standards, reserved ranges | Automated allocation enforcement, overlap prevention, compliance auditing, multi-account governance |
 | **CIDR + Transit Gateway** | Non-overlapping VPC ranges that can share route tables; contiguous blocks for route summarization | Regional hub-and-spoke routing, centralized egress, shared services connectivity |
 | **CIDR + Direct Connect / Hybrid** | AWS ranges that never overlap with on-premises; summarizable blocks for BGP advertisements | Private dedicated connectivity, predictable bandwidth, reduced data transfer costs |
@@ -214,7 +214,7 @@ Every subnet consumes a contiguous portion of the VPC CIDR. AWS reserves 5 addre
 **Recommended subnet layout for a `/16` VPC across 3 Availability Zones:**
 
 | Subnet Tier | AZ-A | AZ-B | AZ-C | Size | Purpose |
-|-------------|------|------|------|------|---------|
+| ------------- | ------ | ------ | ------ | ------ | --------- |
 | Public | 10.0.0.0/24 | 10.0.1.0/24 | 10.0.2.0/24 | /24 (251 usable) | Load balancers, NAT gateways, bastion hosts |
 | Private (application) | 10.0.10.0/24 | 10.0.11.0/24 | 10.0.12.0/24 | /24 (251 usable) | Application servers, containers, Lambda |
 | Private (data) | 10.0.20.0/24 | 10.0.21.0/24 | 10.0.22.0/24 | /24 (251 usable) | RDS, ElastiCache, OpenSearch |

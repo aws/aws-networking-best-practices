@@ -48,7 +48,7 @@ AWS imposes default limits on networking resources, and many of them are lower t
 **Quotas that catch networking teams most often:**
 
 | Resource | Default Limit | Why It Matters |
-|----------|:---:|---|
+| ---------- | :---: | --- |
 | VPCs per Region | 5 | Multi-account environments hit this quickly in shared-services accounts |
 | Subnets per VPC | 200 | Rarely an issue, but large multi-AZ designs with many tiers can approach it |
 | Routes per route table | 50 | Transit Gateway and VPC peering each consume a route entry per destination |
