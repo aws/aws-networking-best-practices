@@ -11,18 +11,30 @@ if [ ! -f "mkdocs.yml" ]; then
     exit 1
 fi
 
+# Tool versions pinned to match the underlying CLI versions used by the
+# corresponding GitHub Actions in .github/workflows/pr-validation.yml.
+# Using npx with these pins (instead of whatever is globally installed)
+# ensures local runs actually reproduce CI results. When bumping an
+# action's version in the workflow, update the matching pin here too.
+#   - markdownlint-cli2-action@v24.2.0 -> markdownlint-cli2@0.23.2
+#   - cspell-action@v8.4.0             -> cspell@9.8.0
+#   - github-action-markdown-link-check@1.0.17 -> markdown-link-check@3.13.7
+MARKDOWNLINT_CLI2_VERSION="0.23.2"
+CSPELL_VERSION="9.8.0"
+MARKDOWN_LINK_CHECK_VERSION="3.13.7"
+
 ERRORS=0
 FAILED_CHECKS=()
 
 # Markdown lint
 echo "📝 Checking markdown lint..."
-if command -v markdownlint-cli2 &> /dev/null; then
-    if ! markdownlint-cli2 --config .github/.markdownlint-cli2.yaml "content/**/*.md"; then
+if command -v npx &> /dev/null; then
+    if ! npx --yes "markdownlint-cli2@${MARKDOWNLINT_CLI2_VERSION}" --config .github/.markdownlint-cli2.yaml "content/**/*.md"; then
         FAILED_CHECKS+=("Markdown lint")
         ERRORS=$((ERRORS+1))
     fi
 else
-    echo "❌ markdownlint-cli2 not installed. Install with: npm install -g markdownlint-cli2"
+    echo "❌ npx not found. Install Node.js (which bundles npx) to run this check."
     exit 1
 fi
 
@@ -40,27 +52,27 @@ fi
 
 # Link check
 echo "🔗 Checking links..."
-if command -v markdown-link-check &> /dev/null; then
-    find content -name "*.md" -exec markdown-link-check --config .github/mlc_config.json {} \; | tee /tmp/link_check.log
+if command -v npx &> /dev/null; then
+    find content -name "*.md" -exec npx --yes "markdown-link-check@${MARKDOWN_LINK_CHECK_VERSION}" --config .github/mlc_config.json {} \; | tee /tmp/link_check.log
     if grep -q "ERROR:" /tmp/link_check.log; then
         echo "❌ Dead links found"
         FAILED_CHECKS+=("Link check")
         ERRORS=$((ERRORS+1))
     fi
 else
-    echo "❌ markdown-link-check not installed. Install with: npm install -g markdown-link-check"
+    echo "❌ npx not found. Install Node.js (which bundles npx) to run this check."
     exit 1
 fi
 
 # Spell check
 echo "📖 Checking spelling..."
-if command -v cspell &> /dev/null; then
-    if ! cspell --config .github/cspell.json "content/**/*.md"; then
+if command -v npx &> /dev/null; then
+    if ! npx --yes "cspell@${CSPELL_VERSION}" --config .github/cspell.json "content/**/*.md"; then
         FAILED_CHECKS+=("Spell check")
         ERRORS=$((ERRORS+1))
     fi
 else
-    echo "❌ cspell not installed. Install with: npm install -g cspell"
+    echo "❌ npx not found. Install Node.js (which bundles npx) to run this check."
     exit 1
 fi
 
