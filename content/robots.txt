@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aws.github.io/aws-networking-best-practices/sitemap.xml
