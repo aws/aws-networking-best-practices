@@ -18,9 +18,9 @@ This page maps common AWS networking questions to the right service, pattern, an
 | I need to... | Recommended pattern | Key trade-off | Learn more |
 | --- | --- | --- | --- |
 | Let private IPv4 resources reach the internet | **NAT gateway** - Zonal or Regional, resilient and scales automatically | Data processing and hourly cost if not centralized | [Internet Connectivity](connectivity/internet.md) |
-| Let private IPv6 resources reach the internet | **Egress-only internet gateway** — no data process (data transfer still applies), per-VPC, outbound-only | Cannot be centralized; doesn't support NAT66/NPTv6  | [Internet Connectivity](connectivity/internet.md) |
+| Let private IPv6 resources reach the internet | **Egress-only internet gateway** — no data process (data transfer still applies), per-VPC, outbound-only | Cannot be centralized; doesn't support NAT66/NPTv6 | [Internet Connectivity](connectivity/internet.md) |
 | Expose an HTTP/HTTPS application to the internet | **CloudFront + AWS WAF + ALB** (decentralized ingress) — edge caching, L7 protection, VPC Origins for private backends | Centralized ingress through a shared VPC adds load-balancer chaining and blast radius; avoid unless compliance mandates it | [Internet Connectivity](connectivity/internet.md) |
-| Expose a TCP/UDP service to the internet | **NLB** internet-facing, per-VPC, can preserve client IP | Combine with security groups or Next Generation Firewall for additional security| [Internet Connectivity](connectivity/internet.md) |
+| Expose a TCP/UDP service to the internet | **NLB** internet-facing, per-VPC, can preserve client IP | Combine with security groups or Next Generation Firewall for additional security | [Internet Connectivity](connectivity/internet.md) |
 | Reduce NAT gateway costs for traffic to AWS Services | **VPC Endpoints** — gateway endpoints for S3/DynamoDB (free), interface endpoints for other services | Interface endpoints have hourly and data processing charges; | [Internet Connectivity](connectivity/internet.md) |
 
 ## Connecting to on-premises and other clouds

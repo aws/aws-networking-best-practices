@@ -61,7 +61,7 @@ A good title is short and descriptive. It should be a one-sentence executive
 summary of the idea, so the potential impact and benefit for our community can
 be inferred from the title.
 
-| <!-- --> | Example  |
+| <!-- --> | Example |
 | -------- | -------- |
 | :material-check:{ style="color: #4DB6AC" } **Clear** | SD-WAN integration with TGW |
 | :material-close:{ style="color: #EF5350" } **Wordy** | Add a feature where you describe how to integrate various SD-WAN options with a Transit Gateway |
