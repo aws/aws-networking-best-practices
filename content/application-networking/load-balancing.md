@@ -409,18 +409,32 @@ Choose GWLB only when you actually have third-party appliances to insert. For AW
 
 </div>
 
-### Gateway Load Balancer best practices
+### Manage flow lifetime and failure recovery
 
-#### Tune timeouts so the appliance, the GWLB, and the client agree
+A stateful appliance, GWLB, and the TCP endpoints must agree about when a flow is still usable. If GWLB and the appliance expire flow state at different times, one side can discard state while the other still treats the flow as active, causing dropped traffic or inconsistent stateful inspection. If an appliance fails but GWLB keeps the flow, senders can wait minutes for TCP retries to expire.
 
-When the GWLB removes a flow from its connection table before the appliance does, return-path packets can be hashed to a different appliance, which is fatal for stateful inspection. Keep all three sides in agreement:
-
-| Flow type | GWLB idle timeout | Configurable? | Notes |
+| Flow type | GWLB idle timeout | Configurable? | Guidance |
 | --- | --- | --- | --- |
-| TCP | 350 seconds (default) | **Yes**, 60–6000 seconds — but only with 5-tuple flow stickiness. 3-tuple and 2-tuple stickiness are locked to the default. | Match the appliance's session timeout to the GWLB timeout. Many firewall vendors default to 3600 seconds, which is fatal: the appliance holds a session the GWLB has already torn down and sends return packets to the wrong target. |
-| Non-TCP (UDP, ICMP) | 120 seconds | No | Implement keep-alive at the application level — the OS does not maintain UDP timers. |
+| TCP | 350 seconds (default) | **Yes**, 60–6000 seconds — only with 5-tuple flow stickiness. | Match the appliance session timeout to the GWLB timeout. Configure application or OS keep-alive below that timeout for long-lived flows. |
+| Non-TCP (UDP, ICMP) | 120 seconds | No | UDP has no transport-level keep-alive; the application must generate periodic traffic when the flow must remain active. |
 
-For TCP, also configure keep-alive on the application or OS to fire below the GWLB idle timeout (`net.ipv4.tcp_keepalive_time = 60` on Linux, or another value below the GWLB timeout) so idle connections are kept alive end-to-end. Tune the GWLB TCP idle timeout deliberately when the workload has long-lived flows (database synchronization, persistent message buses); raising it also increases the chance of stale entries in the connection table.
+When setting the TCP idle timeout above 350 seconds, verify that the target network interface's `TcpEstablishedTimeout` is equal to or greater than the GWLB timeout. Otherwise, the network interface can silently discard connection state before GWLB closes the flow.
+
+For TCP flows, decide how senders learn that an existing flow is no longer viable. By default, GWLB continues forwarding an existing flow to its original target after that target becomes unhealthy or is deregistered, and silently removes an idle flow when its timeout expires. TCP Reset is opt-in and returns an RST in response to the next packet, allowing the sender to establish a new flow instead of waiting for TCP retry and exponential back-off.
+
+| Trigger | Setting | When GWLB sends the reset |
+| --- | --- | --- |
+| Target becomes unhealthy | `send_tcp_reset.on_unhealthy.enabled` target group attribute | After the configured health checks mark the target unhealthy. |
+| Target is deregistered | `send_tcp_reset.on_deregistration.enabled` target group attribute | After the connection-draining period elapses. |
+| TCP flow idle timeout expires | `send_tcp_reset.on_idle_timeout.enabled` listener attribute | When GWLB next receives traffic for the expired flow; this also covers non-SYN TCP packets for flows no longer in the flow table. |
+
+For stateful TCP inspection fleets whose endpoints reconnect after an RST, enable TCP Reset for the applicable triggers. Retain the default only for compatibility, or choose target failover `rebalance` intentionally when preserving existing flows across target failure or deregistration is the requirement.
+
+All three reset settings are **off by default**, including on existing GWLBs. TCP Reset applies only to TCP; UDP, ICMP, and other non-TCP traffic are unaffected. TCP Reset requires 5-tuple flow stickiness and can't be enabled on target groups with `stickiness.enabled` set to `true` (2-tuple or 3-tuple). For target failure and deregistration, reset and target failover `rebalance` cannot be enabled together. Reset does not bypass health-check detection or connection draining, so tune those timers as part of the same recovery design. Monitor `TCP_ELB_Reset_Count` in CloudWatch to confirm the expected resets occur.
+
+See [idle timeout](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/update-idle-timeout.html), [listener attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/gateway-listeners.html#listener-attributes), and [target group attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/edit-target-group-attributes.html) for the exact controls.
+
+### Gateway Load Balancer best practices
 
 #### Plan for Availability Zone resilience
 
@@ -520,6 +534,6 @@ Organizations running existing load balancers have working patterns that don't n
 
 1. **Existing ALBs** keep their role. Adopt CloudFront VPC Origins on new VPC-hosted L7 workloads; add AWS WAF (centrally managed through Firewall Manager) where it isn't already attached; turn on Automatic Target Weights for workloads that have shown gray-failure incidents; enable zonal shift through ARC.
 2. **Existing NLBs without security groups** can stay running, with target-side security groups still doing the access control. New NLBs and recreated NLBs should be created with security groups attached. Enable zonal shift through ARC on production NLBs.
-3. **Existing GWLB deployments** continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the GWLB, the appliances, and the workloads, that the appliance MTU is at least 8568 bytes, and that GWLB endpoints are deployed per Availability Zone in every consuming VPC.
+3. **Existing GWLB deployments** continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the GWLB, the appliances, and the workloads, that the appliance MTU is at least 8568 bytes, and that GWLB endpoints are deployed per Availability Zone in every consuming VPC. For TCP inspection fleets, evaluate enabling TCP Reset for target failure, deregistration, and idle-timeout expiry — all three settings are off by default, so existing deployments retain the previous behaviour until you opt in.
 4. **Classic Load Balancer** is a legacy choice. Plan migration to ALB (for HTTP/HTTPS) or NLB (for L4) opportunistically; CLB is supported but does not receive new features and should not be the target for new workloads.
 5. **IPv6 adoption on existing load balancers** is a per-listener decision. ALBs and NLBs can be moved to dual-stack on a new listener without disrupting the existing IPv4 listener; plan the rollout per workload.
