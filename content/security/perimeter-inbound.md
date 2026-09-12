@@ -162,19 +162,22 @@ Two deployment models exist, and the right choice depends on your traffic patter
 
 | Factor | Centralized inspection (shared VPC) | Per-VPC inspection |
 | --- | --- | --- |
-| **Traffic path** | All traffic routes through a central inspection VPC via Transit Gateway | Each VPC has its own firewall endpoints |
-| **Cost model** | One set of firewall endpoints + Transit Gateway data processing on every flow | Firewall endpoint hours per VPC (no transit data processing) |
-| **Policy management** | Single rule group applied at one location | Same rule groups deployed to each VPC via Firewall Manager |
+| **Traffic path** | All traffic routes through a central inspection VPC | Each VPC has its own firewall endpoints |
+| **Mechanism** | Transit Gateway routing or AWS Cloud WAN [service insertion](segmentation.md#service-insertion-for-inter-segment-inspection) directs traffic to the inspection VPC | VPC ingress routing directs traffic to firewall endpoints in each VPC |
+| **Cost model** | One set of firewall endpoints + data processing on every flow (Transit Gateway or Cloud WAN both charge per GB) | Firewall endpoint hours per VPC (no transit/core-network data processing) |
+| **Policy management** | Firewall policy managed in the shared inspection VPC; Firewall Manager optional | Same firewall policy deployed across in-scope VPCs through Firewall Manager |
 | **Blast radius** | Central firewall misconfiguration affects all VPCs | Per-VPC misconfiguration affects only that workload |
-| **Best for** | Few VPCs with high cross-VPC traffic, or when Transit Gateway is already in the path | Many VPCs with independent traffic patterns, or when minimizing transit data processing cost |
+| **Best for** | Few VPCs with high cross-VPC traffic, or when Transit Gateway or Cloud WAN is already in the path | Many VPCs with independent traffic patterns, or when minimizing data processing cost |
 
-For most multi-account environments with many workload VPCs, **per-VPC inspection managed centrally through Firewall Manager** is the recommended pattern. It avoids Transit Gateway data processing charges on every inbound flow, keeps the blast radius per-workload, and still delivers uniform policy through centrally-managed rule groups.
+For decentralized per-VPC inspection, use [AWS Firewall Manager](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html) to define and apply Network Firewall policies centrally across workload VPCs and accounts. This keeps enforcement distributed while preventing policy drift and automatically extends the organization's inspection baseline to new VPCs that come into policy scope.
+
+For centralized inspection, traffic converges on firewall endpoints in a shared inspection VPC through Transit Gateway routing or AWS Cloud WAN service insertion. Because the firewall endpoints are concentrated in one VPC, Firewall Manager is optional: the networking or security team can manage the Network Firewall resources and policy directly, or use Firewall Manager for centralized governance and lifecycle management. Firewall Manager supports both distributed and centralized Network Firewall deployment models; it centralizes management but does not determine where inspection occurs. See [Network Segmentation → Service insertion for inter-segment inspection](segmentation.md#service-insertion-for-inter-segment-inspection).
 
 #### Use stateless rules for high-volume, simple filtering and stateful rules for protocol-aware inspection
 
 Network Firewall evaluates stateless rules first (fast, per-packet, no connection tracking) and then passes traffic to the stateful engine (connection-aware, protocol-aware, Suricata rules). Use stateless rules for broad deny patterns (block entire CIDR ranges, drop malformed packets, rate-limit by protocol) and stateful rules for protocol-aware inspection (HTTP host header matching, TLS SNI filtering, IPS signatures).
 
-This separation matters for cost: stateless rules are cheaper to evaluate at high throughput. Pushing simple deny logic into the stateless layer reduces the volume of traffic the stateful engine must process.
+This separation is about inspection behavior and rule design, not standard traffic-processing price. AWS Network Firewall charges for provisioned endpoint hours and gigabytes processed, regardless of whether stateless or stateful rules evaluate the traffic; additional charges may apply for features such as TLS inspection or active threat defense. See [AWS Network Firewall pricing](https://aws.amazon.com/network-firewall/pricing/).
 
 ### Gateway Load Balancer and third-party firewalls
 
@@ -286,6 +289,7 @@ Shield Advanced is **not needed** for workloads where Shield Standard's automati
 | **AWS WAF + CloudFront** | L7 request inspection, rate limiting, geo-blocking | Global edge distribution, TLS termination, caching, origin isolation via VPC Origins | Every internet-facing L7 workload — AWS WAF at CloudFront inspects before traffic reaches your Region |
 | **AWS WAF + API Gateway** | Request filtering, IP blocking, rate limiting | API management, throttling, request validation, authorization | API-first workloads where API Gateway is the entry point rather than CloudFront |
 | **Network Firewall + Transit Gateway** | Stateful/stateless VPC traffic inspection | Cross-VPC and hybrid routing | Centralized inspection model where all traffic routes through an inspection VPC |
+| **Network Firewall + AWS Cloud WAN** | Stateful/stateless VPC traffic inspection | Cross-segment and inter-Region routing with [service insertion](segmentation.md#service-insertion-for-inter-segment-inspection) defined in the network policy | Centralized inspection on a Cloud WAN core network — route inter-segment traffic through the inspection VPC as a policy change rather than manual route tables |
 | **Network Firewall + VPC ingress routing** | Inbound traffic inspection before it reaches workload subnets | IGW edge route table directs traffic to firewall endpoints | Per-VPC inspection of internet-bound inbound traffic |
 | **Shield Advanced + AWS WAF** | DDoS protection, DRT access, cost protection | Application-layer attack mitigation, automatic rate limiting | Shield Advanced can instruct AWS WAF to deploy emergency rules during an attack via DRT |
 | **GWLB + Network Firewall** | Third-party appliance inspection for specialized workloads | AWS-managed inspection for standard workloads | Organizations that need vendor-specific features for some traffic and AWS-native for the rest |
