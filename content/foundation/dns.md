@@ -112,6 +112,12 @@ Resolver query logging captures every DNS query made from associated VPCs — th
 
 Query logging is the DNS equivalent of VPC Flow Logs: it provides a complete record of what your workloads tried to reach by name. Without it, investigating DNS-related incidents (exfiltration over DNS tunneling, C2 callbacks, misconfigured forwarding) requires guesswork.
 
+#### Use DNS analytics and insights to turn query logs into metrics and alarms
+
+Route 53 Resolver and DNS Firewall provide native DNS analytics and insights through Amazon CloudWatch. Where query logging gives you the raw per-query record, analytics turns that record into an observability signal: CloudWatch metrics and Contributor Insights over DNS activity, metric filters for specific patterns (blocked queries, DNS response codes), and alarms that fire on thresholds — for example, more than N blocked queries from a VPC within an hour.
+
+Treat this as the alerting and visualization layer on top of query logging, not a replacement for it: keep query logs flowing to S3 for forensic retention and ad-hoc investigation, and use analytics and insights to monitor DNS Firewall rule effectiveness and detect anomalous resolution patterns in near real time.
+
 ### IPv6 considerations
 
 #### Configure dual-stack Resolver endpoints from the start
@@ -152,7 +158,7 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 
     ---
 
-    Complete documentation for Resolver endpoints, forwarding rules, query logging, and DNSSEC validation.
+    Complete documentation for Resolver endpoints, forwarding rules, query logging, DNS analytics and insights, and DNSSEC validation.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver.html)
 
