@@ -398,7 +398,7 @@ VPC Resources address a common pain point: exposing a managed database, a legacy
 
     ---
 
-    Represent a resource (or group of resources) by IP address, domain name, or an ARN (for example, an RDS DB instance). Consumers reach the resource by the custom domain name you assign, not by its actual IP.
+    Represent a resource (or group of resources) by IP address, domain name, ARN (for example, an RDS DB instance), or a range of addresses by CIDR. For single resources and groups, consumers can connect by the custom domain name you assign rather than the actual IP.
 
 *   :material-gate: **Resource gateway**
 
@@ -451,7 +451,7 @@ Like VPC Lattice services, VPC Resources operate independently of your network t
 This is particularly valuable in two common situations:
 
 * **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. Peering and Transit Gateway both require non-overlapping CIDRs; VPC Resources do not.
-* **Least-privilege exposure**: You want to expose exactly one database or one endpoint, not connect two entire networks. A resource configuration is a single, explicit entry point, which is easier to reason about than a route table that connects whole CIDR ranges.
+* **Least-privilege exposure**: Expose a specific resource or a bounded set of addresses, not two entire networks. A resource configuration is an explicit, scoped entry point, easier to reason about than a route table joining whole VPCs. Scope it to a single resource (one IP, DNS name, or ARN) for the tightest exposure, or to a CIDR range when consumers need several hosts in one segment — still scoped and unidirectional, not the full reachability of Transit Gateway, Cloud WAN, or VPC peering.
 
 ### VPC Resources Best Practices
 
@@ -477,9 +477,9 @@ Plan this up front rather than discovering it under load. A resource gateway's I
 
 #### Use custom domain names for stable consumer contracts
 
-When you create a resource configuration, assign a custom domain name that consumers will use (for example, `payments-db.internal.example.com`). The name is decoupled from the underlying IP or resource ARN, so the provider can change the backing resource (failover, migration, version upgrade) without consumers updating their configuration.
+When you create a resource configuration, assign a custom domain name that consumers will use (for example, `payments-db.internal.example.com`). The name is decoupled from the underlying IP or resource ARN, so the provider can change the backing resource (failover, migration, version upgrade) without consumers updating their configuration. 
 
-Consumers can let VPC Lattice manage a private hosted zone in their VPC for the custom domain, which makes the resource resolve locally without manual DNS configuration.
+Consumers can let VPC Lattice manage a private hosted zone in their VPC for the custom domain, which makes the resource resolve locally without manual DNS configuration. (This does not apply to CIDR-range configurations, which have no custom domain name.)
 
 #### Enable access logs for visibility
 
@@ -496,6 +496,7 @@ VPC Resources are the right choice for any pattern where a small number of provi
 Consider VPC Resources when:
 
 * You need to give multiple consumer VPCs or accounts private access to a specific database, cache, message broker, or other TCP endpoint.
+* You need to give a vendor or partner account private access to *several* hosts inside one network segment, where a single resource configuration scoped to a CIDR range fits better than one per host, without opening full network-level routing between the VPCs.
 * You want to expose an on-premises resource (reachable through Direct Connect or VPN in the provider VPC) to AWS consumers without extending the underlying hybrid connectivity to every consumer VPC.
 * Consumer and provider VPCs have overlapping CIDRs, or you expect they might in the future, and you want to avoid the IP address management burden.
 * You want unidirectional access (consumer to resource) without opening a bidirectional network-level path.
