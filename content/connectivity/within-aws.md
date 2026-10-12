@@ -477,7 +477,7 @@ Plan this up front rather than discovering it under load. A resource gateway's I
 
 #### Use custom domain names for stable consumer contracts
 
-When you create a resource configuration, assign a custom domain name that consumers will use (for example, `payments-db.internal.example.com`). The name is decoupled from the underlying IP or resource ARN, so the provider can change the backing resource (failover, migration, version upgrade) without consumers updating their configuration. 
+When you create a resource configuration, assign a custom domain name that consumers will use (for example, `payments-db.internal.example.com`). The name is decoupled from the underlying IP or resource ARN, so the provider can change the backing resource (failover, migration, version upgrade) without consumers updating their configuration.
 
 Consumers can let VPC Lattice manage a private hosted zone in their VPC for the custom domain, which makes the resource resolve locally without manual DNS configuration. (This does not apply to CIDR-range configurations, which have no custom domain name.)
 
