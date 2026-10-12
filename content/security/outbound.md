@@ -90,6 +90,8 @@ Network Firewall sits in the data path and inspects actual traffic. It can filte
 
 **What Network Firewall costs**: endpoint hourly charges plus per-GB traffic processing. For a centralized egress VPC processing terabytes of outbound traffic, Network Firewall costs are significant. This is why DNS Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.
 
+**Which workloads a rule applies to**: rules can be scoped by source workload as well as by destination. For Amazon ECS and Amazon EKS, container associations keep a rule's source IP set aligned with the running tasks and pods, so workloads that share a VPC can have different egress policies (see [Scope egress rules to container workloads](#scope-egress-rules-to-container-workloads)).
+
 ### Layer 4: VPC Endpoints (path elimination)
 
 VPC endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to S3, DynamoDB, and other AWS services via VPC endpoints never traverses a NAT gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no NAT processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.
@@ -122,6 +124,22 @@ Allow-list mode is operationally heavier — every new external dependency requi
 #### Deploy managed domain lists for threat intelligence
 
 AWS provides [managed domain lists](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-managed-domain-lists.html) for DNS Firewall that cover known malware domains, botnet C2 infrastructure, and newly observed domains. Enable these as a baseline block list in every VPC, even when you also run allow-list mode on specific workloads. The managed lists are updated by AWS threat intelligence and require no maintenance from your team.
+
+### Scope egress rules to container workloads
+
+In a VPC that runs Amazon ECS tasks or Amazon EKS pods, a subnet or VPC CIDR describes where workloads run, not which workload sends the traffic — a rule that allows `api.payments.example.com` for that CIDR allows it for every workload in it. Task and pod IP addresses change as workloads scale and redeploy, so a static IP set cannot narrow the rule for long. Use a [container association](https://docs.aws.amazon.com/network-firewall/latest/developerguide/container-associations.html) instead: Network Firewall follows task and pod lifecycle events, keeps the running workloads' IP addresses as a dynamic IP set, and lets a stateful rule combine a source workload with the destination controls above — for example, only the payments workloads can reach the payment provider's domain.
+
+Select workloads with attribute filters: Kubernetes namespaces and labels for Amazon EKS, container-instance attributes for Amazon ECS. Wildcard values group related variants — `app=payments-*` covers `payments-api` and `payments-worker` — so you don't maintain one association per variant. Keep patterns narrow: a broad wildcard extends the rule to any future workload whose name matches.
+
+Validate these constraints before relying on the pattern:
+
+* **Amazon EKS** — disable source NAT on the VPC CNI so the firewall sees the pod IP, not the node IP. With source NAT enabled, rules that reference the association never match.
+* **Amazon ECS** — tasks must use `awsvpc` network mode. Attribute filters apply only to tasks on Amazon EC2 container instances; AWS Fargate tasks have no instance attributes, so track them with an unfiltered association.
+* **Rule groups** — a rule group references either container associations or regular IP sets and prefix lists, not both. Keep them in separate rule groups.
+* **IPv6 Amazon EKS clusters** — traffic from pods to IPv4 destinations is always translated to the node's IPv4 address, so pod-scoped rules can't match it. Scope that traffic at the node or subnet level instead.
+* **Multi-account and multi-Region** — a container association can only track clusters in its own account and Region. With centralized egress, where the firewall's rule groups live in a networking account, create an association in each workload account and Region, then share it with the networking account through AWS Resource Access Manager (RAM).
+
+***Key insight:*** *Domain filtering decides where traffic may go; container associations decide which workload a rule applies to. Together they let workloads that share a VPC and an egress path have different outbound policies.*
 
 ### Data exfiltration prevention
 
@@ -261,6 +279,7 @@ DNS Firewall is **not sufficient alone** when:
 * Compliance requires logging of all outbound connections with deep metadata
 * You must catch connections to hardcoded IPs that bypass DNS
 * Domain filtering via SNI is needed as a backstop to DNS Firewall
+* Egress policy must differ between Amazon ECS or Amazon EKS workloads that share a VPC or subnet (use container associations)
 
 Network Firewall is **not the right choice** when:
 
