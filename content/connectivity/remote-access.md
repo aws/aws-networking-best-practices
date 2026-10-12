@@ -11,7 +11,7 @@ For new application access use cases, AWS Verified Access is the preferred optio
 
 AWS Client VPN is a managed OpenVPN-compatible service that gives end users a network-level connection into a VPC. Each connected client receives an IP address from a client CIDR you configure, and can reach resources in the associated VPC (and, through transit paths, other VPCs and on-premises networks). Authentication supports Active Directory, SAML-based federation with identity providers such as AWS IAM Identity Center, and certificate-based mutual authentication.
 
-Client VPN fits when applications genuinely need network-layer reachability: administrators using SSH or RDP to reach EC2 instances, developers using tools that require direct IP connectivity, or legacy applications that authenticate clients by IP address. It also fits established workflows where users are already trained on a VPN client and the applications haven't been refactored for identity-aware access.
+Client VPN fits when users genuinely need network-layer reachability: administrators who need ad-hoc access across many hosts and ports in a subnet (not a single managed application), tools that require direct IP connectivity or non-TCP protocols, or legacy applications that authenticate clients by IP address. It also fits established workflows where users are already trained on a VPN client and the applications haven't been refactored for identity-aware access.
 
 ### AWS Client VPN Best Practices
 
@@ -31,11 +31,15 @@ The client CIDR (the IP range assigned to connected VPN clients) must not overla
 
 A Client VPN endpoint supports many concurrent connections, but sizing should account for peak simultaneous users, not just steady-state. Monitor `ActiveConnectionsCount` and `CrlDaysToExpiry` in CloudWatch. For organizations with thousands of concurrent users, consider multiple endpoints segmented by user population or application group.
 
+#### Combine identity with device posture
+
+Authenticating the user alone trusts whatever device they happen to be on. Pair identity with device posture so access also depends on the device's security health — disk encryption enabled, firewall active, EDR agent running — raising the bar from "a trusted user" to "a trusted user on a healthy device" for posture-sensitive user populations. See [Device posture for AWS Client VPN](https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/device-posture.html) for the supported device trust providers and how to define the authorization policy.
+
 ## AWS Verified Access
 
 AWS Verified Access provides zero-trust access to corporate applications without a VPN client. Users reach an application through a browser or an application-specific client, and Verified Access evaluates every request against a policy that combines identity (from AWS IAM Identity Center or a third-party identity provider) and device posture (from an integrated device-trust provider such as CrowdStrike or a mobile-device-management vendor). Requests that don't satisfy the policy are rejected. Requests that satisfy it are forwarded to the application.
 
-Verified Access supports both web-based applications (HTTP/HTTPS) and non-web applications reached over TCP, SSH, or RDP, so it covers most of the use cases that previously required Client VPN. The policies are centrally managed in AWS, expressed in Cedar policy language, and evaluated per-request, which gives you fine-grained control that network-layer access can't provide (for example, blocking access when a device's posture check fails even though the user is authenticated).
+Verified Access supports both web-based applications (HTTP/HTTPS) and non-web applications reached over TCP, SSH, or RDP. The policies are centrally managed in AWS, expressed in Cedar policy language, and evaluated per-request against identity, device posture, and request context, so every individual request is authorized on its own rather than inheriting the standing reachability of a network connection.
 
 ### AWS Verified Access Best Practices
 
@@ -62,7 +66,7 @@ Where Verified Access doesn't fit today, Client VPN remains available, and the t
 
 1. Deploy Verified Access for new applications from day one
 2. Migrate existing applications to Verified Access as their lifecycle allows (typically during the next major update or security review)
-3. Gradually reduce Client VPN scope to the cases that genuinely require network-layer access (SSH, RDP, legacy protocols)
+3. Gradually reduce Client VPN scope to the cases that genuinely require network-layer reachability (a routable IP inside the VPC, arbitrary hosts and ports, non-TCP protocols)
 4. Consolidate on Verified Access over time as the application portfolio modernizes
 
 The [Client VPN and Verified Access interoperability patterns](https://aws.amazon.com/blogs/networking-and-content-delivery/aws-client-vpn-and-aws-verified-access-migration-and-interoperability-patterns/) cover these migration paths in detail.
@@ -72,7 +76,7 @@ The [Client VPN and Verified Access interoperability patterns](https://aws.amazo
 **AWS Verified Access** is the right choice when:
 
 * Users need access to web applications (HTTP/HTTPS) or TCP/SSH/RDP services
-* You want per-request identity and device posture evaluation
+* You want per-request authorization — identity, device posture, and request context evaluated on every request rather than at connection time
 * You want to eliminate VPN client deployment and maintenance
 * You're onboarding new applications to remote access
 
