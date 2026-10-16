@@ -245,6 +245,9 @@ This policy says: "Only the OrderService role in account 111122223333 can POST t
 
 When segments need to communicate, you may need to inspect that traffic for threats, compliance, or policy enforcement. AWS Cloud WAN service insertion and Transit Gateway routing both support directing inter-segment traffic through inspection VPCs running AWS Network Firewall or third-party appliances.
 
+!!! tip "Container workloads in inspection rules"
+    AWS Network Firewall container associations keep a dynamic IP set from Amazon ECS task and Amazon EKS pod lifecycle events, so inter-segment inspection rules can target specific workloads instead of whole segment CIDRs. The association only changes what a rule matches — routing (Cloud WAN service insertion or Transit Gateway) still decides which traffic reaches the firewall. See [Scope egress rules to container workloads](outbound.md#scope-egress-rules-to-container-workloads) for the per-account/Region sharing and the constraints that silently block a match.
+
 ### Cloud WAN service insertion pattern
 
 Define inspection rules in the Cloud WAN network policy to route traffic between specific segments through an Inspection VPC:

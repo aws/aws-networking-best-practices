@@ -90,6 +90,8 @@ Network Firewall sits in the data path and inspects actual traffic. It can filte
 
 **What Network Firewall costs**: endpoint hourly charges plus per-GB traffic processing. For a centralized egress VPC processing terabytes of outbound traffic, Network Firewall costs are significant. This is why DNS Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.
 
+**Which workloads a rule applies to**: rules can be scoped by source workload as well as by destination. For Amazon ECS and Amazon EKS, container associations keep a rule's source IP set aligned with the running tasks and pods, so workloads that share a VPC can have different egress policies (see [Scope egress rules to container workloads](#scope-egress-rules-to-container-workloads)).
+
 ### Layer 4: VPC Endpoints (path elimination)
 
 VPC endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to S3, DynamoDB, and other AWS services via VPC endpoints never traverses a NAT gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no NAT processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.
@@ -122,6 +124,24 @@ Allow-list mode is operationally heavier — every new external dependency requi
 #### Deploy managed domain lists for threat intelligence
 
 AWS provides [managed domain lists](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-managed-domain-lists.html) for DNS Firewall that cover known malware domains, botnet C2 infrastructure, and newly observed domains. Enable these as a baseline block list in every VPC, even when you also run allow-list mode on specific workloads. The managed lists are updated by AWS threat intelligence and require no maintenance from your team.
+
+### Workload-aware egress
+
+#### Scope egress rules to container workloads
+
+In a VPC that runs Amazon ECS tasks or Amazon EKS pods, a CIDR tells you where workloads run but not which one is sending — so a rule allowing `api.payments.example.com` for that CIDR allows it for every workload there, and the task and pod IPs change too fast to pin down with a static IP set. A container association closes that gap: it tracks the running tasks and pods as a dynamic source IP set that a stateful rule can match on, so a rule can name a specific workload as well as a destination — only the payments workloads may reach the payment provider's domain, even though they share the VPC and egress path with everything else.
+
+You choose which workloads an association tracks with attribute filters — Kubernetes namespaces and labels for Amazon EKS, container-instance attributes for Amazon ECS — and a wildcard groups related variants under one filter (`app=payments-*` covers `payments-api` and `payments-worker`). Keep patterns narrow, since a broad wildcard also picks up future workloads whose names happen to match.
+
+#### Validate container-association constraints
+
+A container association fails open in subtle ways: when a constraint below isn't met the rule simply never matches, with no error. Check these before relying on the pattern:
+
+* **Amazon EKS** — disable source NAT on the VPC CNI, or the firewall sees the node IP instead of the pod IP and the rule never matches.
+* **Amazon ECS** — tasks must use `awsvpc` network mode. Attribute filters work only on Amazon EC2 container instances; Fargate tasks have no attributes, so track them with an unfiltered association.
+* **Rule groups** — a rule group references either container associations or regular IP sets/prefix lists, never both. Keep them separate.
+* **IPv6 Amazon EKS clusters** — pod traffic to IPv4 destinations is translated to the node's IPv4 address (same source-NAT path), so a pod-IP rule can't match it; scope that traffic at the node or subnet level.
+* **Multi-account and multi-Region** — an association tracks clusters only in its own account and Region. For centralized egress, create one in each workload account and Region and share it to the networking account through AWS Resource Access Manager (RAM).
 
 ### Data exfiltration prevention
 
@@ -261,6 +281,7 @@ DNS Firewall is **not sufficient alone** when:
 * Compliance requires logging of all outbound connections with deep metadata
 * You must catch connections to hardcoded IPs that bypass DNS
 * Domain filtering via SNI is needed as a backstop to DNS Firewall
+* Egress policy must differ between Amazon ECS or Amazon EKS workloads that share a VPC or subnet (use container associations)
 
 Network Firewall is **not the right choice** when:
 
@@ -292,6 +313,7 @@ Network Firewall is **not the right choice** when:
 | **Firewall Manager + Network Firewall** | Centralized rule group management across accounts | Per-VPC or centralized-VPC traffic inspection |
 | **VPC Endpoints + Endpoint Policies** | Private path for AWS service traffic | Authorization scoping (restrict to org buckets, specific KMS keys) |
 | **DNS Firewall + CloudWatch** | Domain filtering and blocking | Alerting on blocked queries, dashboards for egress patterns |
+| **Network Firewall + Amazon ECS / Amazon EKS** | Per-workload egress rules using container associations | Task and pod lifecycle events that keep the source IP set current |
 
 ## Centralized vs. decentralized egress inspection
 
@@ -328,6 +350,14 @@ The [Internet Connectivity](../connectivity/internet.md) page covers the archite
     Managed stateful firewall with Suricata-compatible IPS, domain filtering, and protocol inspection.
 
     [:octicons-arrow-right-24: Network Firewall documentation](https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html)
+
+*   :material-file-document: **Network Firewall container associations**
+
+    ---
+
+    Dynamic IP sets for Amazon ECS tasks and Amazon EKS pods, attribute filters, rule group references, and sharing.
+
+    [:octicons-arrow-right-24: Container associations documentation](https://docs.aws.amazon.com/network-firewall/latest/developerguide/container-associations.html)
 
 *   :material-file-document: **AWS Firewall Manager**
 
