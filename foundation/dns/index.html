@@ -1997,6 +1997,9 @@
 <h4 id="enable-resolver-query-logging-for-visibility-and-forensics">Enable Resolver query logging for visibility and forensics<a class="headerlink" href="#enable-resolver-query-logging-for-visibility-and-forensics" title="Permanent link">&para;</a></h4>
 <p>Resolver query logging captures every <abbr title="Domain Name System">DNS</abbr> query made from associated VPCs — the query name, type, response code, source IP, and timestamp. Deliver logs to <abbr title="Simple Storage Service">S3</abbr> for cost-effective retention and Athena querying, or to CloudWatch Logs for real-time alerting on suspicious resolution patterns (queries for known C2 domains, high-frequency NXDOMAIN responses, unusual query volumes from a single source).</p>
 <p>Query logging is the <abbr title="Domain Name System">DNS</abbr> equivalent of <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs: it provides a complete record of what your workloads tried to reach by name. Without it, investigating <abbr title="Domain Name System">DNS</abbr>-related incidents (exfiltration over <abbr title="Domain Name System">DNS</abbr> tunneling, C2 callbacks, misconfigured forwarding) requires guesswork.</p>
+<h4 id="turn-dns-query-logs-and-dns-firewall-activity-into-metrics-and-alarms">Turn <abbr title="Domain Name System">DNS</abbr> query logs and <abbr title="Domain Name System">DNS</abbr> Firewall activity into metrics and alarms<a class="headerlink" href="#turn-dns-query-logs-and-dns-firewall-activity-into-metrics-and-alarms" title="Permanent link">&para;</a></h4>
+<p>To alert on <abbr title="Domain Name System">DNS</abbr> activity rather than just retain it, deliver Resolver query logs to CloudWatch Logs: metric filters, Contributor Insights, and Logs Insights run on log groups, not on the <abbr title="Simple Storage Service">S3</abbr> copy you keep for forensics. <abbr title="Domain Name System">DNS</abbr> Firewall also publishes per-<abbr title="Virtual Private Cloud">VPC</abbr> and per-rule-group query-volume metrics to CloudWatch every few minutes, which you can alarm on directly without parsing logs.</p>
+<p>Alarm on a baseline you establish, not a fixed count: query logs record only unique queries, so lookups answered from the cache are not logged and counts run low. Treat this as detection, not prevention — it sees only what reaches the resolver, so <abbr title="Domain Name System">DNS</abbr>-over-HTTPS and hardcoded-IP traffic bypass it; keep Network Firewall or other inspection for those.</p>
 <h3 id="ipv6-considerations"><abbr title="Internet Protocol version 6">IPv6</abbr> considerations<a class="headerlink" href="#ipv6-considerations" title="Permanent link">&para;</a></h3>
 <h4 id="configure-dual-stack-resolver-endpoints-from-the-start">Configure dual-stack Resolver endpoints from the start<a class="headerlink" href="#configure-dual-stack-resolver-endpoints-from-the-start" title="Permanent link">&para;</a></h4>
 <p>Resolver inbound and outbound endpoints support <abbr title="Internet Protocol version 6">IPv6</abbr> ENI addresses. If your VPCs are dual-stack, configure Resolver endpoints with both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> addresses so <abbr title="Internet Protocol version 6">IPv6</abbr>-only workloads can forward and resolve without NAT64. On-premises <abbr title="Domain Name System">DNS</abbr> servers forwarding to AWS inbound endpoints need reachability to the endpoint's <abbr title="Internet Protocol version 6">IPv6</abbr> address if the on-premises network is also dual-stack.</p>
@@ -2068,6 +2071,11 @@
 <ul>
 <li><strong><a href="../../application-networking/service-to-service/">Service to Service</a></strong>: Private hosted zones and Route 53 alias records are the primary service discovery mechanism covered on that page. <abbr title="Domain Name System">DNS</abbr> architecture decisions directly shape how services find each other.</li>
 </ul>
+<p><strong>Relationship to Observability topics:</strong></p>
+<ul>
+<li><strong><a href="../../observability/service-monitoring/">AWS Services Monitoring</a></strong>: Covers the existing Route 53 Resolver and <abbr title="Domain Name System">DNS</abbr> Firewall CloudWatch metrics (including <code>FirewallRuleGroupQueryVolume</code>) and dashboards that the <abbr title="Domain Name System">DNS</abbr> metrics-and-alarms guidance on this page builds on.</li>
+<li><strong><a href="../../observability/internal-traffic/">Internal Traffic Monitoring</a></strong>: Positions <abbr title="Domain Name System">DNS</abbr> query logging and <abbr title="Domain Name System">DNS</abbr> Firewall metrics as the <abbr title="Domain Name System">DNS</abbr>-layer signal alongside <abbr title="Virtual Private Cloud">VPC</abbr> and Transit Gateway Flow Logs.</li>
+</ul>
 
 
 
@@ -2090,7 +2098,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 13, 2026 01:12:19 UTC">June 13, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 16, 2026 16:57:18 UTC">October 16, 2026</span>
   </span>
 
     

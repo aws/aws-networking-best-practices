@@ -2416,9 +2416,14 @@
 <td><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs + <code>type</code> field</td>
 <td>Filter on type=6 to isolate <abbr title="Internet Protocol version 6">IPv6</abbr> flows</td>
 </tr>
+<tr>
+<td>"What is my <abbr title="Domain Name System">DNS</abbr> layer resolving and blocking?"</td>
+<td>Route 53 Resolver query logging + <abbr title="Domain Name System">DNS</abbr> Firewall CloudWatch metrics</td>
+<td>Query logs (to CloudWatch Logs) record every unique name resolved and feed metric filters and alarms; <abbr title="Domain Name System">DNS</abbr> Firewall publishes per-<abbr title="Virtual Private Cloud">VPC</abbr> and per-rule-group query-volume metrics directly</td>
+</tr>
 </tbody>
 </table>
-<p><abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs and <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are complementary, not alternatives. Lattice logs tell you <em>what happened at the application layer</em> (which service called which, with what identity, and what the response was). Flow Logs tell you <em>what happened at the network layer</em> (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, use both to get full request-to-packet visibility.</p>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs and <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are complementary, not alternatives. <abbr title="Virtual Private Cloud">VPC</abbr> Lattice logs tell you <em>what happened at the application layer</em> (which service called which, with what identity, and what the response was). Flow Logs tell you <em>what happened at the network layer</em> (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, use both to get full request-to-packet visibility.</p>
 <h2 id="combining-internal-traffic-monitoring-with-other-services">Combining internal traffic monitoring with other services<a class="headerlink" href="#combining-internal-traffic-monitoring-with-other-services" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2539,6 +2544,7 @@
 <ul>
 <li><strong><a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs are configured at the <abbr title="Virtual Private Cloud">VPC</abbr> level. <abbr title="Virtual Private Cloud">VPC</abbr> design (<abbr title="Classless Inter-Domain Routing">CIDR</abbr>, subnets, route tables) determines what traffic patterns are visible and how to interpret them.</li>
 <li><strong><a href="../../foundation/subnets/">Subnets</a></strong>: Subnet IDs in Flow Logs identify which tier (public, private, data) traffic originates from — essential for security analysis.</li>
+<li><strong><a href="../../foundation/dns/"><abbr title="Domain Name System">DNS</abbr> Architecture</a></strong>: Resolver query logging (delivered to CloudWatch Logs) and <abbr title="Domain Name System">DNS</abbr> Firewall CloudWatch metrics are the <abbr title="Domain Name System">DNS</abbr>-layer complement to Flow Logs — they record and surface what workloads resolve and what <abbr title="Domain Name System">DNS</abbr> Firewall blocks, a signal Flow Logs (which see post-resolution IP traffic) cannot provide.</li>
 </ul>
 <p><strong>Relationship to Connectivity:</strong></p>
 <ul>
@@ -2566,7 +2572,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 23:41:30 UTC">June 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 16, 2026 16:52:31 UTC">October 16, 2026</span>
   </span>
 
     
