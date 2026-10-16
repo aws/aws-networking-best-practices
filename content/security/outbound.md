@@ -125,21 +125,23 @@ Allow-list mode is operationally heavier — every new external dependency requi
 
 AWS provides [managed domain lists](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-managed-domain-lists.html) for DNS Firewall that cover known malware domains, botnet C2 infrastructure, and newly observed domains. Enable these as a baseline block list in every VPC, even when you also run allow-list mode on specific workloads. The managed lists are updated by AWS threat intelligence and require no maintenance from your team.
 
-### Scope egress rules to container workloads
+### Workload-aware egress
 
-In a VPC that runs Amazon ECS tasks or Amazon EKS pods, a subnet or VPC CIDR describes where workloads run, not which workload sends the traffic — a rule that allows `api.payments.example.com` for that CIDR allows it for every workload in it. Task and pod IP addresses change as workloads scale and redeploy, so a static IP set cannot narrow the rule for long. Use a [container association](https://docs.aws.amazon.com/network-firewall/latest/developerguide/container-associations.html) instead: Network Firewall follows task and pod lifecycle events, keeps the running workloads' IP addresses as a dynamic IP set, and lets a stateful rule combine a source workload with the destination controls above — for example, only the payments workloads can reach the payment provider's domain.
+#### Scope egress rules to container workloads
 
-Select workloads with attribute filters: Kubernetes namespaces and labels for Amazon EKS, container-instance attributes for Amazon ECS. Wildcard values group related variants — `app=payments-*` covers `payments-api` and `payments-worker` — so you don't maintain one association per variant. Keep patterns narrow: a broad wildcard extends the rule to any future workload whose name matches.
+In a VPC that runs Amazon ECS tasks or Amazon EKS pods, a CIDR tells you where workloads run but not which one is sending — so a rule allowing `api.payments.example.com` for that CIDR allows it for every workload there, and the task and pod IPs change too fast to pin down with a static IP set. A container association closes that gap: it tracks the running tasks and pods as a dynamic source IP set that a stateful rule can match on, so a rule can name a specific workload as well as a destination — only the payments workloads may reach the payment provider's domain, even though they share the VPC and egress path with everything else.
 
-Validate these constraints before relying on the pattern:
+You choose which workloads an association tracks with attribute filters — Kubernetes namespaces and labels for Amazon EKS, container-instance attributes for Amazon ECS — and a wildcard groups related variants under one filter (`app=payments-*` covers `payments-api` and `payments-worker`). Keep patterns narrow, since a broad wildcard also picks up future workloads whose names happen to match.
 
-* **Amazon EKS** — disable source NAT on the VPC CNI so the firewall sees the pod IP, not the node IP. With source NAT enabled, rules that reference the association never match.
-* **Amazon ECS** — tasks must use `awsvpc` network mode. Attribute filters apply only to tasks on Amazon EC2 container instances; AWS Fargate tasks have no instance attributes, so track them with an unfiltered association.
-* **Rule groups** — a rule group references either container associations or regular IP sets and prefix lists, not both. Keep them in separate rule groups.
-* **IPv6 Amazon EKS clusters** — traffic from pods to IPv4 destinations is always translated to the node's IPv4 address, so pod-scoped rules can't match it. Scope that traffic at the node or subnet level instead.
-* **Multi-account and multi-Region** — a container association can only track clusters in its own account and Region. With centralized egress, where the firewall's rule groups live in a networking account, create an association in each workload account and Region, then share it with the networking account through AWS Resource Access Manager (RAM).
+#### Validate container-association constraints
 
-***Key insight:*** *Domain filtering decides where traffic may go; container associations decide which workload a rule applies to. Together they let workloads that share a VPC and an egress path have different outbound policies.*
+A container association fails open in subtle ways: when a constraint below isn't met the rule simply never matches, with no error. Check these before relying on the pattern:
+
+* **Amazon EKS** — disable source NAT on the VPC CNI, or the firewall sees the node IP instead of the pod IP and the rule never matches.
+* **Amazon ECS** — tasks must use `awsvpc` network mode. Attribute filters work only on Amazon EC2 container instances; Fargate tasks have no attributes, so track them with an unfiltered association.
+* **Rule groups** — a rule group references either container associations or regular IP sets/prefix lists, never both. Keep them separate.
+* **IPv6 Amazon EKS clusters** — pod traffic to IPv4 destinations is translated to the node's IPv4 address (same source-NAT path), so a pod-IP rule can't match it; scope that traffic at the node or subnet level.
+* **Multi-account and multi-Region** — an association tracks clusters only in its own account and Region. For centralized egress, create one in each workload account and Region and share it to the networking account through AWS Resource Access Manager (RAM).
 
 ### Data exfiltration prevention
 
@@ -311,6 +313,7 @@ Network Firewall is **not the right choice** when:
 | **Firewall Manager + Network Firewall** | Centralized rule group management across accounts | Per-VPC or centralized-VPC traffic inspection |
 | **VPC Endpoints + Endpoint Policies** | Private path for AWS service traffic | Authorization scoping (restrict to org buckets, specific KMS keys) |
 | **DNS Firewall + CloudWatch** | Domain filtering and blocking | Alerting on blocked queries, dashboards for egress patterns |
+| **Network Firewall + Amazon ECS / Amazon EKS** | Per-workload egress rules using container associations | Task and pod lifecycle events that keep the source IP set current |
 
 ## Centralized vs. decentralized egress inspection
 
@@ -347,6 +350,14 @@ The [Internet Connectivity](../connectivity/internet.md) page covers the archite
     Managed stateful firewall with Suricata-compatible IPS, domain filtering, and protocol inspection.
 
     [:octicons-arrow-right-24: Network Firewall documentation](https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html)
+
+*   :material-file-document: **Network Firewall container associations**
+
+    ---
+
+    Dynamic IP sets for Amazon ECS tasks and Amazon EKS pods, attribute filters, rule group references, and sharing.
+
+    [:octicons-arrow-right-24: Container associations documentation](https://docs.aws.amazon.com/network-firewall/latest/developerguide/container-associations.html)
 
 *   :material-file-document: **AWS Firewall Manager**
 
