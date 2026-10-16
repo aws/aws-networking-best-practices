@@ -1263,6 +1263,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#workload-aware-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workload-aware egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-exfiltration-prevention" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1974,6 +1985,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#workload-aware-egress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workload-aware egress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#data-exfiltration-prevention" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2176,6 +2198,7 @@
 <p>Network Firewall sits in the data path and inspects actual traffic. It can filter by domain name (matching the SNI field in <abbr title="Transport Layer Security">TLS</abbr> ClientHello or the Host header in HTTP), apply Suricata-compatible IPS signatures to detect known-bad patterns, and enforce protocol compliance. This is the layer that catches what <abbr title="Domain Name System">DNS</abbr> Firewall cannot: hardcoded-IP connections, protocol-level anomalies, and traffic patterns that only become visible in the packet stream.</p>
 <p><strong>What Network Firewall catches</strong>: outbound connections to IPs with no <abbr title="Domain Name System">DNS</abbr> resolution, <abbr title="Transport Layer Security">TLS</abbr> connections to unauthorized domains (via SNI inspection), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.</p>
 <p><strong>What Network Firewall costs</strong>: endpoint hourly charges plus per-GB traffic processing. For a centralized egress <abbr title="Virtual Private Cloud">VPC</abbr> processing terabytes of outbound traffic, Network Firewall costs are significant. This is why <abbr title="Domain Name System">DNS</abbr> Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.</p>
+<p><strong>Which workloads a rule applies to</strong>: rules can be scoped by source workload as well as by destination. For Amazon ECS and Amazon EKS, container associations keep a rule's source IP set aligned with the running tasks and pods, so workloads that share a <abbr title="Virtual Private Cloud">VPC</abbr> can have different egress policies (see <a href="#scope-egress-rules-to-container-workloads">Scope egress rules to container workloads</a>).</p>
 <h3 id="layer-4-vpc-endpoints-path-elimination">Layer 4: <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints (path elimination)<a class="headerlink" href="#layer-4-vpc-endpoints-path-elimination" title="Permanent link">&para;</a></h3>
 <p><abbr title="Virtual Private Cloud">VPC</abbr> endpoints don't filter traffic — they remove it from the egress path entirely. Traffic to <abbr title="Simple Storage Service">S3</abbr>, DynamoDB, and other AWS services via <abbr title="Virtual Private Cloud">VPC</abbr> endpoints never traverses a <abbr title="Network Address Translation">NAT</abbr> gateway, never hits Network Firewall egress rules, and never leaves the AWS network. This reduces cost (no <abbr title="Network Address Translation">NAT</abbr> processing charges), reduces attack surface (no internet path to intercept), and reduces the volume of traffic your inspection layers need to handle.</p>
 <p><strong><em>Key insight:</em></strong> <em>The most secure outbound traffic is traffic that never reaches the internet. Deploy <abbr title="Virtual Private Cloud">VPC</abbr> endpoints for every AWS service your workloads use before tuning your egress filters.</em></p>
@@ -2220,6 +2243,19 @@
 <p>Allow-list mode is operationally heavier — every new external dependency requires a rule update — but it eliminates entire categories of exfiltration risk. Pair it with a self-service process for application teams to request domain additions through your change management system.</p>
 <h4 id="deploy-managed-domain-lists-for-threat-intelligence">Deploy managed domain lists for threat intelligence<a class="headerlink" href="#deploy-managed-domain-lists-for-threat-intelligence" title="Permanent link">&para;</a></h4>
 <p>AWS provides <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-managed-domain-lists.html">managed domain lists</a> for <abbr title="Domain Name System">DNS</abbr> Firewall that cover known malware domains, botnet C2 infrastructure, and newly observed domains. Enable these as a baseline block list in every <abbr title="Virtual Private Cloud">VPC</abbr>, even when you also run allow-list mode on specific workloads. The managed lists are updated by AWS threat intelligence and require no maintenance from your team.</p>
+<h3 id="workload-aware-egress">Workload-aware egress<a class="headerlink" href="#workload-aware-egress" title="Permanent link">&para;</a></h3>
+<h4 id="scope-egress-rules-to-container-workloads">Scope egress rules to container workloads<a class="headerlink" href="#scope-egress-rules-to-container-workloads" title="Permanent link">&para;</a></h4>
+<p>In a <abbr title="Virtual Private Cloud">VPC</abbr> that runs Amazon ECS tasks or Amazon EKS pods, a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> tells you where workloads run but not which one is sending — so a rule allowing <code>api.payments.example.com</code> for that <abbr title="Classless Inter-Domain Routing">CIDR</abbr> allows it for every workload there, and the task and pod IPs change too fast to pin down with a static IP set. A container association closes that gap: it tracks the running tasks and pods as a dynamic source IP set that a stateful rule can match on, so a rule can name a specific workload as well as a destination — only the payments workloads may reach the payment provider's domain, even though they share the <abbr title="Virtual Private Cloud">VPC</abbr> and egress path with everything else.</p>
+<p>You choose which workloads an association tracks with attribute filters — Kubernetes namespaces and labels for Amazon EKS, container-instance attributes for Amazon ECS — and a wildcard groups related variants under one filter (<code>app=payments-*</code> covers <code>payments-api</code> and <code>payments-worker</code>). Keep patterns narrow, since a broad wildcard also picks up future workloads whose names happen to match.</p>
+<h4 id="validate-container-association-constraints">Validate container-association constraints<a class="headerlink" href="#validate-container-association-constraints" title="Permanent link">&para;</a></h4>
+<p>A container association fails open in subtle ways: when a constraint below isn't met the rule simply never matches, with no error. Check these before relying on the pattern:</p>
+<ul>
+<li><strong>Amazon EKS</strong> — disable source <abbr title="Network Address Translation">NAT</abbr> on the <abbr title="Virtual Private Cloud">VPC</abbr> CNI, or the firewall sees the node IP instead of the pod IP and the rule never matches.</li>
+<li><strong>Amazon ECS</strong> — tasks must use <code>awsvpc</code> network mode. Attribute filters work only on Amazon <abbr title="Elastic Compute Cloud">EC2</abbr> container instances; Fargate tasks have no attributes, so track them with an unfiltered association.</li>
+<li><strong>Rule groups</strong> — a rule group references either container associations or regular IP sets/prefix lists, never both. Keep them separate.</li>
+<li><strong><abbr title="Internet Protocol version 6">IPv6</abbr> Amazon EKS clusters</strong> — pod traffic to <abbr title="Internet Protocol version 4">IPv4</abbr> destinations is translated to the node's <abbr title="Internet Protocol version 4">IPv4</abbr> address (same source-<abbr title="Network Address Translation">NAT</abbr> path), so a pod-IP rule can't match it; scope that traffic at the node or subnet level.</li>
+<li><strong>Multi-account and multi-Region</strong> — an association tracks clusters only in its own account and Region. For centralized egress, create one in each workload account and Region and share it to the networking account through AWS Resource Access Manager (RAM).</li>
+</ul>
 <h3 id="data-exfiltration-prevention">Data exfiltration prevention<a class="headerlink" href="#data-exfiltration-prevention" title="Permanent link">&para;</a></h3>
 <h4 id="block-dns-tunneling-with-dns-firewall">Block <abbr title="Domain Name System">DNS</abbr> tunneling with <abbr title="Domain Name System">DNS</abbr> Firewall<a class="headerlink" href="#block-dns-tunneling-with-dns-firewall" title="Permanent link">&para;</a></h4>
 <p><abbr title="Domain Name System">DNS</abbr> tunneling encodes data in <abbr title="Domain Name System">DNS</abbr> queries to exfiltrate information through what appears to be normal <abbr title="Domain Name System">DNS</abbr> traffic. <abbr title="Domain Name System">DNS</abbr> Firewall's managed threat lists include known tunneling domains, and the service can detect anomalous query patterns. Enable the <code>AWSManagedDomainsMalwareDomainList</code> and <code>AWSManagedDomainsAggregateThreatList</code> in every <abbr title="Virtual Private Cloud">VPC</abbr> as a baseline.</p>
@@ -2378,6 +2414,7 @@
 <li>Compliance requires logging of all outbound connections with deep metadata</li>
 <li>You must catch connections to hardcoded IPs that bypass <abbr title="Domain Name System">DNS</abbr></li>
 <li>Domain filtering via SNI is needed as a backstop to <abbr title="Domain Name System">DNS</abbr> Firewall</li>
+<li>Egress policy must differ between Amazon ECS or Amazon EKS workloads that share a <abbr title="Virtual Private Cloud">VPC</abbr> or subnet (use container associations)</li>
 </ul>
 <p>Network Firewall is <strong>not the right choice</strong> when:</p>
 <ul>
@@ -2447,6 +2484,11 @@
 <td>Domain filtering and blocking</td>
 <td>Alerting on blocked queries, dashboards for egress patterns</td>
 </tr>
+<tr>
+<td><strong>Network Firewall + Amazon ECS / Amazon EKS</strong></td>
+<td>Per-workload egress rules using container associations</td>
+<td>Task and pod lifecycle events that keep the source IP set current</td>
+</tr>
 </tbody>
 </table>
 <h2 id="centralized-vs-decentralized-egress-inspection">Centralized vs. decentralized egress inspection<a class="headerlink" href="#centralized-vs-decentralized-egress-inspection" title="Permanent link">&para;</a></h2>
@@ -2514,6 +2556,12 @@
 <p><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/what-is-aws-network-firewall.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Network Firewall documentation</a></p>
 </li>
 <li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Network Firewall container associations</strong></p>
+<hr />
+<p>Dynamic IP sets for Amazon ECS tasks and Amazon EKS pods, attribute filters, rule group references, and sharing.</p>
+<p><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/container-associations.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Container associations documentation</a></p>
+</li>
+<li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Firewall Manager</strong></p>
 <hr />
 <p>Centralized security policy management across AWS Organizations for AWS <abbr title="Web Application Firewall">WAF</abbr>, Network Firewall, <abbr title="Domain Name System">DNS</abbr> Firewall, and security groups.</p>
@@ -2577,7 +2625,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 01:15:29 UTC">June 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 16, 2026 16:28:57 UTC">October 16, 2026</span>
   </span>
 
     
