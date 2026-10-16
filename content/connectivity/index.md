@@ -55,8 +55,8 @@ The connectivity patterns you choose shape cost, latency, security boundaries, a
 
 **Key services:**
 
-*   **AWS Verified Access** — Zero-trust application-level access with per-request identity and device posture evaluation; the preferred option for new use cases
-*   **AWS Client VPN** — Network-level user access into VPCs for cases that genuinely require IP reachability
+*   **AWS Verified Access** — Zero-trust application-level access with per-request authorization on identity, device posture, and request context, and no VPN to operate for web applications; the preferred option for new use cases
+*   **AWS Client VPN** — Network-level user access into VPCs for cases that genuinely require IP reachability, with optional device posture checks
 
 ***Key insight:*** *Start with AWS Verified Access for every new application access use case. Use Client VPN only when the application genuinely requires the user to have a routable IP inside the VPC.*
 
