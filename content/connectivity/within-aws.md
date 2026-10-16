@@ -398,7 +398,7 @@ VPC Resources address a common pain point: exposing a managed database, a legacy
 
     ---
 
-    Represent a resource (or group of resources) by IP address, domain name, ARN (for example, an RDS DB instance), or a range of addresses by CIDR. For single resources and groups, consumers can connect by the custom domain name you assign rather than the actual IP.
+    Represent a resource (or group of resources) by IP address, domain name, ARN (for example, an RDS DB instance), or a range of addresses by CIDR. For single resources and groups, consumers can connect by the custom domain name you assign rather than the actual IP. A CIDR range is different: no custom domain name, and consumers reach it through a tunnel endpoint using GENEVE encapsulation rather than a DNS name.
 
 *   :material-gate: **Resource gateway**
 
@@ -428,7 +428,7 @@ VPC Resources address a common pain point: exposing a managed database, a legacy
 
     ---
 
-    Because traffic is NATed through the resource gateway's IPs, consumer and provider VPCs can have overlapping CIDR blocks. This is a major operational advantage compared to peering / Transit Gateway / AWS Cloud WAN.
+    Because traffic is NATed through the resource gateway's IPs, consumer and provider VPCs can have overlapping CIDR blocks. This applies to single, group, and ARN configurations; it does not extend to CIDR-range configurations, where the consumer addresses hosts by their real provider-side IPs inside the tunnel. This is a major operational advantage compared to VPC peering / Transit Gateway / AWS Cloud WAN.
 
 *   :material-lan-connect: **Works with on-premises and third parties**
 
@@ -450,7 +450,7 @@ Like VPC Lattice services, VPC Resources operate independently of your network t
 
 This is particularly valuable in two common situations:
 
-* **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. Peering and Transit Gateway both require non-overlapping CIDRs; VPC Resources do not.
+* **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. VPC Peering, Transit Gateway, and Cloud WAN require non-overlapping CIDRs; VPC Resources do not. This holds for single, group, and ARN configurations; CIDR-range configurations do not NAT, so overlapping address space between consumer and provider needs per-host routes on the consumer side and is best avoided.
 * **Least-privilege exposure**: Expose a specific resource or a bounded set of addresses, not two entire networks. A resource configuration is an explicit, scoped entry point, easier to reason about than a route table joining whole VPCs. Scope it to a single resource (one IP, DNS name, or ARN) for the tightest exposure, or to a CIDR range when consumers need several hosts in one segment — still scoped and unidirectional, not the full reachability of Transit Gateway, Cloud WAN, or VPC peering.
 
 ### VPC Resources Best Practices
@@ -462,6 +462,9 @@ There are two ways to expose a resource configuration to consumers: a standalone
 For anything beyond a handful of consumer VPCs, the service network approach is the recommended pattern. Consumers associate their VPC with the service network once and gain access to every resource (and service) the provider publishes into that service network. Provider teams add or remove resources by updating the service network, without each consumer reconfiguring their endpoints.
 
 Use standalone resource endpoints for targeted, short-lived, or strictly limited consumer scenarios, for example, granting a single application VPC temporary access to a specific resource without making it part of a broader service network.
+
+!!! info "This recommendation covers single, group, and ARN configurations"
+    CIDR-range configurations cannot join a service network. Each consumer VPC reaches them through its own tunnel endpoint, so the service-network scale-out pattern does not apply, and the choice between standalone endpoint and service network does not arise.
 
 #### Organize resource configurations alongside related services
 
@@ -485,6 +488,10 @@ Consumers can let VPC Lattice manage a private hosted zone in their VPC for the 
 
 Configure access logging on the service network or resource configuration. Logs capture connection attempts, source identity, and auth decisions, which is essential for security auditing and troubleshooting. Without logs, diagnosing a rejected connection through a resource gateway is significantly harder.
 
+#### Account for the tunnel endpoint when planning a CIDR-range configuration
+
+A CIDR-range configuration is reached through a tunnel endpoint, a separate billable endpoint (charged per hour and per GB on top of resource gateway processing) with its own placement rules. Place its subnets in Availability Zones that overlap the resource gateway's, and compare Availability Zone IDs rather than names across accounts, since a mismatch is a common cause of failed creation.
+
 #### Plan for IPv6 from the start
 
 Resource gateways support IPv4, IPv6, and dual-stack addressing. If either the consumers or the resource are IPv6-capable, configure dual-stack resource gateways from the beginning. Retrofitting IPv6 later requires recreating the gateway.
@@ -496,13 +503,15 @@ VPC Resources are the right choice for any pattern where a small number of provi
 Consider VPC Resources when:
 
 * You need to give multiple consumer VPCs or accounts private access to a specific database, cache, message broker, or other TCP endpoint.
-* You need to give a vendor or partner account private access to *several* hosts inside one network segment, where a single resource configuration scoped to a CIDR range fits better than one per host, without opening full network-level routing between the VPCs.
+* You need to give a vendor or partner account private access to a network segment whose hosts are ephemeral or not known in advance, so enumerating them as single or group configurations is impractical, without opening full network-level routing between the VPCs.
 * You want to expose an on-premises resource (reachable through Direct Connect or VPN in the provider VPC) to AWS consumers without extending the underlying hybrid connectivity to every consumer VPC.
 * Consumer and provider VPCs have overlapping CIDRs, or you expect they might in the future, and you want to avoid the IP address management burden.
 * You want unidirectional access (consumer to resource) without opening a bidirectional network-level path.
 * You need access logs for TCP resources, which PrivateLink endpoint services don't provide natively.
 
 For HTTP/HTTPS/gRPC services with routing rules, weighted deployments, and multiple compute backends, use [VPC Lattice services](#application-layer-service-communication-with-amazon-vpc-lattice) instead. Both capabilities can share a single service network.
+
+Within VPC Resources, reach for a CIDR-range configuration only when the segment's hosts are ephemeral or not known in advance. Prefer a single or group configuration through a service network when many consumers should share one association (a CIDR range cannot join a service network, so each consumer needs its own tunnel endpoint), when consumers cannot run GENEVE encapsulation on a host they operate, or when the workload needs auth policies, custom domain names, or non-TCP protocols, none of which the tunnel-endpoint path provides.
 
 #### Migrating from PrivateLink endpoint services to VPC resources
 
@@ -582,6 +591,14 @@ With a single service network association, the consumer reaches all three. The c
     Architecture patterns and implementation guides covering both services and resources.
 
     [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-vpc-lattice/)
+
+*   :material-file-document: **Network segments through PrivateLink**
+
+    ---
+
+    How tunnel endpoints work for CIDR-range configurations, including GENEVE encapsulation requirements, DNS resolution through the tunnel, and Availability Zone placement.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc/latest/privatelink/privatelink-access-cidr-ranges.html)
 
 </div>
 
@@ -1006,7 +1023,7 @@ Organizations building a new multi-account AWS network have the opportunity to s
 
 1. **Network backbone**: AWS Cloud WAN provides centralized, policy-driven network management across Regions and accounts from day one, avoiding the need to stitch together individual Transit Gateways later.
 2. **Service communication**: VPC Lattice services let application teams connect HTTP/HTTPS/gRPC workloads across VPCs and accounts with IAM auth policies and traffic management, without waiting for network-level changes.
-3. **Private resource access**: VPC Resources expose databases, caches, and on-premises endpoints to consumer VPCs and accounts through service networks, with overlapping CIDRs supported and no NLB to maintain.
+3. **Private resource access**: VPC Resources expose databases, caches, and on-premises endpoints to consumer VPCs and accounts through service networks, with overlapping CIDRs supported and no NLB to maintain (for single, group, and ARN configurations; CIDR-range configurations are reached directly through a tunnel endpoint rather than a service network).
 4. **AWS service access**: PrivateLink gateway endpoints for S3 and DynamoDB in every VPC (free), plus interface endpoints for frequently used AWS services in private subnets.
 5. **Targeted connections**: VPC Peering for specific VPC pairs where direct low-latency or high-throughput communication justifies a dedicated connection.
 
