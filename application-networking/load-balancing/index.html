@@ -1146,6 +1146,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#manage-flow-lifetime-and-failure-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manage flow lifetime and failure recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#gateway-load-balancer-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2091,6 +2102,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#manage-flow-lifetime-and-failure-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manage flow lifetime and failure recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#gateway-load-balancer-best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2716,34 +2738,64 @@
 </li>
 </ul>
 </div>
-<h3 id="gateway-load-balancer-best-practices">Gateway Load Balancer best practices<a class="headerlink" href="#gateway-load-balancer-best-practices" title="Permanent link">&para;</a></h3>
-<h4 id="tune-timeouts-so-the-appliance-the-gwlb-and-the-client-agree">Tune timeouts so the appliance, the <abbr title="Gateway Load Balancer">GWLB</abbr>, and the client agree<a class="headerlink" href="#tune-timeouts-so-the-appliance-the-gwlb-and-the-client-agree" title="Permanent link">&para;</a></h4>
-<p>When the <abbr title="Gateway Load Balancer">GWLB</abbr> removes a flow from its connection table before the appliance does, return-path packets can be hashed to a different appliance, which is fatal for stateful inspection. Keep all three sides in agreement:</p>
+<h3 id="manage-flow-lifetime-and-failure-recovery">Manage flow lifetime and failure recovery<a class="headerlink" href="#manage-flow-lifetime-and-failure-recovery" title="Permanent link">&para;</a></h3>
+<p>A stateful appliance, <abbr title="Gateway Load Balancer">GWLB</abbr>, and the <abbr title="Transmission Control Protocol">TCP</abbr> endpoints must agree about when a flow is still usable. If <abbr title="Gateway Load Balancer">GWLB</abbr> and the appliance expire flow state at different times, one side can discard state while the other still treats the flow as active, causing dropped traffic or inconsistent stateful inspection. If an appliance fails but <abbr title="Gateway Load Balancer">GWLB</abbr> keeps the flow, senders can wait minutes for <abbr title="Transmission Control Protocol">TCP</abbr> retries to expire.</p>
 <table>
 <thead>
 <tr>
 <th>Flow type</th>
 <th><abbr title="Gateway Load Balancer">GWLB</abbr> idle timeout</th>
 <th>Configurable?</th>
-<th>Notes</th>
+<th>Guidance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><abbr title="Transmission Control Protocol">TCP</abbr></td>
 <td>350 seconds (default)</td>
-<td><strong>Yes</strong>, 60–6000 seconds — but only with 5-tuple flow stickiness. 3-tuple and 2-tuple stickiness are locked to the default.</td>
-<td>Match the appliance's session timeout to the <abbr title="Gateway Load Balancer">GWLB</abbr> timeout. Many firewall vendors default to 3600 seconds, which is fatal: the appliance holds a session the <abbr title="Gateway Load Balancer">GWLB</abbr> has already torn down and sends return packets to the wrong target.</td>
+<td><strong>Yes</strong>, 60–6000 seconds — only with 5-tuple flow stickiness.</td>
+<td>Match the appliance session timeout to the <abbr title="Gateway Load Balancer">GWLB</abbr> timeout. Configure application or OS keep-alive below that timeout for long-lived flows.</td>
 </tr>
 <tr>
 <td>Non-<abbr title="Transmission Control Protocol">TCP</abbr> (<abbr title="User Datagram Protocol">UDP</abbr>, <abbr title="Internet Control Message Protocol">ICMP</abbr>)</td>
 <td>120 seconds</td>
 <td>No</td>
-<td>Implement keep-alive at the application level — the OS does not maintain <abbr title="User Datagram Protocol">UDP</abbr> timers.</td>
+<td><abbr title="User Datagram Protocol">UDP</abbr> has no transport-level keep-alive; the application must generate periodic traffic when the flow must remain active.</td>
 </tr>
 </tbody>
 </table>
-<p>For <abbr title="Transmission Control Protocol">TCP</abbr>, also configure keep-alive on the application or OS to fire below the <abbr title="Gateway Load Balancer">GWLB</abbr> idle timeout (<code>net.ipv4.tcp_keepalive_time = 60</code> on Linux, or another value below the <abbr title="Gateway Load Balancer">GWLB</abbr> timeout) so idle connections are kept alive end-to-end. Tune the <abbr title="Gateway Load Balancer">GWLB</abbr> <abbr title="Transmission Control Protocol">TCP</abbr> idle timeout deliberately when the workload has long-lived flows (database synchronization, persistent message buses); raising it also increases the chance of stale entries in the connection table.</p>
+<p>When setting the <abbr title="Transmission Control Protocol">TCP</abbr> idle timeout above 350 seconds, verify that the target instance's <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/security-group-connection-tracking.html">connection-tracking idle timeout</a> is equal to or greater than the <abbr title="Gateway Load Balancer">GWLB</abbr> timeout. Otherwise, the target can silently discard connection state before <abbr title="Gateway Load Balancer">GWLB</abbr> closes the flow.</p>
+<p>For <abbr title="Transmission Control Protocol">TCP</abbr> flows, decide how senders learn that an existing flow is no longer viable. By default, <abbr title="Gateway Load Balancer">GWLB</abbr> continues forwarding an existing flow to its original target after that target becomes unhealthy or is deregistered, and silently removes an idle flow when its timeout expires. <abbr title="Transmission Control Protocol">TCP</abbr> Reset is opt-in and returns an RST in response to the next packet, allowing the sender to establish a new flow instead of waiting for <abbr title="Transmission Control Protocol">TCP</abbr> retry and exponential back-off.</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Setting</th>
+<th>When <abbr title="Gateway Load Balancer">GWLB</abbr> sends the reset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Target becomes unhealthy</td>
+<td><code>send_tcp_reset.on_unhealthy.enabled</code> target group attribute</td>
+<td>After the configured health checks mark the target unhealthy.</td>
+</tr>
+<tr>
+<td>Target is deregistered</td>
+<td><code>send_tcp_reset.on_deregistration.enabled</code> target group attribute</td>
+<td>After the connection-draining period elapses.</td>
+</tr>
+<tr>
+<td><abbr title="Transmission Control Protocol">TCP</abbr> flow idle timeout expires</td>
+<td><code>send_tcp_reset.on_idle_timeout.enabled</code> listener attribute</td>
+<td>When <abbr title="Gateway Load Balancer">GWLB</abbr> next receives traffic for the expired flow; this also covers non-SYN <abbr title="Transmission Control Protocol">TCP</abbr> packets for flows no longer in the flow table.</td>
+</tr>
+</tbody>
+</table>
+<p>For stateful <abbr title="Transmission Control Protocol">TCP</abbr> inspection fleets whose endpoints reconnect after an RST, enable <abbr title="Transmission Control Protocol">TCP</abbr> Reset for the applicable triggers. Retain the default only for compatibility, or choose target failover <code>rebalance</code> when redistributing flows away from a failed target matters more than preserving the existing appliance's flow state.</p>
+<p>All three reset settings are <strong>off by default</strong>, including on existing GWLBs. <abbr title="Transmission Control Protocol">TCP</abbr> Reset applies only to <abbr title="Transmission Control Protocol">TCP</abbr>; <abbr title="User Datagram Protocol">UDP</abbr>, <abbr title="Internet Control Message Protocol">ICMP</abbr>, and other non-<abbr title="Transmission Control Protocol">TCP</abbr> traffic are unaffected. <abbr title="Transmission Control Protocol">TCP</abbr> Reset requires 5-tuple flow stickiness and can't be enabled on target groups with <code>stickiness.enabled</code> set to <code>true</code> (2-tuple or 3-tuple). Per trigger, the reset and target-failover <code>rebalance</code> settings for target failure (and for deregistration) are mutually exclusive. Reset does not bypass health-check detection or connection draining, so tune those timers as part of the same recovery design. Monitor <code>TCP_GWLB_Reset_Count</code> in CloudWatch to confirm the expected resets occur.</p>
+<p>See <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/update-idle-timeout.html">idle timeout</a>, <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/gateway-listeners.html#listener-attributes">listener attributes</a>, and <a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/edit-target-group-attributes.html">target group attributes</a> for the exact controls.</p>
+<h3 id="gateway-load-balancer-best-practices">Gateway Load Balancer best practices<a class="headerlink" href="#gateway-load-balancer-best-practices" title="Permanent link">&para;</a></h3>
 <h4 id="plan-for-availability-zone-resilience_2">Plan for Availability Zone resilience<a class="headerlink" href="#plan-for-availability-zone-resilience_2" title="Permanent link">&para;</a></h4>
 <p>A single-<abbr title="Availability Zone">AZ</abbr> appliance deployment behind <abbr title="Gateway Load Balancer">GWLB</abbr> is a single point of failure for inspection. <abbr title="Gateway Load Balancer">GWLB</abbr>'s cross-zone load balancing is <strong>off</strong> by default, which is usually correct as it isolates Availability Zone failures so a failed Availability Zone doesn't mask itself behind cross-zone routing.</p>
 <ul>
@@ -2868,7 +2920,7 @@
 <ol>
 <li><strong>Existing ALBs</strong> keep their role. Adopt CloudFront <abbr title="Virtual Private Cloud">VPC</abbr> Origins on new <abbr title="Virtual Private Cloud">VPC</abbr>-hosted L7 workloads; add AWS <abbr title="Web Application Firewall">WAF</abbr> (centrally managed through Firewall Manager) where it isn't already attached; turn on Automatic Target Weights for workloads that have shown gray-failure incidents; enable zonal shift through ARC.</li>
 <li><strong>Existing NLBs without security groups</strong> can stay running, with target-side security groups still doing the access control. New NLBs and recreated NLBs should be created with security groups attached. Enable zonal shift through ARC on production NLBs.</li>
-<li><strong>Existing <abbr title="Gateway Load Balancer">GWLB</abbr> deployments</strong> continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the <abbr title="Gateway Load Balancer">GWLB</abbr>, the appliances, and the workloads, that the appliance <abbr title="Maximum Transmission Unit">MTU</abbr> is at least 8568 bytes, and that <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints are deployed per Availability Zone in every consuming <abbr title="Virtual Private Cloud">VPC</abbr>.</li>
+<li><strong>Existing <abbr title="Gateway Load Balancer">GWLB</abbr> deployments</strong> continue to work. Re-validate that Transit Gateway or AWS Cloud WAN Appliance Mode is enabled for east-west inspection paths, that timeouts are aligned across the <abbr title="Gateway Load Balancer">GWLB</abbr>, the appliances, and the workloads, that the appliance <abbr title="Maximum Transmission Unit">MTU</abbr> is at least 8568 bytes, and that <abbr title="Gateway Load Balancer">GWLB</abbr> endpoints are deployed per Availability Zone in every consuming <abbr title="Virtual Private Cloud">VPC</abbr>. For <abbr title="Transmission Control Protocol">TCP</abbr> inspection fleets, evaluate enabling <abbr title="Transmission Control Protocol">TCP</abbr> Reset for target failure, deregistration, and idle-timeout expiry — all three settings are off by default, so existing deployments retain the previous behavior until you opt in.</li>
 <li><strong>Classic Load Balancer</strong> is a legacy choice. Plan migration to <abbr title="Application Load Balancer">ALB</abbr> (for HTTP/HTTPS) or <abbr title="Network Load Balancer">NLB</abbr> (for L4) opportunistically; <abbr title="Classic Load Balancer">CLB</abbr> is supported but does not receive new features and should not be the target for new workloads.</li>
 <li><strong><abbr title="Internet Protocol version 6">IPv6</abbr> adoption on existing load balancers</strong> is a per-listener decision. ALBs and NLBs can be moved to dual-stack on a new listener without disrupting the existing <abbr title="Internet Protocol version 4">IPv4</abbr> listener; plan the rollout per workload.</li>
 </ol>
@@ -2894,7 +2946,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 1, 2026 20:41:18 UTC">August 1, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 16, 2026 17:14:40 UTC">October 16, 2026</span>
   </span>
 
     
