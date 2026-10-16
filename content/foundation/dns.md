@@ -112,6 +112,12 @@ Resolver query logging captures every DNS query made from associated VPCs — th
 
 Query logging is the DNS equivalent of VPC Flow Logs: it provides a complete record of what your workloads tried to reach by name. Without it, investigating DNS-related incidents (exfiltration over DNS tunneling, C2 callbacks, misconfigured forwarding) requires guesswork.
 
+#### Turn DNS query logs and DNS Firewall activity into metrics and alarms
+
+To alert on DNS activity rather than just retain it, deliver Resolver query logs to CloudWatch Logs: metric filters, Contributor Insights, and Logs Insights run on log groups, not on the S3 copy you keep for forensics. DNS Firewall also publishes per-VPC and per-rule-group query-volume metrics to CloudWatch every few minutes, which you can alarm on directly without parsing logs.
+
+Alarm on a baseline you establish, not a fixed count: query logs record only unique queries, so lookups answered from the cache are not logged and counts run low. Treat this as detection, not prevention — it sees only what reaches the resolver, so DNS-over-HTTPS and hardcoded-IP traffic bypass it; keep Network Firewall or other inspection for those.
+
 ### IPv6 considerations
 
 #### Configure dual-stack Resolver endpoints from the start
@@ -200,3 +206,8 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 **Relationship to Application Networking topics:**
 
 * **[Service to Service](../application-networking/service-to-service.md)**: Private hosted zones and Route 53 alias records are the primary service discovery mechanism covered on that page. DNS architecture decisions directly shape how services find each other.
+
+**Relationship to Observability topics:**
+
+* **[AWS Services Monitoring](../observability/service-monitoring.md)**: Covers the existing Route 53 Resolver and DNS Firewall CloudWatch metrics (including `FirewallRuleGroupQueryVolume`) and dashboards that the DNS metrics-and-alarms guidance on this page builds on.
+* **[Internal Traffic Monitoring](../observability/internal-traffic.md)**: Positions DNS query logging and DNS Firewall metrics as the DNS-layer signal alongside VPC and Transit Gateway Flow Logs.

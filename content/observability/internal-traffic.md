@@ -265,8 +265,9 @@ Each internal traffic monitoring tool answers different questions. Using the wro
 | "Was this request authorized by the auth policy?" | VPC Lattice Access Logs | Logs include auth policy decision (allow/deny) and principal |
 | "What's the total network throughput for this instance?" | CloudWatch Metrics (NetworkIn/Out) | Pre-aggregated metrics without log parsing |
 | "Is IPv6 traffic flowing in this VPC?" | VPC Flow Logs + `type` field | Filter on type=6 to isolate IPv6 flows |
+| "What is my DNS layer resolving and blocking?" | Route 53 Resolver query logging + DNS Firewall CloudWatch metrics | Query logs (to CloudWatch Logs) record every unique name resolved and feed metric filters and alarms; DNS Firewall publishes per-VPC and per-rule-group query-volume metrics directly |
 
-VPC Lattice access logs and VPC Flow Logs are complementary, not alternatives. Lattice logs tell you *what happened at the application layer* (which service called which, with what identity, and what the response was). Flow Logs tell you *what happened at the network layer* (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through VPC Lattice, use both to get full request-to-packet visibility.
+VPC Lattice access logs and VPC Flow Logs are complementary, not alternatives. VPC Lattice logs tell you *what happened at the application layer* (which service called which, with what identity, and what the response was). Flow Logs tell you *what happened at the network layer* (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through VPC Lattice, use both to get full request-to-packet visibility.
 
 ## Combining internal traffic monitoring with other services
 
@@ -372,6 +373,7 @@ However, Transit Gateway Flow Logs only capture traffic that *crosses* the Trans
 
 * **[Amazon VPC](../foundation/vpc.md)**: VPC Flow Logs are configured at the VPC level. VPC design (CIDR, subnets, route tables) determines what traffic patterns are visible and how to interpret them.
 * **[Subnets](../foundation/subnets.md)**: Subnet IDs in Flow Logs identify which tier (public, private, data) traffic originates from — essential for security analysis.
+* **[DNS Architecture](../foundation/dns.md)**: Resolver query logging (delivered to CloudWatch Logs) and DNS Firewall CloudWatch metrics are the DNS-layer complement to Flow Logs — they record and surface what workloads resolve and what DNS Firewall blocks, a signal Flow Logs (which see post-resolution IP traffic) cannot provide.
 
 **Relationship to Connectivity:**
 
