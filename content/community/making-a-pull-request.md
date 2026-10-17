@@ -31,6 +31,8 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 
     * [ ] Tested that documentation builds without errors
 
+    * [ ] Filled in the [Changelog entry](#changelog-entries) section if your change affects what a reader would do
+
 ## Step-by-Step Process
 
 ### 1. Fork the repository on GitHub
@@ -109,6 +111,24 @@ After your pull request is merged:
 * Consider contributing more - we appreciate ongoing contributors!
 
 Thank you for helping improve AWS networking guidance for the community.
+
+## Changelog entries
+
+The [changelog](../changelog.md) lists the changes a reader would act on: new guidance, changed recommendations, corrections that change what a reader would do, and removed guidance. A change belongs there if a reader who applied the old version of the page would now make a different decision. The [conventions](conventions.md#changelog) describe the four change types and the entry format.
+
+**If you are the author:**
+
+1. Fill in the **Changelog entry** section of the pull request template. Tick the change type you think fits, link the affected page and heading, and summarize the change. For a changed recommendation or a removal, write "Previously X. Now Y." Your tick is a suggestion: a maintainer sets the final type with a label.
+2. Leave the section blank for typo fixes, dead-link fixes, formatting, and CI changes.
+
+**If you are a maintainer:**
+
+1. Review the entry at review time. If the pull request belongs in the changelog, apply exactly one type label: `changelog:new`, `changelog:changed`, `changelog:correction`, or `changelog:removed`. The label is the authoritative type. If the author ticked the wrong type, change the label instead of editing the description. Without a type label, the pull request is excluded even if the author filled in the section.
+2. After merging, run `./scripts/generate-changelog.sh --since YYYY-MM-DD` to print formatted entries for merged pull requests that carry a type label. The script requires the [GitHub CLI](https://cli.github.com/) and prints to your terminal. It doesn't edit `content/changelog.md` or commit anything.
+3. Review the output, paste it into the matching month in `content/changelog.md`, and commit it. Pull requests with a missing or malformed section, a label that disagrees with the author's ticked type, or more than one type label appear as warnings on stderr. On a mismatch the script uses the label. For the other cases, fix the pull request description or labels and run the script again.
+
+!!! tip "Test the script offline"
+    Run `./scripts/generate-changelog.sh --since 2026-07-01 --input scripts/fixtures/changelog-prs.json` to format the sample pull requests in the fixture file without calling GitHub.
 
 ## Environment setup
 

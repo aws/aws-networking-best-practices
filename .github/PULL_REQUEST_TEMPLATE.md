@@ -35,6 +35,25 @@ Tick the boxes before submitting:
 - [ ] Documentation update
 - [ ] Refactoring/reorganization
 
+## 📣 Changelog entry
+<!--
+Leave this section blank if this is a typo, link, formatting, or CI change.
+Fill it in if a reader who applied the old version of the page would now make a different decision.
+Tick the type you think fits. This is a suggestion: a maintainer decides the type by applying exactly one label (`changelog:new`, `changelog:changed`, `changelog:correction`, or `changelog:removed`). The label is authoritative, and maintainers correct the type by changing the label, not by editing this checkbox. Without a label, the entry is not published.
+Page(s) affected: use links relative to the content/ folder, for example [Outbound Controls](security/outbound.md#anchor).
+For 🔄 and 🗑️, write the summary as "Previously X. Now Y."
+-->
+Suggested type (a maintainer confirms it with a `changelog:*` label):
+
+- [ ] 🆕 New guidance
+- [ ] 🔄 Changed recommendation
+- [ ] 🔧 Correction
+- [ ] 🗑️ Removed
+
+**Page(s) affected:**
+
+**Summary (previous → new for 🔄 and 🗑️):**
+
 ## 🧪 Testing
 - [ ] Ran `./scripts/validate-pr.sh` locally
 - [ ] Checked for broken internal links

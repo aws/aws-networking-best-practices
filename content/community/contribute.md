@@ -110,6 +110,16 @@ with our community.
 !!! note "Community Guidelines"
     All contributions are public and permanent. Please be constructive, respectful, and follow our [Code of Conduct](https://aws.github.io/code-of-conduct).
 
+## Changelog
+
+Changes that alter a reader's decision, such as new guidance, a changed recommendation, a correction, or removed guidance, are recorded in the [changelog](../changelog.md). The flow has three steps:
+
+1. **Author:** fill in the "Changelog entry" section of the pull request template and tick the type you think fits. Leave it blank for typo, link, formatting, and CI changes.
+2. **Maintainer:** apply exactly one `changelog:*` label (`changelog:new`, `changelog:changed`, `changelog:correction`, or `changelog:removed`) at review time. The label confirms the pull request belongs in the changelog and sets its type. To correct the type, change the label. Pull requests without a type label are excluded.
+3. **Maintainer:** after merging, run `./scripts/generate-changelog.sh --since YYYY-MM-DD` and paste the output into `content/changelog.md`. The script only prints entries; it never edits the page or commits.
+
+See [Changelog entries](making-a-pull-request.md#changelog-entries) for details and [Conventions](conventions.md#changelog) for the change types and entry format.
+
 ## Before You Contribute
 
 Here's a quick checklist to ensure your contribution is helpful and gets the attention it deserves:

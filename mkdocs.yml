@@ -189,6 +189,7 @@ nav:
       - External Traffic: observability/external-traffic.md
       - AWS Services: observability/service-monitoring.md
       - Notifications: observability/notifications.md
+  - Changelog: changelog.md
   - Community:
       - community/index.md
       - How to contribute: community/contribute.md
