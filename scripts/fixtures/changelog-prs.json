@@ -1,0 +1,72 @@
+[
+  {
+    "number": 301,
+    "title": "Add widget guidance",
+    "mergedAt": "2026-11-20T10:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/301",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [x] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [ ] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** [Outbound Controls](security/outbound.md#scope-egress-rules-to-container-workloads)\n\n**Summary (previous → new for 🔄 and 🗑️):** Adds a widget pattern.\nIt spans two lines.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 302,
+    "title": "Change default",
+    "mergedAt": "2026-11-05T23:59:59Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/302",
+    "body": "# 📝 Description\r\n<!-- 🚨 IMPORTANT: replace -->\r\nSome description.\r\n\r\n# Checklist:\r\n\r\n## 🔄 Type of Change\r\n- [x] New content\r\n\r\n## 📣 Changelog entry\r\n<!--\r\nLeave this section blank if this is a typo.\r\n- [x] example inside a comment must be ignored\r\n-->\r\n- [ ] 🆕 New guidance\r\n- [x] 🔄 Changed recommendation\r\n- [ ] 🔧 Correction\r\n- [ ] 🗑️ Removed\r\n\r\n**Page(s) affected:** [Load Balancing](application-networking/load-balancing.md), [DNS](foundation/dns.md#x)\r\n\r\n**Summary (previous → new for 🔄 and 🗑️):** Use per-AZ NAT only. → Use per-VPC NAT with a shared route table.\r\n\r\n## 🧪 Testing\r\n- [x] Ran validate\r\n"
+  },
+  {
+    "number": 303,
+    "title": "Retire section",
+    "mergedAt": "2026-10-16T17:58:15Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/303",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [ ] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [ ] 🔧 Correction\n- [x] 🗑️ Removed\n\n**Page(s) affected:** [Remote Access](connectivity/remote-access.md)\n\n**Summary (previous → new for 🔄 and 🗑️):** Previously the page recommended X. Now it recommends Y.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 304,
+    "title": "Fix diagram",
+    "mergedAt": "2026-10-02T08:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/304",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [ ] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [x] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** [Perimeter Controls](content/security/perimeter-inbound.md)\n\n**Summary (previous → new for 🔄 and 🗑️):** The diagram showed NACLs in the wrong layer.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 305,
+    "title": "Labeled but no section",
+    "mergedAt": "2026-10-10T08:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/305",
+    "body": "# Description\nJust text, no changelog section."
+  },
+  {
+    "number": 306,
+    "title": "Two types ticked",
+    "mergedAt": "2026-10-09T08:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/306",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [x] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [x] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** [A](a.md)\n\n**Summary (previous → new for 🔄 and 🗑️):** Both.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 307,
+    "title": "Changed without previous/now",
+    "mergedAt": "2026-10-08T08:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/307",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [ ] 🆕 New guidance\n- [x] 🔄 Changed recommendation\n- [ ] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** [A](a.md)\n\n**Summary (previous → new for 🔄 and 🗑️):** Now uses Y.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 308,
+    "title": "Page not a link",
+    "mergedAt": "2026-10-07T08:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/308",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [x] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [ ] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** the outbound page\n\n**Summary (previous → new for 🔄 and 🗑️):** Adds something.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 309,
+    "title": "Nothing ticked",
+    "mergedAt": "2026-10-06T08:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/309",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [ ] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [ ] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** \n\n**Summary (previous → new for 🔄 and 🗑️):** \n\n## 🧪 Testing\n- [x] Ran validate\n"
+  },
+  {
+    "number": 310,
+    "title": "Merged before the since date",
+    "mergedAt": "2026-06-30T23:00:00Z",
+    "url": "https://github.com/aws/aws-networking-best-practices/pull/310",
+    "body": "# 📝 Description\n<!-- 🚨 IMPORTANT: replace -->\nSome description.\n\n# Checklist:\n\n## 🔄 Type of Change\n- [x] New content\n\n## 📣 Changelog entry\n<!--\nLeave this section blank if this is a typo.\n- [x] example inside a comment must be ignored\n-->\n- [x] 🆕 New guidance\n- [ ] 🔄 Changed recommendation\n- [ ] 🔧 Correction\n- [ ] 🗑️ Removed\n\n**Page(s) affected:** [Old](old.md)\n\n**Summary (previous → new for 🔄 and 🗑️):** Should be filtered out by --since 2026-07-01.\n\n## 🧪 Testing\n- [x] Ran validate\n"
+  }
+]
