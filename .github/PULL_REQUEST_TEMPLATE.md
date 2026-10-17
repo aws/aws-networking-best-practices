@@ -39,10 +39,12 @@ Tick the boxes before submitting:
 <!--
 Leave this section blank if this is a typo, link, formatting, or CI change.
 Fill it in if a reader who applied the old version of the page would now make a different decision.
-A maintainer confirms the entry by applying the `changelog` label. Without the label, the entry is not published.
-Tick exactly one type. Page(s) affected: use links relative to the content/ folder, for example [Outbound Controls](security/outbound.md#anchor).
+Tick the type you think fits. This is a suggestion: a maintainer decides the type by applying exactly one label (`changelog:new`, `changelog:changed`, `changelog:correction`, or `changelog:removed`). The label is authoritative, and maintainers correct the type by changing the label, not by editing this checkbox. Without a label, the entry is not published.
+Page(s) affected: use links relative to the content/ folder, for example [Outbound Controls](security/outbound.md#anchor).
 For 🔄 and 🗑️, write the summary as "Previously X. Now Y."
 -->
+Suggested type (a maintainer confirms it with a `changelog:*` label):
+
 - [ ] 🆕 New guidance
 - [ ] 🔄 Changed recommendation
 - [ ] 🔧 Correction
