@@ -31,6 +31,8 @@ Ready to contribute content to the AWS Networking Best Practices guide? This pag
 
     * [ ] Tested that documentation builds without errors
 
+    * [ ] Filled in the [Changelog entry](#changelog-entries) section if your change affects what a reader would do
+
 ## Step-by-Step Process
 
 ### 1. Fork the repository on GitHub
@@ -109,6 +111,24 @@ After your pull request is merged:
 * Consider contributing more - we appreciate ongoing contributors!
 
 Thank you for helping improve AWS networking guidance for the community.
+
+## Changelog entries
+
+The [changelog](../changelog.md) lists the changes a reader would act on: new guidance, changed recommendations, corrections that change what a reader would do, and removed guidance. A change belongs there if a reader who applied the old version of the page would now make a different decision. The [conventions](conventions.md#changelog) describe the four change types and the entry format.
+
+**If you are the author:**
+
+1. Fill in the **Changelog entry** section of the pull request template. Tick one change type, link the affected page and heading, and summarize the change. For a changed recommendation or a removal, write "Previously X. Now Y."
+2. Leave the section blank for typo fixes, dead-link fixes, formatting, and CI changes.
+
+**If you are a maintainer:**
+
+1. Review the entry at review time. If the pull request belongs in the changelog, apply the `changelog` label. Without the label, the pull request is excluded even if the author filled in the section.
+2. After merging, run `./scripts/generate-changelog.sh --since YYYY-MM-DD` to print formatted entries for merged pull requests that carry the label. The script requires the [GitHub CLI](https://cli.github.com/) and prints to your terminal. It doesn't edit `content/changelog.md` or commit anything.
+3. Review the output, paste it into the matching month in `content/changelog.md`, and commit it. Pull requests that carry the label but have a missing or malformed section appear as warnings on stderr; fix the pull request description and run the script again.
+
+!!! tip "Test the script offline"
+    Run `./scripts/generate-changelog.sh --since 2026-07-01 --input scripts/fixtures/changelog-prs.json` to format the sample pull requests in the fixture file without calling GitHub.
 
 ## Environment setup
 
