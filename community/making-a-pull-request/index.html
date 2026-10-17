@@ -1359,6 +1359,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -1390,7 +1417,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1412,14 +1439,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1680,6 +1707,17 @@
     <span class="md-ellipsis">
       
         What Happens Next?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog entries
       
     </span>
   </a>
@@ -1979,6 +2017,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#changelog-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog entries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#environment-setup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2141,6 +2190,9 @@
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Tested that documentation builds without errors</p>
 </li>
+<li class="task-list-item">
+<p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Filled in the <a href="#changelog-entries">Changelog entry</a> section if your change affects what a reader would do</p>
+</li>
 </ul>
 </div>
 <h2 id="step-by-step-process">Step-by-Step Process<a class="headerlink" href="#step-by-step-process" title="Permanent link">&para;</a></h2>
@@ -2235,6 +2287,23 @@
 </li>
 </ul>
 <p>Thank you for helping improve AWS networking guidance for the community.</p>
+<h2 id="changelog-entries">Changelog entries<a class="headerlink" href="#changelog-entries" title="Permanent link">&para;</a></h2>
+<p>The <a href="../../changelog/">changelog</a> lists the changes a reader would act on: new guidance, changed recommendations, corrections that change what a reader would do, and removed guidance. A change belongs there if a reader who applied the old version of the page would now make a different decision. The <a href="../conventions/#changelog">conventions</a> describe the four change types and the entry format.</p>
+<p><strong>If you are the author:</strong></p>
+<ol>
+<li>Fill in the <strong>Changelog entry</strong> section of the pull request template. Tick the change type you think fits, link the affected page and heading, and summarize the change. For a changed recommendation or a removal, write "Previously X. Now Y." Your tick is a suggestion: a maintainer sets the final type with a label.</li>
+<li>Leave the section blank for typo fixes, dead-link fixes, formatting, and CI changes.</li>
+</ol>
+<p><strong>If you are a maintainer:</strong></p>
+<ol>
+<li>Review the entry at review time. If the pull request belongs in the changelog, apply exactly one type label: <code>changelog:new</code>, <code>changelog:changed</code>, <code>changelog:correction</code>, or <code>changelog:removed</code>. The label is the authoritative type. If the author ticked the wrong type, change the label instead of editing the description. Without a type label, the pull request is excluded even if the author filled in the section.</li>
+<li>After merging, run <code>./scripts/generate-changelog.sh --since YYYY-MM-DD</code> to print formatted entries for merged pull requests that carry a type label. The script requires the <a href="https://cli.github.com/">GitHub CLI</a> and prints to your terminal. It doesn't edit <code>content/changelog.md</code> or commit anything.</li>
+<li>Review the output, paste it into the matching month in <code>content/changelog.md</code>, and commit it. Pull requests with a missing or malformed section, a label that disagrees with the author's ticked type, or more than one type label appear as warnings on stderr. On a mismatch the script uses the label. For the other cases, fix the pull request description or labels and run the script again.</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Test the script offline</p>
+<p>Run <code>./scripts/generate-changelog.sh --since 2026-07-01 --input scripts/fixtures/changelog-prs.json</code> to format the sample pull requests in the fixture file without calling GitHub.</p>
+</div>
 <h2 id="environment-setup">Environment setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
 <p>First, clone the repository.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/YOUR-USERNAME/aws-networking-best-practices
@@ -2370,7 +2439,7 @@ general before continuing.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 23:55:53 UTC">June 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 17, 2026 01:53:36 UTC">October 17, 2026</span>
   </span>
 
     
