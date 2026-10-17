@@ -1,42 +1,56 @@
 #!/bin/bash
 set -e
 
-# Generates changelog entries from merged PRs that carry the `changelog` label.
+# Generates changelog entries from merged PRs that carry a changelog type label:
+# `changelog:new`, `changelog:changed`, `changelog:correction`, or
+# `changelog:removed`. The label is authoritative: it confirms the PR belongs in
+# the changelog and sets the change type. The checkbox in the PR body is only
+# the author's suggestion. If it disagrees with the label, the label wins and the
+# script warns on stderr.
 #
 # The script only prints to stdout. It never edits content/changelog.md and
 # never commits. A maintainer reviews the output and pastes it into the page.
-# Problems (a labeled PR with a missing or malformed "Changelog entry" section)
-# are reported as warnings on stderr.
+# Problems (a missing or malformed "Changelog entry" section, a label/checkbox
+# mismatch, or more than one type label) are reported as warnings on stderr.
 #
 # Usage:
-#   ./scripts/generate-changelog.sh [--since YYYY-MM-DD] [--label NAME] [--input FILE]
+#   ./scripts/generate-changelog.sh [--since YYYY-MM-DD] [--label-prefix PREFIX] [--input FILE]
 #
 # Offline test mode: --input FILE (or the CHANGELOG_PR_JSON environment variable)
 # reads the PR JSON from a file instead of calling the GitHub CLI. The file uses
-# the same shape as `gh pr list --json number,title,body,mergedAt,url`.
+# the same shape as `gh pr list --json number,title,body,mergedAt,url,labels`.
 
 REPO="aws/aws-networking-best-practices"
 SINCE=""
-LABEL="changelog"
+LABEL_PREFIX="changelog:"
+# Suffixes of the type labels (PREFIX + suffix). Keep in sync with TYPES in the Python block.
+LABEL_SUFFIXES="new changed correction removed"
 INPUT="${CHANGELOG_PR_JSON:-}"
 
 usage() {
     cat << 'EOF'
 Usage: ./scripts/generate-changelog.sh [options]
 
-Prints changelog entries for merged PRs that carry the changelog label,
-grouped by merge month, newest first. Does not edit or commit anything.
+Prints changelog entries for merged PRs that carry exactly one changelog type
+label, grouped by merge month, newest first. Does not edit or commit anything.
+
+The label decides the change type: PREFIX followed by new, changed, correction,
+or removed. The checkbox in the PR body is only a hint; on a mismatch the label
+wins and a warning goes to stderr.
 
 Options:
   --since DATE   Only include PRs merged on or after DATE (YYYY-MM-DD).
                  Default: 30 days ago.
-  --label NAME   Label that marks PRs for the changelog. Default: changelog
+  --label-prefix PREFIX
+                 Prefix of the type labels. Default: changelog:
+                 (changelog:new, changelog:changed, changelog:correction,
+                 changelog:removed)
   --input FILE   Offline test mode: read PR JSON from FILE instead of calling gh.
                  Same as setting the CHANGELOG_PR_JSON environment variable.
   -h, --help     Show this help.
 
-Entries go to stdout. Warnings about labeled PRs with a missing or malformed
-"Changelog entry" section go to stderr.
+Entries go to stdout. Warnings (missing or malformed "Changelog entry" section,
+label/checkbox mismatch, more than one type label) go to stderr.
 EOF
 }
 
@@ -45,9 +59,9 @@ while [ $# -gt 0 ]; do
         --since)
             [ $# -ge 2 ] || { echo "❌ --since requires a date (YYYY-MM-DD)" >&2; exit 1; }
             SINCE="$2"; shift 2 ;;
-        --label)
-            [ $# -ge 2 ] || { echo "❌ --label requires a name" >&2; exit 1; }
-            LABEL="$2"; shift 2 ;;
+        --label-prefix)
+            [ $# -ge 2 ] || { echo "❌ --label-prefix requires a value" >&2; exit 1; }
+            LABEL_PREFIX="$2"; shift 2 ;;
         --input)
             [ $# -ge 2 ] || { echo "❌ --input requires a file path" >&2; exit 1; }
             INPUT="$2"; shift 2 ;;
@@ -74,8 +88,8 @@ if ! [[ "$SINCE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
     exit 1
 fi
 
-JSON_FILE=$(mktemp)
-trap 'rm -f "$JSON_FILE"' EXIT
+JSON_DIR=$(mktemp -d)
+trap 'rm -rf "$JSON_DIR"' EXIT
 
 if [ -n "$INPUT" ]; then
     if [ ! -f "$INPUT" ]; then
@@ -83,33 +97,41 @@ if [ -n "$INPUT" ]; then
         exit 1
     fi
     echo "ℹ️  Offline mode: reading PR JSON from $INPUT" >&2
-    cp "$INPUT" "$JSON_FILE"
+    cp "$INPUT" "$JSON_DIR/input.json"
 else
     if ! command -v gh &> /dev/null; then
         echo "❌ GitHub CLI (gh) not found. Install it from https://cli.github.com/" >&2
         exit 1
     fi
-    gh pr list --repo "$REPO" --state merged --label "$LABEL" \
-        --search "merged:>=$SINCE" \
-        --json number,title,body,mergedAt,url --limit 200 > "$JSON_FILE"
+    # GitHub search filters by one label at a time, so query each type label
+    # separately. The Python block merges the results by PR number.
+    for suffix in $LABEL_SUFFIXES; do
+        gh pr list --repo "$REPO" --state merged --label "${LABEL_PREFIX}${suffix}" \
+            --search "merged:>=$SINCE" \
+            --json number,title,body,mergedAt,url,labels --limit 200 > "$JSON_DIR/$suffix.json"
+    done
 fi
 
-python3 - "$JSON_FILE" "$SINCE" "$REPO" << 'EOF'
+python3 - "$JSON_DIR" "$SINCE" "$REPO" "$LABEL_PREFIX" << 'EOF'
+import glob
 import json
+import os
 import re
 import sys
 from datetime import datetime
 
-json_file, since, repo = sys.argv[1], sys.argv[2], sys.argv[3]
+json_dir, since, repo, label_prefix = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
-# Fixed icons and labels. The type is matched by keyword so that icon variants
-# (for example 🗑 with or without a variation selector) do not matter.
+# Fixed icons and names. The label suffix maps to the type. The checkbox hint is
+# matched by keyword so that icon variants (for example 🗑 with or without a
+# variation selector) do not matter.
 TYPES = [
-    ("new guidance", "🆕", "New guidance"),
-    ("changed recommendation", "🔄", "Changed recommendation"),
-    ("correction", "🔧", "Correction"),
-    ("removed", "🗑️", "Removed"),
+    ("new", "new guidance", "🆕", "New guidance"),
+    ("changed", "changed recommendation", "🔄", "Changed recommendation"),
+    ("correction", "correction", "🔧", "Correction"),
+    ("removed", "removed", "🗑️", "Removed"),
 ]
+SUFFIX_TO_TYPE = {suffix: name for suffix, _k, _i, name in TYPES}
 NEEDS_BEFORE_AFTER = {"Changed recommendation", "Removed"}
 MONTHS = ["January", "February", "March", "April", "May", "June", "July",
           "August", "September", "October", "November", "December"]
@@ -138,8 +160,22 @@ def extract_section(body):
     return "\n".join(section)
 
 
-def parse_entry(pr):
-    """Return (entry_line, merged_date) or raise ValueError with the reason."""
+def type_labels(pr):
+    """Return the change types named by the PR's type labels (label suffix -> type)."""
+    found = []
+    for item in pr.get("labels") or []:
+        name = item.get("name", "") if isinstance(item, dict) else str(item)
+        if name.startswith(label_prefix) and name[len(label_prefix):] in SUFFIX_TO_TYPE:
+            found.append(SUFFIX_TO_TYPE[name[len(label_prefix):]])
+    return found
+
+
+def parse_entry(pr, label):
+    """Return the entry line for a PR whose label-determined type is `label`.
+
+    Raises ValueError with the reason if the entry cannot be built. The checkbox
+    in the body is only a hint: a mismatch prints a warning and the label wins.
+    """
     section = extract_section(pr.get("body"))
     if section is None:
         raise ValueError('no "Changelog entry" section in the PR body')
@@ -149,16 +185,12 @@ def parse_entry(pr):
         m = re.match(r"^\s*[-*]\s*\[([ xX])\]\s*(.+)$", line)
         if m and m.group(1).lower() == "x":
             text = m.group(2).lower()
-            for key, _icon, label in TYPES:
+            for _suffix, key, _icon, name in TYPES:
                 if key in text:
-                    checked.append(label)
-    if not checked:
-        raise ValueError("no change type is ticked")
-    if len(checked) > 1:
-        raise ValueError("more than one change type is ticked (" + ", ".join(checked)
-                         + "); tick one, or split the entry by hand")
-    label = checked[0]
-    icon = next(i for _k, i, lbl in TYPES if lbl == label)
+                    checked.append(name)
+    if checked and checked != [label]:
+        warn(pr, f"label type is {label} but the checkbox suggests {', '.join(checked)}; using the label")
+    icon = next(i for _s, _k, i, name in TYPES if name == label)
 
     page_m = re.search(r"\*\*Page\(s\) affected:?\*\*:?(.*?)(?=\*\*Summary|\Z)", section, re.DOTALL)
     if not page_m or not page_m.group(1).strip():
@@ -198,29 +230,46 @@ def parse_entry(pr):
     return entry
 
 
-with open(json_file) as f:
-    prs = json.load(f)
+# One file offline, one file per type label live. De-duplicate by PR number and
+# combine the labels, so a PR with two type labels shows up with both.
+by_number = {}
+for path in sorted(glob.glob(os.path.join(json_dir, "*.json"))):
+    with open(path) as f:
+        for pr in json.load(f):
+            known = by_number.setdefault(pr["number"], pr)
+            if known is not pr:
+                names = {l["name"] for l in known.get("labels") or []}
+                known.setdefault("labels", []).extend(
+                    l for l in pr.get("labels") or [] if l["name"] not in names)
 
 selected = []
-for pr in prs:
+for pr in by_number.values():
     merged = pr.get("mergedAt") or ""
     if merged[:10] < since:
         continue
+    if not type_labels(pr):
+        continue  # no type label: not published, no warning
     selected.append(pr)
 
 # Newest first by merge timestamp; PR number breaks ties
 selected.sort(key=lambda p: (p.get("mergedAt") or "", p["number"]), reverse=True)
 
 if not selected:
-    print(f"ℹ️  No merged PRs with the label found since {since}.", file=sys.stderr)
+    print(f"ℹ️  No merged PRs with a {label_prefix}* type label found since {since}.", file=sys.stderr)
     sys.exit(0)
 
 current_month = None
 printed = 0
 warned = 0
 for pr in selected:
+    labels = type_labels(pr)
+    if len(set(labels)) > 1:
+        warn(pr, "more than one type label (" + ", ".join(sorted(set(labels)))
+             + "); keep exactly one, then run the script again. Skipping")
+        warned += 1
+        continue
     try:
-        entry = parse_entry(pr)
+        entry = parse_entry(pr, labels[0])
     except ValueError as e:
         warn(pr, str(e))
         warned += 1
