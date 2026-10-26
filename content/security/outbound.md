@@ -36,7 +36,7 @@ Each layer adds a distinct capability: security groups enforce port and protocol
 
     ---
 
-    Stateful deep packet inspection for outbound traffic. Domain filtering via SNI/Host header, Suricata-compatible IPS signatures, and protocol-aware rule groups. The heavyweight option for environments that need full traffic inspection.
+    Stateful deep packet inspection for outbound traffic. Domain filtering via SNI/Host header or, with resolved IP validation, for non-TLS protocols, Suricata-compatible IPS signatures, and protocol-aware rule groups. The heavyweight option for environments that need full traffic inspection.
 
 *   :material-lan-connect: **VPC Endpoints (AWS PrivateLink)**
 
@@ -86,7 +86,7 @@ This is the single highest-value egress control for the cost. DNS Firewall prici
 
 Network Firewall sits in the data path and inspects actual traffic. It can filter by domain name (matching the SNI field in TLS ClientHello or the Host header in HTTP), apply Suricata-compatible IPS signatures to detect known-bad patterns, and enforce protocol compliance. This is the layer that catches what DNS Firewall cannot: hardcoded-IP connections, protocol-level anomalies, and traffic patterns that only become visible in the packet stream.
 
-**What Network Firewall catches**: outbound connections to IPs with no DNS resolution, TLS connections to unauthorized domains (via SNI inspection), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.
+**What Network Firewall catches**: outbound connections to IPs with no DNS resolution, unauthorized domains over TLS (via SNI inspection), unauthorized domains over non-TLS protocols such as SFTP and SSH (with resolved IP validation and resolved-domain rules), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.
 
 **What Network Firewall costs**: endpoint hourly charges plus per-GB traffic processing. For a centralized egress VPC processing terabytes of outbound traffic, Network Firewall costs are significant. This is why DNS Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.
 
@@ -108,12 +108,25 @@ IP addresses are unstable identifiers for internet destinations. CDNs rotate IPs
 
 DNS Firewall and Network Firewall both support domain-based filtering. DNS Firewall blocks at resolution time (cheapest, fastest). Network Firewall matches on the SNI field in TLS or the Host header in HTTP (catches hardcoded-IP bypass attempts). Use both: DNS Firewall as the primary domain filter, Network Firewall as the enforcement backstop.
 
+[Resolved IP validation](https://docs.aws.amazon.com/network-firewall/latest/developerguide/route53-resolved-ip-validation.html) strengthens that backstop. Network Firewall checks that each connection's destination IP was returned by Route 53 Resolver in your VPCs, which hardens domain rules against SNI/Host spoofing. To filter specific domains over non-TLS protocols such as SFTP and SSH, pair it with resolved-domain rules. See [Roll out resolved IP validation in alert mode](#roll-out-resolved-ip-validation-in-alert-mode) before you enforce it.
+
 | Filtering approach | Strengths | Weaknesses |
 | --- | --- | --- |
 | **IP-based (security groups, NACLs)** | Zero cost, always available, no additional service needed | IPs change, CDNs share IPs, impossible to maintain for SaaS destinations |
 | **Domain-based at DNS (DNS Firewall)** | Low cost, prevents connection before it starts, covers all protocols | Bypassed by hardcoded IPs, DNS-over-HTTPS, or IP-literal URLs |
-| **Domain-based at TLS (Network Firewall SNI)** | Catches connections regardless of how the IP was resolved | Only works for TLS traffic, adds inspection cost, encrypted payload not visible |
+| **Domain-based in the data path (Network Firewall)** | Catches connections regardless of how the IP was resolved; with resolved IP validation and resolved-domain rules, covers non-TLS protocols and hardens rules against SNI spoofing | Adds inspection cost, encrypted payload not visible; resolved IP validation needs a dedicated DNS Firewall rule group and zone-aligned routing (see [Roll out resolved IP validation in alert mode](#roll-out-resolved-ip-validation-in-alert-mode)) |
 | **Explicit proxy (Network Firewall Proxy)** | Full request-level visibility, URL path filtering, response inspection | Requires application configuration, preview service, higher operational complexity |
+
+#### Roll out resolved IP validation in alert mode
+
+When enforced, resolved IP validation blocks connections to any IP address that Route 53 Resolver didn't return, including legitimate ones. Check these before you enforce it:
+
+* **Dedicated rule group** — use an empty DNS Firewall rule group associated only with the VPCs behind this firewall. Associated VPCs share one pool of resolutions, so an organization-wide [Firewall Manager](#use-aws-firewall-manager-for-cross-account-dns-firewall-rules) rule group widens what the firewall accepts.
+* **Alert first** — run in `ALERT` until `DnsUnresolvedFlows` settles (typically about 24 hours, while client DNS caches refresh), then switch to `DROP` or `REJECT`.
+* **Clients that resolve elsewhere** — custom DNS servers, DNS-over-HTTPS, and hardcoded IPs fail validation; exempt legitimate cases with the bypass or source ranges.
+* **Availability Zones** — keep traffic on the firewall endpoint in its own zone, or use a transit gateway-attached firewall. Confirm `DnsAzUnavailableFlows` is zero before adding resolved-domain rules: in unsupported zones they drop all the traffic they inspect.
+
+The feature has no additional charge, is available in commercial Regions that offer both Network Firewall and DNS Firewall, and works regardless of IP version.
 
 #### Use DNS Firewall in allow-list mode for sensitive workloads
 
@@ -280,7 +293,7 @@ DNS Firewall is **not sufficient alone** when:
 * You need stateful inspection of outbound traffic (IPS, protocol enforcement)
 * Compliance requires logging of all outbound connections with deep metadata
 * You must catch connections to hardcoded IPs that bypass DNS
-* Domain filtering via SNI is needed as a backstop to DNS Firewall
+* Domain filtering via SNI, or via resolved IP validation for non-TLS protocols, is needed as a backstop to DNS Firewall
 * Egress policy must differ between Amazon ECS or Amazon EKS workloads that share a VPC or subnet (use container associations)
 
 Network Firewall is **not the right choice** when:
