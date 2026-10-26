@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2190,7 +2190,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32-2.59 2.08-3.61 5.75-2.39 8.9.04.1.08.2.08.33 0 .22-.15.42-.35.5-.23.1-.47.04-.66-.12a.6.6 0 0 1-.14-.17c-1.13-1.43-1.31-3.48-.55-5.12C5.78 10 4.87 12.3 5 14.47c.06.5.12 1 .29 1.5.14.6.41 1.2.71 1.73 1.08 1.73 2.95 2.97 4.96 3.22 2.14.27 4.43-.12 6.07-1.6 1.83-1.66 2.47-4.32 1.53-6.6l-.13-.26c-.21-.46-.77-1.26-.77-1.26m-3.16 6.3c-.28.24-.74.5-1.1.6-1.12.4-2.24-.16-2.9-.82 1.19-.28 1.9-1.16 2.11-2.05.17-.8-.15-1.46-.28-2.23-.12-.74-.1-1.37.17-2.06.19.38.39.76.63 1.06.77 1 1.98 1.44 2.24 2.8.04.14.06.28.06.43.03.82-.33 1.72-.93 2.27"/></svg></span> <strong>AWS Network Firewall (egress rules)</strong></p>
 <hr />
-<p>Stateful deep packet inspection for outbound traffic. Domain filtering via SNI/Host header, Suricata-compatible IPS signatures, and protocol-aware rule groups. The heavyweight option for environments that need full traffic inspection.</p>
+<p>Stateful deep packet inspection for outbound traffic. Domain filtering via SNI/Host header or, with resolved IP validation, for non-<abbr title="Transport Layer Security">TLS</abbr> protocols, Suricata-compatible IPS signatures, and protocol-aware rule groups. The heavyweight option for environments that need full traffic inspection.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 1c-1.11 0-2 .89-2 2v4c0 1.11.89 2 2 2H1v2h12V9h-3c1.11 0 2-.89 2-2V3c0-1.11-.89-2-2-2zm0 2h6v4H4zM3 13v7h7v-2H5v-5zm11 0c-1.11 0-2 .89-2 2v4c0 1.11.89 2 2 2h-3v2h12v-2h-3c1.11 0 2-.89 2-2v-4c0-1.11-.89-2-2-2zm0 2h6v4h-6z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Endpoints (AWS PrivateLink)</strong></p>
@@ -2223,7 +2223,7 @@
 <p><strong><em>Key insight:</em></strong> <em><abbr title="Domain Name System">DNS</abbr> Firewall is the first egress control you should deploy in every <abbr title="Virtual Private Cloud">VPC</abbr> — it covers the widest threat surface at the lowest cost, and it works regardless of whether your egress is centralized or decentralized.</em></p>
 <h3 id="layer-3-aws-network-firewall-full-inspection">Layer 3: AWS Network Firewall (full inspection)<a class="headerlink" href="#layer-3-aws-network-firewall-full-inspection" title="Permanent link">&para;</a></h3>
 <p>Network Firewall sits in the data path and inspects actual traffic. It can filter by domain name (matching the SNI field in <abbr title="Transport Layer Security">TLS</abbr> ClientHello or the Host header in HTTP), apply Suricata-compatible IPS signatures to detect known-bad patterns, and enforce protocol compliance. This is the layer that catches what <abbr title="Domain Name System">DNS</abbr> Firewall cannot: hardcoded-IP connections, protocol-level anomalies, and traffic patterns that only become visible in the packet stream.</p>
-<p><strong>What Network Firewall catches</strong>: outbound connections to IPs with no <abbr title="Domain Name System">DNS</abbr> resolution, <abbr title="Transport Layer Security">TLS</abbr> connections to unauthorized domains (via SNI inspection), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.</p>
+<p><strong>What Network Firewall catches</strong>: outbound connections to IPs with no <abbr title="Domain Name System">DNS</abbr> resolution, unauthorized domains over <abbr title="Transport Layer Security">TLS</abbr> (via SNI inspection), unauthorized domains over non-<abbr title="Transport Layer Security">TLS</abbr> protocols such as SFTP and SSH (with resolved IP validation and resolved-domain rules), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.</p>
 <p><strong>What Network Firewall costs</strong>: endpoint hourly charges plus per-GB traffic processing. For a centralized egress <abbr title="Virtual Private Cloud">VPC</abbr> processing terabytes of outbound traffic, Network Firewall costs are significant. This is why <abbr title="Domain Name System">DNS</abbr> Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.</p>
 <p><strong>Which workloads a rule applies to</strong>: rules can be scoped by source workload as well as by destination. For Amazon ECS and Amazon EKS, container associations keep a rule's source IP set aligned with the running tasks and pods, so workloads that share a <abbr title="Virtual Private Cloud">VPC</abbr> can have different egress policies (see <a href="#scope-egress-rules-to-container-workloads">Scope egress rules to container workloads</a>).</p>
 <h3 id="layer-4-vpc-endpoints-path-elimination">Layer 4: <abbr title="Virtual Private Cloud">VPC</abbr> Endpoints (path elimination)<a class="headerlink" href="#layer-4-vpc-endpoints-path-elimination" title="Permanent link">&para;</a></h3>
@@ -2234,6 +2234,7 @@
 <h4 id="prefer-domain-based-filtering-over-ip-based-filtering-for-outbound-controls">Prefer domain-based filtering over IP-based filtering for outbound controls<a class="headerlink" href="#prefer-domain-based-filtering-over-ip-based-filtering-for-outbound-controls" title="Permanent link">&para;</a></h4>
 <p>IP addresses are unstable identifiers for internet destinations. CDNs rotate IPs, SaaS providers share IPs across tenants, and cloud services use dynamic IP pools. An allow list of IPs requires constant maintenance and breaks silently when a provider changes their infrastructure. Domain names are the stable identifier that humans and applications actually use.</p>
 <p><abbr title="Domain Name System">DNS</abbr> Firewall and Network Firewall both support domain-based filtering. <abbr title="Domain Name System">DNS</abbr> Firewall blocks at resolution time (cheapest, fastest). Network Firewall matches on the SNI field in <abbr title="Transport Layer Security">TLS</abbr> or the Host header in HTTP (catches hardcoded-IP bypass attempts). Use both: <abbr title="Domain Name System">DNS</abbr> Firewall as the primary domain filter, Network Firewall as the enforcement backstop.</p>
+<p><a href="https://docs.aws.amazon.com/network-firewall/latest/developerguide/route53-resolved-ip-validation.html">Resolved IP validation</a> strengthens that backstop. Network Firewall checks that each connection's destination IP was returned by Route 53 Resolver in your VPCs, which hardens domain rules against SNI/Host spoofing. To filter specific domains over non-<abbr title="Transport Layer Security">TLS</abbr> protocols such as SFTP and SSH, pair it with resolved-domain rules. See <a href="#roll-out-resolved-ip-validation-in-alert-mode">Roll out resolved IP validation in alert mode</a> before you enforce it.</p>
 <table>
 <thead>
 <tr>
@@ -2254,9 +2255,9 @@
 <td>Bypassed by hardcoded IPs, <abbr title="Domain Name System">DNS</abbr>-over-HTTPS, or IP-literal URLs</td>
 </tr>
 <tr>
-<td><strong>Domain-based at <abbr title="Transport Layer Security">TLS</abbr> (Network Firewall SNI)</strong></td>
-<td>Catches connections regardless of how the IP was resolved</td>
-<td>Only works for <abbr title="Transport Layer Security">TLS</abbr> traffic, adds inspection cost, encrypted payload not visible</td>
+<td><strong>Domain-based in the data path (Network Firewall)</strong></td>
+<td>Catches connections regardless of how the IP was resolved; with resolved IP validation and resolved-domain rules, covers non-<abbr title="Transport Layer Security">TLS</abbr> protocols and hardens rules against SNI spoofing</td>
+<td>Adds inspection cost, encrypted payload not visible; resolved IP validation needs a dedicated <abbr title="Domain Name System">DNS</abbr> Firewall rule group and zone-aligned routing (see <a href="#roll-out-resolved-ip-validation-in-alert-mode">Roll out resolved IP validation in alert mode</a>)</td>
 </tr>
 <tr>
 <td><strong>Explicit proxy (Network Firewall Proxy)</strong></td>
@@ -2265,6 +2266,15 @@
 </tr>
 </tbody>
 </table>
+<h4 id="roll-out-resolved-ip-validation-in-alert-mode">Roll out resolved IP validation in alert mode<a class="headerlink" href="#roll-out-resolved-ip-validation-in-alert-mode" title="Permanent link">&para;</a></h4>
+<p>When enforced, resolved IP validation blocks connections to any IP address that Route 53 Resolver didn't return, including legitimate ones. Check these before you enforce it:</p>
+<ul>
+<li><strong>Dedicated rule group</strong> — use an empty <abbr title="Domain Name System">DNS</abbr> Firewall rule group associated only with the VPCs behind this firewall. Associated VPCs share one pool of resolutions, so an organization-wide <a href="#use-aws-firewall-manager-for-cross-account-dns-firewall-rules">Firewall Manager</a> rule group widens what the firewall accepts.</li>
+<li><strong>Alert first</strong> — run in <code>ALERT</code> until <code>DnsUnresolvedFlows</code> settles (typically about 24 hours, while client <abbr title="Domain Name System">DNS</abbr> caches refresh), then switch to <code>DROP</code> or <code>REJECT</code>.</li>
+<li><strong>Clients that resolve elsewhere</strong> — custom <abbr title="Domain Name System">DNS</abbr> servers, <abbr title="Domain Name System">DNS</abbr>-over-HTTPS, and hardcoded IPs fail validation; exempt legitimate cases with the bypass or source ranges.</li>
+<li><strong>Availability Zones</strong> — keep traffic on the firewall endpoint in its own zone, or use a transit gateway-attached firewall. Confirm <code>DnsAzUnavailableFlows</code> is zero before adding resolved-domain rules: in unsupported zones they drop all the traffic they inspect.</li>
+</ul>
+<p>The feature has no additional charge, is available in commercial Regions that offer both Network Firewall and <abbr title="Domain Name System">DNS</abbr> Firewall, and works regardless of IP version.</p>
 <h4 id="use-dns-firewall-in-allow-list-mode-for-sensitive-workloads">Use <abbr title="Domain Name System">DNS</abbr> Firewall in allow-list mode for sensitive workloads<a class="headerlink" href="#use-dns-firewall-in-allow-list-mode-for-sensitive-workloads" title="Permanent link">&para;</a></h4>
 <p>For workloads that handle sensitive data or operate in regulated environments, configure <abbr title="Domain Name System">DNS</abbr> Firewall with an explicit allow list of permitted domains and block everything else. This inverts the default: instead of blocking known-bad domains (which requires keeping up with threat intelligence), you permit only known-good domains and deny the rest.</p>
 <p>Allow-list mode is operationally heavier — every new external dependency requires a rule update — but it eliminates entire categories of exfiltration risk. Pair it with a self-service process for application teams to request domain additions through your change management system.</p>
@@ -2440,7 +2450,7 @@
 <li>You need stateful inspection of outbound traffic (IPS, protocol enforcement)</li>
 <li>Compliance requires logging of all outbound connections with deep metadata</li>
 <li>You must catch connections to hardcoded IPs that bypass <abbr title="Domain Name System">DNS</abbr></li>
-<li>Domain filtering via SNI is needed as a backstop to <abbr title="Domain Name System">DNS</abbr> Firewall</li>
+<li>Domain filtering via SNI, or via resolved IP validation for non-<abbr title="Transport Layer Security">TLS</abbr> protocols, is needed as a backstop to <abbr title="Domain Name System">DNS</abbr> Firewall</li>
 <li>Egress policy must differ between Amazon ECS or Amazon EKS workloads that share a <abbr title="Virtual Private Cloud">VPC</abbr> or subnet (use container associations)</li>
 </ul>
 <p>Network Firewall is <strong>not the right choice</strong> when:</p>
@@ -2652,7 +2662,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 16, 2026 16:28:57 UTC">October 16, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 26, 2026 20:36:38 UTC">October 26, 2026</span>
   </span>
 
     
@@ -2884,10 +2894,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
