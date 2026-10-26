@@ -93,9 +93,13 @@ For non-production workloads where you're confident about scale, `/20` (4,096 ad
 
 #### Never overlap CIDR blocks across VPCs you might connect
 
-VPCs with overlapping CIDR blocks cannot be connected via VPC Peering, Transit Gateway, or Cloud WAN. This is an absolute constraint — there is no workaround at the network layer. If VPC A uses `10.0.0.0/16` and VPC B uses `10.0.5.0/24`, those VPCs can never peer or share a Transit Gateway route table, because `10.0.5.0/24` falls within `10.0.0.0/16`.
+Design your allocation so VPCs you might connect never overlap. Overlapping ranges block VPC Peering outright: if VPC A uses `10.0.0.0/16` and VPC B uses `10.0.5.0/24`, those VPCs can never peer, because `10.0.5.0/24` falls within `10.0.0.0/16`. Other paths can work around an overlap, but each adds cost, operational overhead, or address bookkeeping you would not otherwise carry — non-overlapping space is always the clean answer.
 
-The only escape from an overlap is PrivateLink (which uses ENIs and doesn't require routable connectivity) or VPC Lattice (which operates at the application layer). But these are service-level solutions, not network-level connectivity. If you need IP-level routing between VPCs — and most organizations do — overlaps are fatal.
+If you inherit an overlap you did not choose — a merger, a partner network, multicloud — you have a few recovery options, none of them free:
+
+* **Re-IP one side.** The only answer for VPC Peering, for IPv6, and for unsupported attachment types. It is the most invasive, because it touches DNS, application config, firewall rules, and monitoring.
+* **Expose the workload as a service through PrivateLink or VPC Lattice.** PrivateLink uses ENIs and doesn't require routable connectivity; VPC Lattice operates at the application layer. The overlap becomes invisible with no translated-address bookkeeping — the right fit when access is a one-directional service exposure rather than full connectivity.
+* **Translate with a managed, static 1:1 NAT on a Transit Gateway or Cloud WAN attachment.** This maps an overlapping CIDR to a non-overlapping one of equal prefix length, giving bidirectional IP-level routing without re-IPing. It is IPv4 only (IPv6 passes untranslated), and the supported attachment types differ between Transit Gateway and Cloud WAN.
 
 This applies across your entire organization, including VPCs you haven't created yet. Reserve address space for future accounts and Regions in your allocation plan.
 
@@ -107,7 +111,7 @@ This means:
 
 1. **Document every on-premises IP range** before allocating AWS CIDRs. Include branch offices, partner networks, acquired company networks, and remote access VPN pools. The range you don't know about is the one that will overlap.
 2. **Reserve non-overlapping space** for AWS that will never conflict with on-premises allocations. A clean split (for example, on-premises owns `10.128.0.0/9`, AWS owns `10.0.0.0/9`) eliminates ambiguity.
-3. **Coordinate with network teams** who manage on-premises addressing. A unilateral AWS CIDR decision that overlaps with the data center range discovered six months later forces a VPC recreation.
+3. **Coordinate with network teams** who manage on-premises addressing. A unilateral AWS CIDR decision that overlaps with the data center range discovered six months later forces a VPC recreation or permanent address translation on the hybrid path.
 4. **Account for VPN client pools**. Remote access VPN clients need IP ranges that don't overlap with either AWS or on-premises networks. Many organizations use `172.16.0.0/12` for client VPN pools.
 5. **Plan for acquisitions**. When your company acquires another organization, their network ranges become your problem. Reserve space that's unlikely to conflict with typical enterprise allocations.
 
@@ -182,7 +186,7 @@ Secondary CIDRs are **not** a substitute for proper initial planning. They add c
 | Using `192.168.0.0/16` for production | Overlaps with home networks, VPN clients, and many on-premises environments | Use `10.0.0.0/8` for AWS production |
 | Allocating `/24` VPCs "to save space" | Exhausts subnet capacity quickly; no room for multi-AZ or EKS | Default to `/16` for production, `/20` minimum for non-production |
 | No reserved space for future Regions | Forces non-contiguous allocation when expanding | Reserve 50%+ of your total allocation |
-| Ignoring on-premises ranges | Discovered overlaps block hybrid connectivity | Document all existing ranges before any AWS allocation |
+| Ignoring on-premises ranges | Discovered overlaps force re-IPing or address translation on the hybrid path | Document all existing ranges before any AWS allocation |
 | Per-team allocation without coordination | Teams independently choose overlapping ranges | Centralize allocation through IPAM or a shared registry |
 | Treating VPC CIDR as changeable | Primary CIDR cannot be removed; forces VPC recreation | Plan the primary CIDR as permanent from day one |
 
