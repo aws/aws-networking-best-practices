@@ -86,7 +86,7 @@ This is the single highest-value egress control for the cost. DNS Firewall prici
 
 Network Firewall sits in the data path and inspects actual traffic. It can filter by domain name (matching the SNI field in TLS ClientHello or the Host header in HTTP), apply Suricata-compatible IPS signatures to detect known-bad patterns, and enforce protocol compliance. This is the layer that catches what DNS Firewall cannot: hardcoded-IP connections, protocol-level anomalies, and traffic patterns that only become visible in the packet stream.
 
-**What Network Firewall catches**: outbound connections to IPs with no DNS resolution, TLS connections to unauthorized domains (via SNI inspection), protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.
+**What Network Firewall catches**: outbound connections to IPs with no DNS resolution, unauthorized domains over TLS (via SNI inspection) or — with Resolved IP Validation — over any protocol including non-TLS ones such as SFTP and SSH, protocol violations, known exploit signatures, and traffic that matches behavioral IPS rules.
 
 **What Network Firewall costs**: endpoint hourly charges plus per-GB traffic processing. For a centralized egress VPC processing terabytes of outbound traffic, Network Firewall costs are significant. This is why DNS Firewall as a first layer matters — it reduces the volume of traffic that needs full inspection by blocking unauthorized destinations before they generate any traffic.
 
@@ -106,13 +106,13 @@ VPC endpoints don't filter traffic — they remove it from the egress path entir
 
 IP addresses are unstable identifiers for internet destinations. CDNs rotate IPs, SaaS providers share IPs across tenants, and cloud services use dynamic IP pools. An allow list of IPs requires constant maintenance and breaks silently when a provider changes their infrastructure. Domain names are the stable identifier that humans and applications actually use.
 
-DNS Firewall and Network Firewall both support domain-based filtering. DNS Firewall blocks at resolution time (cheapest, fastest). Network Firewall matches on the SNI field in TLS or the Host header in HTTP (catches hardcoded-IP bypass attempts). Use both: DNS Firewall as the primary domain filter, Network Firewall as the enforcement backstop.
+DNS Firewall and Network Firewall both support domain-based filtering. DNS Firewall blocks at resolution time (cheapest, fastest). Network Firewall matches on the SNI field in TLS or the Host header in HTTP, and can go further: enabling [Resolved IP Validation](https://docs.aws.amazon.com/network-firewall/latest/developerguide/route53-resolved-ip-validation.html) on the firewall policy checks each connection's destination IP against the answers Route 53 Resolver returned to the VPCs associated with a DNS Firewall rule group, so domain rules hold even for hardcoded-IP and SNI/Host spoofing attempts and reach protocols that carry no domain name at all. Use both: DNS Firewall as the primary domain filter, Network Firewall as the enforcement backstop.
 
 | Filtering approach | Strengths | Weaknesses |
 | --- | --- | --- |
 | **IP-based (security groups, NACLs)** | Zero cost, always available, no additional service needed | IPs change, CDNs share IPs, impossible to maintain for SaaS destinations |
 | **Domain-based at DNS (DNS Firewall)** | Low cost, prevents connection before it starts, covers all protocols | Bypassed by hardcoded IPs, DNS-over-HTTPS, or IP-literal URLs |
-| **Domain-based at TLS (Network Firewall SNI)** | Catches connections regardless of how the IP was resolved | Only works for TLS traffic, adds inspection cost, encrypted payload not visible |
+| **Domain-based in the data path (Network Firewall)** | Catches connections regardless of how the IP was resolved; with Resolved IP Validation, covers non-TLS protocols and hardens rules against SNI spoofing | Adds inspection cost, encrypted payload not visible; Resolved IP Validation needs a DNS Firewall rule group associated with the VPCs, and traffic must reach the firewall endpoint in its own Availability Zone unless the firewall is transit gateway-attached |
 | **Explicit proxy (Network Firewall Proxy)** | Full request-level visibility, URL path filtering, response inspection | Requires application configuration, preview service, higher operational complexity |
 
 #### Use DNS Firewall in allow-list mode for sensitive workloads
