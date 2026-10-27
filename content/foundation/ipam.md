@@ -71,7 +71,7 @@ IPAM becomes essential the moment your AWS environment grows beyond what a singl
 * You have a single account with 1-2 VPCs and no hybrid connectivity. Even here, setting up IPAM early avoids retrofitting later.
 * You're running isolated sandbox accounts that will never connect to production networks.
 
-***Key insight:*** *The cost of not using IPAM is invisible until it's catastrophic. CIDR overlaps are discovered when you try to peer VPCs, attach them to Transit Gateway or Cloud WAN, or establish hybrid connectivity — at which point every remedy is disruptive or adds lasting complexity. IPAM is insurance that costs pennies compared to the operational disruption of an overlap.*
+***Key insight:*** *The cost of not using IPAM is invisible until an overlap affects connectivity. CIDR overlaps are often discovered when you try to peer VPCs, attach them to Transit Gateway or Cloud WAN, or establish hybrid connectivity. At that point, the available remedies require either workload migration or ongoing translation and address-management overhead. IPAM prevents that complexity before deployment.*
 
 ## Best Practices
 
@@ -230,7 +230,7 @@ A non-compliant VPC is a ticking time bomb. It might work fine in isolation, but
 
 1. Identify the non-compliant VPC and its owner
 2. Determine if the CIDR actually conflicts with your managed space
-3. If it conflicts, plan a migration to a compliant CIDR (this requires VPC recreation)
+3. If it conflicts, plan a migration to a compliant CIDR. Use permanent address translation only as a documented exception when re-IPing is not practical.
 4. If it doesn't conflict, import the CIDR into IPAM to bring it under management
 
 #### Import existing CIDRs into IPAM before they cause problems
@@ -336,7 +336,7 @@ IPAM is a governance layer that integrates with every service that consumes or m
 | **IPAM + VPC** | Automated CIDR allocation at VPC creation time | The network construct that consumes the allocated CIDR | VPCs reference IPAM pool IDs instead of hardcoded CIDRs; IPAM assigns the next available block |
 | **IPAM + CloudFormation / Terraform** | Pool IDs and allocation APIs | Infrastructure deployment automation | IaC templates reference pool IDs; CIDRs are determined at deploy time, not authoring time |
 
-***Key insight:*** *IPAM is not a standalone service — it's the address governance layer that makes every other networking service work correctly at scale. It guarantees non-overlapping, summarizable address space before you discover a problem in production.*
+***Key insight:*** *IPAM is not a standalone service. It is the address governance layer that makes every other networking service work correctly at scale. It keeps allocations non-overlapping and summarizable, preventing connectivity failures, re-IPing, and permanent translation workarounds before deployment.*
 
 ## IPAM pricing and cost considerations
 
