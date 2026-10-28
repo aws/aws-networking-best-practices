@@ -138,7 +138,7 @@ AWS Cloud WAN integrates directly with existing Transit Gateway deployments thro
 1. Create your AWS Cloud WAN core network alongside existing Transit Gateways.
 2. Peer Transit Gateways to AWS Cloud WAN as core network attachments. Over the peering attachment, you can create segmentation by extending Transit Gateway route tables to segments using TGW route table attachments.
 3. If your network requires inspection, we recommend the duplication of your Inspection VPCs: current one connected to the Transit Gateway, and a new one connected to AWS Cloud WAN (pointing to the same firewall solution). Once the Service Insertion rules are applied, *local Transit Gateway traffic* will stay in the Inspection VPC connected to the Transit Gateway, while other traffic will go through the new inspection VPC.
-4. Gradually move VPC attachments from Transit Gateway to AWS Cloud WAN. You can create the core network attachment, shift traffic to the new core network attachment, and remove the Transit Gateway attachment when you validate the traffic.
+4. Gradually move VPC attachments from Transit Gateway to AWS Cloud WAN. You can create the core network attachment, shift traffic to the new core network attachment, and remove the Transit Gateway attachment when you validate the traffic. If an attachment uses [Transit Gateway 1:1 NAT](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-nat.html), recreate its rules as [Cloud WAN 1:1 NAT](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-nat.html) rules before shifting traffic. Cloud WAN does not support NAT on transit gateway route table attachments.
 5. Decommission Transit Gateways as they become empty.
 
 This approach avoids a disruptive one-step migration and lets you validate the new network behavior with non-critical workloads first. There is no urgency to migrate from a working Transit Gateway setup. AWS Cloud WAN peers with existing Transit Gateways, so you can adopt it at your own pace.
@@ -428,7 +428,7 @@ VPC Resources address a common pain point: exposing a managed database, a legacy
 
     ---
 
-    Because traffic is NATed through the resource gateway's IPs, consumer and provider VPCs can have overlapping CIDR blocks. This applies to single, group, and ARN configurations; it does not extend to CIDR-range configurations, where the consumer addresses hosts by their real provider-side IPs inside the tunnel. This is a major operational advantage compared to VPC peering / Transit Gateway / AWS Cloud WAN.
+    Because traffic is NATed through the resource gateway's IPs, consumer and provider VPCs can have overlapping CIDR blocks. This applies to single, group, and ARN configurations; it does not extend to CIDR-range configurations, where the consumer addresses hosts by their real provider-side IPs inside the tunnel.
 
 *   :material-lan-connect: **Works with on-premises and third parties**
 
@@ -450,7 +450,7 @@ Like VPC Lattice services, VPC Resources operate independently of your network t
 
 This is particularly valuable in two common situations:
 
-* **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. VPC Peering, Transit Gateway, and Cloud WAN require non-overlapping CIDRs; VPC Resources do not. This holds for single, group, and ARN configurations; CIDR-range configurations do not NAT, so overlapping address space between consumer and provider needs per-host routes on the consumer side and is best avoided.
+* **Overlapping CIDRs**: Consumer and provider VPCs can have the same CIDR block. The resource gateway NATs traffic so consumers never see provider-side IPs. This holds for single, group, and ARN configurations; CIDR-range configurations do not NAT, so overlapping address space between consumer and provider needs per-host routes on the consumer side and is best avoided.
 * **Least-privilege exposure**: Expose a specific resource or a bounded set of addresses, not two entire networks. A resource configuration is an explicit, scoped entry point, easier to reason about than a route table joining whole VPCs. Scope it to a single resource (one IP, DNS name, or ARN) for the tightest exposure, or to a CIDR range when consumers need several hosts in one segment — still scoped and unidirectional, not the full reachability of Transit Gateway, Cloud WAN, or VPC peering.
 
 ### VPC Resources Best Practices

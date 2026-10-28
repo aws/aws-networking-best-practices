@@ -3,7 +3,7 @@
 !!! info "Prerequisites"
     This section assumes familiarity with [Before You Start](aws-prerequisites.md), [Amazon VPC](vpc.md), and [Regions and Availability Zones](regions-azs.md). Review those pages first if you're new to AWS networking fundamentals.
 
-IP address planning is the single most consequential decision you make early in an AWS deployment that you cannot easily change later. Every VPC, every subnet, every peering connection, every hybrid link, and every route table is constrained by the CIDR blocks you chose at creation time. Get this right and your network scales cleanly for years. Get it wrong and you'll spend those years working around overlaps, exhausted address space, and connectivity that should be possible but isn't because two VPCs share the same range.
+IP address planning is the single most consequential decision you make early in an AWS deployment that you cannot easily change later. Every VPC, every subnet, every peering connection, every hybrid link, and every route table is constrained by the CIDR blocks you chose at creation time. Get this right and your network scales cleanly for years. Get it wrong and you'll spend those years working around overlaps, exhausted address space, and connectivity constrained by overlapping ranges.
 
 CIDR (Classless Inter-Domain Routing) notation is the language of IP address planning. It replaces the old classful system (Class A, B, C) with variable-length prefixes that let you carve address space into precisely the sizes you need. Every AWS networking service — VPC, Transit Gateway, Cloud WAN, Direct Connect, VPN — speaks CIDR. Mastering it is not optional.
 
@@ -93,9 +93,13 @@ For non-production workloads where you're confident about scale, `/20` (4,096 ad
 
 #### Never overlap CIDR blocks across VPCs you might connect
 
-VPCs with overlapping CIDR blocks cannot be connected via VPC Peering, Transit Gateway, or Cloud WAN. This is an absolute constraint — there is no workaround at the network layer. If VPC A uses `10.0.0.0/16` and VPC B uses `10.0.5.0/24`, those VPCs can never peer or share a Transit Gateway route table, because `10.0.5.0/24` falls within `10.0.0.0/16`.
+Design your allocation so VPCs you might connect never overlap. Overlapping ranges block VPC Peering outright: if VPC A uses `10.0.0.0/16` and VPC B uses `10.0.5.0/24`, those VPCs can never peer, because `10.0.5.0/24` falls within `10.0.0.0/16`. Other paths can work around an overlap, but each adds cost, operational overhead, or address bookkeeping you would not otherwise carry. Non-overlapping space is always the clean answer.
 
-The only escape from an overlap is PrivateLink (which uses ENIs and doesn't require routable connectivity) or VPC Lattice (which operates at the application layer). But these are service-level solutions, not network-level connectivity. If you need IP-level routing between VPCs — and most organizations do — overlaps are fatal.
+If you inherit an overlap you did not choose, such as a merger, a partner network, or multicloud connectivity, you have a few recovery options, none of them free:
+
+* **Re-IP one side.** This restores native, untranslated IP-level routing and is required if you must use VPC Peering. It also avoids permanent translation for unsupported attachment types or overlapping IPv6 Unique Local Address (ULA) ranges, which managed 1:1 NAT does not translate. It is the most invasive option because it touches DNS, application config, firewall rules, and monitoring.
+* **Expose the workload as a service through PrivateLink or VPC Lattice.** PrivateLink uses ENIs and doesn't require routable connectivity; VPC Lattice operates at the application layer. The overlap becomes invisible with no translated-address bookkeeping. This is the right fit when access is a one-directional service exposure rather than full connectivity.
+* **Translate with managed, static 1:1 NAT on a [Transit Gateway attachment](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-nat.html) or [Cloud WAN attachment](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-nat.html).** This maps an overlapping CIDR to a non-overlapping one of equal prefix length, giving bidirectional IP-level routing without re-IPing. The feature is IPv4 only; IPv6 passes untranslated. Transit Gateway does not support it on AWS Cloud WAN peering and route table attachments, Network Function attachments, or Client VPN attachments. Cloud WAN does not support it on transit gateway route table attachments or tunnel-less Connect attachments. Neither service allows it with appliance mode on the same VPC attachment. It incurs [NAT gateway-hour and per-GB data-processing charges](https://aws.amazon.com/vpc/pricing/), plus applicable standard data-transfer charges.
 
 This applies across your entire organization, including VPCs you haven't created yet. Reserve address space for future accounts and Regions in your allocation plan.
 
@@ -107,7 +111,7 @@ This means:
 
 1. **Document every on-premises IP range** before allocating AWS CIDRs. Include branch offices, partner networks, acquired company networks, and remote access VPN pools. The range you don't know about is the one that will overlap.
 2. **Reserve non-overlapping space** for AWS that will never conflict with on-premises allocations. A clean split (for example, on-premises owns `10.128.0.0/9`, AWS owns `10.0.0.0/9`) eliminates ambiguity.
-3. **Coordinate with network teams** who manage on-premises addressing. A unilateral AWS CIDR decision that overlaps with the data center range discovered six months later forces a VPC recreation.
+3. **Coordinate with network teams** who manage on-premises addressing. A unilateral AWS CIDR decision that overlaps with the data center range discovered six months later forces a VPC recreation or permanent address translation on the hybrid path.
 4. **Account for VPN client pools**. Remote access VPN clients need IP ranges that don't overlap with either AWS or on-premises networks. Many organizations use `172.16.0.0/12` for client VPN pools.
 5. **Plan for acquisitions**. When your company acquires another organization, their network ranges become your problem. Reserve space that's unlikely to conflict with typical enterprise allocations.
 
@@ -182,7 +186,7 @@ Secondary CIDRs are **not** a substitute for proper initial planning. They add c
 | Using `192.168.0.0/16` for production | Overlaps with home networks, VPN clients, and many on-premises environments | Use `10.0.0.0/8` for AWS production |
 | Allocating `/24` VPCs "to save space" | Exhausts subnet capacity quickly; no room for multi-AZ or EKS | Default to `/16` for production, `/20` minimum for non-production |
 | No reserved space for future Regions | Forces non-contiguous allocation when expanding | Reserve 50%+ of your total allocation |
-| Ignoring on-premises ranges | Discovered overlaps block hybrid connectivity | Document all existing ranges before any AWS allocation |
+| Ignoring on-premises ranges | Discovered overlaps force re-IPing or address translation on the hybrid path | Document all existing ranges before any AWS allocation |
 | Per-team allocation without coordination | Teams independently choose overlapping ranges | Centralize allocation through IPAM or a shared registry |
 | Treating VPC CIDR as changeable | Primary CIDR cannot be removed; forces VPC recreation | Plan the primary CIDR as permanent from day one |
 
@@ -201,7 +205,7 @@ The table below shows how CIDR decisions interact with key AWS networking servic
 | **CIDR + Cloud WAN** | Per-Region contiguous allocations that align with segment boundaries; summarizable prefixes for routing policies | Global policy-driven network, segment isolation, service insertion, multi-Region routing |
 | **CIDR + EKS (VPC CNI)** | Secondary CIDRs (100.64.0.0/10) for pod networking; primary CIDR sized for nodes | Pod-level networking with VPC-native security groups, network policies |
 
-The most common failure mode is discovering a CIDR constraint only when you try to adopt a new service. For example: you deploy Transit Gateway and discover that two VPCs in different accounts use the same `10.0.0.0/16` range because teams allocated independently. Or you establish Direct Connect and realize your AWS ranges overlap with a branch office subnet that nobody documented. These are not Transit Gateway or Direct Connect problems — they are CIDR planning problems that surface at deployment time.
+The most common failure mode is discovering a CIDR constraint only when you try to adopt a new service. For example, you deploy Transit Gateway and discover that two VPCs in different accounts use the same `10.0.0.0/16` range because teams allocated independently; the networks must be re-IPed or translated before they can communicate. Or you establish Direct Connect and realize your AWS ranges overlap with a branch office subnet that nobody documented. These are not Transit Gateway or Direct Connect problems; they are CIDR planning problems that surface at deployment time.
 
 ***Key insight:*** *Every networking service you adopt later will either benefit from or be constrained by your CIDR plan. The 30 minutes you spend on a proper allocation scheme saves hundreds of hours of workarounds across Transit Gateway, Direct Connect, and Cloud WAN deployments.*
 

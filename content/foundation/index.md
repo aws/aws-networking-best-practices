@@ -62,7 +62,7 @@ Every VPC, route table, and Transit Gateway attachment lives inside an account, 
 **Key principles:**
 
 *   **Allocate contiguously** — Enables route summarization, simplifies firewall rules, and makes topology legible
-*   **Never overlap** — VPCs with overlapping CIDRs cannot be connected via peering, Transit Gateway, or Cloud WAN
+*   **Never overlap** — Overlapping CIDRs block VPC peering and add cost and operational complexity to other connectivity paths
 *   **Plan for hybrid** — Coordinate with on-premises ranges before any AWS allocation
 *   **Use 10.0.0.0/8** — Largest contiguous private space; supports deep hierarchical allocation
 
@@ -92,7 +92,7 @@ A **subnet** is where routing policy meets IP addressing. Every resource you lau
 *   **Compliance monitoring** — Continuous detection of VPCs with manually assigned CIDRs that violate your standards
 *   **IaC integration** — CloudFormation and Terraform reference IPAM pools instead of hardcoded CIDRs
 
-***Best Practice:*** *Implement IPAM before creating your first production VPC. The cost of a single CIDR overlap (which requires VPC recreation to fix) exceeds the cost of IPAM for years.*
+***Best Practice:*** *Implement IPAM before creating your first production VPC. The cost and operational complexity of connecting overlapping networks exceed the cost of IPAM for years.*
 
 ## 8. DNS Architecture
 
