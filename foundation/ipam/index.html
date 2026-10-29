@@ -2155,9 +2155,9 @@
 <p><abbr title="IP Address Manager">IPAM</abbr> becomes essential the moment your AWS environment grows beyond what a single engineer can track mentally. The threshold is lower than most teams expect.</p>
 <p><strong>Use <abbr title="IP Address Manager">IPAM</abbr> when:</strong></p>
 <ul>
-<li>You operate more than 5-10 VPCs across any number of accounts. Manual tracking breaks down quickly, and the cost of a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap (which requires <abbr title="Virtual Private Cloud">VPC</abbr> recreation to fix) exceeds the cost of <abbr title="IP Address Manager">IPAM</abbr> for years.</li>
+<li>You operate more than 5-10 VPCs across any number of accounts. Manual tracking breaks down quickly, and the cost and operational complexity of connecting overlapping networks exceed the cost of <abbr title="IP Address Manager">IPAM</abbr> for years.</li>
 <li>Multiple teams create VPCs independently. Without centralized allocation, teams will choose CIDRs that conflict with each other or with on-premises networks.</li>
-<li>You need to connect VPCs to each other or to on-premises networks. Overlapping CIDRs make Transit Gateway, Cloud WAN, and <abbr title="Virtual Private Cloud">VPC</abbr> Peering impossible between the affected VPCs.</li>
+<li>You need to connect VPCs to each other or to on-premises networks. <abbr title="IP Address Manager">IPAM</abbr> prevents overlaps that block <abbr title="Virtual Private Cloud">VPC</abbr> Peering and complicate Transit Gateway, Cloud WAN, and hybrid connectivity.</li>
 <li>Compliance frameworks require you to demonstrate IP address governance and audit trails.</li>
 <li>You plan to use Infrastructure as Code for <abbr title="Virtual Private Cloud">VPC</abbr> provisioning. <abbr title="IP Address Manager">IPAM</abbr> pools integrate directly with CloudFormation and Terraform, enabling fully automated, conflict-free <abbr title="Virtual Private Cloud">VPC</abbr> creation.</li>
 </ul>
@@ -2166,7 +2166,7 @@
 <li>You have a single account with 1-2 VPCs and no hybrid connectivity. Even here, setting up <abbr title="IP Address Manager">IPAM</abbr> early avoids retrofitting later.</li>
 <li>You're running isolated sandbox accounts that will never connect to production networks.</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em>The cost of not using <abbr title="IP Address Manager">IPAM</abbr> is invisible until it's catastrophic. <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlaps are discovered when you try to peer VPCs, attach them to Transit Gateway, or establish hybrid connectivity — at which point the only fix is recreating VPCs and migrating workloads. <abbr title="IP Address Manager">IPAM</abbr> is insurance that costs pennies compared to the operational disruption of an overlap.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>The cost of not using <abbr title="IP Address Manager">IPAM</abbr> is invisible until an overlap affects connectivity. <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlaps are often discovered when you try to peer VPCs, attach them to Transit Gateway or Cloud WAN, or establish hybrid connectivity. At that point, the available remedies require either workload migration or ongoing translation and address-management overhead. <abbr title="IP Address Manager">IPAM</abbr> prevents that complexity before deployment.</em></p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="pool-hierarchy-design">Pool hierarchy design<a class="headerlink" href="#pool-hierarchy-design" title="Permanent link">&para;</a></h3>
 <h4 id="design-pools-top-down-organization-region-environment-workload">Design pools top-down: Organization → Region → Environment → Workload<a class="headerlink" href="#design-pools-top-down-organization-region-environment-workload" title="Permanent link">&para;</a></h4>
@@ -2329,7 +2329,7 @@
 <ol>
 <li>Identify the non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> and its owner</li>
 <li>Determine if the <abbr title="Classless Inter-Domain Routing">CIDR</abbr> actually conflicts with your managed space</li>
-<li>If it conflicts, plan a migration to a compliant <abbr title="Classless Inter-Domain Routing">CIDR</abbr> (this requires <abbr title="Virtual Private Cloud">VPC</abbr> recreation)</li>
+<li>If it conflicts, plan a migration to a compliant <abbr title="Classless Inter-Domain Routing">CIDR</abbr>. Use permanent address translation only as a documented exception when re-IPing is not practical.</li>
 <li>If it doesn't conflict, import the <abbr title="Classless Inter-Domain Routing">CIDR</abbr> into <abbr title="IP Address Manager">IPAM</abbr> to bring it under management</li>
 </ol>
 <h4 id="import-existing-cidrs-into-ipam-before-they-cause-problems">Import existing CIDRs into <abbr title="IP Address Manager">IPAM</abbr> before they cause problems<a class="headerlink" href="#import-existing-cidrs-into-ipam-before-they-cause-problems" title="Permanent link">&para;</a></h4>
@@ -2436,7 +2436,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> is not a standalone service — it's the address governance layer that makes every other networking service work correctly at scale. Transit Gateway requires non-overlapping CIDRs. Cloud WAN benefits from summarizable address space. <abbr title="Virtual Private Cloud">VPC</abbr> Peering fails with overlaps. <abbr title="IP Address Manager">IPAM</abbr> is the service that guarantees these preconditions are met before you discover a problem in production.</em></p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> is not a standalone service. It is the address governance layer that makes every other networking service work correctly at scale. It keeps allocations non-overlapping and summarizable, preventing connectivity failures, re-IPing, and permanent translation workarounds before deployment.</em></p>
 <h2 id="ipam-pricing-and-cost-considerations"><abbr title="IP Address Manager">IPAM</abbr> pricing and cost considerations<a class="headerlink" href="#ipam-pricing-and-cost-considerations" title="Permanent link">&para;</a></h2>
 <p><abbr title="IP Address Manager">IPAM</abbr> pricing is based on two dimensions:</p>
 <ul>
@@ -2498,7 +2498,7 @@
 </ul>
 <p><strong>Relationship to Connectivity:</strong></p>
 <ul>
-<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Transit Gateway and Cloud WAN require non-overlapping CIDRs across all connected VPCs. <abbr title="IP Address Manager">IPAM</abbr> is the service that guarantees this precondition.</li>
+<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Transit Gateway and Cloud WAN route between your VPCs; <abbr title="IP Address Manager">IPAM</abbr> prevents overlaps so those networks connect without address workarounds.</li>
 <li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud</a></strong>: On-premises <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges must be imported into <abbr title="IP Address Manager">IPAM</abbr> to prevent AWS allocations from conflicting with existing networks. <abbr title="IP Address Manager">IPAM</abbr>'s hybrid awareness is essential for any organization with Direct Connect or <abbr title="Virtual Private Network">VPN</abbr> connectivity.</li>
 </ul>
 
@@ -2523,7 +2523,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 4, 2026 01:11:30 UTC">June 4, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 27, 2026 09:31:30 UTC">October 27, 2026</span>
   </span>
 
     
