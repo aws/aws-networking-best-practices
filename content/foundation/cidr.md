@@ -105,7 +105,7 @@ This applies across your entire organization, including VPCs you haven't created
 
 #### Plan for hybrid connectivity from day one
 
-If there is any chance your AWS environment will connect to on-premises networks, corporate data centers, or other clouds, you must coordinate CIDR allocation across all environments from the start. Hybrid connectivity failures caused by CIDR overlap are among the most expensive networking mistakes to fix because they require re-IPing workloads — a process that touches DNS, application configurations, firewall rules, and monitoring systems.
+If there is any chance your AWS environment will connect to on-premises networks, corporate data centers, or other clouds, you must coordinate CIDR allocation across all environments from the start. Hybrid connectivity failures caused by CIDR overlap are among the most expensive networking mistakes to fix because they force either re-IPing workloads, which touches DNS, application configurations, firewall rules, and monitoring systems, or permanent address translation on the hybrid path, which adds NAT charges, address bookkeeping, and translated IPs in logs and tracing.
 
 This means:
 
