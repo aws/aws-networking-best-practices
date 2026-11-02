@@ -144,18 +144,20 @@ Anomaly detection costs the same as a standard alarm but adapts automatically to
 
 Every networking service has quotas. Hitting a quota silently — no new VPN connections, no additional Transit Gateway attachments, no more NAT gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.
 
-Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html) integration with CloudWatch to alarm at 80% utilization:
+Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html) integration with CloudWatch to alarm at 80% utilization. Base each alarm on the quota applied to that account and Region: adjustable quotas can differ from the service defaults, while fixed limits remain in the service documentation.
 
-| Service | Quota to monitor | Default limit |
-| --- | --- | --- |
-| Transit Gateway | Attachments per TGW | 5,000 |
-| Transit Gateway | Routes per route table | 10,000 |
-| NAT gateway | NAT gateways per Availability Zone | 5 |
-| VPN | VPN connections per VGW/TGW | 10 / 20 |
-| Direct Connect | Virtual interfaces per connection | 50 |
-| ALB | Rules per ALB | 100 |
-| NLB | Targets per target group | 500 (IP) / 500 (instance) |
-| Network Firewall | Rule groups per firewall policy | 20 |
+| Service | Quotas to monitor |
+| --- | --- |
+| Transit Gateway | Attachments per transit gateway; routes per route table |
+| NAT gateway | NAT gateways per Availability Zone |
+| Site-to-Site VPN | Connections per gateway; routes received from and advertised to each customer gateway |
+| AWS Cloud WAN | Routes per core network; routes received from and advertised to each VPN, Connect peer, and Direct Connect gateway attachment |
+| Direct Connect | Virtual interfaces per connection; prefixes received and advertised per BGP session and gateway association |
+| Application Load Balancer | Rules per load balancer |
+| Network Load Balancer | Targets per target group |
+| AWS Network Firewall | Rule groups per firewall policy |
+
+Hybrid route counts need extra attention because not all of them have a direct quota metric. Direct Connect publishes accepted and advertised prefix counts; for VPN, Connect, and Cloud WAN, periodically collect the route counts available from the routing APIs and receiving peers, then publish a custom metric. Leave enough warning time to summarize or filter routes, or separate hybrid attachments into a different routing domain, because a quota increase is not available for every limit.
 
 ### Multi-account monitoring architecture
 
@@ -315,7 +317,7 @@ Beyond CloudWatch metrics, active health checking validates end-to-end path avai
 
     ---
 
-    Monitor service quota utilization with CloudWatch integration and request increases before hitting limits.
+    Monitor applied quotas through Service Quotas. Check the service-specific quota pages for fixed route limits: [Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html), [Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html), [Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html), and [Cloud WAN](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-quotas.html).
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html)
 
