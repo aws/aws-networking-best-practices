@@ -56,7 +56,7 @@ We document design decisions and the reasons behind them, and rely on AWS docume
 
 **This means:**
 
-* Quotas, limits, and prices are named by dimension (for example, per-tunnel throughput or per-GB data processing) and linked to the current AWS documentation, not stated as numbers
+* Capacity and count quotas, limits, and prices are named by dimension (for example, per-tunnel throughput or per-GB data processing) and linked to the current AWS documentation, not stated as numbers. Values a design must be configured to, such as MTU or encapsulation overhead, may be stated with a link to the page that defines them
 
 * Guidance explains what to build, why, and what breaks otherwise; step-by-step console, CLI, and configuration procedures stay in the AWS documentation
 
