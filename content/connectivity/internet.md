@@ -212,7 +212,7 @@ Best practices:
 
 ### Comparing decentralized vs centralized IPv4 egress
 
-Unlike ingress, where decentralized is almost always the right default, IPv4 egress is a genuine 50-50 decision driven by organizational factors as much as technical ones. The table below summarizes how each pattern handles the dimensions that usually decide the choice. Remember that the decision is IPv4-only — IPv6 egress is decentralized in either case.
+Unlike ingress, where decentralized is almost always the right default, IPv4 egress is a genuine 50-50 decision driven by organizational factors as much as technical ones. The table below compares the AWS-native patterns; the external-provider variant described next is centralized but has its own routing, source-identity, and cost decisions. Remember that the AWS-native decision is IPv4-only — IPv6 egress through an egress-only internet gateway is decentralized.
 
 | Dimension | Decentralized IPv4 egress | Centralized IPv4 egress |
 | --- | --- | --- |
@@ -224,6 +224,23 @@ Unlike ingress, where decentralized is almost always the right default, IPv4 egr
 | **Dual-stack consistency** | IPv4 and IPv6 both exit per-VPC, so the egress shape is identical for both protocols and the workload VPC owns both paths | IPv4 traverses Transit Gateway or AWS Cloud WAN to the shared egress VPC; IPv6 still exits per-VPC through the egress-only internet gateway. Operators run two different egress patterns at once for a dual-stack workload |
 | **Latency overhead** | Direct IGW exit, no transit hop | Adds a Transit Gateway or AWS Cloud WAN hop and inspection processing on every IPv4 flow |
 | **Best fit** | Smaller environments, team-autonomy organizations, latency- or throughput-sensitive workloads, IPv6-first or dual-stack workloads where a single egress shape is preferred, applications that need fundamentally different egress policies from each other | Cost pressure at scale (dozens or hundreds of VPCs) for IPv4 traffic, mandatory single physical inspection point for IPv4, central security ownership, organizations where IPv4 egress is run as a shared platform service |
+
+### External security-provider egress
+
+Use an external secure access service edge (SASE) or proxy provider as the routed egress path when the organization already relies on that provider to enforce one internet policy across AWS, other clouds, and on-premises sites. For AWS-only requirements, NAT gateway with AWS Network Firewall or Gateway Load Balancer, or AWS Network Firewall Proxy (preview) for an explicit proxy, avoids the additional tunnels and provider dependency.
+
+Treat the provider path as a centralized egress variant: workload traffic crosses Transit Gateway or AWS Cloud WAN to a dedicated external routing domain, then reaches the provider through regional Site-to-Site VPN or supported Connect attachments.
+
+| Decision | Recommended design | Why |
+| --- | --- | --- |
+| **Routing boundary** | Terminate the provider attachments in a dedicated external route table or Cloud WAN segment in each Region | Internet-bound traffic has a different trust boundary and route policy from on-premises traffic |
+| **Route exchange** | Send the default route from workload routing domains toward the local provider path, and advertise only that Region's return prefixes to the provider, preferably as a regional summary | Advertising every VPC prefix through every Region consumes route capacity and can produce asymmetric or cross-Region return paths |
+| **Source identity** | Preserve source addresses when the provider applies policy or reporting per workload. If route scale matters more, source NAT in a regional egress VPC reduces the return advertisement to one translated prefix | Source NAT simplifies routing but removes the original workload address from the provider's policy and logs |
+| **Resilience and monitoring** | Use redundant provider paths per Region, with ECMP for equal paths or BGP preference for active/standby. Monitor tunnel and BGP state, traffic distribution, and accepted and advertised route counts | A healthy tunnel can still carry the wrong routes or create an asymmetric path |
+| **IPv6** | Confirm the provider supports IPv6 and prevent it from following a VPC-local path without inspection. Site-to-Site VPN requires separate connections for IPv4 and IPv6; Connect can exchange both families with MP-BGP | Adding IPv6 without an equivalent provider path creates a policy bypass |
+| **Cost** | Compare attachment and tunnel charges, Transit Gateway or Cloud WAN processing, provider charges, source NAT where used, and any cross-Region transfer with the equivalent AWS-native regional egress design | The provider path replaces some AWS inspection components but adds transit and provider costs |
+
+The [Hybrid and Multi-Cloud Connectivity](hybrid-multicloud.md) page covers VPN and Connect attachment design; [Connectivity Within AWS](within-aws.md) covers the route-table, segment, and Cloud WAN routing-policy controls used by this pattern.
 
 ### Looking ahead: AWS Network Firewall Proxy (public preview)
 
@@ -255,6 +272,7 @@ The services this page references, grouped by where they appear:
 | Network Load Balancer | Ingress: L4 entry point in the workload VPC | [Documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html) |
 | Amazon API Gateway | Ingress: managed L7 ingress for API-first workloads | [Documentation](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html) |
 | AWS Global Accelerator | Ingress: anycast static IPs for L4 workloads with global clients | [Documentation](https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html) |
+| AWS Site-to-Site VPN / Connect | Egress: encrypted or BGP-based connectivity to an external security provider | [VPN documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html) / [Transit Gateway Connect](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html) / [Cloud WAN Connect](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-connect-attachment.html) |
 | NAT gateway | Egress (IPv4): managed NAT, regional or zonal mode | [Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) |
 | Egress-only internet gateway | Egress (IPv6): per-VPC outbound IPv6 path | [Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html) |
 | Route 53 DNS Firewall | Egress: domain-based outbound filtering across VPCs | [Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html) |
