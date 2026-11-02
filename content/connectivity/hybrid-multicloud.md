@@ -64,17 +64,28 @@ Most organizations use more than one of these services simultaneously. The goal 
 
 ### AWS Direct Connect Best Practices
 
-#### Design for resiliency at the location and provider level, not just at the connection level
+#### Design resiliency across locations and devices
 
-A single dedicated connection, even at 100 Gbps, is still one circuit through one Direct Connect location. For production hybrid traffic, follow the Resiliency Toolkit's **maximum resiliency** model: at least two connections at two separate Direct Connect locations, each sourced from a different provider and terminating on different on-premises routers. This removes location, provider, cross-connect, and device as single points of failure.
+Start with the failure the network must survive, then choose the AWS Direct Connect Resiliency Toolkit model and physical paths that meet it. Maximum resiliency is the default for critical production traffic; high resiliency is reasonable when the surviving connection still meets the workload's availability and capacity needs. Use a single location only when the workload can tolerate losing that location.
 
-If the workload can tolerate degraded performance during a single location failure, the **high resiliency** model (two connections across two locations through one or more providers) is a reasonable middle ground. The **development/test** single-connection model is rarely appropriate for anything that ends up carrying production traffic.
+| Decision | Recommendation | Why |
+| --- | --- | --- |
+| **Locations and devices** | Place independent connections on separate AWS devices in more than one Direct Connect location, terminate them on separate on-premises routers, and add carrier diversity where one provider could affect both paths | Connections in one location or on one device share the same failure |
+| **Link aggregation groups** | Treat a LAG as one connection for resiliency. Use separate connections or LAGs across devices and locations for availability | Every member terminates on the same Direct Connect endpoint; a LAG adds bandwidth, not device or location diversity |
+| **Minimum links** | Set the threshold to the number of surviving LAG members that can carry the traffic, and plan expansion before the endpoint runs out of same-speed ports | A low threshold can leave an overloaded LAG in service; a high threshold can turn one member failure into a complete LAG failure |
+| **Detection and validation** | Enable BFD on the on-premises router, alarm on `ConnectionState` for every member, and run the Direct Connect failover test before production and after material routing changes | Redundant paths protect the workload only when failures are detected, routes converge, and the surviving path carries traffic |
 
-#### Use a Direct Connect Gateway as the attach point
+#### Size capacity for the failure state
 
-A Direct Connect Gateway is a free, globally distributed resource that acts as the BGP attach point between your VIFs and AWS network services (virtual private gateways, Transit Gateways, or AWS Cloud WAN core networks). Associating a single Direct Connect Gateway with multiple regional attach points means one physical connection can reach workloads in any Region, without a Region-specific VIF per destination.
+Translate workload demand into throughput before choosing connection sizes. Separate recurring traffic, which the permanent connections must carry, from one-time bulk transfers that may justify temporary capacity or migration tooling. For active/active designs, use ECMP across independent VIF paths with equal capacity, the same prefixes, and matching BGP attributes. ECMP is not capacity weighted, so unequal paths can overload the smaller connection.
 
-This also simplifies migrations: when you move workloads between Regions or from Transit Gateway to AWS Cloud WAN, you re-associate the Direct Connect Gateway rather than re-provisioning VIFs. It also keeps the BGP control plane off the data path, so BGP re-convergence doesn't interrupt traffic on healthy paths.
+Size the network after removing the connection or location the design must survive, not from normal utilization with every path available. The remaining paths must carry peak traffic without saturation. Alarm when utilization erodes that failure reserve, review the trend while there is still time to order capacity, and verify the assumption during failover testing.
+
+#### Align Direct Connect gateways with routing domains
+
+A Direct Connect gateway is a globally distributed set of BGP route reflectors outside the data path. It lets VIFs reach associated virtual private gateways, Transit Gateways, or an AWS Cloud WAN core network across Regions without creating a Regional gateway or a Region-specific VIF. Multiple gateways are therefore not an availability mechanism.
+
+Use one Direct Connect gateway for connections that share the same routing ownership and prefix policy, and separate them when those boundaries differ. With Cloud WAN, a gateway can associate with one core network and one segment, so each segment that needs its own Direct Connect attachment requires a distinct gateway. With Transit Gateway, one gateway can serve multiple Transit Gateways when they share the policy; separate gateways when routing domains require independent allowed prefixes or ownership. This keeps the gateway design aligned with segmentation without multiplying gateways only because the network spans Regions.
 
 #### Choose the right VIF type for each workload
 
@@ -100,23 +111,22 @@ When you have multiple Direct Connect connections, BGP attributes and communitie
 
 Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect Gateway has configurable BGP policy knobs. For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point, filtering, summarizing, and manipulating BGP attributes on Direct Connect Gateway attachment routes from the policy. Verify the result from the AWS side by [viewing the BGP routes](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) on the VIF, where accepted routes show the communities AWS actually received with each prefix.
 
-#### Enable BFD for sub-second failover
+#### Plan prefix capacity before turn-up { #monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves }
 
-BGP hold timers alone detect a failed neighbor in around 90 seconds by default (three times the 30-second keep-alive interval). That's too long for most production hybrid workloads. [Bidirectional Forwarding Detection (BFD)](https://docs.aws.amazon.com/directconnect/latest/UserGuide/enable_bfd.html) runs a lightweight liveness check alongside the BGP session and tears the session down as soon as the forwarding path fails, typically within about a second.
+Treat prefix capacity as part of the design, not as an alarm added after migration:
 
-AWS enables asynchronous BFD on every Direct Connect BGP session automatically, with a 300 ms detection timer and a multiplier of 3 (roughly 900 ms to declare the session down). On your side, enable BFD with compatible timers on the on-premises router to complete the negotiation. Without BFD active on both ends, failover on a connection, VIF, or peer device issue still falls back to BGP hold timers, and the outage window is tens of seconds rather than sub-second.
+| Step | Practice |
+| --- | --- |
+| **Summarize** | Advertise aggregates from on-premises instead of every subnet where the address plan permits it. A contiguous allocation reduces BGP and route-table consumption throughout the hybrid path |
+| **Allocate** | Set the [inbound prefix allocation](https://docs.aws.amazon.com/directconnect/latest/UserGuide/prefix-controls.html) for each private or transit VIF. On a dedicated connection, the allocation consumes its connection-level pool; when attached to a Direct Connect gateway, it also consumes the gateway pool. Each redundant VIF consumes its own allocation, even when it advertises the same routes, so include every VIF and both address families in the plan |
+| **Match the AWS attachment** | Transit Gateway and Cloud WAN have different outbound prefix behavior. Transit Gateway advertises the allowed prefixes configured on its gateway association; Cloud WAN advertises the prefixes in the associated segment, with filtering or summarization applied through Cloud WAN routing policy |
+| **Validate** | At turn-up, compare planned, allocated, accepted, and advertised prefixes. Use [BGP route visibility](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) to inspect the routes and CloudWatch metrics to alarm on unexpected changes and on utilization approaching the allocation |
 
-BFD is especially important in multi-circuit or active/passive designs where the whole point of the redundancy is quick failover. Confirm that BFD is up on every session as part of turn-up validation, and alarm on BFD state the same way you alarm on BGP session state.
+Advertising more prefixes than a VIF's inbound allocation takes its BGP session down. Increasing the allocation can provide headroom, but it doesn't fix a fragmented address plan or raise downstream route-table limits. Summarize first, then allocate capacity for the routes that remain.
 
 #### Plan IPv6 from the start
 
 Every VIF type supports IPv6 BGP sessions. Configure IPv6 alongside IPv4 on each VIF from the beginning, even if your on-premises hosts are IPv4-only today. The AWS side supports dual-stack; the hard part is the on-premises rollout, and having the AWS side ready means you can adopt IPv6 when the on-premises network is ready without reopening VIF configuration.
-
-#### Monitor BGP and VIF metrics, and verify the routes themselves
-
-Direct Connect publishes CloudWatch metrics for BGP session state (`VirtualInterfaceBgpStatus`), prefix counts in each direction (`VirtualInterfaceBgpPrefixesAccepted` and `VirtualInterfaceBgpPrefixesAdvertised`), connection state, and per-VIF ingress and egress bytes and packets. Alarm on BGP session state flapping, on a drop in accepted prefix count against its baseline, and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when BGP should balance them). Fast detection of BGP state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.
-
-Prefix counts tell you how many routes moved, not which. [BGP route visibility](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) shows the routes on each VIF in both directions, accepted and advertised, each with its AS path, community values, and install time. Alarm on the metrics, then read the route list to find the prefix that changed. It also answers what the metrics cannot, such as whether IPv6 prefixes are being exchanged alongside IPv4, and on public VIFs whether a prefix was dropped by the inbound policy that requires you to own and register everything you advertise.
 
 ### When to use AWS Direct Connect
 
