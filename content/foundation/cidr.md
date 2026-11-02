@@ -56,7 +56,7 @@ Beyond RFC 1918, AWS VPCs support these ranges:
 * **100.64.0.0/10** (Carrier-Grade NAT range): Useful for EKS pod networking with the VPC CNI custom networking feature. Pods get IPs from this range, preserving your primary RFC 1918 space for nodes and other resources. Also used when RFC 1918 space is exhausted.
 * **RFC 6815 space** (`198.19.0.0/16`): Available as a secondary CIDR for VPCs when other ranges are exhausted.
 
-***Key insight:*** *The 100.64.0.0/10 range is a strategic tool for EKS-heavy environments. A single EKS cluster can consume thousands of IP addresses for pods. Assigning pod networking to 100.64.0.0/10 via custom networking keeps your primary VPC CIDR available for nodes, load balancers, and other infrastructure.*
+***Key insight:*** *The 100.64.0.0/10 range is a strategic tool for EKS-heavy environments. A single EKS cluster can consume thousands of IP addresses for pods. Assigning pod networking to 100.64.0.0/10 via custom networking keeps your primary VPC CIDR available for nodes, load balancers, and other infrastructure. For new clusters, an IPv6 cluster removes the pressure instead of relocating it: pods get IPv6 addresses and consume no IPv4 space at all.*
 
 ## Best Practices
 
@@ -64,24 +64,34 @@ Beyond RFC 1918, AWS VPCs support these ranges:
 
 #### Allocate contiguously for route summarization
 
-The most important property of a good CIDR plan is that allocations within the same logical group are **contiguous**. When all production VPCs in us-east-1 fall within `10.0.0.0/12`, you can advertise a single `/12` summary route to on-premises networks instead of individual `/16` routes for each VPC. This matters because:
+The most important property of a good address plan is that allocations within the same logical group are **contiguous**, for IPv4 and IPv6 alike. Allocate top-down, from your organization's range to a block per Region and then per environment, so a single prefix covers each level. When all production VPCs in us-east-1 fall within `10.0.0.0/12` and `2001:db8::/40`, you advertise one summary route per address family to on-premises instead of one route per VPC. This matters because:
 
 * Route tables have size limits (Transit Gateway supports 10,000 routes, but on-premises routers may support far fewer)
 * Fewer routes mean faster convergence after failures
 * Summary routes simplify firewall rules — one rule covers an entire environment instead of per-VPC entries
 * BGP advertisements to on-premises are cleaner and more stable
 
-**Bad allocation** (non-contiguous, cannot summarize):
+**Example multi-Region scheme** (IPv4 within `10.0.0.0/9` for AWS, IPv6 within a BYOIP `/32`):
 
-* Production VPC 1: `10.0.0.0/16`
-* Development VPC: `10.1.0.0/16`
-* Production VPC 2: `10.5.0.0/16`
+| Region | IPv4 block | IPv6 block | Purpose |
+| -------- | ----------- | ----------- | --------- |
+| us-east-1 | `10.0.0.0/12` | `2001:db8::/40` | Primary Region |
+| us-west-2 | `10.16.0.0/12` | `2001:db8:100::/40` | DR / Secondary |
+| eu-west-1 | `10.32.0.0/12` | `2001:db8:200::/40` | European workloads |
+| ap-southeast-1 | `10.48.0.0/12` | `2001:db8:300::/40` | Asia-Pacific workloads |
+| Reserved | `10.64.0.0/10` | Rest of the `/32` | Future Regions |
 
-**Good allocation** (contiguous, summarizable as `10.0.0.0/12`):
+Each IPv4 `/12` holds 16 `/16` or 256 `/20` VPCs; each IPv6 `/40` holds 65,536 `/56` VPCs, so in IPv6 the hierarchy exists for summarization, not for capacity. Without BYOIP, an Amazon-provided contiguous block provisioned to an IPAM Regional pool gives the same per-Region shape, without the shared organization prefix above it.
 
-* Production VPC 1: `10.0.0.0/16`
-* Production VPC 2: `10.1.0.0/16`
-* Production VPC 3: `10.2.0.0/16`
+Non-contiguous allocation breaks summarization in both families. In IPv4 it comes from per-team numbering, such as production VPCs at `10.0.0.0/16` and `10.5.0.0/16` with development at `10.1.0.0/16` between them. In IPv6 it comes from VPCs that each request an Amazon-provided `/56` outside IPAM: each `/56` is unrelated to the next, so every VPC is advertised and filtered individually.
+
+***Key insight:*** *Reserve at least 50% of your total address space for future growth. Organizations consistently underestimate how many VPCs, accounts, and Regions they'll need in 3-5 years. Address space is free; running out of it is not.*
+
+#### Retrofit summarization into an existing network
+
+Most large networks were not allocated hierarchically, so every VPC prefix propagates individually through Transit Gateway or AWS Cloud WAN and to on-premises. The symptom appears late: route tables and BGP sessions approach their route limits, and teams look for a filtering feature when the root cause is the address plan. You can't renumber everything at once, but you can stop the growth and shrink the problem release by release.
+
+Import existing VPC and on-premises ranges into IPAM to find the ones that already fall inside a summarizable block, and advertise those blocks as summaries now, using Cloud WAN routing policies toward hybrid attachments, the allowed prefixes on a Direct Connect gateway association with a Transit Gateway, or the on-premises router. Check every summary against the full address inventory first: a summary that also covers ranges living in another Region or on-premises attracts their traffic and black-holes it. Then reserve a summary block per Region in IPAM, allocate every new VPC from them, and move existing workloads onto secondary CIDRs from the new blocks as they are redeployed. Route count per attachment and per route table, measured against its quota, tells you whether the plan is converging.
 
 #### Start with /16 for production VPCs
 
@@ -119,26 +129,6 @@ A common pattern: allocate `10.0.0.0/8` with on-premises using `10.128.0.0/9` an
 
 ***Key insight:*** *The most common hybrid connectivity failure is not a Direct Connect configuration error or a BGP misconfiguration — it's a CIDR overlap discovered after workloads are already running. Document all existing ranges, including those "temporary" lab networks and forgotten branch offices, before making any AWS allocation.*
 
-#### Design a multi-Region allocation strategy
-
-Assign each Region a dedicated block within your organizational allocation. This enables per-Region route summarization and prevents cross-Region overlap as you expand.
-
-**Example multi-Region scheme** (within `10.0.0.0/9` for AWS):
-
-| Region | CIDR Block | Purpose |
-| -------- | ----------- | --------- |
-| us-east-1 | 10.0.0.0/12 | Primary Region |
-| us-west-2 | 10.16.0.0/12 | DR / Secondary |
-| eu-west-1 | 10.32.0.0/12 | European workloads |
-| ap-southeast-1 | 10.48.0.0/12 | Asia-Pacific workloads |
-| Reserved | 10.64.0.0/10 | Future Regions |
-
-Each `/12` gives you 1,048,576 addresses per Region — enough for 16 `/16` VPCs or 256 `/20` VPCs. The reserved block ensures you can expand to new Regions without restructuring existing allocations.
-
-When advertising routes to on-premises via Direct Connect or VPN, a per-Region allocation lets you advertise a single summary route per Region (for example, `10.0.0.0/12` for all of us-east-1) rather than individual VPC prefixes. This keeps your on-premises route tables small and your BGP sessions stable.
-
-***Key insight:*** *Reserve at least 50% of your total address space for future growth. Organizations consistently underestimate how many VPCs, accounts, and Regions they'll need in 3-5 years. Address space is free; running out of it is not.*
-
 #### Plan IPv6 alongside IPv4
 
 IPv6 in AWS VPCs works differently from IPv4 and requires separate planning:
@@ -147,21 +137,21 @@ IPv6 in AWS VPCs works differently from IPv4 and requires separate planning:
 * **Subnet-level**: Each subnet gets a `/64` from the VPC's `/56`. This is fixed — you cannot choose a different subnet prefix length.
 * **No NAT required**: IPv6 addresses are globally unique. Egress-only internet gateways provide outbound-only internet access without NAT.
 * **Dual-stack**: Most organizations run dual-stack (IPv4 + IPv6) rather than IPv6-only, at least during transition.
-* **No address exhaustion concern**: A single `/56` provides 4,722,366,482,869,645,213,696 addresses. Exhaustion is not a planning factor for IPv6.
+* **Exhaustion is not a planning factor, summarization is**: A single `/56` provides 4,722,366,482,869,645,213,696 addresses, so you never size IPv6 for scarcity, but you allocate it from the same per-Region hierarchy as IPv4 so it summarizes.
 
 **IPv6 CIDR source options:**
 
 | Source | Use Case | Consideration |
 | -------- | ---------- | --------------- |
-| Amazon-provided | Default for most workloads | Addresses are assigned from Amazon's pool; change if you disassociate |
-| BYOIP (Bring Your Own IP) | Enterprises with existing IPv6 allocations | Requires RIR registration and ROA; provides address portability |
-| IPAM-managed Amazon pool | Multi-account with consistent allocation | Allocates from Amazon's pool but through IPAM for governance |
+| IPAM Regional pool with an Amazon-provided contiguous block | Default for multi-account environments | One summarizable prefix per Region; the block is provisioned to a pool with a Region locale, so the hierarchy starts at the Region rather than an organization-wide pool |
+| BYOIP (Bring Your Own IP) | Enterprises with existing IPv6 allocations | Requires RIR registration and ROA; provides address portability and a single organization-wide prefix |
+| Amazon-provided per VPC (no IPAM) | Single VPCs, sandboxes | Not contiguous across VPCs, so it cannot be summarized; addresses change if you disassociate |
 
-IPv6 planning is simpler than IPv4 in one respect: the address space is so vast that exhaustion is not a concern. The complexity lies in ensuring your security groups, NACLs, route tables, and firewall rules account for IPv6 traffic paths. Many organizations overlook that IPv6 subnets are internet-routable by default — an egress-only internet gateway provides outbound access, but without proper security group rules, resources with public IPv6 addresses are reachable from the internet.
+IPv6 planning is simpler than IPv4 in one respect: you never size for scarcity. The complexity lies in allocating from contiguous blocks and in ensuring your security groups, NACLs, route tables, and firewall rules account for IPv6 traffic paths. Many organizations overlook that IPv6 subnets are internet-routable by default — an egress-only internet gateway provides outbound access, but without proper security group rules, resources with public IPv6 addresses are reachable from the internet.
 
 **IPv6 planning checklist:**
 
-* Decide on Amazon-provided vs BYOIP before creating VPCs (changing later requires disassociation)
+* Decide on the IPv6 source (Amazon-provided contiguous block or BYOIP) and create the Regional pools before creating VPCs (changing later requires disassociation)
 * Update all security groups to include IPv6 rules (IPv4 rules do not automatically apply to IPv6 traffic)
 * Configure route tables with IPv6 routes (`::/0` to internet gateway or egress-only internet gateway)
 * Ensure NACLs permit IPv6 traffic for required flows
