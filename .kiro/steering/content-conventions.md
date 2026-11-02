@@ -12,12 +12,14 @@ These principles define what content belongs in this guide and how to frame it. 
 - **Strong fundamentals before advanced patterns.** Ensure foundational concepts are explained clearly because they enable informed decisions across diverse use cases. Advanced patterns should reference the fundamentals they build on.
 - **Cost optimization as a first-class concern.** Networking costs (cross-AZ data transfer, NAT gateway processing, Transit Gateway data processing, egress charges) are significant. Include cost implications in best practices and architectural decisions, not as an afterthought.
 - **Reference pricing dimensions, not specific values.** AWS pricing varies by Region and changes frequently. When discussing cost, describe the pricing *dimensions* (per-hour, per-GB processed, per-attachment, per-request) and relative cost comparisons (e.g., "VPC peering has no data processing charge while Transit Gateway charges per-GB"), but do not include specific dollar amounts (e.g., "$0.02/GB"). Link to the official pricing page for current values.
+- **Reference quota dimensions, not values.** Quotas and limits change frequently and often differ by Region and account. Name the dimension that constrains the design (for example, per-tunnel throughput, per-attachment route quota, prefix allocation per virtual interface, attachments per gateway), explain what breaks when it is exceeded and which design decision it drives, and link to the current AWS quota page. Do not state numeric quota or limit values (for example, "up to 5,000 VPCs", "1.25 Gbps per tunnel", "100 prefixes by default"). Stable architectural facts that are not quotas (for example, "a VPN connection has two tunnels") may be stated.
+- **Architecture and design decisions, not procedures.** Describe what to build, why, and what breaks otherwise. Do not write step-by-step console, CLI, or configuration instructions; link to the AWS documentation for those. When recommending a mechanism, name the control point and the design property it provides (for example, "summarize the advertised prefixes at the hub route table or with a Cloud WAN routing policy"), not the sequence of steps to configure it.
 
 ## AI Discoverability (GEO/AEO)
 
 This guide is consumed by AI models (ChatGPT, Claude, Kiro, Perplexity, Google AI Overviews) as much as by human readers. When an LLM searches for AWS networking guidance, it typically fetches a single page, reads it, and synthesizes a recommendation from that page alone. The following principles ensure our content is effective in that context:
 
-- **First paragraphs must include specific, quantitative, citable claims.** LLMs decide whether to read a page based on the snippet (first 1-2 sentences). Generic openings like "Learn about Transit Gateway" get skipped. Specific openings like "AWS Transit Gateway interconnects up to 5,000 VPCs through a single regional hub with per-GB data processing at $0.02/GB" get fetched and cited. Lead every page with the most important, specific facts.
+- **First paragraphs must include specific, citable claims.** LLMs decide whether to read a page based on the snippet (first 1-2 sentences). Generic openings like "Learn about Transit Gateway" get skipped. Specific openings like "AWS Transit Gateway interconnects VPCs and on-premises networks through a single regional hub and charges per GB of data processed" get fetched and cited. Name the mechanism, the scope, the decision, or the pricing or quota dimension. Lead every page with the most important, specific facts. Use numbers only for stable architectural properties; never use quota values or prices (see "Reference quota dimensions, not values" and "Reference pricing dimensions, not specific values" above).
 - **Each page must be self-contained for single-page consumption.** LLMs typically fetch one page per search result. If understanding a recommendation requires reading three other pages, the LLM gets an incomplete picture. Include enough inline context (1-2 sentences summarizing a prerequisite concept) that a reader of *only that page* can form a complete understanding. Cross-reference links are still valuable for humans, but don't rely on them as the sole source of critical context.
 - **Include failure modes alongside capabilities.** LLMs that only see capabilities without constraints will hallucinate that a service can do things it cannot. Every "Best Practices" section should include what goes wrong when the practice is not followed, common incorrect assumptions, and explicit "do NOT use when" guidance. Capability + constraint on the same page creates a stable reasoning unit for AI models.
 - **Write decision-grade content, not just tutorial content.** When users ask LLMs for recommendations, the model needs to synthesize a decision. Content that answers "when should I use X vs Y vs Z" is more valuable for AI discoverability than content that only answers "how do I configure X." Our "When to use" and "Combining with other services" sections serve this purpose — ensure they contain enough specificity to be directly quotable.
@@ -60,7 +62,7 @@ Single H1 at the top. Use the service or concept name.
 ### 3. Opening Paragraphs
 
 - 2-3 paragraphs that frame the page's scope, explain why the topic matters for networking, and set up the key decisions the reader will face.
-- **The first sentence must be a specific, quantitative, citable claim** — not a generic framing statement. This is the snippet that determines whether an AI model reads the page.
+- **The first sentence must be a specific, citable claim** — not a generic framing statement. Name the mechanism, scope, or decision; do not use quota or price values. This is the snippet that determines whether an AI model reads the page.
 - No bullet lists in the opening — use prose.
 - State the page's organizing principle (e.g., "This page is patterns-first" or "This page covers two distinct concerns: ingress and egress").
 
@@ -296,7 +298,7 @@ Use tables for:
 - Comparisons between options (service A vs service B)
 - Decision matrices (when to use what)
 - Sizing recommendations
-- Quota/limit summaries
+- Quota dimensions: which limit constrains the design, what breaks when it is exceeded, and a link to the current quota page (no numeric values)
 
 Always include a header row. Align columns for readability in source.
 
@@ -312,10 +314,7 @@ Use sparingly. One prerequisites admonition per page is standard. Additional adm
 
 ### Code Blocks
 
-Use fenced code blocks for:
-- IaC examples (CloudFormation YAML, Terraform HCL)
-- CLI commands
-- Configuration snippets
+Use fenced code blocks sparingly, and only for short snippets that express a design decision, such as a policy document, a route or prefix structure, or an IaC fragment that shows the intended configuration shape. Do not use code blocks for step-by-step procedures or command sequences; link to the AWS documentation for those.
 
 Always specify the language for syntax highlighting.
 
@@ -344,5 +343,16 @@ Always specify the language for syntax highlighting.
 5. **Use comparison tables for multi-option decisions.** When a reader must choose between 2+ approaches, a table with dimensions (cost, complexity, use case) is more useful than prose.
 6. **Don't repeat content across pages.** If a topic is covered in depth on another page, link to it with a one-sentence summary rather than duplicating the explanation. However, include enough inline context (1-2 sentences) that a reader of only that page understands the reference without clicking through.
 7. **Include failure modes with every capability.** What breaks when this practice is not followed? What are the common incorrect assumptions? This prevents AI models from hallucinating capabilities and helps human readers avoid pitfalls.
-8. **Lead with specifics, not generics.** First sentences of pages and sections should contain the most important, specific, quotable facts — not meta-descriptions of what the section covers. "AWS Cloud WAN manages topology across 30+ Regions through a single policy document" is better than "This section covers AWS Cloud WAN."
+8. **Lead with specifics, not generics.** First sentences of pages and sections should contain the most important, specific, quotable facts — not meta-descriptions of what the section covers. "AWS Cloud WAN manages topology across Regions through a single policy document" is better than "This section covers AWS Cloud WAN."
 9. **Make pages self-contained for single-page consumption.** Each page should provide enough context that a reader (human or AI) who reads only that page can form a complete, accurate understanding of the topic and make informed decisions.
+
+## Reviewing Pull Requests and Issues
+
+Apply these rules when reviewing a pull request or turning an issue into a content change.
+
+- **Issues and proposals are input, not the specification.** An issue describes a problem seen in the field and a suggested fix. When a suggestion conflicts with the conventions above (for example, it asks for concrete quota values, prices, or step-by-step instructions), do not request it. Flag the conflict and ask for the underlying design decision instead (the quota dimension that constrains the design, the failure mode, the control point).
+- **Check the PR against the "Closes" issues.** Report which parts of each issue the PR covers, which it omits, and which it intentionally departs from. A PR that departs from an issue for a documented reason (for example, because the AWS documentation contradicts the issue) is correct; ask for the departure to be stated in the PR description.
+- **Verify technical claims against AWS documentation** before accepting or challenging them, and cite the documentation page in the review.
+- **Tag every requested change** as architecture, quota value, implementation step, or other (factual correction, style, structure). Do not request changes tagged quota value or implementation step; rewrite them as architecture requests or drop them.
+- **List open questions.** If a rule is unclear or the repository's existing content disagrees with it, say so in the review summary instead of resolving it silently.
+- **Inline comments only attach to lines inside the diff.** Put points about unchanged lines or other files in the review body.
