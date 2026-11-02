@@ -428,7 +428,22 @@ Configure IPv6 BGP sessions alongside IPv4 on every Connect peer from the beginn
 
 ## Multi-cloud connectivity
 
-Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and BGP configuration on both sides. [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.
+Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, and an application in AWS consuming both. Multi-cloud does not mean every interaction should cross the cloud boundary. Application and data placement determine how much traffic the network must carry and whether the workload can meet its latency, resilience, and cost requirements.
+
+Before choosing connectivity, look for traffic that placement can remove:
+
+| Workload signal | Design response | Why |
+| --- | --- | --- |
+| **Chatty application and database tiers** | Keep them in the same cloud and, where possible, the same Region | A faster link cannot remove repeated round-trip latency |
+| **Compute repeatedly reads the same remote data** | Move compute to the data, or stage and cache the data near the compute | Re-reading the dataset wastes bandwidth and leaves compute waiting |
+| **Only part of a dataset is consumed** | Select objects or partitions first; replicate everything only when the workload needs a complete, current copy | Unused data still consumes transfer and storage |
+| **One-time bulk movement drives capacity** | Give the migration its own completion target and transfer method | A temporary peak should not set permanent capacity |
+
+Keep management and recovery orchestration reachable independently of the cross-cloud data path. After reducing avoidable movement, measure the remaining steady-state traffic and size connectivity from its throughput, latency, and completion-time requirements. Compare peer-cloud transfer charges, inter-Region legs in either cloud, replicated storage, idle compute, and hourly link capacity. AWS Interconnect has no per-GB data transfer charge of its own, but peer-cloud and inter-Region charges remain. The same placement decisions apply to IPv4 and IPv6.
+
+### AWS Interconnect
+
+Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and BGP configuration on both sides. [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.
 
 AWS Interconnect is the default wherever a supported Region pair exists. Where one doesn't, extend a supported pair from inside each cloud before reaching for a partner-based cross-connect or an internet VPN — a coverage gap is usually a routing problem, not a reason to build the path yourself.
 
@@ -477,8 +492,6 @@ Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstract
     Interconnects are typically provisioned within minutes using the create-and-accept workflow between AWS and the provider. No cross-connect ticket, no BGP configuration, no VLAN negotiation.
 
 </div>
-
-### AWS Interconnect Best Practices
 
 #### Use AWS Interconnect as the default for supported Region pairs and providers
 
