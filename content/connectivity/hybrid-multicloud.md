@@ -12,7 +12,7 @@ Hybrid and multi-cloud overview — [Drawio Source](../assets/connectivity/hybri
 
 For on-premises connectivity, [AWS Direct Connect](https://aws.amazon.com/directconnect/) delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. [AWS Site-to-Site VPN](https://aws.amazon.com/vpn/site-to-site-vpn/) provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. **SD-WAN integration** uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party SD-WAN overlays into the AWS network plane.
 
-For multi-cloud, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site VPN between clouds) remain valid where AWS Interconnect doesn't yet support your other cloud, but they carry more operational overhead — a Region-pair gap alone is usually solved by extending inside each cloud instead.
+For multi-cloud, first reduce avoidable cross-cloud movement through application and data placement. For traffic that must cross the boundary, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site VPN between clouds) remain valid where AWS Interconnect doesn't yet support your other cloud, but they carry more operational overhead — a Region-pair gap alone is usually solved by extending inside each cloud instead.
 
 Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see [Building your hybrid and multi-cloud stack](#building-your-hybrid-and-multi-cloud-stack) at the end of this page.
 
@@ -428,7 +428,22 @@ Configure IPv6 BGP sessions alongside IPv4 on every Connect peer from the beginn
 
 ## Multi-cloud connectivity
 
-Workloads increasingly span multiple public clouds: a database in one cloud, an analytics platform in another, an application running in AWS consuming both. Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and BGP configuration on both sides. [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.
+Cross-cloud data movement is a design cost to minimize before choosing or sizing connectivity; no link fixes application tiers or datasets placed where every interaction crosses the cloud boundary. In a multi-cloud workload — a database in one cloud, an analytics platform in another, and an application in AWS consuming both — placement determines how much traffic the network must carry and whether the workload can meet its latency, resilience, and cost requirements.
+
+Before choosing connectivity, look for traffic that placement can remove:
+
+| Workload signal | Design response | Why |
+| --- | --- | --- |
+| **Chatty application and database tiers** | Keep them in the same cloud and, where possible, the same Region | A higher-capacity link cannot remove repeated round-trip latency |
+| **Compute repeatedly reads the same remote data** | Move compute to the data, or stage and cache the data near the compute | Re-reading the dataset wastes bandwidth and leaves compute waiting |
+| **Only part of a dataset is consumed** | Build an inventory-driven selection list at the transfer service, then copy only the required objects or partitions; replicate everything only when the workload needs a complete, current copy | Unused data still consumes transfer and storage |
+| **One-time bulk movement drives capacity** | Use temporary AWS Interconnect capacity or a time-bound bulk-transfer service with its own completion target | Interconnect can scale back down; a slow-to-resize partner cross-connect should not remain sized for a temporary peak |
+
+Keep management, migration, and recovery orchestration reachable independently of the cross-cloud data path; if the link fails and the tooling depends on it, the tooling needed to diagnose the failure or restart the transfer fails with it. After reducing avoidable movement, measure the remaining steady-state traffic and size connectivity from its throughput, latency, and completion-time requirements. Compare Transit Gateway or Cloud WAN data processing, peer-cloud transfer charges, inter-Region legs in either cloud, replicated storage, idle compute, and hourly link capacity. AWS Interconnect has no per-GB data transfer charge of its own, but AWS hub processing, peer-cloud, and inter-Region charges remain. The same placement decisions apply to IPv4 and IPv6.
+
+### AWS Interconnect
+
+Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and BGP configuration on both sides. [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.
 
 AWS Interconnect is the default wherever a supported Region pair exists. Where one doesn't, extend a supported pair from inside each cloud before reaching for a partner-based cross-connect or an internet VPN — a coverage gap is usually a routing problem, not a reason to build the path yourself.
 
@@ -625,7 +640,7 @@ Organizations building hybrid and multi-cloud connectivity from scratch have the
 
 1. **On-premises path and resiliency**: AWS Direct Connect terminating on a Transit Gateway or AWS Cloud WAN core network through a Direct Connect Gateway, designed to the Resiliency Toolkit's maximum resiliency model (multiple connections across multiple locations and providers). Resiliency comes from multiple Direct Connect connections, not from pairing a single Direct Connect with a VPN fallback.
 2. **VPN where it adds value**: AWS Site-to-Site VPN on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.
-3. **Multi-cloud**: AWS Interconnect where supported, sharing the same Direct Connect Gateway as the on-premises Direct Connect. Partner-based Direct Connect or Site-to-Site VPN between clouds only where AWS Interconnect coverage isn't there yet.
+3. **Multi-cloud**: Minimize avoidable cross-cloud movement before sizing the link, then use AWS Interconnect where supported. Use partner-based Direct Connect or Site-to-Site VPN between clouds only where AWS Interconnect coverage isn't there yet.
 4. **SD-WAN integration**: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs SD-WAN across branches and wants that overlay to extend into AWS.
 5. **Application access**: See [Remote Access](remote-access.md) for AWS Verified Access and AWS Client VPN guidance.
 
@@ -635,6 +650,6 @@ Organizations running established hybrid patterns have working foundations that 
 
 1. **AWS Direct Connect** remains the foundation. If circuits are terminated on virtual private gateways rather than Transit Gateway or AWS Cloud WAN, evaluate consolidating onto a hub through a Direct Connect Gateway as the environment grows.
 2. **AWS Site-to-Site VPN** remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated VPN for sites distant from the Region.
-3. **Partner-based Direct Connect to another cloud** keeps working and should not be ripped out for its own sake. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.
+3. **Partner-based Direct Connect to another cloud** keeps working and should not be ripped out for its own sake. Before renewing cross-connects or increasing capacity, review current cross-cloud flows and remove repeated or unused transfers. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.
 4. **SD-WAN integrations** on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so SD-WAN traffic doesn't have to move all at once.
 5. **AWS Client VPN** can coexist with AWS Verified Access during migration. See [Remote Access](remote-access.md) for the recommended migration path.
