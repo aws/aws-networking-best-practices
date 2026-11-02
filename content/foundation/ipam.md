@@ -237,7 +237,7 @@ A non-compliant VPC is a ticking time bomb. It might work fine in isolation, but
 
 If you're adopting IPAM in an environment with existing VPCs, import their CIDRs into your pool hierarchy. This registers them as known allocations, preventing future allocations from overlapping with them. Importing doesn't change the VPC — it just tells IPAM "this space is taken."
 
-***Key insight:*** *IPAM compliance monitoring is your early warning system. Every non-compliant VPC is a potential connectivity failure waiting to happen. The monitoring is free (included with IPAM) — the cost of ignoring it is a production incident when you discover an overlap during a connectivity change.*
+***Key insight:*** *IPAM compliance monitoring is your early warning system. Every non-compliant VPC is a potential connectivity failure waiting to happen. The cost of ignoring it is a production incident when you discover an overlap during a connectivity change.*
 
 ### Integration with Infrastructure as Code
 
@@ -340,14 +340,24 @@ IPAM is a governance layer that integrates with every service that consumes or m
 
 ## IPAM pricing and cost considerations
 
-IPAM pricing is based on two dimensions:
+IPAM is offered in two tiers:
 
-* **Active IP address monitoring**: Per public IP address monitored per hour. This applies to the public scope and BYOIP addresses. Private IP monitoring within your Organization is included at no additional per-IP charge with an active IPAM.
-* **IPAM instance**: There is no separate charge for the IPAM instance itself. You pay for the monitoring and auditing capabilities.
+* **Free Tier**: a single account and Region. Covers BYOIP, Amazon-provided contiguous IPv6 blocks, and Public IP Insights, at no charge.
+* **Advanced Tier**: two or more accounts or Regions. Required for everything this page recommends across an organization: private IPv4 pools, pools in Regions other than the IPAM home Region, sharing pools with other accounts, and Organization-wide monitoring of private addresses.
 
-For most organizations using only private address space (RFC 1918), IPAM costs are minimal — significantly less than the operational cost of a single CIDR overlap incident. The pricing model means IPAM is effectively free for private IP governance in organizations that don't use BYOIP.
+The Advanced Tier bills hourly per **active IP address**, private or public:
 
-Check the [current pricing page](https://aws.amazon.com/vpc/pricing/) for exact rates, as pricing may change. The key takeaway: IPAM's cost is negligible compared to the engineering time it saves and the incidents it prevents.
+* An active address is an IP address or prefix on a network interface attached to a resource.
+* IPAM charges for every active address it monitors, including addresses outside any pool.
+* Unused space in a pool or VPC CIDR costs nothing, so cost grows with running workloads, not with the size of your address plan.
+
+Enabling IPAM Organization-wide brings every member account's addresses into the bill. To keep cost aligned with what you govern:
+
+* **Exclude organizational units** you don't manage, such as sandbox OUs.
+* **Limit operating Regions** to the ones you use.
+* **Enable [cost distribution](https://docs.aws.amazon.com/vpc/latest/ipam/ipam-enable-cost-distro.html)** to charge each member account for its own active addresses instead of the IPAM owner.
+
+Check the IPAM tab on the [Amazon VPC pricing page](https://aws.amazon.com/vpc/pricing/) for current rates and the full tier comparison.
 
 ## Documentation
 
