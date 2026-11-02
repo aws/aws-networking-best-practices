@@ -2334,7 +2334,7 @@
 </ol>
 <h4 id="import-existing-cidrs-into-ipam-before-they-cause-problems">Import existing CIDRs into <abbr title="IP Address Manager">IPAM</abbr> before they cause problems<a class="headerlink" href="#import-existing-cidrs-into-ipam-before-they-cause-problems" title="Permanent link">&para;</a></h4>
 <p>If you're adopting <abbr title="IP Address Manager">IPAM</abbr> in an environment with existing VPCs, import their CIDRs into your pool hierarchy. This registers them as known allocations, preventing future allocations from overlapping with them. Importing doesn't change the <abbr title="Virtual Private Cloud">VPC</abbr> — it just tells <abbr title="IP Address Manager">IPAM</abbr> "this space is taken."</p>
-<p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring is your early warning system. Every non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> is a potential connectivity failure waiting to happen. The monitoring is free (included with <abbr title="IP Address Manager">IPAM</abbr>) — the cost of ignoring it is a production incident when you discover an overlap during a connectivity change.</em></p>
+<p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring is your early warning system. Every non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> is a potential connectivity failure waiting to happen. The cost of ignoring it is a production incident when you discover an overlap during a connectivity change.</em></p>
 <h3 id="integration-with-infrastructure-as-code">Integration with Infrastructure as Code<a class="headerlink" href="#integration-with-infrastructure-as-code" title="Permanent link">&para;</a></h3>
 <h4 id="reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid">Reference <abbr title="IP Address Manager">IPAM</abbr> pools in CloudFormation using <code>Ipv4IpamPoolId</code><a class="headerlink" href="#reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid" title="Permanent link">&para;</a></h4>
 <p>CloudFormation supports <abbr title="IP Address Manager">IPAM</abbr>-allocated CIDRs natively. Instead of hardcoding a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> in your <abbr title="Virtual Private Cloud">VPC</abbr> template, reference the <abbr title="IP Address Manager">IPAM</abbr> pool and let <abbr title="IP Address Manager">IPAM</abbr> assign a non-overlapping block:</p>
@@ -2438,13 +2438,24 @@
 </table>
 <p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> is not a standalone service. It is the address governance layer that makes every other networking service work correctly at scale. It keeps allocations non-overlapping and summarizable, preventing connectivity failures, re-IPing, and permanent translation workarounds before deployment.</em></p>
 <h2 id="ipam-pricing-and-cost-considerations"><abbr title="IP Address Manager">IPAM</abbr> pricing and cost considerations<a class="headerlink" href="#ipam-pricing-and-cost-considerations" title="Permanent link">&para;</a></h2>
-<p><abbr title="IP Address Manager">IPAM</abbr> pricing is based on two dimensions:</p>
+<p><abbr title="IP Address Manager">IPAM</abbr> is offered in two tiers:</p>
 <ul>
-<li><strong>Active IP address monitoring</strong>: Per public IP address monitored per hour. This applies to the public scope and BYOIP addresses. Private IP monitoring within your Organization is included at no additional per-IP charge with an active <abbr title="IP Address Manager">IPAM</abbr>.</li>
-<li><strong><abbr title="IP Address Manager">IPAM</abbr> instance</strong>: There is no separate charge for the <abbr title="IP Address Manager">IPAM</abbr> instance itself. You pay for the monitoring and auditing capabilities.</li>
+<li><strong>Free Tier</strong>: a single account and Region. Covers BYOIP, Amazon-provided contiguous <abbr title="Internet Protocol version 6">IPv6</abbr> blocks, and Public IP Insights, at no charge.</li>
+<li><strong>Advanced Tier</strong>: two or more accounts or Regions. Required for everything this page recommends across an organization: private <abbr title="Internet Protocol version 4">IPv4</abbr> pools, pools in Regions other than the <abbr title="IP Address Manager">IPAM</abbr> home Region, sharing pools with other accounts, and Organization-wide monitoring of private addresses.</li>
 </ul>
-<p>For most organizations using only private address space (RFC 1918), <abbr title="IP Address Manager">IPAM</abbr> costs are minimal — significantly less than the operational cost of a single <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap incident. The pricing model means <abbr title="IP Address Manager">IPAM</abbr> is effectively free for private IP governance in organizations that don't use BYOIP.</p>
-<p>Check the <a href="https://aws.amazon.com/vpc/pricing/">current pricing page</a> for exact rates, as pricing may change. The key takeaway: <abbr title="IP Address Manager">IPAM</abbr>'s cost is negligible compared to the engineering time it saves and the incidents it prevents.</p>
+<p>The Advanced Tier bills hourly per <strong>active IP address</strong>, private or public:</p>
+<ul>
+<li>An active address is an IP address or prefix on a network interface attached to a resource.</li>
+<li><abbr title="IP Address Manager">IPAM</abbr> charges for every active address it monitors, including addresses outside any pool.</li>
+<li>Unused space in a pool or <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> costs nothing, so cost grows with running workloads, not with the size of your address plan.</li>
+</ul>
+<p>Enabling <abbr title="IP Address Manager">IPAM</abbr> Organization-wide brings every member account's addresses into the bill. To keep cost aligned with what you govern:</p>
+<ul>
+<li><strong>Exclude organizational units</strong> you don't manage, such as sandbox OUs.</li>
+<li><strong>Limit operating Regions</strong> to the ones you use.</li>
+<li><strong>Enable <a href="https://docs.aws.amazon.com/vpc/latest/ipam/ipam-enable-cost-distro.html">cost distribution</a></strong> to charge each member account for its own active addresses instead of the <abbr title="IP Address Manager">IPAM</abbr> owner.</li>
+</ul>
+<p>Check the <abbr title="IP Address Manager">IPAM</abbr> tab on the <a href="https://aws.amazon.com/vpc/pricing/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr> pricing page</a> for current rates and the full tier comparison.</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -2523,7 +2534,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 27, 2026 09:31:30 UTC">October 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 2, 2026 10:19:35 UTC">November 2, 2026</span>
   </span>
 
     
