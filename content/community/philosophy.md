@@ -50,6 +50,18 @@ IPv6 isn't optional or future-focused—it's essential for modern AWS networking
 
 * Guidance treats IPv6 adoption as inevitable, not optional
 
+### Architecture Over Procedure and Values
+
+We document design decisions and the reasons behind them, and rely on AWS documentation for what changes frequently or is procedural.
+
+**This means:**
+
+* Capacity and count quotas, limits, and prices are named by dimension (for example, per-tunnel throughput or per-GB data processing) and linked to the current AWS documentation, not stated as numbers. Values a design must be configured to, such as MTU or encapsulation overhead, may be stated with a link to the page that defines them
+
+* Guidance explains what to build, why, and what breaks otherwise; step-by-step console, CLI, and configuration procedures stay in the AWS documentation
+
+* Issues and proposals that ask for concrete values or procedures are welcome as input; reviewers translate them into the design decision underneath
+
 ### Technical Precision and Clarity
 
 We write for experienced practitioners who need accurate, actionable information.
