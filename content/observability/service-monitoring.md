@@ -46,10 +46,10 @@ Not all CloudWatch metrics deserve an alarm. The table below identifies the metr
 | --- | --- | --- |
 | `ConnectionState` | Binary: the physical connection is up or down. State changes indicate fiber cuts, router failures, or maintenance events. | State != 1 (up) for 1 period |
 | `VirtualInterfaceBgpStatus` | Per-VIF BGP session state, 1 up / 0 down. The physical connection can be up while the BGP session is down, so this is distinct from `ConnectionState`. | != 1 for 1 period |
-| `VirtualInterfaceBgpPrefixesAccepted` | Prefixes accepted from the on-premises peer. A drop means routes were withdrawn while the session stayed up. | Drop below baseline, or anomaly detection band |
+| `VirtualInterfaceBgpPrefixesAccepted` | Tracks inbound prefix use against the VIF allocation. Approaching the allocation risks a BGP session failure; a drop means routes were withdrawn while the session stayed up. | Approaches the VIF allocation, drops below baseline, or leaves the anomaly detection band |
 | `VirtualInterfaceBgpPrefixesAdvertised` | Prefixes AWS advertises to the peer. A drop points at a change on the AWS side, such as a detached attachment or a removed VPC association. | Drop below baseline, or anomaly detection band |
-| `VirtualInterfaceBpsEgress` / `VirtualInterfaceBpsIngress` | Per-VIF throughput. Approaching the port capacity means you need to add capacity or shift traffic. | > 80% of port speed sustained over 5 minutes |
-| `ConnectionBpsEgress` / `ConnectionBpsIngress` | Aggregate connection throughput. | > 80% of port speed sustained over 5 minutes |
+| `VirtualInterfaceBpsEgress` / `VirtualInterfaceBpsIngress` | Per-VIF throughput. Use it to project how traffic redistributes when one VIF path fails and to detect unexpected imbalance between equal ECMP paths, following the [failure-state capacity design](../connectivity/hybrid-multicloud.md#size-capacity-for-the-failure-state). | Projected post-failure utilization exceeds the design ceiling, or equal paths become unexpectedly imbalanced |
+| `ConnectionBpsEgress` / `ConnectionBpsIngress` | Aggregate connection throughput. Compare it with the capacity that remains after the required connection or location failure. | Projected post-failure utilization exceeds the design ceiling |
 | `ConnectionLightLevelTx` / `ConnectionLightLevelRx` | Optical signal strength. Degrading light levels predict physical failures before they happen. | Outside acceptable dBm range for the optic type |
 
 ### Site-to-Site VPN
