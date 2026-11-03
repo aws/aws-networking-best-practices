@@ -85,14 +85,14 @@ A well-designed hierarchy for a typical enterprise:
 
 | Level | IPv4 | IPv6 |
 | --- | --- | --- |
-| **Top-level pool** | `10.0.0.0/8` — your entire private address space | Your BYOIP block (for example, a `/32`). Amazon-provided addresses have no top-level pool |
-| **Regional pools** | `/12` per Region — 1,048,576 addresses, enough for thousands of VPCs | A contiguous block per Region: carved from BYOIP, or Amazon-provided (`/52` to `/40`) |
+| **Top-level pool** | `10.0.0.0/8` — your entire private address space | Your BYOIP block, or a private IPv6 ULA/GUA range for internal-only addressing. Amazon-provided contiguous space starts at the Regional pool |
+| **Regional pools** | `/12` per Region — 1,048,576 addresses, enough for thousands of VPCs | A contiguous block carved from the top-level BYOIP or private range, or an Amazon-provided block (`/52` to `/40`) |
 | **Environment pools** | `/13` or `/14` per environment within a Region — separates production from non-production | A slice of the Regional block per environment |
 | **Workload pools** (optional) | `/16` or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs | Same split, where allocation rules differ |
 
 This structure enables route summarization at every level, in both families. Your on-premises network can route to `10.0.0.0/12` and one IPv6 prefix for all of us-east-1, rather than maintaining individual routes for every VPC. That summarization reduces route table size on your on-premises routers and simplifies firewall rules, and it holds only while every VPC in the Region allocates from inside its Regional pool, which locale restrictions guarantee.
 
-Choose the IPv6 source before creating the pools. An Amazon-provided contiguous block must be provisioned to a pool with a Region locale, so that tree starts at the Regional pool and gives one summary per Region; BYOIP adds a single organization-wide prefix and address portability. VPCs that request an Amazon-provided `/56` outside IPAM get unrelated prefixes that can never be summarized, and fixing that later means re-addressing every dual-stack workload.
+Choose the IPv6 source before creating the pools. An Amazon-provided contiguous block must be provisioned to a pool with a Region locale, so that hierarchy starts at the Regional pool. BYOIP provides publicly routable organization-wide space and address portability. A private ULA or privately used GUA range can instead provide an organization-wide hierarchy for internal-only addressing; private GUA space must be owned by your organization and cannot later be advertised publicly from AWS. VPCs that request an Amazon-provided IPv6 CIDR outside IPAM get unrelated prefixes that cannot be summarized, and fixing that later means re-addressing every dual-stack workload.
 
 #### Size regional pools generously — address space is not a scarce resource
 
@@ -148,19 +148,13 @@ Set the locale on every pool below the top level. The top-level pool spans all R
 
 ### Scopes: private vs. public
 
-#### Use the private scope for all RFC 1918 and RFC 6598 address management
+#### Use the private scope for internal IPv4 and IPv6 address management
 
-The private scope is where you manage your internal IP address space: RFC 1918 ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`) and RFC 6598 shared address space (`100.64.0.0/10`, commonly used for EKS pod networking). Every organization needs the private scope; it's the core IPAM use case.
+The private scope manages RFC 1918 ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), RFC 6598 shared address space (`100.64.0.0/10`, commonly used for EKS pod networking), and private IPv6 ULA/GUA ranges. Private IPv6 ranges support internal and hybrid connectivity but cannot be advertised to the internet from AWS. Every organization needs the private scope; it is the core IPAM use case.
 
-#### Use the public scope only when you bring your own IP addresses (BYOIP)
+#### Use the public scope for publicly routable address management
 
-The public scope manages publicly routable IPv4 addresses that you own and have registered with AWS through the BYOIP process. Most organizations don't need this — AWS-assigned public IPs and Elastic IPs are managed outside IPAM. The public scope becomes relevant when you:
-
-* Own portable IPv4 address blocks (from ARIN, RIPE, etc.) and want to use them in AWS
-* Need to maintain consistent public IP addresses across cloud providers
-* Have compliance requirements that mandate using organization-owned public address space
-
-If you don't own public IPv4 blocks, ignore the public scope entirely. It adds no value for AWS-assigned addresses.
+The public scope manages public IPv4 and IPv6 blocks brought to AWS through BYOIP, and Amazon-provided contiguous public IPv6 blocks. AWS-assigned public IPv4 addresses and Elastic IP addresses remain outside IPAM pools. For an IPv6 hierarchy without an organization-owned block, provision an Amazon-provided contiguous block directly to a Regional pool in the public scope.
 
 ### Delegated administration
 
