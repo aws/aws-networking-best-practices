@@ -16,7 +16,8 @@ The connectivity patterns you choose shape cost, latency, security boundaries, a
 **Key decisions:**
 
 *   **Ingress: decentralized vs centralized** — Decentralized (each VPC owns its ingress) is the preferred default; centralized (shared ingress VPC) is reserved for specific compliance cases
-*   **Egress: IPv6 vs IPv4** — IPv6 egress is decentralized by design (egress-only internet gateway per VPC); IPv4 egress is a genuine trade-off between decentralized and centralized patterns
+*   **Egress: IPv6 vs IPv4** — AWS-native IPv6 egress is decentralized through an egress-only internet gateway; IPv4 is a trade-off between decentralized and centralized patterns
+*   **External security-provider egress** — A centralized variant for organizations that already use an external provider as the enterprise internet-policy boundary; when the provider supports IPv6, route both address families through regional provider paths
 *   **Edge services** — Amazon CloudFront, AWS Global Accelerator, and AWS WAF provide centrally-managed protection regardless of ingress pattern
 
 ***Key insight:*** *For ingress, the AWS edge (CloudFront, AWS WAF, per-VPC firewall endpoints) effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress VPC.*
