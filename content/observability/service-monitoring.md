@@ -148,7 +148,7 @@ Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/usergu
 
 | Service | Quotas to monitor |
 | --- | --- |
-| Transit Gateway | Attachments per transit gateway; routes per route table |
+| Transit Gateway | Attachments per transit gateway; total combined routes across all route tables; routes received from and advertised to each Connect peer |
 | NAT gateway | NAT gateways per Availability Zone |
 | Site-to-Site VPN | Connections per gateway; routes received from and advertised to each customer gateway |
 | AWS Cloud WAN | Routes per core network; routes received from and advertised to each VPN, Connect peer, and Direct Connect gateway attachment |
@@ -157,7 +157,11 @@ Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/usergu
 | Network Load Balancer | Targets per target group |
 | AWS Network Firewall | Rule groups per firewall policy |
 
-Hybrid route counts need extra attention because not all of them have a direct quota metric. Direct Connect publishes accepted and advertised prefix counts; for VPN, Connect, and Cloud WAN, periodically collect the route counts available from the routing APIs and receiving peers, then publish a custom metric. Leave enough warning time to summarize or filter routes, or separate hybrid attachments into a different routing domain, because a quota increase is not available for every limit.
+Hybrid route counts need extra attention because not all of them have a direct quota metric. For Direct Connect, alarm on `VirtualInterfaceBgpPrefixesAccepted` and `VirtualInterfaceBgpPrefixesAdvertised` for each VIF and `IpAddressFamily`; exceeding the inbound prefix allocation takes the VIF's BGP session down.
+
+For Transit Gateway, count routes with `SearchTransitGatewayRoutes`. For Cloud WAN, use `list-core-network-routing-information`, which reports the routing database before routing policy is applied, and verify final advertisements from the receiving peer's BGP view. Publish these counts as custom metrics and alarm at 80% of the applicable limit.
+
+When route capacity approaches its limit, reduce it through [routing policy](../connectivity/within-aws.md#apply-routing-policies-at-network-boundaries), a [hierarchical address plan](../foundation/cidr.md#allocate-contiguously-for-route-summarization), or a separate [hybrid routing domain](../connectivity/within-aws.md#think-of-segments-as-routing-domains-not-environments). A quota increase is not available for every limit, so the alarm must leave time for an architectural change.
 
 ### Multi-account monitoring architecture
 

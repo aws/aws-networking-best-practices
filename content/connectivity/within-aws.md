@@ -111,16 +111,17 @@ Apply AWS Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manag
 
 | Goal | Policy pattern | Why it scales |
 | --- | --- | --- |
-| Limit routes advertised to on-premises | On each Region's VPN, Direct Connect, or Connect attachment, match the Regional block. Allow it before a catch-all drop when advertising individual prefixes, or summarize it when only the aggregate should be advertised | One Regional rule replaces a list of every VPC prefix and prevents another Region's return traffic from using the wrong attachment |
-| Control propagation between segments | Filter routes on the segment share; share policies run after attachment policies | The share becomes one boundary for every attachment in both segments |
+| Limit routes advertised to on-premises | On each Region's VPN, Direct Connect, or Connect attachment, match the IPv4 and IPv6 regional blocks separately. Allow them before a catch-all drop when advertising individual prefixes, or summarize them when only the aggregates should be advertised | One rule per regional block and address family replaces a list of every VPC prefix and limits propagation to the intended boundary |
+| Control propagation between segments | Filter routes on the segment share; share policies run after attachment policies. On VPC attachments, use inbound drop rules for secondary ranges such as `100.64.0.0/10` that must remain local | The share becomes one boundary for every attachment in both segments, while local or overlapping secondary ranges stay out of the core network |
+| Control regional egress propagation | Filter which default routes cross attachment, segment-share, and core network edge boundaries; use service insertion, not routing policy, to steer traffic through inspection | Workload Regions learn only their intended egress defaults, while route propagation remains separate from the inspection path |
 | Select a path across multiple hybrid connections | Set local preference, MED, or AS path on BGP-capable attachments | The policy expresses active/active or active/standby routing without a separate routing appliance |
 
 !!! note "Take into account"
 
-    * VPC attachments support only inbound allow and drop actions. They can't summarize or change BGP attributes; communities work on VPN and Connect attachments, not Direct Connect or Transit Gateway peering. Use prefixes from the address plan as the common match.
+    * VPC attachments support only inbound allow and drop actions. You cannot tag VPC routes with a BGP community at ingress, summarize them, or change their BGP attributes; classify their origin with contiguous prefixes from the address plan instead. Communities work on VPN and Connect attachments, not Direct Connect or Transit Gateway peering.
     * Summarization works only outbound on BGP-capable attachments and resets MED, local preference, AS path, and communities. Plan path preference for the generated summary separately.
     * Allow and drop end evaluation; summarize and set actions don't. Order modifications before terminal actions, and aggregate by Region because each policy supports a limited number of rules.
-    * Routing policies don't apply to network function groups, and the routing information API shows routes before policy. Use service insertion for inspection and verify final advertisements from the receiving peer.
+    * Routing policies don't apply to network function groups; use service insertion for inspection. The routing-information API exposes learned and advertised routes and BGP attributes before policy is applied, so verify final advertisements from the receiving peer.
 
 #### Plan IPv6 from the start
 
@@ -664,16 +665,18 @@ With a single service network association, the consumer reaches all three. The c
 
 #### Build segmentation with purpose-specific route tables
 
-Disable default route table association and propagation on the Transit Gateway. A new attachment should reach nothing until you deliberately associate it with the route table for its role and propagate only the destinations that role needs. Leaving the defaults enabled puts each new attachment into one shared routing domain, so the network becomes flatter as it grows.
+Disable default route table association and propagation on the Transit Gateway, and leave automatic acceptance of shared attachments disabled. At scale, central networking automation should validate each cross-account attachment, approve it, associate it with the route table for its role, and propagate only the destinations that role needs. An attachment that cannot be classified should remain pending or unassociated, with no reachability. Leaving these defaults enabled lets each new attachment join the shared routing domain without the intended control gate.
 
 Apply the controls together:
 
 | Control | How to use it |
 | --- | --- |
-| **Association** | Create route tables for boundaries such as `production`, `non-production`, `shared-services`, and `inspection`. Associate each attachment with one table based on its role; that table determines how traffic arriving from the attachment is routed. Manage associations as infrastructure as code in the Transit Gateway owner account |
+| **Association** | Create route tables for boundaries such as `production`, `non-production`, `shared-services`, and `inspection`. Associate each attachment with one table based on its role; that table determines how traffic arriving from the attachment is routed |
 | **Selective propagation** | Propagate an attachment's routes only into the tables whose sources need to reach it. Propagating every attachment into every table recreates all-to-all connectivity |
 | **Static routes** | Use explicit routes where only selected CIDRs should cross a boundary. VPC propagation includes every VPC CIDR, so use static routes for the routable ranges when secondary ranges such as `100.64.0.0/10` must stay local or may overlap elsewhere |
 | **Policy-Based Routing** | Route tables segment traffic by the attachment it arrives from. When routing must instead differ by source, destination, port, or protocol, use [Policy-Based Routing](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-policy-tables.html) to classify flows onto the same purpose-specific route tables |
+
+Participant accounts can request and delete their VPC attachments, but the Transit Gateway owner controls route-table associations. Use [Organizations SCP guardrails](../security/segmentation.md#use-scps-to-prevent-segmentation-bypass) to keep workload attachment changes inside the approved workflow, and restrict route-table and peering changes in the networking account to its deployment role.
 
 #### Deploy in a dedicated networking account and share via AWS RAM
 
