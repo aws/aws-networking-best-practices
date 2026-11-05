@@ -20,7 +20,7 @@ VPC architecture — [Drawio Source](../assets/foundation/vpc-architecture.drawi
 
     ---
 
-    Define a primary IPv4 CIDR block (`/16` to `/28`), add up to 4 secondary CIDRs, and optionally assign a `/56` IPv6 CIDR for dual-stack operation.
+    Define a primary IPv4 CIDR block, add secondary CIDRs where needed, and size IPv6 CIDRs for the subnet hierarchy and growth requirements.
 
 *   :material-shield-lock: **Network isolation**
 
@@ -115,13 +115,13 @@ When allocating CIDRs, don't just plan for the current VPC. Reserve contiguous b
 
 #### Enable dual-stack from day one on new VPCs
 
-Every new VPC should be created with both an IPv4 CIDR and an Amazon-provided `/56` IPv6 CIDR. The incremental cost is zero (IPv6 addressing is free), and retrofitting IPv6 into an existing VPC requires updating every subnet, security group, route table, and NACL — work that compounds with the age of the VPC.
+Every new VPC should be created with both an IPv4 CIDR and an IPv6 CIDR allocated from the IPAM pool hierarchy for its Region. Set allocation rules that size the IPv6 CIDR for the VPC's subnet hierarchy and growth instead of forcing one prefix length everywhere. Use an Amazon-provided contiguous block or BYOIP for publicly routable space, and a private ULA/GUA range for internal-only addressing. IPv6 addresses have no separate address charge, but [IPAM tier charges](ipam.md#ipam-pricing-and-cost-considerations) can apply to managed active addresses. Retrofitting IPv6 into an existing VPC requires updating every subnet, security group, route table, and NACL — work that compounds with the age of the VPC.
 
 Dual-stack doesn't mean you must use IPv6 immediately. It means the option is available when workloads are ready, without a migration project. Services like EKS, Lambda, and ALB already support IPv6 natively. The trend is clear: IPv6 adoption is accelerating, and VPCs created today without it will need it within their lifetime.
 
 #### Use IPv6 for east-west traffic to reduce NAT dependency
 
-IPv6 addresses are globally unique and publicly routable by design, but that doesn't mean they're publicly accessible. Egress-only internet gateways allow outbound IPv6 traffic while blocking inbound. For service-to-service communication within AWS, IPv6 eliminates the need for NAT gateway (and its per-GB cost) for traffic that doesn't need IPv4 translation.
+Public IPv6 GUA addresses are globally unique and can be routed to the internet when routing and security controls allow it; private ULA/GUA ranges remain internal. Neither requires NAT for east-west communication. An egress-only internet gateway gives public IPv6 addresses outbound-only internet access. For service-to-service communication within AWS, IPv6 removes NAT gateway processing and its per-GB charge from traffic that does not need IPv4 translation.
 
 ### VPC Flow Logs
 

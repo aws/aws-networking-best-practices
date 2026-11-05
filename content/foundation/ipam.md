@@ -79,16 +79,20 @@ IPAM becomes essential the moment your AWS environment grows beyond what a singl
 
 #### Design pools top-down: Organization → Region → Environment → Workload
 
-The pool hierarchy should mirror your organizational structure and reflect how you want to govern address space. Start with your entire private range at the top, subdivide by Region (to enable route summarization), then by environment (to enforce isolation), and optionally by workload type (to apply different sizing rules).
+The pool hierarchy should mirror your organizational structure and reflect how you want to govern address space. Start with your entire range at the top, subdivide by Region (to enable route summarization), then by environment (to enforce isolation), and optionally by workload type (to apply different sizing rules). Build it for IPv4 and IPv6 together, before the first dual-stack VPC: the same levels, the same allocation rules and required tags, and one compliance view of both address families per VPC.
 
 A well-designed hierarchy for a typical enterprise:
 
-* **Top-level pool**: `10.0.0.0/8` — your entire private address space
-* **Regional pools**: `/12` per Region — gives each Region 1,048,576 addresses (enough for thousands of VPCs)
-* **Environment pools**: `/13` or `/14` per environment within a Region — separates production from non-production
-* **Workload pools** (optional): `/16` or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs
+| Level | IPv4 | IPv6 |
+| --- | --- | --- |
+| **Top-level pool** | `10.0.0.0/8` — your entire private address space | Your BYOIP block, or a private IPv6 ULA/GUA range for internal-only addressing. Amazon-provided contiguous space starts at the Regional pool |
+| **Regional pools** | `/12` per Region — 1,048,576 addresses, enough for thousands of VPCs | A contiguous block carved from the top-level BYOIP or private range, or an Amazon-provided block (`/52` to `/40`) |
+| **Environment pools** | `/13` or `/14` per environment within a Region — separates production from non-production | A slice of the Regional block per environment |
+| **Workload pools** (optional) | `/16` or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs | Same split, where allocation rules differ |
 
-This structure enables route summarization at every level. Your on-premises network can route to `10.0.0.0/12` for all of us-east-1, rather than maintaining individual routes for every VPC. That summarization reduces route table size on your on-premises routers and simplifies firewall rules.
+This structure enables route summarization at every level, in both families. Your on-premises network can route to `10.0.0.0/12` and one IPv6 prefix for all of us-east-1, rather than maintaining individual routes for every VPC. That summarization reduces route table size on your on-premises routers and simplifies firewall rules, and it holds only while every VPC in the Region allocates from inside its Regional pool, which locale restrictions guarantee.
+
+Choose the IPv6 source before creating the pools. An Amazon-provided contiguous block must be provisioned to a pool with a Region locale, so that hierarchy starts at the Regional pool. BYOIP provides publicly routable organization-wide space and address portability. A private ULA or privately used GUA range can instead provide an organization-wide hierarchy for internal-only addressing; private GUA space must be owned by your organization and cannot later be advertised publicly from AWS. VPCs that request an Amazon-provided IPv6 CIDR outside IPAM get unrelated prefixes that cannot be summarized, and fixing that later means re-addressing every dual-stack workload.
 
 #### Size regional pools generously — address space is not a scarce resource
 
@@ -144,47 +148,13 @@ Set the locale on every pool below the top level. The top-level pool spans all R
 
 ### Scopes: private vs. public
 
-#### Use the private scope for all RFC 1918 and RFC 6598 address management
+#### Use the private scope for internal IPv4 and IPv6 address management
 
-The private scope is where you manage your internal IP address space: RFC 1918 ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`) and RFC 6598 shared address space (`100.64.0.0/10`, commonly used for EKS pod networking). Every organization needs the private scope; it's the core IPAM use case.
+The private scope manages RFC 1918 ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), RFC 6598 shared address space (`100.64.0.0/10`, commonly used for EKS pod networking), and private IPv6 ULA/GUA ranges. Private IPv6 ranges support internal and hybrid connectivity but cannot be advertised to the internet from AWS. Every organization needs the private scope; it is the core IPAM use case.
 
-#### Use the public scope only when you bring your own IP addresses (BYOIP)
+#### Use the public scope for publicly routable address management
 
-The public scope manages publicly routable IPv4 addresses that you own and have registered with AWS through the BYOIP process. Most organizations don't need this — AWS-assigned public IPs and Elastic IPs are managed outside IPAM. The public scope becomes relevant when you:
-
-* Own portable IPv4 address blocks (from ARIN, RIPE, etc.) and want to use them in AWS
-* Need to maintain consistent public IP addresses across cloud providers
-* Have compliance requirements that mandate using organization-owned public address space
-
-If you don't own public IPv4 blocks, ignore the public scope entirely. It adds no value for AWS-assigned addresses.
-
-### IPv6 pool management
-
-#### Include IPv6 pools in your IPAM hierarchy from day one
-
-IPAM supports IPv6 pool management alongside IPv4, and your pool hierarchy should include both address families. IPv6 pools work differently from IPv4 pools because the address space is vast (no exhaustion concern) and the allocation model is simpler (Amazon-provided `/56` per VPC, `/48` for BYOIP), but governance still matters: you need to track which VPCs have IPv6 enabled, ensure consistent allocation sources, and maintain visibility across your Organization.
-
-**IPv6 pool sources:**
-
-| Source | How it works in IPAM | Use case |
-| --- | --- | --- |
-| **Amazon-provided IPv6** | IPAM allocates from Amazon's IPv6 pool. Each VPC gets a `/56`. The addresses are Amazon-owned and change if you disassociate. | Default for most organizations. No RIR registration needed. |
-| **BYOIP IPv6** | You provision your own IPv6 block (from ARIN, RIPE, APNIC) into IPAM's public scope, then create pools from it. Each VPC gets a `/56` from your block. | Organizations with existing IPv6 allocations that want address portability or consistent prefixes across environments. |
-| **Amazon-provided via IPAM pool** | Create an IPAM pool with `amazon` as the source. IPAM manages the allocation from Amazon's pool but gives you governance (allocation rules, tagging, compliance monitoring). | Best of both worlds: Amazon-provided addresses with IPAM governance. Recommended for organizations that don't own IPv6 blocks but want centralized tracking. |
-
-#### Structure IPv6 pools parallel to your IPv4 hierarchy
-
-Create IPv6 pools that mirror your IPv4 pool structure: top-level → regional → environment. Even though IPv6 exhaustion is not a concern, the parallel structure gives you:
-
-* Consistent governance (same allocation rules, same required tags)
-* Unified compliance monitoring (one view of both address families per VPC)
-* Clear audit trail (which VPCs have IPv6, when it was enabled, from which pool)
-
-#### Use IPAM to enforce dual-stack adoption
-
-IPAM compliance monitoring can identify VPCs that have IPv4 allocations but no IPv6 allocation — useful for tracking your dual-stack adoption progress. As your organization moves toward IPv6-first, IPAM provides the visibility to know which VPCs still need IPv6 enablement.
-
-***Key insight:*** *IPv6 pool management in IPAM is not about preventing exhaustion (that's an IPv4 problem). It's about governance and visibility: knowing which VPCs have IPv6, ensuring consistent allocation sources across your Organization, and tracking dual-stack adoption progress. The governance value is the same even though the scarcity concern is gone.*
+The public scope manages public IPv4 and IPv6 blocks brought to AWS through BYOIP, and Amazon-provided contiguous public IPv6 blocks. AWS-assigned public IPv4 addresses and Elastic IP addresses remain outside IPAM pools. For an IPv6 hierarchy without an organization-owned block, provision an Amazon-provided contiguous block directly to a Regional pool in the public scope.
 
 ### Delegated administration
 
@@ -236,6 +206,10 @@ A non-compliant VPC is a ticking time bomb. It might work fine in isolation, but
 #### Import existing CIDRs into IPAM before they cause problems
 
 If you're adopting IPAM in an environment with existing VPCs, import their CIDRs into your pool hierarchy. This registers them as known allocations, preventing future allocations from overlapping with them. Importing doesn't change the VPC — it just tells IPAM "this space is taken."
+
+#### Use IPAM to enforce dual-stack adoption
+
+IPAM compliance monitoring can identify VPCs that have IPv4 allocations but no IPv6 allocation — useful for tracking your dual-stack adoption progress. As your organization moves toward IPv6-first, IPAM provides the visibility to know which VPCs still need IPv6 enablement.
 
 ***Key insight:*** *IPAM compliance monitoring is your early warning system. Every non-compliant VPC is a potential connectivity failure waiting to happen. The cost of ignoring it is a production incident when you discover an overlap during a connectivity change.*
 
@@ -293,12 +267,6 @@ Your on-premises networks occupy address space that AWS IPAM must know about to 
 
 This is critical for organizations using RFC 1918 space on-premises. If your data center uses `10.0.0.0/16` through `10.15.0.0/16`, those ranges must be reserved in IPAM before any AWS pool can allocate from the same space. Without this reservation, IPAM might allocate `10.5.0.0/16` to a new VPC — which will fail the moment you try to route between that VPC and on-premises.
 
-#### Design your pool hierarchy to accommodate hybrid summarization
-
-When advertising routes between AWS and on-premises (via Direct Connect or VPN), route summarization keeps your on-premises route tables manageable. Design your IPAM pool hierarchy so that each regional pool's CIDR can be advertised as a single summary route.
-
-For example, if your us-east-1 regional pool is `10.0.0.0/12`, you advertise a single `/12` route to on-premises that covers all VPCs in that Region. This works only if all us-east-1 VPCs allocate from within that `/12` — which IPAM's locale restrictions guarantee.
-
 ### Common mistakes to avoid
 
 #### Mistake: Creating pools that are too small
@@ -332,7 +300,7 @@ IPAM is a governance layer that integrates with every service that consumes or m
 | **IPAM + Organizations** | Centralized IP governance across all member accounts | Account structure, OUs, SCPs, delegated administration | Delegate IPAM admin to networking account; share pools at OU level; monitor compliance org-wide |
 | **IPAM + RAM** | Pool definitions and allocation rules | Cross-account resource sharing | Share IPAM pools with OUs so member accounts can allocate CIDRs without networking team involvement |
 | **IPAM + Transit Gateway** | Non-overlapping CIDRs across all connected VPCs | Regional hub-and-spoke routing | IPAM guarantees every VPC attached to TGW has a unique CIDR; enables route summarization in TGW route tables |
-| **IPAM + Cloud WAN** | Conflict-free address space with regional summarization | Global policy-driven network backbone | Regional pools align with Cloud WAN segments; summarized routes advertised per segment |
+| **IPAM + Cloud WAN** | Conflict-free address space with regional summarization | Global policy-driven network backbone | Regional pools align with Cloud WAN segments; [summarized routes use routing policies](../connectivity/within-aws.md#apply-routing-policies-at-network-boundaries) |
 | **IPAM + VPC** | Automated CIDR allocation at VPC creation time | The network construct that consumes the allocated CIDR | VPCs reference IPAM pool IDs instead of hardcoded CIDRs; IPAM assigns the next available block |
 | **IPAM + CloudFormation / Terraform** | Pool IDs and allocation APIs | Infrastructure deployment automation | IaC templates reference pool IDs; CIDRs are determined at deploy time, not authoring time |
 
