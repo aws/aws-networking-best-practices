@@ -750,17 +750,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ipv6-pool-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IPv6 pool management
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#delegated-administration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1956,17 +1945,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ipv6-pool-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IPv6 pool management
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#delegated-administration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2170,15 +2148,41 @@
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="pool-hierarchy-design">Pool hierarchy design<a class="headerlink" href="#pool-hierarchy-design" title="Permanent link">&para;</a></h3>
 <h4 id="design-pools-top-down-organization-region-environment-workload">Design pools top-down: Organization → Region → Environment → Workload<a class="headerlink" href="#design-pools-top-down-organization-region-environment-workload" title="Permanent link">&para;</a></h4>
-<p>The pool hierarchy should mirror your organizational structure and reflect how you want to govern address space. Start with your entire private range at the top, subdivide by Region (to enable route summarization), then by environment (to enforce isolation), and optionally by workload type (to apply different sizing rules).</p>
+<p>The pool hierarchy should mirror your organizational structure and reflect how you want to govern address space. Start with your entire range at the top, subdivide by Region (to enable route summarization), then by environment (to enforce isolation), and optionally by workload type (to apply different sizing rules). Build it for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> together, before the first dual-stack <abbr title="Virtual Private Cloud">VPC</abbr>: the same levels, the same allocation rules and required tags, and one compliance view of both address families per <abbr title="Virtual Private Cloud">VPC</abbr>.</p>
 <p>A well-designed hierarchy for a typical enterprise:</p>
-<ul>
-<li><strong>Top-level pool</strong>: <code>10.0.0.0/8</code> — your entire private address space</li>
-<li><strong>Regional pools</strong>: <code>/12</code> per Region — gives each Region 1,048,576 addresses (enough for thousands of VPCs)</li>
-<li><strong>Environment pools</strong>: <code>/13</code> or <code>/14</code> per environment within a Region — separates production from non-production</li>
-<li><strong>Workload pools</strong> (optional): <code>/16</code> or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs</li>
-</ul>
-<p>This structure enables route summarization at every level. Your on-premises network can route to <code>10.0.0.0/12</code> for all of us-east-1, rather than maintaining individual routes for every <abbr title="Virtual Private Cloud">VPC</abbr>. That summarization reduces route table size on your on-premises routers and simplifies firewall rules.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th><abbr title="Internet Protocol version 4">IPv4</abbr></th>
+<th><abbr title="Internet Protocol version 6">IPv6</abbr></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Top-level pool</strong></td>
+<td><code>10.0.0.0/8</code> — your entire private address space</td>
+<td>Your BYOIP block, or a private <abbr title="Internet Protocol version 6">IPv6</abbr> ULA/GUA range for internal-only addressing. Amazon-provided contiguous space starts at the Regional pool</td>
+</tr>
+<tr>
+<td><strong>Regional pools</strong></td>
+<td><code>/12</code> per Region — 1,048,576 addresses, enough for thousands of VPCs</td>
+<td>A contiguous block carved from the top-level BYOIP or private range, or an Amazon-provided block (<code>/52</code> to <code>/40</code>)</td>
+</tr>
+<tr>
+<td><strong>Environment pools</strong></td>
+<td><code>/13</code> or <code>/14</code> per environment within a Region — separates production from non-production</td>
+<td>A slice of the Regional block per environment</td>
+</tr>
+<tr>
+<td><strong>Workload pools</strong> (optional)</td>
+<td><code>/16</code> or larger per workload type — applies different allocation rules to EKS clusters vs. standard VPCs</td>
+<td>Same split, where allocation rules differ</td>
+</tr>
+</tbody>
+</table>
+<p>This structure enables route summarization at every level, in both families. Your on-premises network can route to <code>10.0.0.0/12</code> and one <abbr title="Internet Protocol version 6">IPv6</abbr> prefix for all of us-east-1, rather than maintaining individual routes for every <abbr title="Virtual Private Cloud">VPC</abbr>. That summarization reduces route table size on your on-premises routers and simplifies firewall rules, and it holds only while every <abbr title="Virtual Private Cloud">VPC</abbr> in the Region allocates from inside its Regional pool, which locale restrictions guarantee.</p>
+<p>Choose the <abbr title="Internet Protocol version 6">IPv6</abbr> source before creating the pools. An Amazon-provided contiguous block must be provisioned to a pool with a Region locale, so that hierarchy starts at the Regional pool. BYOIP provides publicly routable organization-wide space and address portability. A private ULA or privately used GUA range can instead provide an organization-wide hierarchy for internal-only addressing; private GUA space must be owned by your organization and cannot later be advertised publicly from AWS. VPCs that request an Amazon-provided <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> outside <abbr title="IP Address Manager">IPAM</abbr> get unrelated prefixes that cannot be summarized, and fixing that later means re-addressing every dual-stack workload.</p>
 <h4 id="size-regional-pools-generously-address-space-is-not-a-scarce-resource">Size regional pools generously — address space is not a scarce resource<a class="headerlink" href="#size-regional-pools-generously-address-space-is-not-a-scarce-resource" title="Permanent link">&para;</a></h4>
 <p>The most common <abbr title="IP Address Manager">IPAM</abbr> mistake is creating regional pools that are too small. A <code>/16</code> regional pool gives you only 256 <code>/24</code> VPCs or 16 <code>/20</code> VPCs. That sounds like enough until you account for production, staging, development, and sandbox environments across dozens of accounts.</p>
 <p>Use <code>/12</code> for regional pools if your top-level pool is a <code>/8</code>. This gives each Region 16 <code>/16</code> blocks or 256 <code>/20</code> blocks — enough for years of growth. If you're constrained to a smaller top-level range (for example, <code>10.0.0.0/10</code> because the rest is used on-premises), allocate at least a <code>/14</code> per Region.</p>
@@ -2245,56 +2249,10 @@
 <p>Set the locale on every pool below the top level. The top-level pool spans all Regions; regional pools and below should always have a locale set.</p>
 <p><strong><em>Key insight:</em></strong> <em>Allocation rules are not bureaucracy — they're guardrails that prevent the three most expensive <abbr title="IP Address Manager">IPAM</abbr> mistakes: oversized allocations that waste space, undersized allocations that require <abbr title="Virtual Private Cloud">VPC</abbr> recreation, and cross-Region allocations that break route summarization.</em></p>
 <h3 id="scopes-private-vs-public">Scopes: private vs. public<a class="headerlink" href="#scopes-private-vs-public" title="Permanent link">&para;</a></h3>
-<h4 id="use-the-private-scope-for-all-rfc-1918-and-rfc-6598-address-management">Use the private scope for all RFC 1918 and RFC 6598 address management<a class="headerlink" href="#use-the-private-scope-for-all-rfc-1918-and-rfc-6598-address-management" title="Permanent link">&para;</a></h4>
-<p>The private scope is where you manage your internal IP address space: RFC 1918 ranges (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>) and RFC 6598 shared address space (<code>100.64.0.0/10</code>, commonly used for EKS pod networking). Every organization needs the private scope; it's the core <abbr title="IP Address Manager">IPAM</abbr> use case.</p>
-<h4 id="use-the-public-scope-only-when-you-bring-your-own-ip-addresses-byoip">Use the public scope only when you bring your own IP addresses (BYOIP)<a class="headerlink" href="#use-the-public-scope-only-when-you-bring-your-own-ip-addresses-byoip" title="Permanent link">&para;</a></h4>
-<p>The public scope manages publicly routable <abbr title="Internet Protocol version 4">IPv4</abbr> addresses that you own and have registered with AWS through the BYOIP process. Most organizations don't need this — AWS-assigned public IPs and Elastic IPs are managed outside <abbr title="IP Address Manager">IPAM</abbr>. The public scope becomes relevant when you:</p>
-<ul>
-<li>Own portable <abbr title="Internet Protocol version 4">IPv4</abbr> address blocks (from ARIN, RIPE, etc.) and want to use them in AWS</li>
-<li>Need to maintain consistent public IP addresses across cloud providers</li>
-<li>Have compliance requirements that mandate using organization-owned public address space</li>
-</ul>
-<p>If you don't own public <abbr title="Internet Protocol version 4">IPv4</abbr> blocks, ignore the public scope entirely. It adds no value for AWS-assigned addresses.</p>
-<h3 id="ipv6-pool-management"><abbr title="Internet Protocol version 6">IPv6</abbr> pool management<a class="headerlink" href="#ipv6-pool-management" title="Permanent link">&para;</a></h3>
-<h4 id="include-ipv6-pools-in-your-ipam-hierarchy-from-day-one">Include <abbr title="Internet Protocol version 6">IPv6</abbr> pools in your <abbr title="IP Address Manager">IPAM</abbr> hierarchy from day one<a class="headerlink" href="#include-ipv6-pools-in-your-ipam-hierarchy-from-day-one" title="Permanent link">&para;</a></h4>
-<p><abbr title="IP Address Manager">IPAM</abbr> supports <abbr title="Internet Protocol version 6">IPv6</abbr> pool management alongside <abbr title="Internet Protocol version 4">IPv4</abbr>, and your pool hierarchy should include both address families. <abbr title="Internet Protocol version 6">IPv6</abbr> pools work differently from <abbr title="Internet Protocol version 4">IPv4</abbr> pools because the address space is vast (no exhaustion concern) and the allocation model is simpler (Amazon-provided <code>/56</code> per <abbr title="Virtual Private Cloud">VPC</abbr>, <code>/48</code> for BYOIP), but governance still matters: you need to track which VPCs have <abbr title="Internet Protocol version 6">IPv6</abbr> enabled, ensure consistent allocation sources, and maintain visibility across your Organization.</p>
-<p><strong><abbr title="Internet Protocol version 6">IPv6</abbr> pool sources:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>How it works in <abbr title="IP Address Manager">IPAM</abbr></th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Amazon-provided <abbr title="Internet Protocol version 6">IPv6</abbr></strong></td>
-<td><abbr title="IP Address Manager">IPAM</abbr> allocates from Amazon's <abbr title="Internet Protocol version 6">IPv6</abbr> pool. Each <abbr title="Virtual Private Cloud">VPC</abbr> gets a <code>/56</code>. The addresses are Amazon-owned and change if you disassociate.</td>
-<td>Default for most organizations. No RIR registration needed.</td>
-</tr>
-<tr>
-<td><strong>BYOIP <abbr title="Internet Protocol version 6">IPv6</abbr></strong></td>
-<td>You provision your own <abbr title="Internet Protocol version 6">IPv6</abbr> block (from ARIN, RIPE, APNIC) into <abbr title="IP Address Manager">IPAM</abbr>'s public scope, then create pools from it. Each <abbr title="Virtual Private Cloud">VPC</abbr> gets a <code>/56</code> from your block.</td>
-<td>Organizations with existing <abbr title="Internet Protocol version 6">IPv6</abbr> allocations that want address portability or consistent prefixes across environments.</td>
-</tr>
-<tr>
-<td><strong>Amazon-provided via <abbr title="IP Address Manager">IPAM</abbr> pool</strong></td>
-<td>Create an <abbr title="IP Address Manager">IPAM</abbr> pool with <code>amazon</code> as the source. <abbr title="IP Address Manager">IPAM</abbr> manages the allocation from Amazon's pool but gives you governance (allocation rules, tagging, compliance monitoring).</td>
-<td>Best of both worlds: Amazon-provided addresses with <abbr title="IP Address Manager">IPAM</abbr> governance. Recommended for organizations that don't own <abbr title="Internet Protocol version 6">IPv6</abbr> blocks but want centralized tracking.</td>
-</tr>
-</tbody>
-</table>
-<h4 id="structure-ipv6-pools-parallel-to-your-ipv4-hierarchy">Structure <abbr title="Internet Protocol version 6">IPv6</abbr> pools parallel to your <abbr title="Internet Protocol version 4">IPv4</abbr> hierarchy<a class="headerlink" href="#structure-ipv6-pools-parallel-to-your-ipv4-hierarchy" title="Permanent link">&para;</a></h4>
-<p>Create <abbr title="Internet Protocol version 6">IPv6</abbr> pools that mirror your <abbr title="Internet Protocol version 4">IPv4</abbr> pool structure: top-level → regional → environment. Even though <abbr title="Internet Protocol version 6">IPv6</abbr> exhaustion is not a concern, the parallel structure gives you:</p>
-<ul>
-<li>Consistent governance (same allocation rules, same required tags)</li>
-<li>Unified compliance monitoring (one view of both address families per <abbr title="Virtual Private Cloud">VPC</abbr>)</li>
-<li>Clear audit trail (which VPCs have <abbr title="Internet Protocol version 6">IPv6</abbr>, when it was enabled, from which pool)</li>
-</ul>
-<h4 id="use-ipam-to-enforce-dual-stack-adoption">Use <abbr title="IP Address Manager">IPAM</abbr> to enforce dual-stack adoption<a class="headerlink" href="#use-ipam-to-enforce-dual-stack-adoption" title="Permanent link">&para;</a></h4>
-<p><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring can identify VPCs that have <abbr title="Internet Protocol version 4">IPv4</abbr> allocations but no <abbr title="Internet Protocol version 6">IPv6</abbr> allocation — useful for tracking your dual-stack adoption progress. As your organization moves toward <abbr title="Internet Protocol version 6">IPv6</abbr>-first, <abbr title="IP Address Manager">IPAM</abbr> provides the visibility to know which VPCs still need <abbr title="Internet Protocol version 6">IPv6</abbr> enablement.</p>
-<p><strong><em>Key insight:</em></strong> <em><abbr title="Internet Protocol version 6">IPv6</abbr> pool management in <abbr title="IP Address Manager">IPAM</abbr> is not about preventing exhaustion (that's an <abbr title="Internet Protocol version 4">IPv4</abbr> problem). It's about governance and visibility: knowing which VPCs have <abbr title="Internet Protocol version 6">IPv6</abbr>, ensuring consistent allocation sources across your Organization, and tracking dual-stack adoption progress. The governance value is the same even though the scarcity concern is gone.</em></p>
+<h4 id="use-the-private-scope-for-internal-ipv4-and-ipv6-address-management">Use the private scope for internal <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> address management<a class="headerlink" href="#use-the-private-scope-for-internal-ipv4-and-ipv6-address-management" title="Permanent link">&para;</a></h4>
+<p>The private scope manages RFC 1918 ranges (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>), RFC 6598 shared address space (<code>100.64.0.0/10</code>, commonly used for EKS pod networking), and private <abbr title="Internet Protocol version 6">IPv6</abbr> ULA/GUA ranges. Private <abbr title="Internet Protocol version 6">IPv6</abbr> ranges support internal and hybrid connectivity but cannot be advertised to the internet from AWS. Every organization needs the private scope; it is the core <abbr title="IP Address Manager">IPAM</abbr> use case.</p>
+<h4 id="use-the-public-scope-for-publicly-routable-address-management">Use the public scope for publicly routable address management<a class="headerlink" href="#use-the-public-scope-for-publicly-routable-address-management" title="Permanent link">&para;</a></h4>
+<p>The public scope manages public <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> blocks brought to AWS through BYOIP, and Amazon-provided contiguous public <abbr title="Internet Protocol version 6">IPv6</abbr> blocks. AWS-assigned public <abbr title="Internet Protocol version 4">IPv4</abbr> addresses and Elastic IP addresses remain outside <abbr title="IP Address Manager">IPAM</abbr> pools. For an <abbr title="Internet Protocol version 6">IPv6</abbr> hierarchy without an organization-owned block, provision an Amazon-provided contiguous block directly to a Regional pool in the public scope.</p>
 <h3 id="delegated-administration">Delegated administration<a class="headerlink" href="#delegated-administration" title="Permanent link">&para;</a></h3>
 <h4 id="delegate-ipam-to-your-centralized-networking-account">Delegate <abbr title="IP Address Manager">IPAM</abbr> to your centralized networking account<a class="headerlink" href="#delegate-ipam-to-your-centralized-networking-account" title="Permanent link">&para;</a></h4>
 <p><abbr title="IP Address Manager">IPAM</abbr> should be administered from a dedicated networking account (or shared-services account), not the Organization management account. Delegated administration keeps the management account clean (it should only handle Organizations, billing, and SCPs) while giving the networking team full <abbr title="IP Address Manager">IPAM</abbr> control.</p>
@@ -2334,6 +2292,8 @@
 </ol>
 <h4 id="import-existing-cidrs-into-ipam-before-they-cause-problems">Import existing CIDRs into <abbr title="IP Address Manager">IPAM</abbr> before they cause problems<a class="headerlink" href="#import-existing-cidrs-into-ipam-before-they-cause-problems" title="Permanent link">&para;</a></h4>
 <p>If you're adopting <abbr title="IP Address Manager">IPAM</abbr> in an environment with existing VPCs, import their CIDRs into your pool hierarchy. This registers them as known allocations, preventing future allocations from overlapping with them. Importing doesn't change the <abbr title="Virtual Private Cloud">VPC</abbr> — it just tells <abbr title="IP Address Manager">IPAM</abbr> "this space is taken."</p>
+<h4 id="use-ipam-to-enforce-dual-stack-adoption">Use <abbr title="IP Address Manager">IPAM</abbr> to enforce dual-stack adoption<a class="headerlink" href="#use-ipam-to-enforce-dual-stack-adoption" title="Permanent link">&para;</a></h4>
+<p><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring can identify VPCs that have <abbr title="Internet Protocol version 4">IPv4</abbr> allocations but no <abbr title="Internet Protocol version 6">IPv6</abbr> allocation — useful for tracking your dual-stack adoption progress. As your organization moves toward <abbr title="Internet Protocol version 6">IPv6</abbr>-first, <abbr title="IP Address Manager">IPAM</abbr> provides the visibility to know which VPCs still need <abbr title="Internet Protocol version 6">IPv6</abbr> enablement.</p>
 <p><strong><em>Key insight:</em></strong> <em><abbr title="IP Address Manager">IPAM</abbr> compliance monitoring is your early warning system. Every non-compliant <abbr title="Virtual Private Cloud">VPC</abbr> is a potential connectivity failure waiting to happen. The cost of ignoring it is a production incident when you discover an overlap during a connectivity change.</em></p>
 <h3 id="integration-with-infrastructure-as-code">Integration with Infrastructure as Code<a class="headerlink" href="#integration-with-infrastructure-as-code" title="Permanent link">&para;</a></h3>
 <h4 id="reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid">Reference <abbr title="IP Address Manager">IPAM</abbr> pools in CloudFormation using <code>Ipv4IpamPoolId</code><a class="headerlink" href="#reference-ipam-pools-in-cloudformation-using-ipv4ipampoolid" title="Permanent link">&para;</a></h4>
@@ -2371,9 +2331,6 @@
 <h4 id="import-on-premises-cidr-ranges-into-ipam-as-non-allocatable-reservations">Import on-premises <abbr title="Classless Inter-Domain Routing">CIDR</abbr> ranges into <abbr title="IP Address Manager">IPAM</abbr> as non-allocatable reservations<a class="headerlink" href="#import-on-premises-cidr-ranges-into-ipam-as-non-allocatable-reservations" title="Permanent link">&para;</a></h4>
 <p>Your on-premises networks occupy address space that AWS <abbr title="IP Address Manager">IPAM</abbr> must know about to prevent overlaps. Import these ranges into your top-level pool as manual allocations (or into a dedicated "on-premises" pool) so that <abbr title="IP Address Manager">IPAM</abbr>'s overlap detection accounts for them.</p>
 <p>This is critical for organizations using RFC 1918 space on-premises. If your data center uses <code>10.0.0.0/16</code> through <code>10.15.0.0/16</code>, those ranges must be reserved in <abbr title="IP Address Manager">IPAM</abbr> before any AWS pool can allocate from the same space. Without this reservation, <abbr title="IP Address Manager">IPAM</abbr> might allocate <code>10.5.0.0/16</code> to a new <abbr title="Virtual Private Cloud">VPC</abbr> — which will fail the moment you try to route between that <abbr title="Virtual Private Cloud">VPC</abbr> and on-premises.</p>
-<h4 id="design-your-pool-hierarchy-to-accommodate-hybrid-summarization">Design your pool hierarchy to accommodate hybrid summarization<a class="headerlink" href="#design-your-pool-hierarchy-to-accommodate-hybrid-summarization" title="Permanent link">&para;</a></h4>
-<p>When advertising routes between AWS and on-premises (via Direct Connect or <abbr title="Virtual Private Network">VPN</abbr>), route summarization keeps your on-premises route tables manageable. Design your <abbr title="IP Address Manager">IPAM</abbr> pool hierarchy so that each regional pool's <abbr title="Classless Inter-Domain Routing">CIDR</abbr> can be advertised as a single summary route.</p>
-<p>For example, if your us-east-1 regional pool is <code>10.0.0.0/12</code>, you advertise a single <code>/12</code> route to on-premises that covers all VPCs in that Region. This works only if all us-east-1 VPCs allocate from within that <code>/12</code> — which <abbr title="IP Address Manager">IPAM</abbr>'s locale restrictions guarantee.</p>
 <h3 id="common-mistakes-to-avoid">Common mistakes to avoid<a class="headerlink" href="#common-mistakes-to-avoid" title="Permanent link">&para;</a></h3>
 <h4 id="mistake-creating-pools-that-are-too-small">Mistake: Creating pools that are too small<a class="headerlink" href="#mistake-creating-pools-that-are-too-small" title="Permanent link">&para;</a></h4>
 <p>A <code>/16</code> regional pool seems large until you realize it supports only 16 <code>/20</code> VPCs or a single <code>/16</code> <abbr title="Virtual Private Cloud">VPC</abbr>. Organizations that start with small pools hit exhaustion within months and face a painful restructuring. Always size pools for 5-10 years of growth.</p>
@@ -2534,7 +2491,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 2, 2026 10:19:35 UTC">November 2, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 10:21:50 UTC">November 3, 2026</span>
   </span>
 
     

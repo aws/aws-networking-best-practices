@@ -2089,29 +2089,69 @@
 <li><strong>100.64.0.0/10</strong> (Carrier-Grade <abbr title="Network Address Translation">NAT</abbr> range): Useful for EKS pod networking with the <abbr title="Virtual Private Cloud">VPC</abbr> CNI custom networking feature. Pods get IPs from this range, preserving your primary RFC 1918 space for nodes and other resources. Also used when RFC 1918 space is exhausted.</li>
 <li><strong>RFC 6815 space</strong> (<code>198.19.0.0/16</code>): Available as a secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> for VPCs when other ranges are exhausted.</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em>The 100.64.0.0/10 range is a strategic tool for EKS-heavy environments. A single EKS cluster can consume thousands of IP addresses for pods. Assigning pod networking to 100.64.0.0/10 via custom networking keeps your primary <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> available for nodes, load balancers, and other infrastructure.</em></p>
+<p><strong><em>Key insight:</em></strong> <em>The 100.64.0.0/10 range is a strategic tool for EKS-heavy environments. A single EKS cluster can consume thousands of IP addresses for pods. Assigning pod networking to 100.64.0.0/10 via custom networking keeps your primary <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> available for nodes, load balancers, and other infrastructure. For new clusters, an <abbr title="Internet Protocol version 6">IPv6</abbr> cluster removes the pressure instead of relocating it: pods get <abbr title="Internet Protocol version 6">IPv6</abbr> addresses and consume no <abbr title="Internet Protocol version 4">IPv4</abbr> space at all.</em></p>
 <h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
 <h3 id="cidr-allocation-strategy"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> allocation strategy<a class="headerlink" href="#cidr-allocation-strategy" title="Permanent link">&para;</a></h3>
 <h4 id="allocate-contiguously-for-route-summarization">Allocate contiguously for route summarization<a class="headerlink" href="#allocate-contiguously-for-route-summarization" title="Permanent link">&para;</a></h4>
-<p>The most important property of a good <abbr title="Classless Inter-Domain Routing">CIDR</abbr> plan is that allocations within the same logical group are <strong>contiguous</strong>. When all production VPCs in us-east-1 fall within <code>10.0.0.0/12</code>, you can advertise a single <code>/12</code> summary route to on-premises networks instead of individual <code>/16</code> routes for each <abbr title="Virtual Private Cloud">VPC</abbr>. This matters because:</p>
+<p>The most important property of a good address plan is that allocations within the same logical group are <strong>contiguous</strong>, for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> alike. Allocate top-down, from your organization's range to a block per Region and then per environment, so a single prefix covers each level. When all production VPCs in us-east-1 fall within <code>10.0.0.0/12</code> and <code>2001:db8::/40</code>, you advertise one summary route per address family to on-premises instead of one route per <abbr title="Virtual Private Cloud">VPC</abbr>. This matters because:</p>
 <ul>
-<li>Route tables have size limits (Transit Gateway supports 10,000 routes, but on-premises routers may support far fewer)</li>
+<li>Route tables and <abbr title="Border Gateway Protocol">BGP</abbr> sessions have finite <a href="../../observability/service-monitoring/#monitor-quotas-before-you-hit-them">route capacity</a>, and on-premises routers may support fewer routes than AWS services</li>
 <li>Fewer routes mean faster convergence after failures</li>
 <li>Summary routes simplify firewall rules — one rule covers an entire environment instead of per-<abbr title="Virtual Private Cloud">VPC</abbr> entries</li>
 <li><abbr title="Border Gateway Protocol">BGP</abbr> advertisements to on-premises are cleaner and more stable</li>
 </ul>
-<p><strong>Bad allocation</strong> (non-contiguous, cannot summarize):</p>
-<ul>
-<li>Production <abbr title="Virtual Private Cloud">VPC</abbr> 1: <code>10.0.0.0/16</code></li>
-<li>Development <abbr title="Virtual Private Cloud">VPC</abbr>: <code>10.1.0.0/16</code></li>
-<li>Production <abbr title="Virtual Private Cloud">VPC</abbr> 2: <code>10.5.0.0/16</code></li>
-</ul>
-<p><strong>Good allocation</strong> (contiguous, summarizable as <code>10.0.0.0/12</code>):</p>
-<ul>
-<li>Production <abbr title="Virtual Private Cloud">VPC</abbr> 1: <code>10.0.0.0/16</code></li>
-<li>Production <abbr title="Virtual Private Cloud">VPC</abbr> 2: <code>10.1.0.0/16</code></li>
-<li>Production <abbr title="Virtual Private Cloud">VPC</abbr> 3: <code>10.2.0.0/16</code></li>
-</ul>
+<p><strong>Example multi-Region scheme</strong> (<abbr title="Internet Protocol version 4">IPv4</abbr> within <code>10.0.0.0/9</code> for AWS, <abbr title="Internet Protocol version 6">IPv6</abbr> within a BYOIP <code>/32</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Region</th>
+<th><abbr title="Internet Protocol version 4">IPv4</abbr> block</th>
+<th><abbr title="Internet Protocol version 6">IPv6</abbr> block</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>us-east-1</td>
+<td><code>10.0.0.0/12</code></td>
+<td><code>2001:db8::/40</code></td>
+<td>Primary Region</td>
+</tr>
+<tr>
+<td>us-west-2</td>
+<td><code>10.16.0.0/12</code></td>
+<td><code>2001:db8:100::/40</code></td>
+<td>DR / Secondary</td>
+</tr>
+<tr>
+<td>eu-west-1</td>
+<td><code>10.32.0.0/12</code></td>
+<td><code>2001:db8:200::/40</code></td>
+<td>European workloads</td>
+</tr>
+<tr>
+<td>ap-southeast-1</td>
+<td><code>10.48.0.0/12</code></td>
+<td><code>2001:db8:300::/40</code></td>
+<td>Asia-Pacific workloads</td>
+</tr>
+<tr>
+<td>Reserved</td>
+<td><code>10.64.0.0/10</code></td>
+<td>Rest of the <code>/32</code></td>
+<td>Future Regions</td>
+</tr>
+</tbody>
+</table>
+<p>Each <abbr title="Internet Protocol version 4">IPv4</abbr> <code>/12</code> holds 16 <code>/16</code> or 256 <code>/20</code> VPCs. An <abbr title="Internet Protocol version 6">IPv6</abbr> Regional pool supports <abbr title="Virtual Private Cloud">VPC</abbr> allocations sized for different subnet hierarchies, so in <abbr title="Internet Protocol version 6">IPv6</abbr> the hierarchy exists for summarization and governance rather than scarcity. For publicly routable space without BYOIP, an Amazon-provided contiguous block provisioned to an <abbr title="IP Address Manager">IPAM</abbr> Regional pool gives the same per-Region shape, without an organization-wide prefix above it. A private <abbr title="Internet Protocol version 6">IPv6</abbr> ULA or GUA range in <abbr title="IP Address Manager">IPAM</abbr>'s private scope can provide an organization-wide hierarchy for internal-only addressing.</p>
+<p>Non-contiguous allocation breaks summarization in both families. In <abbr title="Internet Protocol version 4">IPv4</abbr> it comes from per-team numbering, such as production VPCs at <code>10.0.0.0/16</code> and <code>10.5.0.0/16</code> with development at <code>10.1.0.0/16</code> between them. In <abbr title="Internet Protocol version 6">IPv6</abbr> it comes from VPCs that each request an Amazon-provided <abbr title="Classless Inter-Domain Routing">CIDR</abbr> outside <abbr title="IP Address Manager">IPAM</abbr>: each allocation is unrelated to the next, so every <abbr title="Virtual Private Cloud">VPC</abbr> is advertised and filtered individually.</p>
+<p><strong><em>Key insight:</em></strong> <em>Reserve at least 50% of your total address space for future growth. Organizations consistently underestimate how many VPCs, accounts, and Regions they'll need in 3-5 years. Address space is free; running out of it is not.</em></p>
+<h4 id="retrofit-summarization-into-an-existing-network">Retrofit summarization into an existing network<a class="headerlink" href="#retrofit-summarization-into-an-existing-network" title="Permanent link">&para;</a></h4>
+<p>Most large networks were not allocated hierarchically, so every <abbr title="Virtual Private Cloud">VPC</abbr> prefix propagates individually through Transit Gateway or AWS Cloud WAN and to on-premises. The symptom appears late: route tables and <abbr title="Border Gateway Protocol">BGP</abbr> sessions approach their route limits, and teams look for a filtering feature when the root cause is the address plan. You cannot renumber everything at once.</p>
+<p>Import existing <abbr title="Virtual Private Cloud">VPC</abbr> and on-premises ranges into <abbr title="IP Address Manager">IPAM</abbr> to find the ones that already fall inside a summarizable block. Advertise those blocks now through Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a>, <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/allowed-to-prefixes.html">allowed prefixes</a> on a Direct Connect gateway association with Transit Gateway, or the on-premises router. Check each summary against the full inventory first: a summary that covers ranges living elsewhere attracts their traffic and black-holes it.</p>
+<p>Reserve a summary block per Region in <abbr title="IP Address Manager">IPAM</abbr> and allocate every new <abbr title="Virtual Private Cloud">VPC</abbr> from it. Move existing workloads onto <a href="#use-secondary-cidrs-strategically-not-as-a-crutch">secondary CIDRs</a> from the new blocks as they are redeployed. Keep routes that cannot yet be summarized out of routing domains that do not need them through purpose-specific Transit Gateway route tables or Cloud WAN segments, as described in <a href="../../connectivity/within-aws/">Connectivity Within AWS</a>.</p>
+<p>Track <a href="../../observability/service-monitoring/#monitor-quotas-before-you-hit-them">route counts against their quotas</a> to measure convergence.</p>
+<p><strong><em>Key insight:</em></strong> <em>Stop route growth first by allocating every new <abbr title="Virtual Private Cloud">VPC</abbr> from the Regional blocks, then shrink the existing problem release by release.</em></p>
 <h4 id="start-with-16-for-production-vpcs">Start with /16 for production VPCs<a class="headerlink" href="#start-with-16-for-production-vpcs" title="Permanent link">&para;</a></h4>
 <p>A <code>/16</code> gives you 65,536 addresses and room to create 256 <code>/24</code> subnets. This sounds excessive until you account for multi-<abbr title="Availability Zone">AZ</abbr> deployments (3+ Availability Zones × multiple subnet tiers), EKS pod density, future growth, and the fact that you cannot shrink a <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> after creation. The cost of a <code>/16</code> is zero (IP addresses in a <abbr title="Virtual Private Cloud">VPC</abbr> are free until you use Elastic IPs or public <abbr title="Internet Protocol version 4">IPv4</abbr>), but the cost of running out of space is a painful migration.</p>
 <p>For non-production workloads where you're confident about scale, <code>/20</code> (4,096 addresses) is a reasonable choice. For isolated single-purpose VPCs (inspection VPCs, Transit Gateway attachment VPCs), <code>/24</code> or even <code>/28</code> may suffice.</p>
@@ -2137,56 +2177,14 @@
 </ol>
 <p>A common pattern: allocate <code>10.0.0.0/8</code> with on-premises using <code>10.128.0.0/9</code> and AWS using <code>10.0.0.0/9</code>. This gives each environment 8 million addresses with zero overlap risk. For organizations with existing on-premises allocations scattered across <code>10.0.0.0/8</code>, use <code>172.16.0.0/12</code> for AWS or work with your network team to identify unused portions of the <code>10.x</code> space.</p>
 <p><strong><em>Key insight:</em></strong> <em>The most common hybrid connectivity failure is not a Direct Connect configuration error or a <abbr title="Border Gateway Protocol">BGP</abbr> misconfiguration — it's a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap discovered after workloads are already running. Document all existing ranges, including those "temporary" lab networks and forgotten branch offices, before making any AWS allocation.</em></p>
-<h4 id="design-a-multi-region-allocation-strategy">Design a multi-Region allocation strategy<a class="headerlink" href="#design-a-multi-region-allocation-strategy" title="Permanent link">&para;</a></h4>
-<p>Assign each Region a dedicated block within your organizational allocation. This enables per-Region route summarization and prevents cross-Region overlap as you expand.</p>
-<p><strong>Example multi-Region scheme</strong> (within <code>10.0.0.0/9</code> for AWS):</p>
-<table>
-<thead>
-<tr>
-<th>Region</th>
-<th><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Block</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>us-east-1</td>
-<td>10.0.0.0/12</td>
-<td>Primary Region</td>
-</tr>
-<tr>
-<td>us-west-2</td>
-<td>10.16.0.0/12</td>
-<td>DR / Secondary</td>
-</tr>
-<tr>
-<td>eu-west-1</td>
-<td>10.32.0.0/12</td>
-<td>European workloads</td>
-</tr>
-<tr>
-<td>ap-southeast-1</td>
-<td>10.48.0.0/12</td>
-<td>Asia-Pacific workloads</td>
-</tr>
-<tr>
-<td>Reserved</td>
-<td>10.64.0.0/10</td>
-<td>Future Regions</td>
-</tr>
-</tbody>
-</table>
-<p>Each <code>/12</code> gives you 1,048,576 addresses per Region — enough for 16 <code>/16</code> VPCs or 256 <code>/20</code> VPCs. The reserved block ensures you can expand to new Regions without restructuring existing allocations.</p>
-<p>When advertising routes to on-premises via Direct Connect or <abbr title="Virtual Private Network">VPN</abbr>, a per-Region allocation lets you advertise a single summary route per Region (for example, <code>10.0.0.0/12</code> for all of us-east-1) rather than individual <abbr title="Virtual Private Cloud">VPC</abbr> prefixes. This keeps your on-premises route tables small and your <abbr title="Border Gateway Protocol">BGP</abbr> sessions stable.</p>
-<p><strong><em>Key insight:</em></strong> <em>Reserve at least 50% of your total address space for future growth. Organizations consistently underestimate how many VPCs, accounts, and Regions they'll need in 3-5 years. Address space is free; running out of it is not.</em></p>
 <h4 id="plan-ipv6-alongside-ipv4">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr><a class="headerlink" href="#plan-ipv6-alongside-ipv4" title="Permanent link">&para;</a></h4>
 <p><abbr title="Internet Protocol version 6">IPv6</abbr> in AWS VPCs works differently from <abbr title="Internet Protocol version 4">IPv4</abbr> and requires separate planning:</p>
 <ul>
-<li><strong><abbr title="Virtual Private Cloud">VPC</abbr>-level</strong>: Each <abbr title="Virtual Private Cloud">VPC</abbr> receives a <code>/56</code> <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> (256 <code>/64</code> subnets available). You can use Amazon-provided addresses or bring your own (BYOIP).</li>
-<li><strong>Subnet-level</strong>: Each subnet gets a <code>/64</code> from the <abbr title="Virtual Private Cloud">VPC</abbr>'s <code>/56</code>. This is fixed — you cannot choose a different subnet prefix length.</li>
-<li><strong>No <abbr title="Network Address Translation">NAT</abbr> required</strong>: <abbr title="Internet Protocol version 6">IPv6</abbr> addresses are globally unique. Egress-only internet gateways provide outbound-only internet access without <abbr title="Network Address Translation">NAT</abbr>.</li>
+<li><strong><abbr title="Virtual Private Cloud">VPC</abbr>-level</strong>: Choose the <abbr title="Internet Protocol version 6">IPv6</abbr> prefix length from the subnet hierarchy and growth requirement, then enforce it through <abbr title="IP Address Manager">IPAM</abbr> allocation rules. Allocate the <abbr title="Classless Inter-Domain Routing">CIDR</abbr> from a Regional hierarchy backed by an Amazon-provided contiguous block, BYOIP, or a private ULA/GUA range.</li>
+<li><strong>Subnet-level</strong>: Choose subnet prefix lengths within the <abbr title="Virtual Private Cloud">VPC</abbr> allocation based on workload scale and future subdivision; <abbr title="Internet Protocol version 6">IPv6</abbr> subnets are no longer limited to a single fixed size.</li>
+<li><strong>No <abbr title="Network Address Translation">NAT</abbr> required for public <abbr title="Internet Protocol version 6">IPv6</abbr></strong>: Public GUA addresses are globally unique, and egress-only internet gateways provide outbound-only internet access without <abbr title="Network Address Translation">NAT</abbr>. Private ULA/GUA ranges stay internal and require a routed path through a resource with public addressing for internet access.</li>
 <li><strong>Dual-stack</strong>: Most organizations run dual-stack (<abbr title="Internet Protocol version 4">IPv4</abbr> + <abbr title="Internet Protocol version 6">IPv6</abbr>) rather than <abbr title="Internet Protocol version 6">IPv6</abbr>-only, at least during transition.</li>
-<li><strong>No address exhaustion concern</strong>: A single <code>/56</code> provides 4,722,366,482,869,645,213,696 addresses. Exhaustion is not a planning factor for <abbr title="Internet Protocol version 6">IPv6</abbr>.</li>
+<li><strong>Exhaustion is not the primary sizing concern, summarization is</strong>: Size <abbr title="Virtual Private Cloud">VPC</abbr> and subnet allocations for their hierarchy and growth rather than <abbr title="Internet Protocol version 4">IPv4</abbr>-style scarcity, and keep each Region contiguous so its routes summarize.</li>
 </ul>
 <p><strong><abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> source options:</strong></p>
 <table>
@@ -2199,28 +2197,33 @@
 </thead>
 <tbody>
 <tr>
-<td>Amazon-provided</td>
-<td>Default for most workloads</td>
-<td>Addresses are assigned from Amazon's pool; change if you disassociate</td>
+<td><abbr title="IP Address Manager">IPAM</abbr> Regional pool with an Amazon-provided contiguous block</td>
+<td>Default for multi-account environments</td>
+<td>One summarizable prefix per Region; the block is provisioned to a pool with a Region locale, so the hierarchy starts at the Region rather than an organization-wide pool</td>
 </tr>
 <tr>
 <td>BYOIP (Bring Your Own IP)</td>
-<td>Enterprises with existing <abbr title="Internet Protocol version 6">IPv6</abbr> allocations</td>
+<td>Enterprises that need publicly routable, organization-wide <abbr title="Internet Protocol version 6">IPv6</abbr> space</td>
 <td>Requires RIR registration and ROA; provides address portability</td>
 </tr>
 <tr>
-<td><abbr title="IP Address Manager">IPAM</abbr>-managed Amazon pool</td>
-<td>Multi-account with consistent allocation</td>
-<td>Allocates from Amazon's pool but through <abbr title="IP Address Manager">IPAM</abbr> for governance</td>
+<td>Private <abbr title="Internet Protocol version 6">IPv6</abbr> ULA or GUA in an <abbr title="IP Address Manager">IPAM</abbr> private scope</td>
+<td>Internal-only networks that need an organization-wide hierarchy</td>
+<td>The range cannot be advertised to the internet from AWS; private GUA space must be owned by your organization</td>
+</tr>
+<tr>
+<td>Amazon-provided per <abbr title="Virtual Private Cloud">VPC</abbr> (no <abbr title="IP Address Manager">IPAM</abbr>)</td>
+<td>Single VPCs, sandboxes</td>
+<td>Not contiguous across VPCs, so the allocations cannot be summarized; addresses change if you disassociate</td>
 </tr>
 </tbody>
 </table>
-<p><abbr title="Internet Protocol version 6">IPv6</abbr> planning is simpler than <abbr title="Internet Protocol version 4">IPv4</abbr> in one respect: the address space is so vast that exhaustion is not a concern. The complexity lies in ensuring your security groups, NACLs, route tables, and firewall rules account for <abbr title="Internet Protocol version 6">IPv6</abbr> traffic paths. Many organizations overlook that <abbr title="Internet Protocol version 6">IPv6</abbr> subnets are internet-routable by default — an egress-only internet gateway provides outbound access, but without proper security group rules, resources with public <abbr title="Internet Protocol version 6">IPv6</abbr> addresses are reachable from the internet.</p>
+<p><abbr title="Internet Protocol version 6">IPv6</abbr> planning is simpler than <abbr title="Internet Protocol version 4">IPv4</abbr> in one respect: you never size for scarcity. The complexity lies in allocating from contiguous blocks and ensuring your security groups, NACLs, route tables, and firewall rules account for <abbr title="Internet Protocol version 6">IPv6</abbr> traffic paths. Public GUA addresses can reach the internet only when routing and security controls allow it; private ULA/GUA ranges cannot be advertised to the internet from AWS.</p>
 <p><strong><abbr title="Internet Protocol version 6">IPv6</abbr> planning checklist:</strong></p>
 <ul>
-<li>Decide on Amazon-provided vs BYOIP before creating VPCs (changing later requires disassociation)</li>
+<li>Decide on the <abbr title="Internet Protocol version 6">IPv6</abbr> source (Amazon-provided contiguous block, BYOIP, or private ULA/GUA range) and create the Regional pools before creating VPCs (changing later requires disassociation)</li>
 <li>Update all security groups to include <abbr title="Internet Protocol version 6">IPv6</abbr> rules (<abbr title="Internet Protocol version 4">IPv4</abbr> rules do not automatically apply to <abbr title="Internet Protocol version 6">IPv6</abbr> traffic)</li>
-<li>Configure route tables with <abbr title="Internet Protocol version 6">IPv6</abbr> routes (<code>::/0</code> to internet gateway or egress-only internet gateway)</li>
+<li>Configure <abbr title="Internet Protocol version 6">IPv6</abbr> routes for the chosen source: public GUA uses an internet or egress-only internet gateway; private ULA/GUA uses an internal or hybrid egress path</li>
 <li>Ensure NACLs permit <abbr title="Internet Protocol version 6">IPv6</abbr> traffic for required flows</li>
 <li>Verify that applications and <abbr title="Domain Name System">DNS</abbr> resolution handle dual-stack correctly</li>
 </ul>
@@ -2467,7 +2470,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 31, 2026 19:07:02 UTC">October 31, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 10:21:50 UTC">November 3, 2026</span>
   </span>
 
     
