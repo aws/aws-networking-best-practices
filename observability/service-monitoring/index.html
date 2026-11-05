@@ -2536,58 +2536,52 @@
 <p>Anomaly detection costs the same as a standard alarm but adapts automatically to traffic growth, seasonal patterns, and baseline shifts. Use a band width of 2 standard deviations for most networking metrics — tight enough to catch real anomalies, loose enough to avoid false positives during normal variance.</p>
 <h4 id="monitor-quotas-before-you-hit-them">Monitor quotas before you hit them<a class="headerlink" href="#monitor-quotas-before-you-hit-them" title="Permanent link">&para;</a></h4>
 <p>Every networking service has quotas. Hitting a quota silently — no new <abbr title="Virtual Private Network">VPN</abbr> connections, no additional Transit Gateway attachments, no more <abbr title="Network Address Translation">NAT</abbr> gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.</p>
-<p>Use <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html">AWS Service Quotas</a> integration with CloudWatch to alarm at 80% utilization:</p>
+<p>Use <a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html">AWS Service Quotas</a> integration with CloudWatch to alarm at 80% utilization. Base each alarm on the quota applied to that account and Region: adjustable quotas can differ from the service defaults, while fixed limits remain in the service documentation.</p>
 <table>
 <thead>
 <tr>
 <th>Service</th>
-<th>Quota to monitor</th>
-<th>Default limit</th>
+<th>Quotas to monitor</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Transit Gateway</td>
-<td>Attachments per <abbr title="Transit Gateway">TGW</abbr></td>
-<td>5,000</td>
-</tr>
-<tr>
-<td>Transit Gateway</td>
-<td>Routes per route table</td>
-<td>10,000</td>
+<td>Attachments per transit gateway; total combined routes across all route tables; routes received from and advertised to each Connect peer</td>
 </tr>
 <tr>
 <td><abbr title="Network Address Translation">NAT</abbr> gateway</td>
 <td><abbr title="Network Address Translation">NAT</abbr> gateways per Availability Zone</td>
-<td>5</td>
 </tr>
 <tr>
-<td><abbr title="Virtual Private Network">VPN</abbr></td>
-<td><abbr title="Virtual Private Network">VPN</abbr> connections per <abbr title="Virtual Private Gateway">VGW</abbr>/<abbr title="Transit Gateway">TGW</abbr></td>
-<td>10 / 20</td>
+<td>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></td>
+<td>Connections per gateway; routes received from and advertised to each customer gateway</td>
+</tr>
+<tr>
+<td>AWS Cloud WAN</td>
+<td>Routes per core network; routes received from and advertised to each <abbr title="Virtual Private Network">VPN</abbr>, Connect peer, and Direct Connect gateway attachment</td>
 </tr>
 <tr>
 <td>Direct Connect</td>
-<td>Virtual interfaces per connection</td>
-<td>50</td>
+<td>Virtual interfaces per connection; prefixes received and advertised per <abbr title="Border Gateway Protocol">BGP</abbr> session and gateway association</td>
 </tr>
 <tr>
-<td><abbr title="Application Load Balancer">ALB</abbr></td>
-<td>Rules per <abbr title="Application Load Balancer">ALB</abbr></td>
-<td>100</td>
+<td>Application Load Balancer</td>
+<td>Rules per load balancer</td>
 </tr>
 <tr>
-<td><abbr title="Network Load Balancer">NLB</abbr></td>
+<td>Network Load Balancer</td>
 <td>Targets per target group</td>
-<td>500 (IP) / 500 (instance)</td>
 </tr>
 <tr>
-<td>Network Firewall</td>
+<td>AWS Network Firewall</td>
 <td>Rule groups per firewall policy</td>
-<td>20</td>
 </tr>
 </tbody>
 </table>
+<p>Hybrid route counts need extra attention because not all of them have a direct quota metric. For Direct Connect, alarm on <code>VirtualInterfaceBgpPrefixesAccepted</code> and <code>VirtualInterfaceBgpPrefixesAdvertised</code> for each VIF and <code>IpAddressFamily</code>; exceeding the inbound prefix allocation takes the VIF's <abbr title="Border Gateway Protocol">BGP</abbr> session down.</p>
+<p>For Transit Gateway, count routes with <code>SearchTransitGatewayRoutes</code>. For Cloud WAN, use <code>list-core-network-routing-information</code>, which reports the routing database before routing policy is applied, and verify final advertisements from the receiving peer's <abbr title="Border Gateway Protocol">BGP</abbr> view. Publish these counts as custom metrics and alarm at 80% of the applicable limit.</p>
+<p>When route capacity approaches its limit, reduce it through <a href="../../connectivity/within-aws/#apply-routing-policies-at-network-boundaries">routing policy</a>, a <a href="../../foundation/cidr/#allocate-contiguously-for-route-summarization">hierarchical address plan</a>, or a separate <a href="../../connectivity/within-aws/#think-of-segments-as-routing-domains-not-environments">hybrid routing domain</a>. A quota increase is not available for every limit, so the alarm must leave time for an architectural change.</p>
 <h3 id="multi-account-monitoring-architecture">Multi-account monitoring architecture<a class="headerlink" href="#multi-account-monitoring-architecture" title="Permanent link">&para;</a></h3>
 <h4 id="deploy-a-centralized-monitoring-account">Deploy a centralized monitoring account<a class="headerlink" href="#deploy-a-centralized-monitoring-account" title="Permanent link">&para;</a></h4>
 <p>In a multi-account environment, networking resources are distributed across shared-services accounts, workload accounts, and connectivity accounts. The networking team needs a single pane of glass.</p>
@@ -2802,7 +2796,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Service Quotas</strong></p>
 <hr />
-<p>Monitor service quota utilization with CloudWatch integration and request increases before hitting limits.</p>
+<p>Monitor applied quotas through Service Quotas. Check the service-specific quota pages for fixed route limits: <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html">Direct Connect</a>, <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a>, <a href="https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html">Transit Gateway</a>, and <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-quotas.html">Cloud WAN</a>.</p>
 <p><a href="https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 </ul>
@@ -2841,7 +2835,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="August 1, 2026 20:38:07 UTC">August 1, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 10:49:25 UTC">November 3, 2026</span>
   </span>
 
     

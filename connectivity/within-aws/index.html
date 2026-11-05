@@ -2701,9 +2701,40 @@
 </div>
 <h3 id="aws-cloud-wan-best-practices">AWS Cloud WAN Best Practices<a class="headerlink" href="#aws-cloud-wan-best-practices" title="Permanent link">&para;</a></h3>
 <h4 id="think-of-segments-as-routing-domains-not-environments">Think of segments as routing domains, not environments<a class="headerlink" href="#think-of-segments-as-routing-domains-not-environments" title="Permanent link">&para;</a></h4>
-<p>A common first instinct is to create segments named "production" and "development." While that works, it limits the power of segmentation. Segments are better understood as routing domains or security zones that define trust boundaries.</p>
-<p>For example, a <code>pci</code> segment might contain VPCs across both production and staging that handle cardholder data, with strict inspection rules for any traffic entering or leaving that segment. A <code>sharedservices</code> segment might host <abbr title="Domain Name System">DNS</abbr>, monitoring, and identity services that need controlled access from multiple other segments. A <code>hybrid</code> segment might group all Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> attachments, with service insertion rules that force traffic between <code>hybrid</code> and other segments through an Inspection <abbr title="Virtual Private Cloud">VPC</abbr> running your preferred firewall solution.</p>
-<p>Designing segments around trust boundaries and traffic flow patterns gives you more flexibility than mapping them 1:1 to environments. You can always have a segment per environment too, but consider what routing and security boundaries you actually need rather than defaulting to environment names.</p>
+<p>Design segments around trust boundaries and traffic flow, not around environment names. A common first instinct is to create "production" and "development" segments. That works, but it limits segmentation to a copy of your account structure. A segment is a routing domain: it decides which attachments learn which routes and where inspection and routing policy apply. You can still have a segment per environment, but start from the routing and security boundaries you actually need.</p>
+<p>Some examples of segments built this way:</p>
+<table>
+<thead>
+<tr>
+<th>Segment</th>
+<th>What it groups</th>
+<th>Why it is its own routing domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pci</code></td>
+<td>VPCs handling cardholder data, across production and staging</td>
+<td>Strict inspection on any traffic entering or leaving the segment, whatever the environment</td>
+</tr>
+<tr>
+<td><code>sharedservices</code></td>
+<td><abbr title="Domain Name System">DNS</abbr>, monitoring, and identity services</td>
+<td>Controlled access from many other segments without connecting those segments to each other</td>
+</tr>
+<tr>
+<td><code>hybrid</code></td>
+<td>Direct Connect, <abbr title="Virtual Private Network">VPN</abbr>, and Connect attachments to on-premises</td>
+<td>Service insertion forces traffic to and from other segments through an Inspection <abbr title="Virtual Private Cloud">VPC</abbr>. Filtering, summarization, and path preference for on-premises live on the segment share or the hybrid attachments, apart from <abbr title="Virtual Private Cloud">VPC</abbr>-to-<abbr title="Virtual Private Cloud">VPC</abbr> routing</td>
+</tr>
+<tr>
+<td><code>external</code></td>
+<td><abbr title="Virtual Private Network">VPN</abbr> or Connect tunnels to a third-party internet security provider</td>
+<td>Internet-bound traffic is a different trust boundary from on-premises. Workload segments learn a default route toward the provider, and the provider only needs return routes for the VPCs it serves, not your on-premises routes</td>
+</tr>
+</tbody>
+</table>
+<p>Putting hybrid or external attachments in the same segment as your VPCs is the common shortcut, and it breaks as the network grows. Each connection can receive every <abbr title="Virtual Private Cloud">VPC</abbr> prefix, consuming its route allowance and leaving no single policy boundary where those advertisements can be reduced. In separate segments, segment shares and routing policies control which prefixes each hybrid or external connection receives. For a small network with few Regions, low route counts, and no boundary-specific policy, one segment is still reasonable; splitting costs more sharing configuration.</p>
 <h4 id="automate-attachment-acceptance-with-aws-organizations-scps">Automate attachment acceptance with AWS Organizations SCPs<a class="headerlink" href="#automate-attachment-acceptance-with-aws-organizations-scps" title="Permanent link">&para;</a></h4>
 <p>AWS Cloud WAN attachment acceptance policies determine which attachments can connect to which segments, based on attachment's metadata, being the main one the use of tags. The key to making this work at scale without manual approval is controlling those tags at the source.</p>
 <p>Use <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html">AWS Organizations Service Control Policies</a> (SCPs) to enforce tagging requirements on resources across your accounts. When accounts in a specific OU create VPCs with the required tags (for example, <code>segment:production</code> or <code>segment:sharedservices</code>), Cloud WAN automatically accepts the attachment into the correct segment. No tickets, no manual review by the networking team.</p>
@@ -2711,12 +2742,48 @@
 <h4 id="use-service-insertion-for-agile-security-enforcement">Use service insertion for agile security enforcement<a class="headerlink" href="#use-service-insertion-for-agile-security-enforcement" title="Permanent link">&para;</a></h4>
 <p>AWS Cloud WAN's service insertion capability lets you route intra or inter-segment traffic through Inspection VPCs running <a href="https://aws.amazon.com/network-firewall/">AWS Network Firewall</a> or third-party appliances. The inspection rules are defined in the network policy, so changing which traffic gets inspected, or routing it through a different Inspection <abbr title="Virtual Private Cloud">VPC</abbr>, is a policy change rather than a manual routing update across multiple Transit Gateways.</p>
 <p>This matters because security and inspection requirements change. A new compliance requirement might mandate inspection of traffic between two segments that previously communicated directly, or you can also apply cost-optimization strategies by removing inspection in environments that are protected using other security mechanisms. With service insertion, that's a policy update applied across all affected Regions and segments.</p>
-<h4 id="use-routing-policies-to-control-route-propagation-and-traffic-paths">Use routing policies to control route propagation and traffic paths<a class="headerlink" href="#use-routing-policies-to-control-route-propagation-and-traffic-paths" title="Permanent link">&para;</a></h4>
-<p>AWS Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> give you fine-grained control over which routes propagate across your network and how traffic flows in multi-path environments. A routing policy is a set of rules with match conditions and actions that apply to route propagations at the attachment, segment sharing, or core network edge level.</p>
-<p><strong>Route filtering and summarization</strong>: in large networks, not every attachment needs visibility into every route. Routing policies let you filter which prefixes propagate between segments or between Cloud WAN and external networks (Direct Connect, <abbr title="Virtual Private Network">VPN</abbr>). You can also summarize routes to reduce route table size and limit the blast radius of misconfigurations. For example, instead of propagating individual <abbr title="Virtual Private Cloud">VPC</abbr> CIDRs to your on-premises network, you can advertise a single summary route that covers the entire segment.</p>
-<p><strong><abbr title="Border Gateway Protocol">BGP</abbr> attribute manipulation for multi-path environments</strong>: when you have multiple connectivity paths to on-premises (for example, Direct Connect in two Regions, plus a <abbr title="Virtual Private Network">VPN</abbr> backup), routing policies let you manipulate <abbr title="Border Gateway Protocol">BGP</abbr> attributes (AS path prepending, MED, local preference) to control which path traffic takes. This is essential for optimizing performance based on bandwidth availability, latency, or cost, and for building active/standby failover patterns without relying on third-party routing appliances.</p>
-<p><strong>Regional internet egress control</strong>: Organizations that centralize outbound internet traffic through inspection VPCs in specific Regions can use routing policies to direct default routes appropriately. For example, traffic from Asia-Pacific Regions routes through an Inspection <abbr title="Virtual Private Cloud">VPC</abbr> in Singapore, while European traffic routes through Frankfurt.</p>
-<p>Routing policies also provide enhanced visibility into the routing database, showing which routes are learned and advertised along with their <abbr title="Border Gateway Protocol">BGP</abbr> attributes. This visibility is critical for troubleshooting in complex multi-path environments.</p>
+<h4 id="apply-routing-policies-at-network-boundaries">Apply routing policies at network boundaries<a class="headerlink" href="#apply-routing-policies-at-network-boundaries" title="Permanent link">&para;</a></h4>
+<p>Apply AWS Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> where routes cross attachments, segment shares, or core network edges. At each boundary, define which routes can propagate, whether they should be summarized, and which path should be preferred. A hierarchical address plan complements the policy: contiguous per-Region blocks let one rule express the intent without maintaining a list of every <abbr title="Virtual Private Cloud">VPC</abbr> prefix.</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Policy pattern</th>
+<th>Why it scales</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Limit routes advertised to on-premises</td>
+<td>On each Region's <abbr title="Virtual Private Network">VPN</abbr>, Direct Connect, or Connect attachment, match the <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> regional blocks separately. Allow them before a catch-all drop when advertising individual prefixes, or summarize them when only the aggregates should be advertised</td>
+<td>One rule per regional block and address family replaces a list of every <abbr title="Virtual Private Cloud">VPC</abbr> prefix and limits propagation to the intended boundary</td>
+</tr>
+<tr>
+<td>Control propagation between segments</td>
+<td>Filter routes on the segment share; share policies run after attachment policies. On <abbr title="Virtual Private Cloud">VPC</abbr> attachments, use inbound drop rules for secondary ranges such as <code>100.64.0.0/10</code> that must remain local</td>
+<td>The share becomes one boundary for every attachment in both segments, while local or overlapping secondary ranges stay out of the core network</td>
+</tr>
+<tr>
+<td>Control regional egress propagation</td>
+<td>Filter which default routes cross attachment, segment-share, and core network edge boundaries; use service insertion, not routing policy, to steer traffic through inspection</td>
+<td>Workload Regions learn only their intended egress defaults, while route propagation remains separate from the inspection path</td>
+</tr>
+<tr>
+<td>Select a path across multiple hybrid connections</td>
+<td>Set local preference, MED, or AS path on <abbr title="Border Gateway Protocol">BGP</abbr>-capable attachments</td>
+<td>The policy expresses active/active or active/standby routing without a separate routing appliance</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Take into account</p>
+<ul>
+<li><abbr title="Virtual Private Cloud">VPC</abbr> attachments support only inbound allow and drop actions. You cannot tag <abbr title="Virtual Private Cloud">VPC</abbr> routes with a <abbr title="Border Gateway Protocol">BGP</abbr> community at ingress, summarize them, or change their <abbr title="Border Gateway Protocol">BGP</abbr> attributes; classify their origin with contiguous prefixes from the address plan instead. Communities work on <abbr title="Virtual Private Network">VPN</abbr> and Connect attachments, not Direct Connect or Transit Gateway peering.</li>
+<li>Summarization works only outbound on <abbr title="Border Gateway Protocol">BGP</abbr>-capable attachments and resets MED, local preference, AS path, and communities. Plan path preference for the generated summary separately.</li>
+<li>Allow and drop end evaluation; summarize and set actions don't. Order modifications before terminal actions, and aggregate by Region because each policy supports a limited number of rules.</li>
+<li>Routing policies don't apply to network function groups; use service insertion for inspection. The routing-information API exposes learned and advertised routes and <abbr title="Border Gateway Protocol">BGP</abbr> attributes before policy is applied, so verify final advertisements from the receiving peer.</li>
+</ul>
+</div>
 <h4 id="plan-ipv6-from-the-start">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start" title="Permanent link">&para;</a></h4>
 <p>AWS Cloud WAN supports dual-stack routing. Configure <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> in your network policy from the beginning, even if not all workloads use <abbr title="Internet Protocol version 6">IPv6</abbr> today. Retrofitting <abbr title="Internet Protocol version 6">IPv6</abbr> into an existing network policy is more disruptive than including it from the start, and <abbr title="Internet Protocol version 6">IPv6</abbr> adoption is accelerating across AWS services.</p>
 <h4 id="treat-the-network-policy-as-code">Treat the network policy as code<a class="headerlink" href="#treat-the-network-policy-as-code" title="Permanent link">&para;</a></h4>
@@ -3198,14 +3265,40 @@
 </ul>
 </div>
 <h3 id="transit-gateway-best-practices">Transit Gateway Best Practices<a class="headerlink" href="#transit-gateway-best-practices" title="Permanent link">&para;</a></h3>
-<h4 id="use-separate-route-tables-for-segmentation">Use separate route tables for segmentation<a class="headerlink" href="#use-separate-route-tables-for-segmentation" title="Permanent link">&para;</a></h4>
-<p>Don't rely on the default route table. Create route tables aligned with your security or environment boundaries (for example, <code>production</code>, <code>non-production</code>, <code>shared-services</code>, <code>inspection</code>) and associate each attachment with the route table that represents its role. Route propagation and static routes between those route tables define which attachments can reach which others, giving you network-level segmentation without a second Transit Gateway. Route tables segment by origin: one attachment, one table. Where routing must differ by traffic type instead, <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-policy-tables.html">Policy-Based Routing</a> classifies flows onto these same route tables.</p>
+<h4 id="build-segmentation-with-purpose-specific-route-tables">Build segmentation with purpose-specific route tables<a class="headerlink" href="#build-segmentation-with-purpose-specific-route-tables" title="Permanent link">&para;</a></h4>
+<p>Disable default route table association and propagation on the Transit Gateway, and leave automatic acceptance of shared attachments disabled. At scale, central networking automation should validate each cross-account attachment, approve it, associate it with the route table for its role, and propagate only the destinations that role needs. An attachment that cannot be classified should remain pending or unassociated, with no reachability. Leaving these defaults enabled lets each new attachment join the shared routing domain without the intended control gate.</p>
+<p>Apply the controls together:</p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>How to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Association</strong></td>
+<td>Create route tables for boundaries such as <code>production</code>, <code>non-production</code>, <code>shared-services</code>, and <code>inspection</code>. Associate each attachment with one table based on its role; that table determines how traffic arriving from the attachment is routed</td>
+</tr>
+<tr>
+<td><strong>Selective propagation</strong></td>
+<td>Propagate an attachment's routes only into the tables whose sources need to reach it. Propagating every attachment into every table recreates all-to-all connectivity</td>
+</tr>
+<tr>
+<td><strong>Static routes</strong></td>
+<td>Use explicit routes where only selected CIDRs should cross a boundary. <abbr title="Virtual Private Cloud">VPC</abbr> propagation includes every <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>, so use static routes for the routable ranges when secondary ranges such as <code>100.64.0.0/10</code> must stay local or may overlap elsewhere</td>
+</tr>
+<tr>
+<td><strong>Policy-Based Routing</strong></td>
+<td>Route tables segment traffic by the attachment it arrives from. When routing must instead differ by source, destination, port, or protocol, use <a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-policy-tables.html">Policy-Based Routing</a> to classify flows onto the same purpose-specific route tables</td>
+</tr>
+</tbody>
+</table>
+<p>Participant accounts can request and delete their <abbr title="Virtual Private Cloud">VPC</abbr> attachments, but the Transit Gateway owner controls route-table associations. Use <a href="../../security/segmentation/#use-scps-to-prevent-segmentation-bypass">Organizations SCP guardrails</a> to keep workload attachment changes inside the approved workflow, and restrict route-table and peering changes in the networking account to its deployment role.</p>
 <h4 id="deploy-in-a-dedicated-networking-account-and-share-via-aws-ram">Deploy in a dedicated networking account and share via AWS RAM<a class="headerlink" href="#deploy-in-a-dedicated-networking-account-and-share-via-aws-ram" title="Permanent link">&para;</a></h4>
 <p>Own the Transit Gateway in a dedicated networking account and share it across your organization at the OU level rather than individual accounts. Sharing at the OU level scales automatically as new accounts are added to the OU, and centralizing ownership keeps route table changes in one place. Application accounts attach their own VPCs; the networking team controls the routing.</p>
 <h4 id="use-dedicated-28-subnets-for-transit-gateway-attachments">Use dedicated <code>/28</code> subnets for Transit Gateway attachments<a class="headerlink" href="#use-dedicated-28-subnets-for-transit-gateway-attachments" title="Permanent link">&para;</a></h4>
 <p>Create small <code>/28</code> subnets in each Availability Zone specifically for the Transit Gateway ENIs. A dedicated subnet keeps the attachment ENIs predictable for <abbr title="Network Access Control List">NACL</abbr> and flow log configuration, and the small size reserves minimal address space from the <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr>.</p>
-<h4 id="propagate-routes-selectively">Propagate routes selectively<a class="headerlink" href="#propagate-routes-selectively" title="Permanent link">&para;</a></h4>
-<p>Enable route propagation only where needed. Propagating every attachment's routes into every route table is convenient but defeats segmentation. Static routes and selective propagation together give you explicit control over what each attachment can reach.</p>
 <h4 id="order-policy-rules-from-specific-to-broad-and-always-end-with-a-catch-all">Order policy rules from specific to broad, and always end with a catch-all<a class="headerlink" href="#order-policy-rules-from-specific-to-broad-and-always-end-with-a-catch-all" title="Permanent link">&para;</a></h4>
 <p>Rules are evaluated in ascending order, first match wins, so a broad rule at a low number shadows the more specific rules at higher numbers. Leave gaps in the numbering (100, 200, 300) so you can insert rules later without renumbering, and finish with a catch-all matching everything: unmatched traffic is dropped, so an empty policy table is a blackhole for the whole attachment.</p>
 <p>Entry quotas are low, so keep the rule set to deliberate exceptions. Check the routing impact before associating a policy table with a Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> or Connect attachment, which stops route advertisement to that <abbr title="Border Gateway Protocol">BGP</abbr> peer; Direct Connect is unaffected. Customer-managed entries are not supported on Transit Gateway-to-Cloud WAN peering attachments, where read-only system entries enforce Cloud WAN's segment isolation instead.</p>
@@ -3632,7 +3725,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 27, 2026 09:31:30 UTC">October 27, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 10:49:25 UTC">November 3, 2026</span>
   </span>
 
     
