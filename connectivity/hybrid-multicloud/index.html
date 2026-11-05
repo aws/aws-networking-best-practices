@@ -2314,9 +2314,9 @@
 <p>A single physical connection carries multiple VLAN-tagged virtual interfaces. <strong>Private VIFs</strong> reach <abbr title="Virtual Private Cloud">VPC</abbr> resources (via a virtual private gateway or a Direct Connect gateway). <strong>Transit VIFs</strong> reach Transit Gateways or AWS Cloud WAN core networks (via a Direct Connect gateway). <strong>Public VIFs</strong> reach AWS public service endpoints over private links.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect Gateway</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect gateway</strong></p>
 <hr />
-<p>A globally distributed <abbr title="Border Gateway Protocol">BGP</abbr> route reflector. A single Direct Connect Gateway associates with virtual private gateways, Transit Gateways, or AWS Cloud WAN core networks across any AWS Region (except China), so one physical connection can reach many Regions without provisioning multiple circuits.</p>
+<p>A globally distributed <abbr title="Border Gateway Protocol">BGP</abbr> route reflector. A single Direct Connect gateway associates with virtual private gateways, Transit Gateways, or AWS Cloud WAN core networks across any AWS Region (except China), so one physical connection can reach many Regions without provisioning multiple circuits.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.5 15.5H22V17h-5.5v1.75l-2.5-2.5 2.5-2.5zm3 4.25V18l2.5 2.5-2.5 2.5v-1.75H14v-1.5zM9.5 5.5a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2M5.75 8.9 4 9.65V13H2V8.3l5.25-2.15Q7.625 6 8 6c.7 0 1.35.35 1.7.95l.95 1.6C11.55 10 13.15 11 15 11v2c-2.2 0-4.15-1-5.45-2.6l-.6 3L11 15.45V23H9v-6l-2.15-2-1.75 8H3z"/></svg></span> <strong>SiteLink</strong></p>
@@ -2336,16 +2336,45 @@
 </ul>
 </div>
 <h3 id="aws-direct-connect-best-practices">AWS Direct Connect Best Practices<a class="headerlink" href="#aws-direct-connect-best-practices" title="Permanent link">&para;</a></h3>
-<h4 id="design-for-resiliency-at-the-location-and-provider-level-not-just-at-the-connection-level">Design for resiliency at the location and provider level, not just at the connection level<a class="headerlink" href="#design-for-resiliency-at-the-location-and-provider-level-not-just-at-the-connection-level" title="Permanent link">&para;</a></h4>
-<p>A single dedicated connection, even at 100 Gbps, is still one circuit through one Direct Connect location. For production hybrid traffic, follow the Resiliency Toolkit's <strong>maximum resiliency</strong> model: at least two connections at two separate Direct Connect locations, each sourced from a different provider and terminating on different on-premises routers. This removes location, provider, cross-connect, and device as single points of failure.</p>
-<p>If the workload can tolerate degraded performance during a single location failure, the <strong>high resiliency</strong> model (two connections across two locations through one or more providers) is a reasonable middle ground. The <strong>development/test</strong> single-connection model is rarely appropriate for anything that ends up carrying production traffic.</p>
-<h4 id="use-a-direct-connect-gateway-as-the-attach-point">Use a Direct Connect Gateway as the attach point<a class="headerlink" href="#use-a-direct-connect-gateway-as-the-attach-point" title="Permanent link">&para;</a></h4>
-<p>A Direct Connect Gateway is a free, globally distributed resource that acts as the <abbr title="Border Gateway Protocol">BGP</abbr> attach point between your VIFs and AWS network services (virtual private gateways, Transit Gateways, or AWS Cloud WAN core networks). Associating a single Direct Connect Gateway with multiple regional attach points means one physical connection can reach workloads in any Region, without a Region-specific VIF per destination.</p>
-<p>This also simplifies migrations: when you move workloads between Regions or from Transit Gateway to AWS Cloud WAN, you re-associate the Direct Connect Gateway rather than re-provisioning VIFs. It also keeps the <abbr title="Border Gateway Protocol">BGP</abbr> control plane off the data path, so <abbr title="Border Gateway Protocol">BGP</abbr> re-convergence doesn't interrupt traffic on healthy paths.</p>
+<h4 id="design-resiliency-across-locations-and-devices">Design resiliency across locations and devices<a class="headerlink" href="#design-resiliency-across-locations-and-devices" title="Permanent link">&para;</a></h4>
+<p>Start with the failure the network must survive, then choose the AWS Direct Connect Resiliency Toolkit model and physical paths that meet it. Maximum resiliency is the default for critical production traffic; high resiliency is reasonable when the surviving connection still meets the workload's availability and capacity needs. Use a single location only when the workload can tolerate losing that location.</p>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Recommendation</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Locations and devices</strong></td>
+<td>Place independent connections on separate AWS devices in more than one Direct Connect location, terminate them on separate on-premises routers, and add carrier diversity where one provider could affect both paths</td>
+<td>Connections in one location or on one device share the same failure</td>
+</tr>
+<tr>
+<td><strong>Link aggregation groups</strong></td>
+<td>Treat a LAG as one connection for resiliency and use separate connections or LAGs across devices and locations for availability. Set minimum links so the LAG withdraws before its remaining members become overloaded</td>
+<td>Every member terminates on the same Direct Connect endpoint, and the default minimum of 0 provides no capacity guardrail; a LAG adds bandwidth, not device or location diversity</td>
+</tr>
+<tr>
+<td><strong>Detection and validation</strong></td>
+<td>AWS enables BFD on its side; enable compatible BFD on the on-premises router. Without BFD, route withdrawal falls back to the default <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-specific-settings.html"><abbr title="Border Gateway Protocol">BGP</abbr> hold timer</a> of about 90 seconds. Alarm on <code>ConnectionState</code> for every member, and run the Direct Connect failover test before production and after material routing changes</td>
+<td>Redundant paths protect the workload only when failures are detected, routes converge, and the surviving path carries traffic</td>
+</tr>
+</tbody>
+</table>
+<h4 id="size-capacity-for-the-failure-state">Size capacity for the failure state<a class="headerlink" href="#size-capacity-for-the-failure-state" title="Permanent link">&para;</a></h4>
+<p>Translate workload demand into throughput before choosing connection sizes. Separate recurring traffic, which permanent capacity must carry, from one-time bulk transfers that may justify temporary capacity or migration tooling. Prefer several independent, equal-capacity connections with ECMP over one larger port: a single port remains one capacity failure, while unequal ECMP paths can overload the smaller connection. Advertise the same prefixes with matching <abbr title="Border Gateway Protocol">BGP</abbr> attributes across the ECMP paths.</p>
+<p>Size the network after removing the connection or location the design must survive, not from normal utilization with every path available. If the requirement includes two independent failures, add independent devices, connections, or locations until the remaining paths can carry peak traffic; extra members inside one LAG do not protect against loss of its shared endpoint.</p>
+<p>Set <a href="../../observability/service-monitoring/">monitoring</a> warning and action thresholds from the projected utilization after the required failure rather than from a fixed percentage of port speed. Review traffic growth early enough to meet provider, port, and location delivery times. If the preferred facility cannot provide the required port capacity, a provider-managed Ethernet or wavelength service can extend the connection from another Direct Connect location.</p>
+<h4 id="align-direct-connect-gateways-with-routing-domains">Align Direct Connect gateways with routing domains<a class="headerlink" href="#align-direct-connect-gateways-with-routing-domains" title="Permanent link">&para;</a></h4>
+<p>A Direct Connect gateway is a globally distributed set of <abbr title="Border Gateway Protocol">BGP</abbr> route reflectors outside the data path. It lets VIFs reach associated virtual private gateways, Transit Gateways, or an AWS Cloud WAN core network across Regions without creating a Regional gateway or a Region-specific VIF. Multiple gateways are therefore not an availability mechanism.</p>
+<p>Use one Direct Connect gateway when connections share routing ownership and prefix policy, and when their combined VIF allocations and attachment count fit the gateway's current <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/prefix-controls.html">prefix allocation</a> and <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html">attachment quota</a> dimensions. Every attached VIF consumes part of the gateway's shared prefix pool. Separate gateways when ownership, prefix policy, or either capacity dimension requires an independent boundary.</p>
 <h4 id="choose-the-right-vif-type-for-each-workload">Choose the right VIF type for each workload<a class="headerlink" href="#choose-the-right-vif-type-for-each-workload" title="Permanent link">&para;</a></h4>
 <p>Direct Connect offers three VIF types, each suited to a different use case. Picking the right one per workload matters more than defaulting to one type everywhere:</p>
 <ul>
-<li><strong>Transit VIF</strong> is the default for extending on-premises connectivity to the AWS network at large. Terminating on a Transit Gateway or AWS Cloud WAN core network (via a Direct Connect Gateway), a single Transit VIF reaches every <abbr title="Virtual Private Cloud">VPC</abbr> the hub routes to, with less VIF sprawl and centralized routing.</li>
+<li><strong>Transit VIF</strong> is the default for extending on-premises connectivity to the AWS network at large. Terminating on a Transit Gateway or AWS Cloud WAN core network (via a Direct Connect gateway), a single Transit VIF reaches every <abbr title="Virtual Private Cloud">VPC</abbr> the hub routes to, with less VIF sprawl and centralized routing.</li>
 <li><strong>Private VIF</strong> to a specific <abbr title="Virtual Private Cloud">VPC</abbr> makes sense for workloads that justify a dedicated path: sustained high-throughput data transfer or latency-sensitive traffic where the hub's data processing adds overhead you want to avoid, or compliance cases where the workload can't share an attach point.</li>
 <li><strong>Public VIF</strong> is the right choice for consumption of AWS public service endpoints (for example, Amazon <abbr title="Simple Storage Service">S3</abbr> or Amazon DynamoDB) directly over the Direct Connect path.</li>
 </ul>
@@ -2382,25 +2411,77 @@
 </tr>
 </tbody>
 </table>
-<p>Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect Gateway has configurable <abbr title="Border Gateway Protocol">BGP</abbr> policy knobs. For AWS Cloud WAN deployments, Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> add an AWS-side control point, filtering, summarizing, and manipulating <abbr title="Border Gateway Protocol">BGP</abbr> attributes on Direct Connect Gateway attachment routes from the policy. Verify the result from the AWS side by <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html">viewing the <abbr title="Border Gateway Protocol">BGP</abbr> routes</a> on the VIF, where accepted routes show the communities AWS actually received with each prefix.</p>
-<h4 id="enable-bfd-for-sub-second-failover">Enable BFD for sub-second failover<a class="headerlink" href="#enable-bfd-for-sub-second-failover" title="Permanent link">&para;</a></h4>
-<p><abbr title="Border Gateway Protocol">BGP</abbr> hold timers alone detect a failed neighbor in around 90 seconds by default (three times the 30-second keep-alive interval). That's too long for most production hybrid workloads. <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/enable_bfd.html">Bidirectional Forwarding Detection (BFD)</a> runs a lightweight liveness check alongside the <abbr title="Border Gateway Protocol">BGP</abbr> session and tears the session down as soon as the forwarding path fails, typically within about a second.</p>
-<p>AWS enables asynchronous BFD on every Direct Connect <abbr title="Border Gateway Protocol">BGP</abbr> session automatically, with a 300 ms detection timer and a multiplier of 3 (roughly 900 ms to declare the session down). On your side, enable BFD with compatible timers on the on-premises router to complete the negotiation. Without BFD active on both ends, failover on a connection, VIF, or peer device issue still falls back to <abbr title="Border Gateway Protocol">BGP</abbr> hold timers, and the outage window is tens of seconds rather than sub-second.</p>
-<p>BFD is especially important in multi-circuit or active/passive designs where the whole point of the redundancy is quick failover. Confirm that BFD is up on every session as part of turn-up validation, and alarm on BFD state the same way you alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state.</p>
+<p>Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect gateway has configurable <abbr title="Border Gateway Protocol">BGP</abbr> policy knobs. For AWS Cloud WAN deployments, Cloud WAN <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html">routing policies</a> add an AWS-side control point, filtering, summarizing, and manipulating <abbr title="Border Gateway Protocol">BGP</abbr> attributes on Direct Connect gateway attachment routes from the policy. Verify the result from the AWS side by <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html">viewing the <abbr title="Border Gateway Protocol">BGP</abbr> routes</a> on the VIF, where accepted routes show the communities AWS actually received with each prefix.</p>
+<h4 id="monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves">Plan prefix capacity before turn-up<a class="headerlink" href="#monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves" title="Permanent link">&para;</a></h4>
+<p>Treat prefix capacity as part of the design, not as an alarm added after migration:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Practice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Summarize</strong></td>
+<td>Advertise aggregates from on-premises instead of every subnet where the address plan permits it. A contiguous allocation reduces <abbr title="Border Gateway Protocol">BGP</abbr> and route-table consumption throughout the hybrid path</td>
+</tr>
+<tr>
+<td><strong>Allocate</strong></td>
+<td>Each private or transit VIF starts with a default inbound allocation for each address family and has a per-VIF ceiling. On a dedicated connection, that allocation consumes the connection pool; when attached to a Direct Connect gateway, it also consumes the shared gateway pool. Each redundant VIF consumes its own allocation even when it advertises the same routes. Check current values in <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html">Direct Connect quotas</a></td>
+</tr>
+<tr>
+<td><strong>Match the AWS attachment</strong></td>
+<td>A Transit Gateway association advertises only its configured allowed prefixes, and that list has its own quota. A <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-cloud-wan.html">Cloud WAN gateway attachment</a> has no allowed-prefix list: it advertises the associated segment's prefixes, subject to its advertised-route quota and any Cloud WAN routing policy</td>
+</tr>
+<tr>
+<td><strong>Validate</strong></td>
+<td>At turn-up, compare planned, allocated, accepted, and advertised prefixes. Use <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html"><abbr title="Border Gateway Protocol">BGP</abbr> route visibility</a> to inspect the routes, and alarm on <a href="../../observability/service-monitoring/"><code>VirtualInterfaceBgpPrefixesAccepted</code></a> as usage approaches the VIF allocation</td>
+</tr>
+</tbody>
+</table>
+<p>The default VIF allocation can be smaller than a fragmented route set, and advertising more prefixes than the allocation takes the <abbr title="Border Gateway Protocol">BGP</abbr> session down. Increasing it is bounded by the per-VIF ceiling and does not raise downstream route-table limits. Summarize first, then allocate capacity for the routes that remain.</p>
 <h4 id="plan-ipv6-from-the-start">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start" title="Permanent link">&para;</a></h4>
 <p>Every VIF type supports <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions. Configure <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on each VIF from the beginning, even if your on-premises hosts are <abbr title="Internet Protocol version 4">IPv4</abbr>-only today. The AWS side supports dual-stack; the hard part is the on-premises rollout, and having the AWS side ready means you can adopt <abbr title="Internet Protocol version 6">IPv6</abbr> when the on-premises network is ready without reopening VIF configuration.</p>
-<h4 id="monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves">Monitor <abbr title="Border Gateway Protocol">BGP</abbr> and VIF metrics, and verify the routes themselves<a class="headerlink" href="#monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves" title="Permanent link">&para;</a></h4>
-<p>Direct Connect publishes CloudWatch metrics for <abbr title="Border Gateway Protocol">BGP</abbr> session state (<code>VirtualInterfaceBgpStatus</code>), prefix counts in each direction (<code>VirtualInterfaceBgpPrefixesAccepted</code> and <code>VirtualInterfaceBgpPrefixesAdvertised</code>), connection state, and per-VIF ingress and egress bytes and packets. Alarm on <abbr title="Border Gateway Protocol">BGP</abbr> session state flapping, on a drop in accepted prefix count against its baseline, and on unexpected traffic asymmetry (one VIF carrying significantly more or less than its siblings when <abbr title="Border Gateway Protocol">BGP</abbr> should balance them). Fast detection of <abbr title="Border Gateway Protocol">BGP</abbr> state changes is the difference between a failover that is invisible to users and one that causes a five-minute outage.</p>
-<p>Prefix counts tell you how many routes moved, not which. <a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html"><abbr title="Border Gateway Protocol">BGP</abbr> route visibility</a> shows the routes on each VIF in both directions, accepted and advertised, each with its AS path, community values, and install time. Alarm on the metrics, then read the route list to find the prefix that changed. It also answers what the metrics cannot, such as whether <abbr title="Internet Protocol version 6">IPv6</abbr> prefixes are being exchanged alongside <abbr title="Internet Protocol version 4">IPv4</abbr>, and on public VIFs whether a prefix was dropped by the inbound policy that requires you to own and register everything you advertise.</p>
 <h3 id="when-to-use-aws-direct-connect">When to use AWS Direct Connect<a class="headerlink" href="#when-to-use-aws-direct-connect" title="Permanent link">&para;</a></h3>
-<p>Direct Connect is the right choice whenever any of the following applies:</p>
-<ul>
-<li>Your hybrid workloads require predictable bandwidth or latency that the public internet can't guarantee.</li>
-<li>You transfer large volumes of data out of AWS and want the lower Direct Connect egress pricing rather than internet egress rates.</li>
-<li>You have compliance requirements that forbid sensitive traffic from traversing the public internet.</li>
-<li>You are building any new production hybrid architecture. The path to high resiliency is multiple Direct Connect connections across multiple locations and providers, not a single Direct Connect paired with a <abbr title="Virtual Private Network">VPN</abbr> fallback.</li>
-</ul>
-<p>Direct Connect is <strong>not</strong> the right starting point when connectivity needs to be up in days rather than weeks (provisioning involves cross-connects and provider coordination), when traffic volume is low enough that <abbr title="Virtual Private Network">VPN</abbr> cost and performance are acceptable, or when connectivity is short-lived (for example, a one-time data migration where <abbr title="Virtual Private Network">VPN</abbr> throughput is sufficient).</p>
+<p>Choose the path from the workload requirement:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Recommended path</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Predictable bandwidth or latency beyond what the public internet provides</td>
+<td><strong>Direct Connect</strong></td>
+<td>A dedicated private path delivers more consistent network performance</td>
+</tr>
+<tr>
+<td>Sustained data transfer out of AWS</td>
+<td><strong>Direct Connect</strong></td>
+<td>Lower egress pricing can offset the connection and provider costs</td>
+</tr>
+<tr>
+<td>Compliance requires traffic to avoid the public internet</td>
+<td><strong>Direct Connect</strong></td>
+<td>Traffic stays on the private connectivity path</td>
+</tr>
+<tr>
+<td>Connectivity must be available in days</td>
+<td><strong>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong></td>
+<td>Direct Connect requires provider coordination and physical provisioning</td>
+</tr>
+<tr>
+<td>Traffic is low-volume or short-lived</td>
+<td><strong>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong></td>
+<td>A dedicated connection adds cost and provisioning work that the workload does not justify</td>
+</tr>
+</tbody>
+</table>
+<p>For production resilience, use independent Direct Connect connections across locations, adding provider diversity where one carrier could affect both paths. Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> can provide fast-start connectivity or an encryption overlay, but it does not replace resilient Direct Connect connections.</p>
 <h3 id="combining-aws-direct-connect-with-other-hybrid-networking-services">Combining AWS Direct Connect with other Hybrid Networking services<a class="headerlink" href="#combining-aws-direct-connect-with-other-hybrid-networking-services" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2424,7 +2505,7 @@
 <tr>
 <td><strong>Direct Connect + AWS Interconnect (multi-cloud)</strong></td>
 <td>On-premises hybrid path</td>
-<td>Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect Gateway</td>
+<td>Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect gateway</td>
 </tr>
 </tbody>
 </table>
@@ -2434,7 +2515,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Direct Connect documentation</strong></p>
 <hr />
-<p>Complete service documentation covering connections, virtual interfaces, Direct Connect Gateway, SiteLink, and MACsec.</p>
+<p>Complete service documentation covering connections, virtual interfaces, Direct Connect gateway, SiteLink, and MACsec.</p>
 <p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
@@ -2594,7 +2675,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.4 18.2q.6.75.6 1.8c0 1.7-1.3 3-3 3s-3-1.3-3-3 1.3-3 3-3q.6 0 1.2.3l1.4-1.8c-.9-1-1.3-2.4-1.1-3.7l-2-.7c-.5.8-1.4 1.4-2.5 1.4-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3v.2l2 .7c.6-1.2 1.8-2.1 3.2-2.3V5.9C10 5.6 9 4.4 9 3c0-1.7 1.3-3 3-3s3 1.3 3 3c0 1.4-1 2.6-2.2 2.9v2.2c1.4.2 2.6 1.1 3.2 2.3l2-.7v-.2c0-1.7 1.3-3 3-3s3 1.3 3 3-1.3 3-3 3c-1.1 0-2-.6-2.5-1.4l-2 .7c.2 1.3-.2 2.7-1.1 3.7l1.4 1.8q.6-.3 1.2-.3c1.7 0 3 1.3 3 3s-1.3 3-3 3-3-1.3-3-3q0-1.05.6-1.8l-1.4-1.8c-1.4.8-3 .8-4.4 0z"/></svg></span> <strong>Transit Gateway vs AWS Cloud WAN differences</strong></p>
 <hr />
-<p>Both services support Connect attachments with <abbr title="Border Gateway Protocol">BGP</abbr>, but the supported <strong>tunnel protocol</strong> and <strong>underlay</strong> differ. Transit Gateway Connect uses GRE only and supports both <abbr title="Virtual Private Cloud">VPC</abbr> and Direct Connect underlays. AWS Cloud WAN Connect supports GRE and <strong>Tunnel-less Connect</strong> (a higher-performance option that eliminates encapsulation overhead), and the underlay must be a <abbr title="Virtual Private Cloud">VPC</abbr> attachment; Direct Connect Gateway is not supported. Pick the landing service that matches your existing AWS network backbone.</p>
+<p>Both services support Connect attachments with <abbr title="Border Gateway Protocol">BGP</abbr>, but the supported <strong>tunnel protocol</strong> and <strong>underlay</strong> differ. Transit Gateway Connect uses GRE only and supports both <abbr title="Virtual Private Cloud">VPC</abbr> and Direct Connect underlays. AWS Cloud WAN Connect supports GRE and <strong>Tunnel-less Connect</strong> (a higher-performance option that eliminates encapsulation overhead), and the underlay must be a <abbr title="Virtual Private Cloud">VPC</abbr> attachment; Direct Connect gateway is not supported. Pick the landing service that matches your existing AWS network backbone.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12v10h20V12c0-5.5-4.5-10-10-10M7.1 5.69A7.94 7.94 0 0 1 11 4.07v2.02c-.91.15-1.75.51-2.47 1.02zm8.37 1.42A5.95 5.95 0 0 0 13 6.09V4.07c1.46.18 2.79.76 3.9 1.62zM5.69 7.1l1.42 1.43A5.95 5.95 0 0 0 6.09 11H4.07c.18-1.46.76-2.79 1.62-3.9M6 13v2.5H4V13zm-2 7v-2.5h2V20zM16.89 8.53l1.42-1.43a7.94 7.94 0 0 1 1.62 3.9h-2.02a5.95 5.95 0 0 0-1.02-2.47M18 13h2v2.5h-2zm0 7v-2.5h2V20z"/></svg></span> <strong>GRE and Tunnel-less Connect</strong></p>
@@ -2604,7 +2685,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m20.2 5.9.8-.8C19.6 3.7 17.8 3 16 3s-3.6.7-5 2.1l.8.8C13 4.8 14.5 4.2 16 4.2s3 .6 4.2 1.7m-.9.8c-.9-.9-2.1-1.4-3.3-1.4s-2.4.5-3.3 1.4l.8.8c.7-.7 1.6-1 2.5-1s1.8.3 2.5 1zM19 13h-2V9h-2v4H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2M8 18H6v-2h2zm3.5 0h-2v-2h2zm3.5 0h-2v-2h2z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> or Direct Connect underlay (Transit Gateway only)</strong></p>
 <hr />
-<p>For Transit Gateway Connect, the underlay can be a <abbr title="Virtual Private Cloud">VPC</abbr> (where <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> virtual appliances run as <abbr title="Elastic Compute Cloud">EC2</abbr> instances) or a Direct Connect attachment (where the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance is on-premises and peers with AWS over Direct Connect via a Direct Connect Gateway). The right choice depends on where you want your <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances to sit. AWS Cloud WAN Connect currently supports <abbr title="Virtual Private Cloud">VPC</abbr> underlay only.</p>
+<p>For Transit Gateway Connect, the underlay can be a <abbr title="Virtual Private Cloud">VPC</abbr> (where <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> virtual appliances run as <abbr title="Elastic Compute Cloud">EC2</abbr> instances) or a Direct Connect attachment (where the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance is on-premises and peers with AWS over Direct Connect via a Direct Connect gateway). The right choice depends on where you want your <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances to sit. AWS Cloud WAN Connect currently supports <abbr title="Virtual Private Cloud">VPC</abbr> underlay only.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 2v20c-5.1-.5-9-4.8-9-10s3.9-9.5 9-10m2 0v9h9c-.5-4.8-4.2-8.5-9-9m0 11v9c4.7-.5 8.5-4.2 9-9z"/></svg></span> <strong>Segment <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic into AWS environments</strong></p>
@@ -2621,7 +2702,7 @@
 <h3 id="best-practices-for-integrating-sd-wan-networks-with-aws">Best Practices for integrating <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> networks with AWS<a class="headerlink" href="#best-practices-for-integrating-sd-wan-networks-with-aws" title="Permanent link">&para;</a></h3>
 <h4 id="choose-the-underlay-based-on-where-the-sd-wan-appliance-lives">Choose the underlay based on where the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliance lives<a class="headerlink" href="#choose-the-underlay-based-on-where-the-sd-wan-appliance-lives" title="Permanent link">&para;</a></h4>
 <p>If the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> vendor recommends running virtual appliances inside AWS (a common pattern), use a <abbr title="Virtual Private Cloud">VPC</abbr>-based Connect attachment on either Transit Gateway or AWS Cloud WAN: deploy the appliances in a transit <abbr title="Virtual Private Cloud">VPC</abbr>, attach the <abbr title="Virtual Private Cloud">VPC</abbr> to the chosen service, then layer the Connect attachment on top. The <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlay connects on-premises devices to the appliances over the internet or Direct Connect.</p>
-<p>If the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances stay on-premises and peer with AWS directly, use a Transit Gateway Connect attachment with a Direct Connect underlay (via a Direct Connect Gateway). The on-premises <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> devices establish GRE peers to the Transit Gateway over the Direct Connect circuit. This removes the virtual-appliance tier in AWS entirely, at the cost of requiring Direct Connect everywhere the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> terminates. This pattern is currently Transit Gateway only; AWS Cloud WAN Connect does not support a Direct Connect Gateway underlay.</p>
+<p>If the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances stay on-premises and peer with AWS directly, use a Transit Gateway Connect attachment with a Direct Connect underlay (via a Direct Connect gateway). The on-premises <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> devices establish GRE peers to the Transit Gateway over the Direct Connect circuit. This removes the virtual-appliance tier in AWS entirely, at the cost of requiring Direct Connect everywhere the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> terminates. This pattern is currently Transit Gateway only; AWS Cloud WAN Connect does not support a Direct Connect gateway underlay.</p>
 <h4 id="design-for-connect-peer-redundancy-per-segment">Design for Connect peer redundancy per segment<a class="headerlink" href="#design-for-connect-peer-redundancy-per-segment" title="Permanent link">&para;</a></h4>
 <p>A Connect attachment supports up to four Connect peers, each with two <abbr title="Border Gateway Protocol">BGP</abbr> sessions. For redundancy, provision at least two Connect peers per attachment, terminated on different <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> appliances or different on-premises devices. AWS strongly recommends configuring both <abbr title="Border Gateway Protocol">BGP</abbr> sessions on every Connect peer; running a single session removes protection against <abbr title="Border Gateway Protocol">BGP</abbr> control plane failures during AWS maintenance events.</p>
 <p>If you're segmenting <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic into multiple AWS environments (for example, production and non-production over the same Connect attachment), each segment typically requires its own Connect peer with routes filtered appropriately.</p>
@@ -2688,7 +2769,7 @@
 <h3 id="aws-interconnect">AWS Interconnect<a class="headerlink" href="#aws-interconnect" title="Permanent link">&para;</a></h3>
 <p>Connecting AWS VPCs to another cloud's networks historically required building the path yourself: provisioning Direct Connect to a colocation facility, cross-connecting to the other cloud's equivalent service, and maintaining the physical and <abbr title="Border Gateway Protocol">BGP</abbr> configuration on both sides. <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> changes that by offering a managed, direct cloud-to-cloud connection that AWS and the peer cloud provision and maintain end to end.</p>
 <p>AWS Interconnect is the default wherever a supported Region pair exists. Where one doesn't, extend a supported pair from inside each cloud before reaching for a partner-based cross-connect or an internet <abbr title="Virtual Private Network">VPN</abbr> — a coverage gap is usually a routing problem, not a reason to build the path yourself.</p>
-<p>AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's networks. AWS Interconnect - multicloud is Region-paired: each Interconnect ties one AWS Region to one Region in the peer cloud, and you provision an Interconnect per pair you need to reach. The set of supported cloud providers and Region pairs is expanding — check <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html">Regional availability</a> for the current list before designing around a specific pair. On the AWS side, an Interconnect attaches to a Direct Connect Gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.</p>
+<p>AWS Interconnect is a fully managed service that creates a private, high-speed connection between AWS VPCs and another cloud provider's networks. AWS Interconnect - multicloud is Region-paired: each Interconnect ties one AWS Region to one Region in the peer cloud, and you provision an Interconnect per pair you need to reach. The set of supported cloud providers and Region pairs is expanding — check <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html">Regional availability</a> for the current list before designing around a specific pair. On the AWS side, an Interconnect attaches to a Direct Connect gateway, which in turn associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.</p>
 <p>Unlike the do-it-yourself alternative at a colocation, AWS Interconnect abstracts away physical cross-connects, <abbr title="Border Gateway Protocol">BGP</abbr> configuration, and VLAN provisioning. You select the AWS Region, the peer cloud's Region, the required bandwidth, and the provider, and AWS and the provider provision both sides automatically. Capacity can be scaled up or down without re-provisioning.</p>
 <p><strong>Key capabilities</strong>:</p>
 <div class="grid cards">
@@ -2696,7 +2777,7 @@
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 17.5c0 .89.18 1.73.5 2.5h-7c-1.5 0-2.81-.5-3.89-1.57C1.54 17.38 1 16.09 1 14.58q0-1.95 1.17-3.48C3.34 9.57 4 9.43 5.25 9.15c.42-1.53 1.25-2.77 2.5-3.72S10.42 4 12 4c1.95 0 3.6.68 4.96 2.04S19 9.05 19 11h.1c-3.4.23-6.1 3.05-6.1 6.5m6-4V12l-2.25 2.25L19 16.5V15a2.5 2.5 0 0 1 2.5 2.5c0 .4-.09.78-.26 1.12l1.09 1.09c.42-.63.67-1.39.67-2.21 0-2.21-1.79-4-4-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5c0-.4.09-.78.26-1.12l-1.09-1.09c-.42.63-.67 1.39-.67 2.21 0 2.21 1.79 4 4 4V23l2.25-2.25L19 18.5z"/></svg></span> <strong>Direct AWS ↔ other-cloud connectivity</strong></p>
 <hr />
-<p>A single managed object (the <em>interconnect</em>) connects a Direct Connect Gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.</p>
+<p>A single managed object (the <em>interconnect</em>) connects a Direct Connect gateway to the peer cloud's attach point. Traffic rides the AWS global backbone to the provider and hands off directly, with no intermediate internet hops.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 11c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V5l9-4 9 4zm-9 10c3.75-1 7-5.46 7-9.78V6.3l-7-3.12L5 6.3v4.92C5 15.54 8.25 20 12 21m2.8-10V9.5C14.8 8.1 13.4 7 12 7S9.2 8.1 9.2 9.5V11c-.6 0-1.2.6-1.2 1.2v3.5c0 .7.6 1.3 1.2 1.3h5.5c.7 0 1.3-.6 1.3-1.2v-3.5c0-.7-.6-1.3-1.2-1.3m-1.3 0h-3V9.5c0-.8.7-1.3 1.5-1.3s1.5.5 1.5 1.3z"/></svg></span> <strong>Fully managed MACsec encryption</strong></p>
@@ -2714,9 +2795,9 @@
 <p>Capacity can be increased or decreased without re-provisioning cross-connects or coordinating with the provider.</p>
 </li>
 <li>
-<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect Gateway as the AWS attach point</strong></p>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9c-1.1 0-2 .9-2 2v4a2 2 0 0 0 2 2h6v2h-1c-.55 0-1 .45-1 1H2v2h7c0 .55.45 1 1 1h4c.55 0 1-.45 1-1h7v-2h-7c0-.55-.45-1-1-1h-1v-2h6c1.11 0 2-.89 2-2v-4a2 2 0 0 0-2-2zm1 3h2v2H6zm3.5 0h2v2h-2zm3.5 0h2v2h-2z"/></svg></span> <strong>Direct Connect gateway as the AWS attach point</strong></p>
 <hr />
-<p>The AWS side of the Interconnect attaches to a Direct Connect Gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.</p>
+<p>The AWS side of the Interconnect attaches to a Direct Connect gateway, which then associates with a Transit Gateway, AWS Cloud WAN core network, or virtual private gateway.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 4a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8m0 2a6 6 0 0 0-6 6 6 6 0 0 0 6 6 6 6 0 0 0 6-6 6 6 0 0 0-6-6m-1 2h1.5v3.78l2.33 2.33-1.06 1.06L14 12.4zM2 18a1 1 0 0 1-1-1 1 1 0 0 1 1-1h3.83c.31.71.71 1.38 1.17 2zm1-5a1 1 0 0 1-1-1 1 1 0 0 1 1-1h2.05L5 12l.05 1zm1-5a1 1 0 0 1-1-1 1 1 0 0 1 1-1h3c-.46.62-.86 1.29-1.17 2z"/></svg></span> <strong>Fast provisioning</strong></p>
@@ -2731,17 +2812,17 @@
 <p>The reason to look elsewhere is coverage, so check <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html">Regional availability</a> rather than assuming a pair is listed. If it isn't, ask whether a supported pair can reach your Regions from inside each cloud (see <a href="#no-supported-pair-for-the-regions-you-need">No supported pair for the Regions you need</a>) before abandoning AWS Interconnect. The partner-based approach and internet-based <abbr title="Virtual Private Network">VPN</abbr> are for clouds that aren't supported at all, or where the backbone path works but an existing colocation or carrier footprint makes one more cross-connect more efficient than inter-Region data transfer on two backbones.</p>
 <h4 id="treat-a-single-interconnect-as-the-resilient-unit">Treat a single Interconnect as the resilient unit<a class="headerlink" href="#treat-a-single-interconnect-as-the-resilient-unit" title="Permanent link">&para;</a></h4>
 <p>The 99.99% <a href="https://aws.amazon.com/interconnect/sla/">SLA</a> applies to one Interconnect because the redundancy is inside the object — a four-connection ECMP fabric across at least two facilities, pre-provisioned by AWS and the provider. Direct Connect reaches the same commitment only through a Multi-Site Redundant Deployment you need to manage; a single Direct Connect connection sits on a 95% tier. The mistake is importing that Resiliency Toolkit habit and provisioning a second Interconnect on the same Region pair for redundancy. That doubles cost without raising the commitment, because both ride the same fabric. Add Interconnects only for a different Region pair.</p>
-<p>What stays yours is everything behind the demarcation point: the Direct Connect Gateway association, the Transit Gateway or Core Network Edge, and the workload. SLA eligibility requires the endpoint to span two or more Availability Zones, so a single-<abbr title="Availability Zone">AZ</abbr> target is both an availability risk and outside the commitment.</p>
-<p><strong><em>Key insight:</em></strong> <em>AWS Interconnect turns resiliency from something you architect into something you inherit. The design question moves from "how many circuits and locations" to "is everything behind the Direct Connect Gateway as available as the Interconnect in front of it."</em></p>
+<p>What stays yours is everything behind the demarcation point: the Direct Connect gateway association, the Transit Gateway or Core Network Edge, and the workload. SLA eligibility requires the endpoint to span two or more Availability Zones, so a single-<abbr title="Availability Zone">AZ</abbr> target is both an availability risk and outside the commitment.</p>
+<p><strong><em>Key insight:</em></strong> <em>AWS Interconnect turns resiliency from something you architect into something you inherit. The design question moves from "how many circuits and locations" to "is everything behind the Direct Connect gateway as available as the Interconnect in front of it."</em></p>
 <h4 id="use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region">Use AWS Cloud WAN to decouple AWS-Region from Interconnect-Region<a class="headerlink" href="#use-aws-cloud-wan-to-decouple-aws-region-from-interconnect-region" title="Permanent link">&para;</a></h4>
-<p>A virtual private gateway or Transit Gateway can only reach an Interconnect in its own AWS Region, even through a Direct Connect Gateway. Attach that Direct Connect Gateway to <strong>AWS Cloud WAN</strong> instead and the constraint disappears: any Core Network Edge can reach any Interconnect, so one Interconnect serves workloads in every Region in the core network.</p>
-<p>The regional constraint is enforced, not advisory: attaching an Interconnect to a Direct Connect Gateway that is already associated to a Transit Gateway in a remote Region fails outright.</p>
+<p>A virtual private gateway or Transit Gateway can only reach an Interconnect in its own AWS Region, even through a Direct Connect gateway. Attach that Direct Connect gateway to <strong>AWS Cloud WAN</strong> instead and the constraint disappears: any Core Network Edge can reach any Interconnect, so one Interconnect serves workloads in every Region in the core network.</p>
+<p>The regional constraint is enforced, not advisory: attaching an Interconnect to a Direct Connect gateway that is already associated to a Transit Gateway in a remote Region fails outright.</p>
 <p>The peer cloud's side is a different story: the peer cloud Region an Interconnect pairs with is fixed by the Interconnect itself, and AWS Cloud WAN does nothing to change that. Landing traffic in a different peer cloud Region means either an Interconnect paired with that Region, or a hop from the paired Region using whatever cross-Region connectivity that cloud offers — which is for you to verify on their side, not something AWS Cloud WAN can do for you. See <a href="#no-supported-pair-for-the-regions-you-need">No supported pair for the Regions you need</a> for when that hop is the right answer.</p>
 <h4 id="watch-the-pricing-tier-as-the-interconnects-reach-grows">Watch the pricing tier as the Interconnect's reach grows<a class="headerlink" href="#watch-the-pricing-tier-as-the-interconnects-reach-grows" title="Permanent link">&para;</a></h4>
 <p>AWS Interconnect has no per-GB data transfer charge. You pay an hourly rate set by two inputs: the bandwidth you provision, and a <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/interconnect-pricing.html">pricing tier</a> from 1 (local) to 5 (maximum scope) reflecting the geographic distance between the Interconnect's local Region and the Regions whose traffic uses it. The Interconnect is subscribed to the lowest tier covering every path in use, so the farthest Region sets the price for all of them. A locally associated Transit Gateway or virtual private gateway is always Tier 1, since the association can only be in the Interconnect's local Region. For AWS Cloud WAN, the routing benefit carries a cost consequence. Adding a Core Network Edge re-evaluates the tier, so a new AWS Region can move an Interconnect several tiers up.</p>
 <p>For proof-of-concept work, AWS Interconnect - multicloud includes one free local (Tier 1) 500 Mbps interconnect per AWS Region per generally available cloud provider. This free tier covers the AWS side only — check the other provider's pricing.</p>
 <h4 id="plan-ipv6-from-the-start_3">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> from the start<a class="headerlink" href="#plan-ipv6-from-the-start_3" title="Permanent link">&para;</a></h4>
-<p>AWS Interconnect supports both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions to the Direct Connect Gateway. Enable <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on the Interconnect from the beginning so that when the peer cloud's <abbr title="Internet Protocol version 6">IPv6</abbr> support catches up on your workloads' side, the transport is ready.</p>
+<p>AWS Interconnect supports both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Border Gateway Protocol">BGP</abbr> sessions to the Direct Connect gateway. Enable <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr> on the Interconnect from the beginning so that when the peer cloud's <abbr title="Internet Protocol version 6">IPv6</abbr> support catches up on your workloads' side, the transport is ready.</p>
 <h3 id="when-to-use-aws-interconnect">When to use AWS Interconnect<a class="headerlink" href="#when-to-use-aws-interconnect" title="Permanent link">&para;</a></h3>
 <p>AWS Interconnect is the right choice when:</p>
 <ul>
@@ -2758,7 +2839,7 @@
 </ul>
 <h4 id="no-supported-pair-for-the-regions-you-need">No supported pair for the Regions you need<a class="headerlink" href="#no-supported-pair-for-the-regions-you-need" title="Permanent link">&para;</a></h4>
 <p>An unsupported Region pair is not the same as an unsupported cloud. Land the Interconnect at a pair that <em>is</em> supported and carry each leg the rest of the way inside each cloud.</p>
-<p>On the AWS side this is solved: a Direct Connect Gateway attached to an AWS Cloud WAN core network lets any Core Network Edge reach any Interconnect on that gateway, so the Interconnect's Region doesn't have to be the Region your workload runs in. With Transit Gateway instead, inter-Region Transit Gateway peering gets you from the workload Region to the Region whose Interconnect is local. Both routes cost something: the AWS Cloud WAN route can raise the Interconnect's pricing tier, and the Transit Gateway peering route adds inter-Region data transfer charges.</p>
+<p>On the AWS side this is solved: a Direct Connect gateway attached to an AWS Cloud WAN core network lets any Core Network Edge reach any Interconnect on that gateway, so the Interconnect's Region doesn't have to be the Region your workload runs in. With Transit Gateway instead, inter-Region Transit Gateway peering gets you from the workload Region to the Region whose Interconnect is local. Both routes cost something: the AWS Cloud WAN route can raise the Interconnect's pricing tier, and the Transit Gateway peering route adds inter-Region data transfer charges.</p>
 <p>On the peer cloud side, check that provider's documentation for how it carries traffic between its own Regions. The mechanisms, constraints, and charges differ by cloud, so confirm the target Region is reachable from the paired Region — and at what cost — before committing to this design.</p>
 <table>
 <thead>
@@ -2910,7 +2991,7 @@
 <h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations building hybrid and multi-cloud connectivity from scratch have the opportunity to adopt the patterns that scale best from day one:</p>
 <ol>
-<li><strong>On-premises path and resiliency</strong>: AWS Direct Connect terminating on a Transit Gateway or AWS Cloud WAN core network through a Direct Connect Gateway, designed to the Resiliency Toolkit's maximum resiliency model (multiple connections across multiple locations and providers). Resiliency comes from multiple Direct Connect connections, not from pairing a single Direct Connect with a <abbr title="Virtual Private Network">VPN</abbr> fallback.</li>
+<li><strong>On-premises path and resiliency</strong>: AWS Direct Connect terminating on a Transit Gateway or AWS Cloud WAN core network through a Direct Connect gateway, designed to the Resiliency Toolkit's maximum resiliency model (multiple connections across multiple locations and providers). Resiliency comes from multiple Direct Connect connections, not from pairing a single Direct Connect with a <abbr title="Virtual Private Network">VPN</abbr> fallback.</li>
 <li><strong><abbr title="Virtual Private Network">VPN</abbr> where it adds value</strong>: AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.</li>
 <li><strong>Multi-cloud</strong>: Minimize avoidable cross-cloud movement before sizing the link, then use AWS Interconnect where supported. Use partner-based Direct Connect or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds only where AWS Interconnect coverage isn't there yet.</li>
 <li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong>: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across branches and wants that overlay to extend into AWS.</li>
@@ -2919,7 +3000,7 @@
 <h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations running established hybrid patterns have working foundations that don't need to be replaced:</p>
 <ol>
-<li><strong>AWS Direct Connect</strong> remains the foundation. If circuits are terminated on virtual private gateways rather than Transit Gateway or AWS Cloud WAN, evaluate consolidating onto a hub through a Direct Connect Gateway as the environment grows.</li>
+<li><strong>AWS Direct Connect</strong> remains the foundation. If circuits are terminated on virtual private gateways rather than Transit Gateway or AWS Cloud WAN, evaluate consolidating onto a hub through a Direct Connect gateway as the environment grows.</li>
 <li><strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong> remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated <abbr title="Virtual Private Network">VPN</abbr> for sites distant from the Region.</li>
 <li><strong>Partner-based Direct Connect to another cloud</strong> keeps working and should not be ripped out for its own sake. Before renewing cross-connects or increasing capacity, review current cross-cloud flows and remove repeated or unused transfers. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.</li>
 <li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integrations</strong> on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic doesn't have to move all at once.</li>
@@ -2947,7 +3028,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 2, 2026 21:46:55 UTC">November 2, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 09:43:38 UTC">November 3, 2026</span>
   </span>
 
     
