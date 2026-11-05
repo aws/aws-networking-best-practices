@@ -1760,7 +1760,8 @@
 <p><strong>Key decisions:</strong></p>
 <ul>
 <li><strong>Ingress: decentralized vs centralized</strong> — Decentralized (each <abbr title="Virtual Private Cloud">VPC</abbr> owns its ingress) is the preferred default; centralized (shared ingress <abbr title="Virtual Private Cloud">VPC</abbr>) is reserved for specific compliance cases</li>
-<li><strong>Egress: <abbr title="Internet Protocol version 6">IPv6</abbr> vs <abbr title="Internet Protocol version 4">IPv4</abbr></strong> — <abbr title="Internet Protocol version 6">IPv6</abbr> egress is decentralized by design (egress-only internet gateway per <abbr title="Virtual Private Cloud">VPC</abbr>); <abbr title="Internet Protocol version 4">IPv4</abbr> egress is a genuine trade-off between decentralized and centralized patterns</li>
+<li><strong>Egress: <abbr title="Internet Protocol version 6">IPv6</abbr> vs <abbr title="Internet Protocol version 4">IPv4</abbr></strong> — AWS-native <abbr title="Internet Protocol version 6">IPv6</abbr> egress is decentralized through an egress-only internet gateway; <abbr title="Internet Protocol version 4">IPv4</abbr> is a trade-off between decentralized and centralized patterns</li>
+<li><strong>External security-provider egress</strong> — A centralized variant for organizations that already use an external provider as the enterprise internet-policy boundary; when the provider supports <abbr title="Internet Protocol version 6">IPv6</abbr>, route both address families through regional provider paths</li>
 <li><strong>Edge services</strong> — Amazon CloudFront, AWS Global Accelerator, and AWS <abbr title="Web Application Firewall">WAF</abbr> provide centrally-managed protection regardless of ingress pattern</li>
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>For ingress, the AWS edge (CloudFront, AWS <abbr title="Web Application Firewall">WAF</abbr>, per-<abbr title="Virtual Private Cloud">VPC</abbr> firewall endpoints) effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress <abbr title="Virtual Private Cloud">VPC</abbr>.</em></p>
@@ -1846,7 +1847,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 16, 2026 15:38:39 UTC">October 16, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 08:41:21 UTC">November 3, 2026</span>
   </span>
 
     
