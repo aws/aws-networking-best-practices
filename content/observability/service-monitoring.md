@@ -46,10 +46,10 @@ Not all CloudWatch metrics deserve an alarm. The table below identifies the metr
 | --- | --- | --- |
 | `ConnectionState` | Binary: the physical connection is up or down. State changes indicate fiber cuts, router failures, or maintenance events. | State != 1 (up) for 1 period |
 | `VirtualInterfaceBgpStatus` | Per-VIF BGP session state, 1 up / 0 down. The physical connection can be up while the BGP session is down, so this is distinct from `ConnectionState`. | != 1 for 1 period |
-| `VirtualInterfaceBgpPrefixesAccepted` | Prefixes accepted from the on-premises peer. A drop means routes were withdrawn while the session stayed up. | Drop below baseline, or anomaly detection band |
+| `VirtualInterfaceBgpPrefixesAccepted` | Tracks inbound prefix use against the VIF allocation. Approaching the allocation risks a BGP session failure; a drop means routes were withdrawn while the session stayed up. | Approaches the VIF allocation, drops below baseline, or leaves the anomaly detection band |
 | `VirtualInterfaceBgpPrefixesAdvertised` | Prefixes AWS advertises to the peer. A drop points at a change on the AWS side, such as a detached attachment or a removed VPC association. | Drop below baseline, or anomaly detection band |
-| `VirtualInterfaceBpsEgress` / `VirtualInterfaceBpsIngress` | Per-VIF throughput. Approaching the port capacity means you need to add capacity or shift traffic. | > 80% of port speed sustained over 5 minutes |
-| `ConnectionBpsEgress` / `ConnectionBpsIngress` | Aggregate connection throughput. | > 80% of port speed sustained over 5 minutes |
+| `VirtualInterfaceBpsEgress` / `VirtualInterfaceBpsIngress` | Per-VIF throughput. Use it to project how traffic redistributes when one VIF path fails and to detect unexpected imbalance between equal ECMP paths, following the [failure-state capacity design](../connectivity/hybrid-multicloud.md#size-capacity-for-the-failure-state). | Projected post-failure utilization exceeds the design ceiling, or equal paths become unexpectedly imbalanced |
+| `ConnectionBpsEgress` / `ConnectionBpsIngress` | Aggregate connection throughput. Compare it with the capacity that remains after the required connection or location failure. | Projected post-failure utilization exceeds the design ceiling |
 | `ConnectionLightLevelTx` / `ConnectionLightLevelRx` | Optical signal strength. Degrading light levels predict physical failures before they happen. | Outside acceptable dBm range for the optic type |
 
 ### Site-to-Site VPN
@@ -144,18 +144,24 @@ Anomaly detection costs the same as a standard alarm but adapts automatically to
 
 Every networking service has quotas. Hitting a quota silently — no new VPN connections, no additional Transit Gateway attachments, no more NAT gateway elastic IPs — causes failures that look like service issues but are actually capacity limits.
 
-Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html) integration with CloudWatch to alarm at 80% utilization:
+Use [AWS Service Quotas](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html) integration with CloudWatch to alarm at 80% utilization. Base each alarm on the quota applied to that account and Region: adjustable quotas can differ from the service defaults, while fixed limits remain in the service documentation.
 
-| Service | Quota to monitor | Default limit |
-| --- | --- | --- |
-| Transit Gateway | Attachments per TGW | 5,000 |
-| Transit Gateway | Routes per route table | 10,000 |
-| NAT gateway | NAT gateways per Availability Zone | 5 |
-| VPN | VPN connections per VGW/TGW | 10 / 20 |
-| Direct Connect | Virtual interfaces per connection | 50 |
-| ALB | Rules per ALB | 100 |
-| NLB | Targets per target group | 500 (IP) / 500 (instance) |
-| Network Firewall | Rule groups per firewall policy | 20 |
+| Service | Quotas to monitor |
+| --- | --- |
+| Transit Gateway | Attachments per transit gateway; total combined routes across all route tables; routes received from and advertised to each Connect peer |
+| NAT gateway | NAT gateways per Availability Zone |
+| Site-to-Site VPN | Connections per gateway; routes received from and advertised to each customer gateway |
+| AWS Cloud WAN | Routes per core network; routes received from and advertised to each VPN, Connect peer, and Direct Connect gateway attachment |
+| Direct Connect | Virtual interfaces per connection; prefixes received and advertised per BGP session and gateway association |
+| Application Load Balancer | Rules per load balancer |
+| Network Load Balancer | Targets per target group |
+| AWS Network Firewall | Rule groups per firewall policy |
+
+Hybrid route counts need extra attention because not all of them have a direct quota metric. For Direct Connect, alarm on `VirtualInterfaceBgpPrefixesAccepted` and `VirtualInterfaceBgpPrefixesAdvertised` for each VIF and `IpAddressFamily`; exceeding the inbound prefix allocation takes the VIF's BGP session down.
+
+For Transit Gateway, count routes with `SearchTransitGatewayRoutes`. For Cloud WAN, use `list-core-network-routing-information`, which reports the routing database before routing policy is applied, and verify final advertisements from the receiving peer's BGP view. Publish these counts as custom metrics and alarm at 80% of the applicable limit.
+
+When route capacity approaches its limit, reduce it through [routing policy](../connectivity/within-aws.md#apply-routing-policies-at-network-boundaries), a [hierarchical address plan](../foundation/cidr.md#allocate-contiguously-for-route-summarization), or a separate [hybrid routing domain](../connectivity/within-aws.md#think-of-segments-as-routing-domains-not-environments). A quota increase is not available for every limit, so the alarm must leave time for an architectural change.
 
 ### Multi-account monitoring architecture
 
@@ -315,7 +321,7 @@ Beyond CloudWatch metrics, active health checking validates end-to-end path avai
 
     ---
 
-    Monitor service quota utilization with CloudWatch integration and request increases before hitting limits.
+    Monitor applied quotas through Service Quotas. Check the service-specific quota pages for fixed route limits: [Direct Connect](https://docs.aws.amazon.com/directconnect/latest/UserGuide/limits.html), [Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html), [Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html), and [Cloud WAN](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-quotas.html).
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/servicequotas/latest/userguide/intro.html)
 

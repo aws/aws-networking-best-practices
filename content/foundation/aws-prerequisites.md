@@ -68,13 +68,13 @@ AWS imposes default limits on networking resources, and many of them are lower t
 
 ## IPv6 Readiness
 
-IPv6 is not a future consideration — it's a current requirement for modern AWS networking. Every new VPC should be dual-stack from day one, and your non-networking foundations must be ready to support that. IPv6 readiness failures are subtle: a VPC with IPv6 enabled but security groups that only have IPv4 rules, or IaC templates that create route tables without `::/0` entries, or NACLs that block IPv6 traffic silently.
+IPv6 is not a future consideration — it's a current requirement for modern AWS networking. Every new VPC should be dual-stack from day one, and your non-networking foundations must be ready to support that. IPv6 readiness failures are subtle: a VPC with IPv6 enabled but security groups that only have IPv4 rules, IaC templates that omit the intended IPv6 routes, or NACLs that block IPv6 traffic silently.
 
 **What IPv6 readiness means for your prerequisites:**
 
 * **Security groups need explicit IPv6 rules** — IPv4 rules do not automatically apply to IPv6 traffic. A security group that allows `0.0.0.0/0` on port 443 does not allow `[::]/0` on port 443. Every security group in your IaC templates must include both protocol families.
 * **NACLs must permit IPv6** — The default NACL allows all traffic (IPv4 and IPv6), but custom NACLs need explicit IPv6 entries. A custom NACL that allows `0.0.0.0/0` inbound does not allow IPv6 inbound.
-* **IaC templates must include dual-stack from the start** — VPC templates should allocate both an IPv4 CIDR and an Amazon-provided IPv6 `/56`. Subnet templates should assign both an IPv4 CIDR and an IPv6 `/64`. Route tables need both `0.0.0.0/0` and `::/0` entries. Retrofitting IPv6 into existing templates is significantly more work than including it from the beginning.
+* **IaC templates must include dual-stack from the start** — VPC and subnet templates should allocate IPv4 and IPv6 CIDRs from the IPAM hierarchy, using allocation rules to enforce the prefix lengths appropriate for each resource. Retrofitting IPv6 into existing templates is significantly more work than including it from the beginning.
 * **IAM policies referencing `ec2:` actions** — IPv6-specific actions (like `ec2:AssignIpv6Addresses`) must not be inadvertently blocked by SCPs or permission boundaries that restrict `ec2:*` actions.
 * **DNS resolution** — Applications must handle dual-stack DNS responses (AAAA records alongside A records). Test that your application code, health checks, and monitoring tools work correctly when DNS returns IPv6 addresses.
 
