@@ -14,7 +14,7 @@ Internet ingress and egress — [Drawio Source](../assets/connectivity/internet-
 
 For ingress, the decentralized pattern keeps each application's internet entry point in the VPC and account that owns the workload. Application teams manage their own load balancers, certificates, and scaling decisions; failure of one team's ingress does not affect others. Centralized protection is still applied uniformly through CloudFront, AWS WAF, and per-VPC layer-3/4 inspection (AWS Network Firewall, or [Gateway Load Balancer](https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html) with third-party firewall appliances) — all managed centrally through [AWS Firewall Manager](https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html). The AWS edge effectively becomes a centrally-managed, globally-distributed perimeter, removing the historical reason to route every flow through a shared regional ingress VPC. Centralized ingress through a shared VPC remains an option, but it adds load-balancer chaining, extra traffic processing cost, and shared-VPC blast radius without delivering protection that the cloud-native decentralized pattern doesn't already provide.
 
-For egress, the choice is more nuanced and splits by IP version. **IPv6 egress is decentralized by design**: each VPC reaches the internet through its own egress-only internet gateway, and there is no managed NAT66 to centralize. **IPv4 egress** is the genuine 50-50 choice. Centralizing IPv4 collapses per-VPC [NAT gateways](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) and inspection endpoints into one shared egress VPC, but adds Transit Gateway or AWS Cloud WAN data-processing charges on every flow and concentrates operational ownership on a central team. Decentralizing IPv4 keeps each VPC self-contained with no transit-network charges, but each VPC pays for its own NAT gateway and (where required) per-VPC inspection. Uniform policy is achievable in either pattern.
+For egress, the AWS-native choice is more nuanced and splits by IP version. **AWS-native IPv6 egress is decentralized by design**: each VPC reaches the internet through its own egress-only internet gateway, and there is no managed NAT66 to centralize. Routing IPv6 through an external security provider is the exception; when the provider supports IPv6, both address families can use Transit Gateway or AWS Cloud WAN. **IPv4 egress** is the genuine 50-50 choice. Centralizing IPv4 collapses per-VPC [NAT gateways](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) and inspection endpoints into one shared egress VPC, but adds Transit Gateway or AWS Cloud WAN data-processing charges on every flow and concentrates operational ownership on a central team. Decentralizing IPv4 keeps each VPC self-contained with no transit-network charges, but each VPC pays for its own NAT gateway and (where required) per-VPC inspection. Uniform policy is achievable in either pattern.
 
 ## Ingress connectivity
 
@@ -212,7 +212,7 @@ Best practices:
 
 ### Comparing decentralized vs centralized IPv4 egress
 
-Unlike ingress, where decentralized is almost always the right default, IPv4 egress is a genuine 50-50 decision driven by organizational factors as much as technical ones. The table below summarizes how each pattern handles the dimensions that usually decide the choice. Remember that the decision is IPv4-only — IPv6 egress is decentralized in either case.
+Unlike ingress, where decentralized is almost always the right default, IPv4 egress is a genuine 50-50 decision driven by organizational factors as much as technical ones. The table below compares the AWS-native patterns; the external-provider variant described next is centralized but has its own routing, source-identity, and cost decisions. Remember that the AWS-native decision is IPv4-only — IPv6 egress through an egress-only internet gateway is decentralized.
 
 | Dimension | Decentralized IPv4 egress | Centralized IPv4 egress |
 | --- | --- | --- |
@@ -224,6 +224,25 @@ Unlike ingress, where decentralized is almost always the right default, IPv4 egr
 | **Dual-stack consistency** | IPv4 and IPv6 both exit per-VPC, so the egress shape is identical for both protocols and the workload VPC owns both paths | IPv4 traverses Transit Gateway or AWS Cloud WAN to the shared egress VPC; IPv6 still exits per-VPC through the egress-only internet gateway. Operators run two different egress patterns at once for a dual-stack workload |
 | **Latency overhead** | Direct IGW exit, no transit hop | Adds a Transit Gateway or AWS Cloud WAN hop and inspection processing on every IPv4 flow |
 | **Best fit** | Smaller environments, team-autonomy organizations, latency- or throughput-sensitive workloads, IPv6-first or dual-stack workloads where a single egress shape is preferred, applications that need fundamentally different egress policies from each other | Cost pressure at scale (dozens or hundreds of VPCs) for IPv4 traffic, mandatory single physical inspection point for IPv4, central security ownership, organizations where IPv4 egress is run as a shared platform service |
+
+### External security-provider egress
+
+Use an external secure access service edge (SASE) or proxy provider as the routed egress path when the organization already relies on that provider to enforce one internet policy across AWS, other clouds, and on-premises sites. For AWS-only requirements, NAT gateway with AWS Network Firewall or Gateway Load Balancer, or AWS Network Firewall Proxy (preview) for an explicit proxy, avoids the additional tunnels and provider dependency.
+
+This pattern is bounded by per-tunnel throughput and per-attachment route quotas; check the current [Site-to-Site VPN](https://docs.aws.amazon.com/vpn/latest/s2svpn/vpn-limits.html), [Transit Gateway](https://docs.aws.amazon.com/vpc/latest/tgw/transit-gateway-quotas.html), and [Cloud WAN](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-quotas.html) quotas. It is not the right choice when the provider paths cannot carry sustained egress or when the extra provider hop exceeds the workload's latency budget.
+
+Treat the provider path as a centralized egress variant. Site-to-Site VPN provides the internet-based path. Connect applies only when the provider edge is reached through a VPC-hosted appliance or Direct Connect transport; it is not an internet-facing replacement for VPN.
+
+| Decision | Recommended design | Why |
+| --- | --- | --- |
+| **Routing boundary** | With Transit Gateway, use a dedicated external route table in each Region. With Cloud WAN, use one external segment across the required edge locations and routing policy that prefers each Region's local provider path, with remote paths at lower preference for failover | Internet-bound traffic has a different trust boundary and route policy from on-premises traffic |
+| **Route exchange** | Learn the default route from the local provider path and advertise only that Region's return prefixes to the provider, preferably as a regional summary | Advertising the same broad return summary through every Region lets the provider return traffic through a different Region, breaking symmetry and stateful inspection |
+| **Source identity** | Preserve source addresses when the provider applies policy or reporting per workload. If route scale matters more, source NAT in a regional egress VPC reduces the return advertisement to one translated prefix | Source NAT simplifies routing but removes the original workload address from the provider's policy and logs |
+| **Resilience and monitoring** | Use paths to separate provider points of presence, with ECMP for equal paths or BGP preference for active/standby. Alarm on [`TunnelState`](../observability/service-monitoring.md), inspect AWS-side routes in the associated Transit Gateway route table or Cloud WAN routing information, and verify final advertisements in the provider's BGP view | When a provider location withdraws its routes, BGP moves traffic to the next preferred path; monitoring must confirm that the surviving path has the right routes and capacity |
+| **IPv6** | If provider inspection is required, route both IPv4 `0.0.0.0/0` and IPv6 `::/0` to the hub. Site-to-Site VPN requires separate connections for the two address families; Connect exchanges both with MP-BGP | An IPv6 `::/0` route to an egress-only internet gateway leaves directly from the VPC and bypasses the provider |
+| **Cost** | Compare attachment and tunnel hours, Transit Gateway or Cloud WAN processing, provider charges, source NAT, [data transfer out](https://aws.amazon.com/vpn/pricing/), and cross-Region transfer with the equivalent AWS-native regional egress design | The provider path replaces some AWS inspection components but adds transit, provider, and data-transfer costs |
+
+The [Hybrid and Multi-Cloud Connectivity](hybrid-multicloud.md) page covers VPN and Connect attachment design; [Connectivity Within AWS](within-aws.md) covers the route-table, segment, and Cloud WAN routing-policy controls used by this pattern.
 
 ### Looking ahead: AWS Network Firewall Proxy (public preview)
 
@@ -255,6 +274,7 @@ The services this page references, grouped by where they appear:
 | Network Load Balancer | Ingress: L4 entry point in the workload VPC | [Documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html) |
 | Amazon API Gateway | Ingress: managed L7 ingress for API-first workloads | [Documentation](https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html) |
 | AWS Global Accelerator | Ingress: anycast static IPs for L4 workloads with global clients | [Documentation](https://docs.aws.amazon.com/global-accelerator/latest/dg/what-is-global-accelerator.html) |
+| AWS Site-to-Site VPN / Connect | Egress: encrypted or BGP-based connectivity to an external security provider | [VPN documentation](https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html) / [Transit Gateway Connect](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-connect.html) / [Cloud WAN Connect](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-connect-attachment.html) |
 | NAT gateway | Egress (IPv4): managed NAT, regional or zonal mode | [Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) |
 | Egress-only internet gateway | Egress (IPv6): per-VPC outbound IPv6 path | [Documentation](https://docs.aws.amazon.com/vpc/latest/userguide/egress-only-internet-gateway.html) |
 | Route 53 DNS Firewall | Egress: domain-based outbound filtering across VPCs | [Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html) |
@@ -267,7 +287,7 @@ The services this page references, grouped by where they appear:
 
 ## Building your internet connectivity stack
 
-Real-world internet connectivity strategies combine choices across two largely independent dimensions: ingress (decentralized vs centralized, per workload) and egress (IPv6 stays decentralized; IPv4 is decentralized vs centralized by trade-off). Each decision is made on its own merits.
+Real-world internet connectivity strategies combine choices across two largely independent dimensions: ingress (decentralized vs centralized, per workload) and egress (AWS-native IPv6 stays decentralized; IPv4 is decentralized vs centralized by trade-off; an external provider is a centralized variant). Each decision is made on its own merits.
 
 ![Internet connectivity stack showing three tiers: Ingress (edge layer, per-VPC entry point, per-VPC L4 inspection), Egress (IPv6 decentralized, IPv4 pattern choice, volume reduction), and Filtering layer (centrally managed, data-plane options)](../assets/connectivity/internet-stack.png)
 /// caption
@@ -279,10 +299,11 @@ Internet connectivity stack — [Drawio Source](../assets/connectivity/internet-
 Organizations building internet connectivity from a clean slate can start with the patterns that scale and stay honest to the cloud-native model:
 
 1. **Decentralized ingress as the default**. Each application team owns its public-facing entry point. Use Amazon CloudFront and AWS WAF in front of L7 workloads (with CloudFront VPC Origins for VPC-hosted backends), and NLB or AWS Global Accelerator in front of L4 workloads. Apply per-VPC AWS Network Firewall or GWLB-with-third-party-firewall endpoints where L4 inspection is required, with rule sets managed centrally through AWS Firewall Manager.
-2. **IPv6-first egress where the workload supports it**. Each VPC reaches the internet through its own egress-only internet gateway. There is no managed NAT66, so plan for IPv6 egress to be decentralized everywhere — and let that simplicity drive the IPv6 adoption decision.
+2. **IPv6 through an egress-only internet gateway**. This path is decentralized by design because each VPC owns its gateway. When an external provider must inspect IPv6, use the provider path in item 6 instead.
 3. **Regional NAT gateway for IPv4 egress in every new VPC**. Single NAT gateway ID per VPC, no public subnet required, simpler routing.
 4. **Reduce IPv4 egress volume from day one**. Gateway VPC endpoints for S3 and DynamoDB in every VPC at no charge. Interface VPC endpoints for the AWS services your workloads call most.
 5. **Choose the IPv4 egress pattern based on organizational fit**. Decentralized for team autonomy, dual-stack symmetry, or latency sensitivity. Centralized for cost pressure at scale or a single physical inspection point. Both deliver uniform policy — through AWS Firewall Manager and Route 53 DNS Firewall in the decentralized case, and through the shared inspection layer in the centralized case.
+6. **Use an external security provider only when it is already the enterprise policy boundary**. Build regional provider paths with symmetric return routing for both address families; otherwise use the simpler AWS-native design.
 
 ### Existing environments
 
@@ -292,4 +313,5 @@ Organizations running established internet connectivity have working patterns th
 2. **Existing centralized ingress through a shared VPC** can keep running where it was adopted for a specific compliance reason. New workloads default to decentralized; centralized stays in place for the workloads that originally required it.
 3. **Existing zonal NAT gateways** are fully supported and don't need to be migrated to regional mode. Adopt regional NAT gateway as the default for new VPCs as they're created, and let the existing zonal deployments run.
 4. **Existing centralized IPv4 egress VPCs** keep their role. Add Route 53 DNS Firewall and AWS Firewall Manager-managed rule sets across the consuming VPCs to extend uniform policy enforcement to traffic that doesn't need to traverse the centralized inspection layer (DNS-based filtering, per-workload rules).
-5. **Plan IPv6 adoption deliberately**. IPv6 egress is decentralized by design and cannot be retrofitted into a centralized model without self-hosted NAT66 — factor that into when and how each application starts dual-stacking.
+5. **Existing external security-provider egress** can remain where it is the enterprise policy boundary. Before expanding it, verify regional return routing, source-identity requirements, IPv6 coverage, and failover between provider locations.
+6. **Plan IPv6 adoption deliberately**. AWS-native IPv6 egress is decentralized through an egress-only internet gateway. If an external provider must inspect IPv6, route `::/0` to the same Transit Gateway or AWS Cloud WAN path as IPv4 instead of creating a VPC-local bypass.
