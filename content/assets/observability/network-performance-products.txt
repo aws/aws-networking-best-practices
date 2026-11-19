@@ -1,0 +1,32 @@
+DIAGRAM: Network Performance Monitoring Products
+PURPOSE: Shows the three Amazon CloudWatch Network Monitoring products side by side, with each product's vantage point, the network path it measures, and the signals it publishes to Amazon CloudWatch.
+LAYOUT: three horizontal lanes stacked top-to-bottom, each flowing left-to-right (vantage point, measured path, signals), with a single tall CloudWatch node on the right that all three lanes feed
+WIDTH: 700px maximum readable width
+GROUPS:
+- Network Synthetic Monitor (managed probes): border style dashed, color blue (#2563eb); contains the three nodes of the first lane
+- Network Flow Monitor (agents): border style dashed, color purple (#7c3aed); contains the three nodes of the second lane
+- Internet Monitor (AWS global network data): border style dashed, color green (#059669); contains the three nodes of the third lane
+NODES:
+Network Synthetic Monitor lane:
+- Probe source: generic box, label "Probe source / VPC subnet / (no agent)"
+- Measured path: generic box, label "Measured path / Direct Connect to on-premises / TGW peering, VPC peering, PrivateLink, EC2 public IP to another Region"
+- Signals: generic box, label "Signals / Round-trip time, packet loss, NHI"
+Network Flow Monitor lane:
+- Agent: generic box, label "Agent on / EC2 instance or EKS node"
+- Measured path: generic box, label "Measured path / Actual TCP flows to subnets, AZs, VPCs, AWS services, and the edge of another Region"
+- Signals: generic box, label "Signals / TCP round-trip time, retransmissions, bytes, NHI"
+Internet Monitor lane:
+- End users: generic box, label "End users / by city-network and ASN"
+- Measured path: generic box, label "Measured path / Internet to your VPC, CloudFront distribution, or WorkSpaces directory"
+- Signals: generic box, label "Signals / Availability and performance events, AWS or ASN attribution"
+Shared:
+- CloudWatch: orange (#ff9900) bordered box, label "Amazon CloudWatch / Metrics, Alarms, Dashboards, EventBridge events"
+CONNECTIONS:
+- Within each lane: Vantage point → Measured path → Signals: style solid
+- Signals (each lane) → CloudWatch: style solid
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000).
+- Nodes are unfilled boxes with a colored border matching the lane color; text inside uses #7E7E7E.
+- The diagram does not use AWS service icons. Add icons in DrawIO if desired and re-export the PNG.
+- Blue for Network Synthetic Monitor, purple for Network Flow Monitor, green for Internet Monitor, orange for the shared CloudWatch container.
+- NHI is the network health indicator. Internet Monitor publishes health events with attribution, not an NHI value.

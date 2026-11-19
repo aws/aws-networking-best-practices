@@ -259,6 +259,8 @@ Beyond CloudWatch metrics, active health checking validates end-to-end path avai
 * **Transit Gateway path validation**: Lambda in spoke VPC A sends a request to a known endpoint in spoke VPC B through the Transit Gateway. Validates routing, not just attachment state.
 * **Direct Connect path validation**: On-premises probe sends traffic to a known VPC endpoint. Validates the full path including BGP routing, not just the physical connection state.
 
+For hybrid and inter-Region paths, Network Synthetic Monitor provides managed probes without custom Lambda code and publishes a network health indicator that attributes degradation to the AWS network. See [Network Performance Monitoring](network-performance.md) for when to use it instead of a custom check.
+
 ***Key insight:*** *CloudWatch metrics tell you the service is healthy. Synthetic health checks tell you the path works end-to-end. You need both — a healthy service with broken routing still means an outage.*
 
 ## Combining service monitoring with other services
@@ -270,6 +272,7 @@ Beyond CloudWatch metrics, active health checking validates end-to-end path avai
 | **Service monitoring + AWS Network Manager** | Per-service metric alarms and dashboards | Topology visualization and route analysis across the global network |
 | **Service monitoring + AWS Health Dashboard** | Your resource-specific metrics and alarms | AWS-side service events, maintenance notifications, and regional issues |
 | **Service monitoring + Amazon DevOps Guru** | Explicit alarm thresholds and anomaly bands you define | ML-driven anomaly detection across related resources that you didn't explicitly instrument |
+| **Service monitoring + Network Synthetic Monitor** | Resource metrics that locate a fault on the Transit Gateway or Direct Connect resource | Path-level round-trip time, packet loss, and AWS-side attribution (see [Network Performance Monitoring](network-performance.md)) |
 | **Service monitoring + AWS Trusted Advisor** | Real-time operational health | Periodic checks for quota utilization, security, and cost optimization |
 | **Service monitoring + Notifications** | Metric collection and alarm evaluation | Alert routing, escalation, and on-call integration (see [Notifications](notifications.md)) |
 
@@ -331,6 +334,7 @@ Beyond CloudWatch metrics, active health checking validates end-to-end path avai
 
 * **[Internal Traffic Monitoring](internal-traffic.md)** — Covers VPC Flow Logs and traffic mirroring for understanding what's flowing through your network, complementing the service health view on this page.
 * **[External Traffic Monitoring](external-traffic.md)** — Covers monitoring traffic between AWS and the internet, including CloudFront and edge service metrics.
+* **[Network Performance Monitoring](network-performance.md)** — Covers path-level performance and attribution with Network Synthetic Monitor, Network Flow Monitor, and Internet Monitor, which service metrics cannot provide.
 * **[Notifications](notifications.md)** — Covers alert routing, escalation policies, and integration with incident management tools. Service monitoring generates the signals; notifications deliver them to the right people.
 
 **Relationship to other sections:**

@@ -265,6 +265,7 @@ Each internal traffic monitoring tool answers different questions. Using the wro
 | "Was this request authorized by the auth policy?" | VPC Lattice Access Logs | Logs include auth policy decision (allow/deny) and principal |
 | "What's the total network throughput for this instance?" | CloudWatch Metrics (NetworkIn/Out) | Pre-aggregated metrics without log parsing |
 | "Is IPv6 traffic flowing in this VPC?" | VPC Flow Logs + `type` field | Filter on type=6 to isolate IPv6 flows |
+| "Is the AWS network causing the degradation on this path?" | Network Synthetic Monitor or Network Flow Monitor network health indicator (see [Network Performance Monitoring](network-performance.md)) | Flow logs show what traversed the network, not whether the AWS-controlled part of the path was impaired |
 | "What is my DNS layer resolving and blocking?" | Route 53 Resolver query logging + DNS Firewall CloudWatch metrics | Query logs (to CloudWatch Logs) record every unique name resolved and feed metric filters and alarms; DNS Firewall publishes per-VPC and per-rule-group query-volume metrics directly |
 
 VPC Lattice access logs and VPC Flow Logs are complementary, not alternatives. VPC Lattice logs tell you *what happened at the application layer* (which service called which, with what identity, and what the response was). Flow Logs tell you *what happened at the network layer* (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through VPC Lattice, use both to get full request-to-packet visibility.
@@ -367,6 +368,7 @@ However, Transit Gateway Flow Logs only capture traffic that *crosses* the Trans
 
 * **[External Traffic Monitoring](external-traffic.md)** — Covers visibility into traffic between your AWS resources and the internet, including NAT gateway logs, ALB access logs, and CloudFront logs.
 * **[AWS Services Monitoring](service-monitoring.md)** — Covers health and performance monitoring of the networking services themselves (Transit Gateway metrics, NAT gateway CloudWatch metrics, VPC endpoint metrics).
+* **[Network Performance Monitoring](network-performance.md)** — Covers path performance and attribution of degradation to the AWS network, which flow logs cannot show.
 * **[Notifications](notifications.md)** — Covers alerting and notification patterns built on top of the monitoring data described here.
 
 **Relationship to Foundation:**

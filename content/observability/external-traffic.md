@@ -366,6 +366,7 @@ CloudFront and ALB logs both record the client's IP version. Track the percentag
 
 * **[Internal Traffic Monitoring](internal-traffic.md)**: Covers east-west traffic visibility within your AWS environment. External traffic monitoring handles north-south flows crossing the internet boundary.
 * **[AWS Services Monitoring](service-monitoring.md)**: Covers health and performance monitoring of AWS networking services themselves. External traffic monitoring uses the data those services produce.
+* **[Network Performance Monitoring](network-performance.md)**: Covers Internet Monitor, which adds city-network and ASN health events with AWS or ISP attribution for the same users that access logs describe.
 * **[Notifications](notifications.md)**: Covers alerting and notification routing. External traffic monitoring generates the signals that notifications act on.
 
 **Relationship to Connectivity:**
