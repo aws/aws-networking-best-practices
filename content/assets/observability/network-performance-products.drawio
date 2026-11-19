@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="np-products">
+    <mxGraphModel dx="1412" dy="1262" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="np-cw" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#ff9900;strokeWidth=2;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=12;align=center;verticalAlign=middle;" value="&lt;b&gt;Amazon CloudWatch&lt;/b&gt;&lt;br&gt;&lt;br&gt;Metrics&lt;br&gt;Alarms&lt;br&gt;Dashboards&lt;br&gt;EventBridge events" vertex="1">
+          <mxGeometry height="476" width="130" x="646" y="36" as="geometry" />
+        </mxCell>
+        <mxCell id="np-lane-0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#2563eb;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=center;spacingTop=6;container=0;" value="Network Synthetic Monitor (managed probes)" vertex="1">
+          <mxGeometry height="160" width="580" x="16" y="16" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-0-0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#2563eb;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Probe source&lt;/b&gt;&lt;br&gt;VPC subnet&lt;br&gt;(no agent)" vertex="1">
+          <mxGeometry height="100" width="150" x="30" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-0-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#2563eb;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Measured path&lt;/b&gt;&lt;br&gt;Direct Connect to on-premises&lt;br&gt;TGW peering, VPC peering,&lt;br&gt;PrivateLink, EC2 public IP&lt;br&gt;to another Region" vertex="1">
+          <mxGeometry height="100" width="200" x="206" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-0-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#2563eb;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Signals&lt;/b&gt;&lt;br&gt;Round-trip time,&lt;br&gt;packet loss, NHI" vertex="1">
+          <mxGeometry height="100" width="150" x="432" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="np-3" edge="1" parent="1" source="np-b-0-0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-b-0-1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-4" edge="1" parent="1" source="np-b-0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-b-0-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-5" edge="1" parent="1" source="np-b-0-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-cw" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-lane-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#7c3aed;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=center;spacingTop=6;container=0;" value="Network Flow Monitor (agents)" vertex="1">
+          <mxGeometry height="160" width="580" x="16" y="194" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-1-0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7c3aed;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Agent on&lt;/b&gt;&lt;br&gt;EC2 instance or&lt;br&gt;EKS node" vertex="1">
+          <mxGeometry height="100" width="150" x="30" y="234" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-1-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7c3aed;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Measured path&lt;/b&gt;&lt;br&gt;Actual TCP flows to subnets,&lt;br&gt;AZs, VPCs, AWS services,&lt;br&gt;and the edge of another&lt;br&gt;Region" vertex="1">
+          <mxGeometry height="100" width="200" x="206" y="234" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-1-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#7c3aed;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Signals&lt;/b&gt;&lt;br&gt;TCP round-trip time,&lt;br&gt;retransmissions,&lt;br&gt;bytes, NHI" vertex="1">
+          <mxGeometry height="100" width="150" x="432" y="234" as="geometry" />
+        </mxCell>
+        <mxCell id="np-6" edge="1" parent="1" source="np-b-1-0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-b-1-1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-7" edge="1" parent="1" source="np-b-1-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-b-1-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-8" edge="1" parent="1" source="np-b-1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-cw" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-lane-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;strokeColor=#059669;fillColor=none;fontColor=light-dark(#7E7E7E,#7E7E7E);fontStyle=1;fontSize=13;verticalAlign=top;align=center;spacingTop=6;container=0;" value="Internet Monitor (AWS global network data)" vertex="1">
+          <mxGeometry height="160" width="580" x="16" y="372" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-2-0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;End users&lt;/b&gt;&lt;br&gt;by city-network&lt;br&gt;and ASN" vertex="1">
+          <mxGeometry height="100" width="150" x="30" y="412" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-2-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Measured path&lt;/b&gt;&lt;br&gt;Internet to your VPC,&lt;br&gt;CloudFront distribution,&lt;br&gt;or WorkSpaces directory" vertex="1">
+          <mxGeometry height="100" width="200" x="206" y="412" as="geometry" />
+        </mxCell>
+        <mxCell id="np-b-2-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Signals&lt;/b&gt;&lt;br&gt;Availability and&lt;br&gt;performance events,&lt;br&gt;AWS or ASN attribution" vertex="1">
+          <mxGeometry height="100" width="150" x="432" y="412" as="geometry" />
+        </mxCell>
+        <mxCell id="np-9" edge="1" parent="1" source="np-b-2-0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-b-2-1" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-10" edge="1" parent="1" source="np-b-2-1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-b-2-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="np-11" edge="1" parent="1" source="np-b-2-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#7E7E7E;endArrow=classic;" target="np-cw" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="C5S-iT0AG1xl6bEgSJ8H-1" parent="1" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;fillColor=#E7157B;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.cloudwatch_2;labelPerimeter=1;" value="" vertex="1">
+          <mxGeometry height="40" width="40" x="691" y="180" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
