@@ -1,5 +1,5 @@
 DIAGRAM: Internal Traffic Monitoring Sources
-PURPOSE: Shows the internal traffic monitoring architecture: Data Sources (VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to Destinations (S3, CloudWatch Logs, Firehose) and then to Analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics).
+PURPOSE: Shows the internal traffic monitoring architecture: Data Sources (VPC Flow Logs, Transit Gateway Flow Logs, Cloud WAN Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to Destinations (S3, CloudWatch Logs, Firehose) and then to Analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics).
 LAYOUT: left-to-right (three-column flow)
 WIDTH: 700px maximum readable width
 
@@ -12,6 +12,7 @@ NODES:
 Data Sources:
 - Flow Logs: AWS icon "Amazon Virtual Private Cloud", label "VPC Flow Logs\nPacket metadata at VPC/subnet/ENI"
 - TGW Logs: AWS icon "AWS Transit Gateway", label "Transit Gateway Flow Logs\nCross-VPC and cross-account traffic"
+- CWAN Logs: AWS icon "Flow Logs", label "Cloud WAN Flow Logs\nGlobal network traffic"
 - Lattice Logs: AWS icon "Amazon VPC Lattice", label "VPC Lattice Access Logs\nPer-request service-to-service detail"
 - NFW Logs: AWS icon "AWS Network Firewall", label "Network Firewall Logs\nStateful inspection decisions"
 
@@ -31,6 +32,9 @@ CONNECTIONS:
 - Flow Logs → Firehose: style solid
 - TGW Logs → S3: style solid
 - TGW Logs → CloudWatch Logs: style solid
+- CWAN Logs → S3: style solid
+- CWAN Logs → CloudWatch Logs: style solid
+- CWAN Logs → Firehose: style solid
 - Lattice Logs → S3: style solid
 - Lattice Logs → CloudWatch Logs: style solid
 - Lattice Logs → Firehose: style solid
