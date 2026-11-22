@@ -118,7 +118,8 @@ Apply AWS Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manag
 
 !!! note "Take into account"
 
-    * VPC attachments support only inbound allow and drop actions. You cannot tag VPC routes with a BGP community at ingress, summarize them, or change their BGP attributes; classify their origin with contiguous prefixes from the address plan instead. Communities work on VPN and Connect attachments, not Direct Connect or Transit Gateway peering.
+    * VPC attachments support only inbound allow and drop actions. You cannot tag VPC routes with a BGP community at ingress, summarize them, or change their BGP attributes; classify their origin with contiguous prefixes from the address plan instead.
+    * BGP communities work on Site-to-Site VPN, Connect, and Direct Connect attachments, not on Transit Gateway route table attachments. Over Direct Connect, use standard communities with your own ASN ([restrictions](https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-cloud-wan.html#bgp-community-support-cloudwan)).
     * Summarization works only outbound on BGP-capable attachments and resets MED, local preference, AS path, and communities. Plan path preference for the generated summary separately.
     * Allow and drop end evaluation; summarize and set actions don't. Order modifications before terminal actions, and aggregate by Region because each policy supports a limited number of rules.
     * Routing policies don't apply to network function groups; use service insertion for inspection. The routing-information API exposes learned and advertised routes and BGP attributes before policy is applied, so verify final advertisements from the receiving peer.
