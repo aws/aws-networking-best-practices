@@ -134,6 +134,10 @@ The AWS Cloud WAN console provides policy versioning and change sets, which is a
 
 This approach gives you audit trails, peer review, rollback capability through version control, and the ability to test policy changes in a non-production network before applying to production. It also means your network topology is documented by definition, since the policy *is* the documentation.
 
+#### Enable Cloud WAN Flow Logs from day one
+
+Enable [Cloud WAN Flow Logs](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html) when you deploy the core network to get a single, central view of traffic across every attachment, segment, and Region. Records include the source and destination segments and why packets were dropped, which is faster to query during an incident than logs from each VPC.
+
 ### When to use AWS Cloud WAN
 
 AWS Cloud WAN is a natural fit when building a new multi-account network in AWS. The network policy defines your entire topology declaratively, so you avoid the operational overhead of stitching together individual Transit Gateways and peering connections as you grow. This applies whether you're starting in one Region or many.
