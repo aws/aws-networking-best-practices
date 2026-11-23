@@ -12,6 +12,7 @@ Observability operates on top of the connectivity, application networking, and s
 
 *   **VPC Flow Logs** — Packet-level metadata at VPC, subnet, or ENI level with 40+ custom format fields
 *   **Transit Gateway Flow Logs** — Centralized cross-VPC and cross-account traffic visibility from a single configuration
+*   **AWS Cloud WAN Flow Logs** — Core network traffic with segment, inspection, and drop-reason detail, from the core network owner account
 *   **VPC Lattice Access Logs** — Per-request service-to-service detail with identity, latency, and auth decisions
 *   **Network Firewall Logs** — Stateful inspection decisions (allowed, denied, alerted) with rule attribution
 *   **Amazon Athena** — SQL-based querying of Flow Logs stored in S3 for large-scale analysis
@@ -70,7 +71,7 @@ Observability operates on top of the connectivity, application networking, and s
 
     ---
 
-    VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice access logs, Athena integration, and cost-effective log analysis.
+    VPC Flow Logs, Transit Gateway and Cloud WAN Flow Logs, VPC Lattice access logs, Athena integration, and cost-effective log analysis.
 
     [:octicons-arrow-right-24: Internal Traffic Monitoring](internal-traffic.md)
 
