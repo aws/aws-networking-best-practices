@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -2295,7 +2295,7 @@
 <p>Hybrid and multi-cloud overview — <a href="../../assets/connectivity/hybrid-overview.drawio">Drawio Source</a></p>
 </figcaption>
 </figure>
-<p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
+<p>For on-premises connectivity, <a href="https://aws.amazon.com/directconnect/">AWS Direct Connect</a> delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. Where your network provider supports it, <a href="https://aws.amazon.com/interconnect/lastmile/">AWS Interconnect - last mile</a> provisions that private path as one managed, resilient connection. <a href="https://aws.amazon.com/vpn/site-to-site-vpn/">AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a> provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. <strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong> uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> overlays into the AWS network plane.</p>
 <p>For multi-cloud, first reduce avoidable cross-cloud movement through application and data placement. For traffic that must cross the boundary, <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html">AWS Interconnect</a> is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds) remain valid where AWS Interconnect doesn't yet support your other cloud, but they carry more operational overhead — a Region-pair gap alone is usually solved by extending inside each cloud instead.</p>
 <p>Most organizations use more than one of these services simultaneously. The goal is to use each where it provides the most value. For the recommended architecture combining these services, see <a href="#building-your-hybrid-and-multi-cloud-stack">Building your hybrid and multi-cloud stack</a> at the end of this page.</p>
 <h2 id="private-on-premises-connectivity-with-aws-direct-connect">Private on-premises connectivity with AWS Direct Connect<a class="headerlink" href="#private-on-premises-connectivity-with-aws-direct-connect" title="Permanent link">&para;</a></h2>
@@ -2364,6 +2364,16 @@
 </tr>
 </tbody>
 </table>
+<h4 id="use-aws-interconnect-last-mile-where-your-network-provider-supports-it">Use AWS Interconnect - last mile where your network provider supports it<a class="headerlink" href="#use-aws-interconnect-last-mile-where-your-network-provider-supports-it" title="Permanent link">&para;</a></h4>
+<p><a href="https://docs.aws.amazon.com/interconnect/latest/userguide/getting-started-lastmile.html">AWS Interconnect - last mile</a> delivers the Direct Connect maximum resiliency design as one managed connection. AWS and your network provider provision four connections across two sites, configure <abbr title="Border Gateway Protocol">BGP</abbr> and VLANs, and attach the Interconnect directly to a Direct Connect gateway. It supports <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr>.</p>
+<p>Use last mile when your sites already connect to a supported provider in a covered metro, as listed in the <a href="https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html">regional availability documentation</a>. Use Direct Connect everywhere else.</p>
+<p>Three parts of the design stay yours:</p>
+<ul>
+<li><strong>First mile:</strong> the <a href="https://aws.amazon.com/interconnect/sla/">SLA</a> ends at the demarcation point and requires an endpoint in two or more Availability Zones (see <a href="#treat-a-single-interconnect-as-the-resilient-unit">Treat a single Interconnect as the resilient unit</a>). MACsec runs only between AWS and provider devices, so plan path diversity and encryption from your site into the provider's network.</li>
+<li><strong>Regional reach:</strong> virtual private gateways and Transit Gateways associate with the Interconnect only in its local Region. AWS Cloud WAN reaches it from any Core Network Edge.</li>
+<li><strong>Cost:</strong> AWS charges hourly by bandwidth and a <a href="https://aws.amazon.com/interconnect/lastmile/pricing/">pricing tier</a> set by the metro and the farthest AWS Region attached to the Direct Connect gateway, with no per-GB charge. The provider bills its service separately.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Last mile gives you the AWS side of maximum resiliency as a managed service. The first mile to the provider is still yours to design.</em></p>
 <h4 id="size-capacity-for-the-failure-state">Size capacity for the failure state<a class="headerlink" href="#size-capacity-for-the-failure-state" title="Permanent link">&para;</a></h4>
 <p>Translate workload demand into throughput before choosing connection sizes. Separate recurring traffic, which permanent capacity must carry, from one-time bulk transfers that may justify temporary capacity or migration tooling. Prefer several independent, equal-capacity connections with ECMP over one larger port: a single port remains one capacity failure, while unequal ECMP paths can overload the smaller connection. Advertise the same prefixes with matching <abbr title="Border Gateway Protocol">BGP</abbr> attributes across the ECMP paths.</p>
 <p>Size the network after removing the connection or location the design must survive, not from normal utilization with every path available. If the requirement includes two independent failures, add independent devices, connections, or locations until the remaining paths can carry peak traffic; extra members inside one LAG do not protect against loss of its shared endpoint.</p>
@@ -2471,8 +2481,8 @@
 </tr>
 <tr>
 <td>Connectivity must be available in days</td>
-<td><strong>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong></td>
-<td>Direct Connect requires provider coordination and physical provisioning</td>
+<td><strong>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong>, or <strong>AWS Interconnect - last mile</strong> where your sites already connect to a supported provider in your metro</td>
+<td>Direct Connect requires provider coordination and physical provisioning; Interconnect - last mile uses capacity AWS and the provider have already provisioned</td>
 </tr>
 <tr>
 <td>Traffic is low-volume or short-lived</td>
@@ -2503,7 +2513,12 @@
 <td>Overlay delivered by the <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> solution</td>
 </tr>
 <tr>
-<td><strong>Direct Connect + AWS Interconnect (multi-cloud)</strong></td>
+<td><strong>Direct Connect + AWS Interconnect - last mile</strong></td>
+<td>Private path for sites and metros that Interconnect - last mile does not cover</td>
+<td>Managed private path for sites served by a supported network provider; both can attach to the same Direct Connect gateway</td>
+</tr>
+<tr>
+<td><strong>Direct Connect + AWS Interconnect - multicloud</strong></td>
 <td>On-premises hybrid path</td>
 <td>Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect gateway</td>
 </tr>
@@ -2517,6 +2532,12 @@
 <hr />
 <p>Complete service documentation covering connections, virtual interfaces, Direct Connect gateway, SiteLink, and MACsec.</p>
 <p><a href="https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS Interconnect - last mile documentation</strong></p>
+<hr />
+<p>Managed on-premises connectivity through a supported network provider: prerequisites, attach point, and network planning choices.</p>
+<p><a href="https://docs.aws.amazon.com/interconnect/latest/userguide/getting-started-lastmile.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm0 2h7v5h5v11H6zm2 8v2h8v-2zm0 4v2h5v-2z"/></svg></span> <strong>Resiliency Toolkit</strong></p>
@@ -2535,6 +2556,12 @@
 <hr />
 <p>Port-hour charges for dedicated and hosted connections, plus data transfer out pricing that is typically lower than internet egress.</p>
 <p><a href="https://aws.amazon.com/directconnect/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>AWS Interconnect - last mile pricing</strong></p>
+<hr />
+<p>Hourly charges set by provisioned bandwidth and a pricing tier based on the metro and the farthest attached AWS Region, with no per-GB data transfer. The provider bills its service separately.</p>
+<p><a href="https://aws.amazon.com/interconnect/lastmile/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
 </li>
 </ul>
 </div>
@@ -2992,18 +3019,20 @@
 <p>Organizations building hybrid and multi-cloud connectivity from scratch have the opportunity to adopt the patterns that scale best from day one:</p>
 <ol>
 <li><strong>On-premises path and resiliency</strong>: AWS Direct Connect terminating on a Transit Gateway or AWS Cloud WAN core network through a Direct Connect gateway, designed to the Resiliency Toolkit's maximum resiliency model (multiple connections across multiple locations and providers). Resiliency comes from multiple Direct Connect connections, not from pairing a single Direct Connect with a <abbr title="Virtual Private Network">VPN</abbr> fallback.</li>
+<li><strong>Managed on-premises path where available</strong>: AWS Interconnect - last mile for sites already connected to a supported network provider in a covered metro, which can attach to the same Direct Connect gateway as your Direct Connect connections.</li>
 <li><strong><abbr title="Virtual Private Network">VPN</abbr> where it adds value</strong>: AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.</li>
-<li><strong>Multi-cloud</strong>: Minimize avoidable cross-cloud movement before sizing the link, then use AWS Interconnect where supported. Use partner-based Direct Connect or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds only where AWS Interconnect coverage isn't there yet.</li>
-<li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong>: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across branches and wants that overlay to extend into AWS.</li>
+<li><strong>Multi-cloud</strong>: Minimize avoidable cross-cloud movement before sizing the link, then use AWS Interconnect - multicloud where supported. Use partner-based Direct Connect or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> between clouds only where AWS Interconnect coverage isn't there yet.</li>
+<li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integration</strong>: Transit Gateway Connect or Cloud WAN Connect attachments if the organization already runs <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> across branches and wants that overlay to extend into AWS.</li>
 <li><strong>Application access</strong>: See <a href="../remote-access/">Remote Access</a> for AWS Verified Access and AWS Client <abbr title="Virtual Private Network">VPN</abbr> guidance.</li>
 </ol>
 <h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
 <p>Organizations running established hybrid patterns have working foundations that don't need to be replaced:</p>
 <ol>
 <li><strong>AWS Direct Connect</strong> remains the foundation. If circuits are terminated on virtual private gateways rather than Transit Gateway or AWS Cloud WAN, evaluate consolidating onto a hub through a Direct Connect gateway as the environment grows.</li>
+<li><strong>AWS Interconnect - last mile</strong> can attach to your existing Direct Connect gateway if every virtual private gateway or Transit Gateway associated with it is in the Interconnect's local Region. Cloud WAN associations have no such limit.</li>
 <li><strong>AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></strong> remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated <abbr title="Virtual Private Network">VPN</abbr> for sites distant from the Region.</li>
-<li><strong>Partner-based Direct Connect to another cloud</strong> keeps working and should not be ripped out for its own sake. Before renewing cross-connects or increasing capacity, review current cross-cloud flows and remove repeated or unused transfers. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.</li>
-<li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integrations</strong> on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic doesn't have to move all at once.</li>
+<li><strong>Partner-based Direct Connect to another cloud</strong> keeps working and should not be ripped out for its own sake. Before renewing cross-connects or increasing capacity, review current cross-cloud flows and remove repeated or unused transfers. Evaluate AWS Interconnect - multicloud for new multi-cloud pairs or when existing cross-connects come up for renewal.</li>
+<li><strong><abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> integrations</strong> on Transit Gateway Connect can migrate incrementally to Cloud WAN when multi-Region management complexity grows; Cloud WAN peers with existing Transit Gateways, so <abbr title="Software-Defined Wide Area Network">SD-WAN</abbr> traffic doesn't have to move all at once.</li>
 <li><strong>AWS Client <abbr title="Virtual Private Network">VPN</abbr></strong> can coexist with AWS Verified Access during migration. See <a href="../remote-access/">Remote Access</a> for the recommended migration path.</li>
 </ol>
 
@@ -3028,7 +3057,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 09:43:38 UTC">November 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 22, 2026 17:53:59 UTC">November 22, 2026</span>
   </span>
 
     
@@ -3263,7 +3292,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.footer"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
