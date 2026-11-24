@@ -55,7 +55,7 @@
         <mxCell id="np-b-2-0" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;End users&lt;/b&gt;&lt;br&gt;by city-network&lt;br&gt;and ASN" vertex="1">
           <mxGeometry height="100" width="150" x="30" y="412" as="geometry" />
         </mxCell>
-        <mxCell id="np-b-2-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Measured path&lt;/b&gt;&lt;br&gt;Internet to your VPC,&lt;br&gt;CloudFront distribution,&lt;br&gt;or WorkSpaces directory" vertex="1">
+        <mxCell id="np-b-2-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Measured path&lt;/b&gt;&lt;br&gt;Internet to your VPC, NLB,&lt;br&gt;CloudFront distribution,&lt;br&gt;or WorkSpaces directory" vertex="1">
           <mxGeometry height="100" width="200" x="206" y="412" as="geometry" />
         </mxCell>
         <mxCell id="np-b-2-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#059669;fontColor=light-dark(#7E7E7E,#7E7E7E);fontSize=11;align=center;verticalAlign=middle;" value="&lt;b&gt;Signals&lt;/b&gt;&lt;br&gt;Availability and&lt;br&gt;performance events,&lt;br&gt;AWS or ASN attribution" vertex="1">

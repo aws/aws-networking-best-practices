@@ -17,16 +17,17 @@ Network Flow Monitor lane:
 - Signals: generic box, label "Signals / TCP round-trip time, retransmissions, bytes, NHI"
 Internet Monitor lane:
 - End users: generic box, label "End users / by city-network and ASN"
-- Measured path: generic box, label "Measured path / Internet to your VPC, CloudFront distribution, or WorkSpaces directory"
+- Measured path: generic box, label "Measured path / Internet to your VPC, NLB, CloudFront distribution, or WorkSpaces directory"
 - Signals: generic box, label "Signals / Availability and performance events, AWS or ASN attribution"
 Shared:
 - CloudWatch: orange (#ff9900) bordered box, label "Amazon CloudWatch / Metrics, Alarms, Dashboards, EventBridge events"
+- CloudWatch icon: AWS icon "Amazon CloudWatch" (pink #E7157B resource icon), 40x40, centered above the CloudWatch label
 CONNECTIONS:
 - Within each lane: Vantage point → Measured path → Signals: style solid
 - Signals (each lane) → CloudWatch: style solid
 NOTES:
 - BACKGROUND: Transparent (no white background). All text and lines that appear directly on the transparent background must use #7E7E7E instead of black (#000000).
 - Nodes are unfilled boxes with a colored border matching the lane color; text inside uses #7E7E7E.
-- The diagram does not use AWS service icons. Add icons in DrawIO if desired and re-export the PNG.
+- The only AWS service icon is the Amazon CloudWatch icon above the CloudWatch label. The lane nodes are plain boxes without icons.
 - Blue for Network Synthetic Monitor, purple for Network Flow Monitor, green for Internet Monitor, orange for the shared CloudWatch container.
 - NHI is the network health indicator. Internet Monitor publishes health events with attribution, not an NHI value.
