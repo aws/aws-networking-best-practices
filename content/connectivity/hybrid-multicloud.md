@@ -174,6 +174,9 @@ For production resilience, use independent Direct Connect connections across loc
 | **Direct Connect + AWS Interconnect - last mile** | Private path for sites and metros that Interconnect - last mile does not cover | Managed private path for sites served by a supported network provider; both can attach to the same Direct Connect gateway |
 | **Direct Connect + AWS Interconnect - multicloud** | On-premises hybrid path | Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect gateway |
 | **Direct Connect + Route 53 Global Resolver (via Cloud WAN)** | Private path for on-premises DNS queries into AWS Cloud WAN | Anycast, multi-Region DNS resolution with DNS filtering for on-premises clients, without per-Region inbound endpoints. If the resolver does not run in the Region of a Direct Connect interface, queries are spread across all the resolver's Regions on the same continent instead of the closest one, so run the resolver in the Regions where your Direct Connect interfaces terminate. See [DNS Architecture](../foundation/dns.md#global-resolver-for-clients-outside-vpcs) |
+| **Direct Connect + Amazon Route 53 private endpoint health checks** | Private path from a health check source VPC to on-premises targets | Managed DNS failover for active-passive workloads between AWS and on-premises |
+
+For active-passive disaster recovery toward on-premises endpoints, [Amazon Route 53 private endpoint health checks](../foundation/dns.md#use-private-endpoint-health-checks-for-dns-failover-of-private-and-hybrid-endpoints) remove the need for a custom alarm-and-Lambda failover loop. The source VPC must be in the same account as the records it is associated with and must have reach to the target over Direct Connect.
 
 ### Documentation
 
@@ -334,6 +337,9 @@ Site-to-Site VPN is **not** the right choice when you need predictable latency b
 | Combination | Site-to-Site VPN handles | Other service handles |
 | --- | --- | --- |
 | **VPN + AWS Direct Connect** | IPsec overlay on top of Direct Connect when MACsec is not available or layer-3 encryption is required | Private path into AWS |
+| **Site-to-Site VPN + Route 53 private endpoint health checks** | Encrypted private path from a health check source VPC to on-premises targets | Managed DNS failover for active-passive workloads between AWS and on-premises |
+
+When the passive endpoint is on premises, [Route 53 private endpoint health checks](../foundation/dns.md#use-private-endpoint-health-checks-for-dns-failover-of-private-and-hybrid-endpoints) can fail over private hosted zone records to it over the VPN. Allow the source's traffic through security groups, network ACLs, and the on-premises firewall return path, or the check reports a healthy target as unhealthy.
 
 ### Documentation
 
