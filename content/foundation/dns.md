@@ -118,6 +118,29 @@ To alert on DNS activity rather than just retain it, deliver Resolver query logs
 
 Alarm on a baseline you establish, not a fixed count: query logs record only unique queries, so lookups answered from the cache are not logged and counts run low. Treat this as detection, not prevention — it sees only what reaches the resolver, so DNS-over-HTTPS and hardcoded-IP traffic bypass it; keep Network Firewall or other inspection for those.
 
+### Protecting critical records
+
+#### Protect critical records from accidental change
+
+Route 53 record set protection rejects any `ChangeResourceRecordSets` request that creates, updates, or deletes records with a protected name and type, in public and private hosted zones. The protection applies to every principal, including those with full Route 53 permissions, so it holds even where IAM policies are broad. Use it for records that rarely change and would cause an outage if changed by mistake, such as the apex records of a production domain, MX records, and records that route traffic to critical endpoints. Protect only the few records where a mistake is expensive.
+
+Know how it behaves before you rely on it:
+
+* **Scope is name and type.** One protection covers every record with that name and type, whatever its set identifier. You can't protect only some of a set of weighted records.
+* **Rejection is whole-batch.** If any change in a request touches a protected name and type, Route 53 rejects the entire request with `InvalidChangeBatch` and applies none of it. Infrastructure as code that bundles protected and unprotected changes in one batch fails as a whole. The same error comes back through AWS CloudFormation, the AWS CLI, and the AWS SDKs.
+* **A protection can reserve a name.** You can create one for a name and type that has no records yet, which stops anyone from creating that record.
+* **Write a useful comment.** The optional comment (up to 256 characters) appears in the error when a change is rejected. Say why the record is protected and whom to contact.
+
+Changing a protected record is deliberate: delete the protection, make the change, then create the protection again. A protection can't be edited, so changing its comment also means deleting and recreating it. Plan this into your change process and runbooks.
+
+Protections are only as strong as who can remove them. Any principal with `route53:DeleteResourceRecordSetProtections` on the hosted zone can delete any protection in it, and these actions support only the hosted zone resource and no service-specific condition keys. Grant that permission to a small set of administrators and consider denying it to everyone else, for example with a service control policy (SCP).
+
+A hosted zone that has any protections, including protections on names with no records, can't be deleted. Add a step to teardown automation that lists and deletes the protections first.
+
+Protections don't change how Route 53 answers DNS queries. They only control changes to records.
+
+For the console and CLI steps, see [Protecting records from changes](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html). For an example policy that denies removing protections, see [Example 5: Deny removal of record set protections](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/access-control-managing-permissions.html#access-policy-example-deny-delete-rrset-protections).
+
 ### IPv6 considerations
 
 #### Configure dual-stack Resolver endpoints from the start
