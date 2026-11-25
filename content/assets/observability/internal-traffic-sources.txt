@@ -10,11 +10,11 @@ GROUPS:
 
 NODES:
 Data Sources:
-- Flow Logs: AWS icon "Amazon Virtual Private Cloud", label "VPC Flow Logs\nPacket metadata at VPC/subnet/ENI"
-- TGW Logs: AWS icon "AWS Transit Gateway", label "Transit Gateway Flow Logs\nCross-VPC and cross-account traffic"
-- CWAN Logs: AWS icon "Flow Logs", label "Cloud WAN Flow Logs\nGlobal network traffic"
-- Lattice Logs: AWS icon "Amazon VPC Lattice", label "VPC Lattice Access Logs\nPer-request service-to-service detail"
-- NFW Logs: AWS icon "AWS Network Firewall", label "Network Firewall Logs\nStateful inspection decisions"
+- Flow Logs: AWS icon "Flow Logs", label "VPC Flow Logs\nPacket metadata at VPC/subnet/ENI"
+- TGW Logs: AWS icon "Flow Logs", label "Transit Gateway Flow Logs\nCross-VPC and cross-account traffic"
+- CWAN Logs: AWS icon "Flow Logs", label "Cloud WAN Flow Logs\nCore network traffic"
+- Lattice Logs: AWS icon "Logs", label "VPC Lattice Access Logs\nPer-request service-to-service detail"
+- NFW Logs: AWS icon "Logs", label "Network Firewall Logs\nStateful inspection decisions"
 
 Storage:
 - S3: AWS icon "Amazon Simple Storage Service", label "Amazon S3\nCost-effective long-term storage"

@@ -5,7 +5,7 @@
 
 Understanding what traffic flows between your internal resources is the foundation of network security, cost optimization, and troubleshooting in AWS. Security groups and NACLs define what's *allowed* — internal traffic monitoring tells you what's *actually happening*. Without it, you're operating blind: unable to detect lateral movement, unable to identify unexpected cross-AZ data transfer costs, and unable to troubleshoot connectivity failures beyond "it doesn't work."
 
-Internal traffic monitoring in AWS is not a single tool — it's a layered approach. VPC Flow Logs provide packet-level metadata at the network layer. Transit Gateway and Cloud WAN Flow Logs give you centralized cross-VPC visibility from the account that owns the transit layer. VPC Lattice access logs capture per-request application-layer detail. Network Firewall logs record stateful inspection decisions. Each data source answers different questions, and a production environment needs most of them working together.
+Internal traffic monitoring in AWS is not a single tool — it's a layered approach. VPC Flow Logs provide packet-level metadata at the network layer. AWS Transit Gateway Flow Logs and AWS Cloud WAN Flow Logs give you centralized cross-VPC visibility from the account that owns the transit layer. VPC Lattice access logs capture per-request application-layer detail. Network Firewall logs record stateful inspection decisions. Each data source answers different questions, and a production environment needs most of them working together.
 
 This page is organized around data sources and the decisions you face when building internal traffic visibility: what to enable, where to send the data, how to query it cost-effectively, and how to correlate across sources.
 
@@ -159,7 +159,7 @@ TBLPROPERTIES (
 
 This approach means Athena queries only scan the partitions you specify, reducing both query time and cost dramatically.
 
-### Transit Gateway and Cloud WAN Flow Logs for cross-VPC visibility
+### Transit Gateway and Cloud WAN Flow Logs for cross-VPC visibility { #transit-gateway-flow-logs-for-cross-vpc-visibility }
 
 #### Enable flow logs centrally on the transit layer
 
@@ -240,7 +240,7 @@ When using dual-stack VPCs, include `pkt-srcaddr` and `pkt-dstaddr` in your cust
 
 #### Understand the cost model before scaling Flow Log collection
 
-Flow Log costs have three components: ingestion, storage, and analysis. At scale, these add up:
+VPC, Transit Gateway, and Cloud WAN Flow Logs have no charge for the feature itself. You pay for what happens to the logs: ingestion, storage, and analysis. At scale, these add up:
 
 * **Ingestion**: The per-GB charge for delivering logs to the destination. S3 is cheapest (tiered per-GB rate), CloudWatch Logs is roughly 2× the S3 rate. See [CloudWatch pricing](https://aws.amazon.com/cloudwatch/pricing/) for current values.
 * **Storage**: S3 Standard charges per-GB/month. Use S3 Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.
@@ -271,6 +271,7 @@ Each internal traffic monitoring tool answers different questions. Using the wro
 | "What did the firewall block in the last hour?" | Network Firewall Alert Logs | Records every drop/alert action with rule attribution |
 | "How much cross-AZ traffic is this VPC generating?" | VPC Flow Logs + `az-id` field | The `az-id` field identifies which Availability Zone each flow originates from |
 | "What's the total network throughput for this instance?" | CloudWatch Metrics (NetworkIn/Out) | Pre-aggregated metrics without log parsing |
+| "Is IPv6 traffic flowing in this VPC?" | VPC Flow Logs + `type` field | Filter on `type` = `IPv6` to isolate IPv6 flows |
 | "What is my DNS layer resolving and blocking?" | Route 53 Resolver query logging + DNS Firewall CloudWatch metrics | Query logs (to CloudWatch Logs) record every unique name resolved and feed metric filters and alarms; DNS Firewall publishes per-VPC and per-rule-group query-volume metrics directly |
 
 VPC Lattice access logs and VPC Flow Logs are complementary, not alternatives. VPC Lattice logs tell you *what happened at the application layer* (which service called which, with what identity, and what the response was). Flow Logs tell you *what happened at the network layer* (which IPs exchanged packets, how many bytes, whether the traffic was accepted or rejected by security groups). For service-to-service traffic flowing through VPC Lattice, use both to get full request-to-packet visibility.
@@ -309,11 +310,11 @@ VPC Flow Logs support cross-account delivery to S3 natively. The Flow Log in the
 
 For CloudWatch Logs delivery, cross-account requires a CloudWatch Logs destination in the receiving account with a resource policy allowing the source accounts. This is more complex to manage and is generally not recommended for large-scale centralized logging — use S3 instead.
 
-### Transit Gateway and Cloud WAN Flow Logs for org-wide visibility
+### Transit Gateway and Cloud WAN Flow Logs for org-wide visibility { #transit-gateway-flow-logs-for-org-wide-visibility }
 
 Transit Gateway and Cloud WAN Flow Logs are configured in the account that owns the transit gateway or core network, typically the networking account. Because cross-VPC traffic crosses that transit layer, one configuration gives organization-wide visibility, which is simpler than making sure every workload account enables and delivers VPC Flow Logs.
 
-They don't capture traffic within a single VPC (subnet-to-subnet, ENI-to-ENI), so you still need VPC Flow Logs for intra-VPC visibility.
+They don't capture traffic within a single VPC (subnet-to-subnet, ENI-to-ENI), so you still need VPC Flow Logs for intra-VPC visibility. Cloud WAN Flow Logs also don't record flows on tunnel-less Connect or Transit Gateway route table attachments; those appear on the underlying VPC attachment or peering, so during a migration over peering, run Transit Gateway Flow Logs too.
 
 ## Documentation
 

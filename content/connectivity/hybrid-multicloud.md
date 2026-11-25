@@ -110,7 +110,15 @@ When you have multiple Direct Connect connections, BGP attributes and communitie
 | **AS_PATH prepending** — longer is less preferred, but stripped on a public VIF using a private ASN | All |
 | **Longest prefix match** — overrides everything above | All |
 
-Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect gateway has configurable BGP policy knobs. For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point: you can filter and summarize Direct Connect gateway attachment routes, and configure BGP attributes on routes received from and advertised to on-premises. Verify the result from the AWS side by [viewing the BGP routes](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) on the VIF, where accepted routes show the communities AWS actually received with each prefix.
+Traffic engineering is primarily an on-premises exercise; neither the VIF nor the Direct Connect gateway has configurable BGP policy knobs.
+
+For AWS Cloud WAN deployments, Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html) add an AWS-side control point. You can filter and summarize Direct Connect gateway attachment routes, set BGP attributes on routes received from and advertised to on-premises, and match communities you set on-premises. To match communities, keep in mind the [restrictions](https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-cloud-wan.html#bgp-community-support-cloudwan):
+
+* Tag routes with your own ASN. The `7224:*` communities in the table above are consumed by Direct Connect and never reach Cloud WAN.
+* When two locations advertise the same prefix, only the best path's communities reach Cloud WAN.
+* A summarized route goes back on-premises with no communities, so an on-premises policy that matches the tag stops matching.
+
+Verify the result from the AWS side by [viewing the BGP routes](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-route-visibility.html) on the VIF, where accepted routes show the communities AWS actually received with each prefix.
 
 #### Plan prefix capacity before turn-up { #monitor-bgp-and-vif-metrics-and-verify-the-routes-themselves }
 

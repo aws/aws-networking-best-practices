@@ -119,7 +119,9 @@ Apply AWS Cloud WAN [routing policies](https://docs.aws.amazon.com/network-manag
 !!! note "Take into account"
 
     * VPC attachments support only inbound allow and drop actions. You cannot tag VPC routes with a BGP community at ingress, summarize them, or change their BGP attributes; classify their origin with contiguous prefixes from the address plan instead.
-    * BGP communities work on Site-to-Site VPN, Connect, and Direct Connect attachments, not on Transit Gateway route table attachments. Over Direct Connect, use standard communities with your own ASN ([restrictions](https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-cloud-wan.html#bgp-community-support-cloudwan)).
+    * BGP communities work on Site-to-Site VPN, Connect, and Direct Connect attachments. Transit Gateway route table attachments don't support BGP communities.
+    * Community ASNs in a policy can't overlap the core network ASN range, and on-premises routers can't advertise communities that contain an ASN the core network uses ([ASN constraints](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-routing-policies.html#cloudwan-routing-policies-considerations-bgp-asn-constraints)).
+    * Over Direct Connect, only standard communities reach Cloud WAN, and when two locations advertise the same prefix, only the best path's communities are kept ([restrictions](https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-cloud-wan.html#bgp-community-support-cloudwan)).
     * Summarization works only outbound on BGP-capable attachments and resets MED, local preference, AS path, and communities. Plan path preference for the generated summary separately.
     * Allow and drop end evaluation; summarize and set actions don't. Order modifications before terminal actions, and aggregate by Region because each policy supports a limited number of rules.
     * Routing policies don't apply to network function groups; use service insertion for inspection. The routing-information API exposes learned and advertised routes and BGP attributes before policy is applied, so verify final advertisements from the receiving peer.
@@ -136,7 +138,7 @@ This approach gives you audit trails, peer review, rollback capability through v
 
 #### Enable Cloud WAN Flow Logs from day one
 
-Enable [Cloud WAN Flow Logs](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html) when you deploy the core network to get a single, central view of traffic across every attachment, segment, and Region. Records include the source and destination segments and why packets were dropped, which is faster to query during an incident than logs from each VPC.
+Enable [Cloud WAN Flow Logs](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html) when you deploy the core network to get a central view of traffic across segments and Regions. Creating the first flow log moves the core network into an updating state, so it's easier at deployment than on a live network. Each flow is logged where it enters and where it leaves the core network, so filter on `flow-direction` before summing bytes. Tunnel-less Connect and Transit Gateway route table attachments aren't logged; their flows appear on the underlying VPC attachment or peering.
 
 ### When to use AWS Cloud WAN
 
