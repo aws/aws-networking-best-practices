@@ -16,7 +16,7 @@
         <link rel="prev" href="../external-traffic/">
       
       
-        <link rel="next" href="../notifications/">
+        <link rel="next" href="../network-performance/">
       
       
         
@@ -1187,6 +1187,8 @@
       
         
       
+        
+      
     
     
     
@@ -1583,6 +1585,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../network-performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2712,6 +2742,7 @@
 <li><strong>Transit Gateway path validation</strong>: Lambda in spoke <abbr title="Virtual Private Cloud">VPC</abbr> A sends a request to a known endpoint in spoke <abbr title="Virtual Private Cloud">VPC</abbr> B through the Transit Gateway. Validates routing, not just attachment state.</li>
 <li><strong>Direct Connect path validation</strong>: On-premises probe sends traffic to a known <abbr title="Virtual Private Cloud">VPC</abbr> endpoint. Validates the full path including <abbr title="Border Gateway Protocol">BGP</abbr> routing, not just the physical connection state.</li>
 </ul>
+<p>For hybrid and inter-Region paths, Network Synthetic Monitor provides managed probes without custom Lambda code and publishes a network health indicator that attributes degradation to the AWS network. See <a href="../network-performance/">Network Performance Monitoring</a> for when to use it instead of a custom check.</p>
 <p><strong><em>Key insight:</em></strong> <em>CloudWatch metrics tell you the service is healthy. Synthetic health checks tell you the path works end-to-end. You need both — a healthy service with broken routing still means an outage.</em></p>
 <h2 id="combining-service-monitoring-with-other-services">Combining service monitoring with other services<a class="headerlink" href="#combining-service-monitoring-with-other-services" title="Permanent link">&para;</a></h2>
 <table>
@@ -2747,6 +2778,11 @@
 <td><strong>Service monitoring + Amazon DevOps Guru</strong></td>
 <td>Explicit alarm thresholds and anomaly bands you define</td>
 <td>ML-driven anomaly detection across related resources that you didn't explicitly instrument</td>
+</tr>
+<tr>
+<td><strong>Service monitoring + Network Synthetic Monitor</strong></td>
+<td>Resource metrics that locate a fault on the Transit Gateway or Direct Connect resource</td>
+<td>Path-level round-trip time, packet loss, and AWS-side attribution (see <a href="../network-performance/">Network Performance Monitoring</a>)</td>
 </tr>
 <tr>
 <td><strong>Service monitoring + AWS Trusted Advisor</strong></td>
@@ -2805,6 +2841,7 @@
 <ul>
 <li><strong><a href="../internal-traffic/">Internal Traffic Monitoring</a></strong> — Covers <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs and traffic mirroring for understanding what's flowing through your network, complementing the service health view on this page.</li>
 <li><strong><a href="../external-traffic/">External Traffic Monitoring</a></strong> — Covers monitoring traffic between AWS and the internet, including CloudFront and edge service metrics.</li>
+<li><strong><a href="../network-performance/">Network Performance Monitoring</a></strong> — Covers path-level performance and attribution with Network Synthetic Monitor, Network Flow Monitor, and Internet Monitor, which service metrics cannot provide.</li>
 <li><strong><a href="../notifications/">Notifications</a></strong> — Covers alert routing, escalation policies, and integration with incident management tools. Service monitoring generates the signals; notifications deliver them to the right people.</li>
 </ul>
 <p><strong>Relationship to other sections:</strong></p>
@@ -2835,7 +2872,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 3, 2026 10:49:25 UTC">November 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 22:07:05 UTC">November 19, 2026</span>
   </span>
 
     
@@ -2949,13 +2986,13 @@
         
         
           
-          <a href="../notifications/" class="md-footer__link md-footer__link--next" aria-label="Next: Notifications">
+          <a href="../network-performance/" class="md-footer__link md-footer__link--next" aria-label="Next: Network Performance">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Notifications
+                Network Performance
               </div>
             </div>
             <div class="md-footer__button md-icon">

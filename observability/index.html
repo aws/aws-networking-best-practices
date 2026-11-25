@@ -1187,6 +1187,8 @@
       
         
       
+        
+      
     
     
     
@@ -1307,6 +1309,34 @@
     
   
     AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="network-performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Performance
   
 
     
@@ -1693,10 +1723,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-notifications" class="md-nav__link">
+  <a href="#4-network-performance-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Notifications
+        4. Network Performance Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Notifications
       
     </span>
   </a>
@@ -1748,7 +1789,7 @@
 
 
 <h1 id="observability">Observability<a class="headerlink" href="#observability" title="Permanent link">&para;</a></h1>
-<p>This section covers how to gain visibility into your AWS network — what traffic is flowing, whether the services carrying that traffic are healthy, and how to get notified when something goes wrong. Network observability is not a single dashboard; it is a layered approach where each data source answers different questions, and the combination gives you the full picture.</p>
+<p>This section covers how to gain visibility into your AWS network — what traffic is flowing, whether the services carrying that traffic are healthy, whether the network paths between endpoints perform well and who owns a degradation, and how to get notified when something goes wrong. Network observability is not a single dashboard; it is a layered approach where each data source answers different questions, and the combination gives you the full picture.</p>
 <p>Observability operates on top of the connectivity, application networking, and security layers. It consumes the logs, metrics, and events those layers produce and turns them into actionable insight. Without observability, you're operating blind: unable to troubleshoot connectivity failures, unable to detect security incidents, unable to attribute costs, and unable to validate that your architecture is performing as designed.</p>
 <h2 id="1-internal-traffic-monitoring">1. Internal Traffic Monitoring<a class="headerlink" href="#1-internal-traffic-monitoring" title="Permanent link">&para;</a></h2>
 <p><strong>Internal traffic monitoring</strong> provides visibility into traffic flows between resources within your AWS environment — <abbr title="Virtual Private Cloud">VPC</abbr>-to-<abbr title="Virtual Private Cloud">VPC</abbr>, subnet-to-subnet, ENI-to-ENI. This is the foundation of network security analysis, cost attribution, and connectivity troubleshooting.</p>
@@ -1783,7 +1824,17 @@
 <li><strong>Centralized dashboards</strong> — Cross-account, cross-Region visibility for the networking team</li>
 </ul>
 <p><strong><em>Key insight:</em></strong> <em>CloudWatch metrics tell you the service is healthy. Synthetic health checks tell you the path works end-to-end. You need both — a healthy service with broken routing still means an outage.</em></p>
-<h2 id="4-notifications">4. Notifications<a class="headerlink" href="#4-notifications" title="Permanent link">&para;</a></h2>
+<h2 id="4-network-performance-monitoring">4. Network Performance Monitoring<a class="headerlink" href="#4-network-performance-monitoring" title="Permanent link">&para;</a></h2>
+<p><strong>Network performance monitoring</strong> measures the performance of network paths and attributes degradation to the AWS network or to your own segments. Flow logs show what traversed the network and service metrics show whether a service is healthy, but neither shows whether the AWS-controlled part of a path is impaired. Amazon CloudWatch Network Monitoring provides 3 products for this, each with a different vantage point.</p>
+<p><strong>Key products:</strong></p>
+<ul>
+<li><strong>Network Synthetic Monitor</strong> — Managed probes with no agent. Round-trip time, packet loss, and a network health indicator (NHI) for AWS Direct Connect paths and inter-Region paths, including AWS Transit Gateway peering</li>
+<li><strong>Network Flow Monitor</strong> — Agents on Amazon <abbr title="Elastic Compute Cloud">EC2</abbr> instances and Amazon EKS nodes report <abbr title="Transmission Control Protocol">TCP</abbr> performance for real workload flows, with an NHI per monitor</li>
+<li><strong>Internet Monitor</strong> — City-network and ASN health events for internet-facing applications, with AWS or ISP attribution</li>
+<li><strong>Network health indicator</strong> — A binary attribution signal. NHI 100 means AWS-side degradation was observed. NHI 0 does not mean the whole path is healthy</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>Pair the NHI with packet loss and round-trip time. The NHI says whether AWS is involved, and the performance metrics say whether anyone is affected.</em></p>
+<h2 id="5-notifications">5. Notifications<a class="headerlink" href="#5-notifications" title="Permanent link">&para;</a></h2>
 <p><strong>Notifications</strong> bridge the gap between detecting a problem and getting the right person to act on it. The number one operational failure in monitoring is alert fatigue — teams ignoring alerts because too many are false positives or low-priority noise.</p>
 <p><strong>Key services:</strong></p>
 <ul>
@@ -1817,6 +1868,12 @@
 <p><a href="service-monitoring/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> AWS Services Monitoring</a></p>
 </li>
 <li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 16a3 3 0 0 1-3-3c0-1.12.61-2.1 1.5-2.61l9.71-5.62-5.53 9.58c-.5.98-1.51 1.65-2.68 1.65m0-13c1.81 0 3.5.5 4.97 1.32l-2.1 1.21C14 5.19 13 5 12 5a8 8 0 0 0-8 8c0 2.21.89 4.21 2.34 5.65h.01c.39.39.39 1.02 0 1.41s-1.03.39-1.42.01A9.97 9.97 0 0 1 2 13 10 10 0 0 1 12 3m10 10c0 2.76-1.12 5.26-2.93 7.07-.39.38-1.02.38-1.41-.01a.996.996 0 0 1 0-1.41A7.95 7.95 0 0 0 20 13c0-1-.19-2-.54-2.9L20.67 8C21.5 9.5 22 11.18 22 13"/></svg></span> <strong>Network Performance Monitoring</strong></p>
+<hr />
+<p>Network Synthetic Monitor, Network Flow Monitor, Internet Monitor, and the network health indicator for attributing path degradation to the AWS network.</p>
+<p><a href="network-performance/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Network Performance Monitoring</a></p>
+</li>
+<li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23 7v6h-2V7m0 8h2v2h-2M12 2a2 2 0 0 0-2 2 2 2 0 0 0 0 .29C7.12 5.14 5 7.82 5 11v6l-2 2v1h18v-1l-2-2v-6c0-3.18-2.12-5.86-5-6.71A2 2 0 0 0 14 4a2 2 0 0 0-2-2m-2 19a2 2 0 0 0 2 2 2 2 0 0 0 2-2Z"/></svg></span> <strong>Notifications</strong></p>
 <hr />
 <p>Alarm design, severity tiers, composite alarms, EventBridge state-change routing, and cross-account event forwarding.</p>
@@ -1846,7 +1903,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 3, 2026 19:56:19 UTC">June 3, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 22:07:05 UTC">November 19, 2026</span>
   </span>
 
     

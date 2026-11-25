@@ -1298,6 +1298,8 @@
       
         
       
+        
+      
     
     
     
@@ -1420,6 +1422,34 @@
     
   
     AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/network-performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Performance
   
 
     
@@ -2126,19 +2156,25 @@
 <td>Measure real-time packet loss and latency between my <abbr title="Elastic Compute Cloud">EC2</abbr> instances and AWS services</td>
 <td><strong>Network Flow Monitor</strong> — lightweight agents on instances report <abbr title="Transmission Control Protocol">TCP</abbr> performance stats; dashboards show per-flow packet loss, latency, and attribution</td>
 <td>Requires agent installation on each instance; only covers <abbr title="Transmission Control Protocol">TCP</abbr>-based flows</td>
-<td><a href="../observability/service-monitoring/">AWS Services Monitoring</a></td>
+<td><a href="../observability/network-performance/">Network Performance</a></td>
 </tr>
 <tr>
 <td>Monitor internet performance and availability for my internet-facing applications</td>
 <td><strong>Internet Monitor</strong> — uses AWS global network data to baseline performance; surfaces health events and suggests routing improvements via CloudFront or alternate Regions</td>
 <td>Visibility limited to traffic paths AWS can observe; no on-premises coverage</td>
-<td><a href="../observability/service-monitoring/">AWS Services Monitoring</a></td>
+<td><a href="../observability/network-performance/">Network Performance</a></td>
 </tr>
 <tr>
 <td>Track latency and packet loss for hybrid connections to on-premises destinations</td>
-<td><strong>Network Synthetic Monitor</strong> — fully-managed probes from AWS resources to on-prem IPs; no agent install required; health event alerts with configurable thresholds</td>
+<td><strong>Network Synthetic Monitor</strong> — fully-managed probes from AWS resources to on-prem IPs; no agent install required; alarms on round-trip time and packet loss with configurable thresholds</td>
 <td>Only measures AWS-to-on-prem direction; requires destination IPs to be reachable from probe source</td>
-<td><a href="../observability/service-monitoring/">AWS Services Monitoring</a></td>
+<td><a href="../observability/network-performance/">Network Performance</a></td>
+</tr>
+<tr>
+<td>Find out whether degradation on a Direct Connect or inter-Region path is caused by the AWS network</td>
+<td><strong>Network health indicator (NHI)</strong> from Network Synthetic Monitor (Direct Connect, Transit Gateway peering, <abbr title="Virtual Private Cloud">VPC</abbr> peering, PrivateLink, <abbr title="Elastic Compute Cloud">EC2</abbr> public IP paths)</td>
+<td>NHI 100 means AWS-side degradation was observed; NHI 0 does not mean the whole path is healthy. For Transit Gateway peering it covers the path only up to the peering connection. Network Flow Monitor also emits an NHI, but only for <abbr title="Transmission Control Protocol">TCP</abbr> flows from instances running its agent, measured up to the edge of another Region, and not for Direct Connect paths</td>
+<td><a href="../observability/network-performance/">Network Performance</a></td>
 </tr>
 </tbody>
 </table>
@@ -2207,7 +2243,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 7, 2026 11:37:45 UTC">November 7, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 24, 2026 23:14:00 UTC">November 24, 2026</span>
   </span>
 
     

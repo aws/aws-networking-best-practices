@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://aws.github.io/aws-networking-best-practices/observability/notifications/">
       
       
-        <link rel="prev" href="../service-monitoring/">
+        <link rel="prev" href="../network-performance/">
       
       
         <link rel="next" href="../../changelog/">
@@ -1187,6 +1187,8 @@
       
         
       
+        
+      
     
     
     
@@ -1307,6 +1309,34 @@
     
   
     AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../network-performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Performance
   
 
     
@@ -2234,6 +2264,11 @@
 <td>Account structure, delegated administration, Organization-wide Health events</td>
 </tr>
 <tr>
+<td><strong>Notifications + Network Synthetic Monitor</strong></td>
+<td>Alarm routing for the network health indicator, packet loss, and round-trip time, with severity set by whether the NHI confirms AWS-side impairment (see <a href="../network-performance/">Network Performance Monitoring</a>)</td>
+<td>Path-level measurements and AWS-side attribution</td>
+</tr>
+<tr>
 <td><strong>Composite Alarms + Simple Alarms</strong></td>
 <td>Noise reduction through boolean logic on alarm states</td>
 <td>Individual metric evaluation per resource or per condition</td>
@@ -2284,6 +2319,7 @@
 <h2 id="related-observability-pages">Related Observability Pages<a class="headerlink" href="#related-observability-pages" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong><a href="../service-monitoring/">AWS Services Monitoring</a></strong> — The metrics and health checks that feed into the notification pipeline covered on this page</li>
+<li><strong><a href="../network-performance/">Network Performance Monitoring</a></strong> — The NHI, packet loss, and round-trip time signals, and Internet Monitor health events, that drive path-degradation notifications</li>
 <li><strong><a href="../internal-traffic/">Internal Traffic Monitoring</a></strong> — <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs and traffic mirroring that provide the raw data for anomaly-based network alarms</li>
 <li><strong><a href="../external-traffic/">External Traffic Monitoring</a></strong> — Internet-facing traffic visibility that drives <abbr title="Distributed Denial of Service">DDoS</abbr> and abuse notifications</li>
 </ul>
@@ -2318,7 +2354,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="June 17, 2026 23:41:30 UTC">June 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 22:07:05 UTC">November 19, 2026</span>
   </span>
 
     
@@ -2415,7 +2451,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../service-monitoring/" class="md-footer__link md-footer__link--prev" aria-label="Previous: AWS Services">
+          <a href="../network-performance/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Network Performance">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2425,7 +2461,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                AWS Services
+                Network Performance
               </div>
             </div>
           </a>
