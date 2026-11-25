@@ -118,6 +118,32 @@ To alert on DNS activity rather than just retain it, deliver Resolver query logs
 
 Alarm on a baseline you establish, not a fixed count: query logs record only unique queries, so lookups answered from the cache are not logged and counts run low. Treat this as detection, not prevention — it sees only what reaches the resolver, so DNS-over-HTTPS and hardcoded-IP traffic bypass it; keep Network Firewall or other inspection for those.
 
+### Protecting critical records
+
+#### Protect critical records from accidental change
+
+Route 53 record set protection rejects any `ChangeResourceRecordSets` request that creates, updates, or deletes records with a protected name and type, in public and private hosted zones. The protection applies to every principal, including those with full Route 53 permissions, so a direct change is blocked and a deliberate extra step is forced. It prevents accidents and is not a security boundary: a principal with broad permissions, such as `route53:*`, can also delete the protection and then change the record (see the permission guidance below). Use it for records that rarely change and would cause an outage if changed by mistake, such as the apex records of a production domain, MX records, and records that route traffic to critical endpoints. Protect only the few records where a mistake is expensive. Each protection turns a routine change into a privileged two-step change, and the number of protections per hosted zone is limited by a [quota](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#limits-api-entities-records), so protecting broadly slows down routine changes and can exhaust that quota.
+
+Know how it behaves before you rely on it:
+
+* **Scope is name and type.** One protection covers every record with that name and type, whatever its set identifier. You can't protect only some of a set of weighted records. The type is part of the scope: a protection on `A` doesn't cover `AAAA` for the same name, so a dual-stack name needs one protection for each. With only `A` protected, someone can still change or delete the `AAAA` record, and IPv6 clients fail while IPv4 clients keep working, which is a partial outage that is hard to spot.
+* **Rejection is whole-batch.** If any change in a request touches a protected name and type, Route 53 rejects the entire request with `InvalidChangeBatch` and applies none of it. A change that touches a protected record fails in the AWS CLI, the AWS SDKs, and AWS CloudFormation; the [Route 53 documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html#rrset-protection-blocked-changes) and the [CloudFormation reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html#aws-resource-route53-recordsetprotection--remarks) name the error differently (`InvalidChangeBatch` and `ResourceConflict`), so don't key a runbook or alarm to one error name.
+* **CloudFormation updates are ordered.** CloudFormation deletes a removed protection only in its cleanup phase, after it changes the record, so a stack update that changes a protected record and removes its protection fails. Adding a protection and changing the same record in one update can leave the stack in a failed rollback state, and changing a protection's comment replaces it, so the record is unprotected during the replacement. A protection that stays behind, for example with `DeletionPolicy: Retain`, blocks deleting the record and fails teardown. Ship record changes and protection changes as separate stack updates or pipeline stages, and let one pipeline own removal of stray protections. The CloudFormation reference describes the procedures.
+* **A protection can reserve a name.** You can create one for a name and type that has no records yet, which stops anyone from creating that record.
+* **Write a useful comment.** The optional comment (up to 256 characters) appears in the error when a change is rejected. Say why the record is protected and whom to contact.
+
+Changing a protected record is deliberate: delete the protection, make the change, then create the protection again. A protection can't be edited, so changing its comment also means deleting and recreating it. Plan this into your change process and runbooks. Until the protection is recreated, any principal with change permission can alter the record, and if the change step fails and nothing recreates the protection, the record stays unprotected with no signal. Have automation treat delete, change, and recreate as one unit that restores the protection on failure, and alert on `DeleteResourceRecordSetProtections` calls: [AWS CloudTrail](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/logging-using-cloudtrail.html) logs requests to create, delete, and list protections.
+
+Protections are only as strong as who can remove them. Any principal with `route53:DeleteResourceRecordSetProtections` on the hosted zone can delete any protection in it, and the three record set protection actions (create, delete, and list) support only the hosted zone resource and no service-specific condition keys. Grant that permission to a small set of administrators and consider denying it to everyone else. In an AWS Organizations environment where a networking account owns the hosted zones, apply a [service control policy](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html) (SCP) deny at the OU that contains the accounts that own hosted zones, and exempt the central DNS or networking admin role. SCPs don't apply to the management account, and because the actions have no condition keys you can't allow removal of some protections and deny others in the same zone. The protection is only as strong as the broadest delete grant.
+
+A hosted zone that has any protections, including protections on names with no records, can't be deleted. Add a step to teardown automation that lists and deletes the protections first.
+
+Protections don't change how Route 53 answers DNS queries. They only control changes to records.
+
+***Key insight:*** *Record set protection prevents accidents, not deliberate changes. It is only as strong as the control over who can delete protections.*
+
+For the console and CLI steps, see [Protecting records from changes](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html). For an example policy that denies removing protections, see [Example 5: Deny removal of record set protections](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/access-control-managing-permissions.html#access-policy-example-deny-delete-rrset-protections).
+
 ### IPv6 considerations
 
 #### Configure dual-stack Resolver endpoints from the start
@@ -178,6 +204,22 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html)
 
+*   :material-file-document: **Protecting records from changes**
+
+    ---
+
+    How record set protections work, which records to protect, how rejected changes and zone deletion behave, and the permissions that control removal.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html)
+
+*   :material-file-document: **AWS::Route53::RecordSetProtection**
+
+    ---
+
+    CloudFormation resource for managing protections, including update ordering, rollback behavior, and importing existing protections.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html)
+
 *   :material-post: **Route 53 blog posts**
 
     ---
@@ -193,7 +235,7 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 **Relationship to other Foundation topics:**
 
 * **[Amazon VPC](vpc.md)**: Every VPC gets a Route 53 Resolver automatically. VPC design (number of VPCs, account placement) determines how many private hosted zone associations and Resolver endpoints you need.
-* **[AWS Organizations](organizations.md)**: Route 53 Profiles share DNS configuration at the OU level. Your OU structure determines how DNS configuration is distributed.
+* **[AWS Organizations](organizations.md)**: Route 53 Profiles share DNS configuration at the OU level, and an SCP at the OU restricts who can remove record set protections. Your OU structure determines how DNS configuration is distributed and where that control applies.
 
 **Relationship to Connectivity topics:**
 
