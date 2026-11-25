@@ -185,6 +185,7 @@ The real cost risk is not the notification services themselves — it's creating
 | **AWS Chatbot + Slack/Teams** | Formatted alarm delivery with interactive actions | Team communication, acknowledgment, runbook execution from chat |
 | **EventBridge + Lambda** | Event routing to compute targets | Automated remediation logic (failover, scaling, ticket creation) |
 | **CloudWatch + AWS Organizations** | Cross-account alarm aggregation in a centralized monitoring account | Account structure, delegated administration, Organization-wide Health events |
+| **Notifications + Network Synthetic Monitor** | Alarm routing for the network health indicator, packet loss, and round-trip time, with severity set by whether the NHI confirms AWS-side impairment (see [Network Performance Monitoring](network-performance.md)) | Path-level measurements and AWS-side attribution |
 | **Composite Alarms + Simple Alarms** | Noise reduction through boolean logic on alarm states | Individual metric evaluation per resource or per condition |
 
 ## Documentation
@@ -244,6 +245,7 @@ The real cost risk is not the notification services themselves — it's creating
 ## Related Observability Pages
 
 * **[AWS Services Monitoring](service-monitoring.md)** — The metrics and health checks that feed into the notification pipeline covered on this page
+* **[Network Performance Monitoring](network-performance.md)** — The NHI, packet loss, and round-trip time signals, and Internet Monitor health events, that drive path-degradation notifications
 * **[Internal Traffic Monitoring](internal-traffic.md)** — VPC Flow Logs and traffic mirroring that provide the raw data for anomaly-based network alarms
 * **[External Traffic Monitoring](external-traffic.md)** — Internet-facing traffic visibility that drives DDoS and abuse notifications
 
