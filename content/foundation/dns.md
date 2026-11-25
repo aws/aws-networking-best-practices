@@ -204,6 +204,22 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html)
 
+*   :material-file-document: **Protecting records from changes**
+
+    ---
+
+    How record set protections work, which records to protect, how rejected changes and zone deletion behave, and the permissions that control removal.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html)
+
+*   :material-file-document: **AWS::Route53::RecordSetProtection**
+
+    ---
+
+    CloudFormation resource for managing protections, including update ordering, rollback behavior, and importing existing protections.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html)
+
 *   :material-post: **Route 53 blog posts**
 
     ---
@@ -219,7 +235,7 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 **Relationship to other Foundation topics:**
 
 * **[Amazon VPC](vpc.md)**: Every VPC gets a Route 53 Resolver automatically. VPC design (number of VPCs, account placement) determines how many private hosted zone associations and Resolver endpoints you need.
-* **[AWS Organizations](organizations.md)**: Route 53 Profiles share DNS configuration at the OU level. Your OU structure determines how DNS configuration is distributed.
+* **[AWS Organizations](organizations.md)**: Route 53 Profiles share DNS configuration at the OU level, and an SCP at the OU restricts who can remove record set protections. Your OU structure determines how DNS configuration is distributed and where that control applies.
 
 **Relationship to Connectivity topics:**
 
