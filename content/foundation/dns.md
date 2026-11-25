@@ -252,4 +252,4 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 **Relationship to Observability topics:**
 
 * **[AWS Services Monitoring](../observability/service-monitoring.md)**: Covers the existing Route 53 Resolver and DNS Firewall CloudWatch metrics (including `FirewallRuleGroupQueryVolume`) and dashboards that the DNS metrics-and-alarms guidance on this page builds on.
-* **[Internal Traffic Monitoring](../observability/internal-traffic.md)**: Positions DNS query logging and DNS Firewall metrics as the DNS-layer signal alongside VPC and Transit Gateway Flow Logs.
+* **[Internal Traffic Monitoring](../observability/internal-traffic.md)**: Positions DNS query logging and DNS Firewall metrics as the DNS-layer signal alongside VPC, Transit Gateway, and Cloud WAN Flow Logs.
