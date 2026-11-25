@@ -22,7 +22,7 @@ jobs:
               "repo": "${{ github.repository }}",
               "pr_number": "${{ github.event.pull_request.number }}",
               "pr_title": ${{ toJSON(github.event.pull_request.title) }},
-              "pr_author": "${{ github.event.pull_request.user.login }}",
+              "pr_author": ${{ toJSON(github.event.pull_request.user.login) }},
               "pr_url": "${{ github.event.pull_request.html_url }}",
-              "branch": "${{ github.event.pull_request.head.ref }}"
+              "branch": ${{ toJSON(github.event.pull_request.head.ref) }}
             }
