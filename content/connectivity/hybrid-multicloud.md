@@ -10,7 +10,7 @@ Connecting AWS to networks outside AWS covers two distinct concerns, and the rig
 Hybrid and multi-cloud overview — [Drawio Source](../assets/connectivity/hybrid-overview.drawio)
 ///
 
-For on-premises connectivity, [AWS Direct Connect](https://aws.amazon.com/directconnect/) delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. [AWS Site-to-Site VPN](https://aws.amazon.com/vpn/site-to-site-vpn/) provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. **SD-WAN integration** uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party SD-WAN overlays into the AWS network plane.
+For on-premises connectivity, [AWS Direct Connect](https://aws.amazon.com/directconnect/) delivers private, predictable bandwidth over dedicated circuits and is the foundation for most production hybrid deployments. Where your network provider supports it, [AWS Interconnect - last mile](https://aws.amazon.com/interconnect/lastmile/) provisions that private path as one managed, resilient connection. [AWS Site-to-Site VPN](https://aws.amazon.com/vpn/site-to-site-vpn/) provides encrypted connectivity over the internet, useful when private circuits are not needed or as a complement to Direct Connect for layer-3 encryption. **SD-WAN integration** uses Transit Gateway Connect or AWS Cloud WAN Connect attachments to bring third-party SD-WAN overlays into the AWS network plane.
 
 For multi-cloud, first reduce avoidable cross-cloud movement through application and data placement. For traffic that must cross the boundary, [AWS Interconnect](https://docs.aws.amazon.com/interconnect/latest/userguide/what-is-interconnect.html) is the recommended option: a managed service that creates a direct, private connection between your AWS VPCs and another cloud provider's networks without requiring cross-connects at a colocation, partner coordination, or manual router configuration. The established alternatives (partner-based Direct Connect cross-connects, or Site-to-Site VPN between clouds) remain valid where AWS Interconnect doesn't yet support your other cloud, but they carry more operational overhead — a Region-pair gap alone is usually solved by extending inside each cloud instead.
 
@@ -73,6 +73,20 @@ Start with the failure the network must survive, then choose the AWS Direct Conn
 | **Locations and devices** | Place independent connections on separate AWS devices in more than one Direct Connect location, terminate them on separate on-premises routers, and add carrier diversity where one provider could affect both paths | Connections in one location or on one device share the same failure |
 | **Link aggregation groups** | Treat a LAG as one connection for resiliency and use separate connections or LAGs across devices and locations for availability. Set minimum links so the LAG withdraws before its remaining members become overloaded | Every member terminates on the same Direct Connect endpoint, and the default minimum of 0 provides no capacity guardrail; a LAG adds bandwidth, not device or location diversity |
 | **Detection and validation** | AWS enables BFD on its side; enable compatible BFD on the on-premises router. Without BFD, route withdrawal falls back to the default [BGP hold timer](https://docs.aws.amazon.com/directconnect/latest/UserGuide/bgp-specific-settings.html) of about 90 seconds. Alarm on `ConnectionState` for every member, and run the Direct Connect failover test before production and after material routing changes | Redundant paths protect the workload only when failures are detected, routes converge, and the surviving path carries traffic |
+
+#### Use AWS Interconnect - last mile where your network provider supports it
+
+[AWS Interconnect - last mile](https://docs.aws.amazon.com/interconnect/latest/userguide/getting-started-lastmile.html) delivers the Direct Connect maximum resiliency design as one managed connection. AWS and your network provider provision four connections across two sites, configure BGP and VLANs, and attach the Interconnect directly to a Direct Connect gateway. It supports IPv4 and IPv6.
+
+Use last mile when your sites already connect to a supported provider in a covered metro, as listed in the [regional availability documentation](https://docs.aws.amazon.com/interconnect/latest/userguide/region-availability.html). Use Direct Connect everywhere else.
+
+Three parts of the design stay yours:
+
+* **First mile:** the [SLA](https://aws.amazon.com/interconnect/sla/) ends at the demarcation point and requires an endpoint in two or more Availability Zones (see [Treat a single Interconnect as the resilient unit](#treat-a-single-interconnect-as-the-resilient-unit)). MACsec runs only between AWS and provider devices, so plan path diversity and encryption from your site into the provider's network.
+* **Regional reach:** virtual private gateways and Transit Gateways associate with the Interconnect only in its local Region. AWS Cloud WAN reaches it from any Core Network Edge.
+* **Cost:** AWS charges hourly by bandwidth and a [pricing tier](https://aws.amazon.com/interconnect/lastmile/pricing/) set by the metro and the farthest AWS Region attached to the Direct Connect gateway, with no per-GB charge. The provider bills its service separately.
+
+***Key insight:*** *Last mile gives you the AWS side of maximum resiliency as a managed service. The first mile to the provider is still yours to design.*
 
 #### Size capacity for the failure state
 
@@ -138,7 +152,7 @@ Choose the path from the workload requirement:
 | Predictable bandwidth or latency beyond what the public internet provides | **Direct Connect** | A dedicated private path delivers more consistent network performance |
 | Sustained data transfer out of AWS | **Direct Connect** | Lower egress pricing can offset the connection and provider costs |
 | Compliance requires traffic to avoid the public internet | **Direct Connect** | Traffic stays on the private connectivity path |
-| Connectivity must be available in days | **Site-to-Site VPN** | Direct Connect requires provider coordination and physical provisioning |
+| Connectivity must be available in days | **Site-to-Site VPN**, or **AWS Interconnect - last mile** where your sites already connect to a supported provider in your metro | Direct Connect requires provider coordination and physical provisioning; Interconnect - last mile uses capacity AWS and the provider have already provisioned |
 | Traffic is low-volume or short-lived | **Site-to-Site VPN** | A dedicated connection adds cost and provisioning work that the workload does not justify |
 
 For production resilience, use independent Direct Connect connections across locations, adding provider diversity where one carrier could affect both paths. Site-to-Site VPN can provide fast-start connectivity or an encryption overlay, but it does not replace resilient Direct Connect connections.
@@ -149,7 +163,8 @@ For production resilience, use independent Direct Connect connections across loc
 | --- | --- | --- |
 | **Direct Connect + Site-to-Site VPN** | Private path into AWS | IPsec overlay on top of Direct Connect when MACsec is not available (for example, sub-10 Gbps hosted connections or compliance baselines that require layer-3 encryption) |
 | **Direct Connect + SD-WAN (via TGW/Cloud WAN Connect)** | Underlying transport between on-premises SD-WAN appliances and AWS | Overlay delivered by the SD-WAN solution |
-| **Direct Connect + AWS Interconnect (multi-cloud)** | On-premises hybrid path | Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect gateway |
+| **Direct Connect + AWS Interconnect - last mile** | Private path for sites and metros that Interconnect - last mile does not cover | Managed private path for sites served by a supported network provider; both can attach to the same Direct Connect gateway |
+| **Direct Connect + AWS Interconnect - multicloud** | On-premises hybrid path | Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect gateway |
 
 ### Documentation
 
@@ -162,6 +177,14 @@ For production resilience, use independent Direct Connect connections across loc
     Complete service documentation covering connections, virtual interfaces, Direct Connect gateway, SiteLink, and MACsec.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html)
+
+*   :material-file-document: **AWS Interconnect - last mile documentation**
+
+    ---
+
+    Managed on-premises connectivity through a supported network provider: prerequisites, attach point, and network planning choices.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/interconnect/latest/userguide/getting-started-lastmile.html)
 
 *   :material-file-document-outline: **Resiliency Toolkit**
 
@@ -186,6 +209,14 @@ For production resilience, use independent Direct Connect connections across loc
     Port-hour charges for dedicated and hosted connections, plus data transfer out pricing that is typically lower than internet egress.
 
     [:octicons-arrow-right-24: Pricing](https://aws.amazon.com/directconnect/pricing/)
+
+*   :material-currency-usd: **AWS Interconnect - last mile pricing**
+
+    ---
+
+    Hourly charges set by provisioned bandwidth and a pricing tier based on the metro and the farthest attached AWS Region, with no per-GB data transfer. The provider bills its service separately.
+
+    [:octicons-arrow-right-24: Pricing](https://aws.amazon.com/interconnect/lastmile/pricing/)
 
 </div>
 
@@ -653,17 +684,19 @@ Hybrid and multi-cloud stack — [Drawio Source](../assets/connectivity/hybrid-s
 Organizations building hybrid and multi-cloud connectivity from scratch have the opportunity to adopt the patterns that scale best from day one:
 
 1. **On-premises path and resiliency**: AWS Direct Connect terminating on a Transit Gateway or AWS Cloud WAN core network through a Direct Connect gateway, designed to the Resiliency Toolkit's maximum resiliency model (multiple connections across multiple locations and providers). Resiliency comes from multiple Direct Connect connections, not from pairing a single Direct Connect with a VPN fallback.
-2. **VPN where it adds value**: AWS Site-to-Site VPN on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.
-3. **Multi-cloud**: Minimize avoidable cross-cloud movement before sizing the link, then use AWS Interconnect where supported. Use partner-based Direct Connect or Site-to-Site VPN between clouds only where AWS Interconnect coverage isn't there yet.
-4. **SD-WAN integration**: Transit Gateway Connect or AWS Cloud WAN Connect attachments if the organization already runs SD-WAN across branches and wants that overlay to extend into AWS.
-5. **Application access**: See [Remote Access](remote-access.md) for AWS Verified Access and AWS Client VPN guidance.
+2. **Managed on-premises path where available**: AWS Interconnect - last mile for sites already connected to a supported network provider in a covered metro, which can attach to the same Direct Connect gateway as your Direct Connect connections.
+3. **VPN where it adds value**: AWS Site-to-Site VPN on the same Transit Gateway or AWS Cloud WAN for fast-start sites that don't yet have Direct Connect, short-lived connectivity, or as an IPsec overlay on top of Direct Connect when MACsec is not available.
+4. **Multi-cloud**: Minimize avoidable cross-cloud movement before sizing the link, then use AWS Interconnect - multicloud where supported. Use partner-based Direct Connect or Site-to-Site VPN between clouds only where AWS Interconnect coverage isn't there yet.
+5. **SD-WAN integration**: Transit Gateway Connect or Cloud WAN Connect attachments if the organization already runs SD-WAN across branches and wants that overlay to extend into AWS.
+6. **Application access**: See [Remote Access](remote-access.md) for AWS Verified Access and AWS Client VPN guidance.
 
 ### Existing environments
 
 Organizations running established hybrid patterns have working foundations that don't need to be replaced:
 
 1. **AWS Direct Connect** remains the foundation. If circuits are terminated on virtual private gateways rather than Transit Gateway or AWS Cloud WAN, evaluate consolidating onto a hub through a Direct Connect gateway as the environment grows.
-2. **AWS Site-to-Site VPN** remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated VPN for sites distant from the Region.
-3. **Partner-based Direct Connect to another cloud** keeps working and should not be ripped out for its own sake. Before renewing cross-connects or increasing capacity, review current cross-cloud flows and remove repeated or unused transfers. Evaluate AWS Interconnect for new multi-cloud pairs or when existing cross-connects come up for renewal.
-4. **SD-WAN integrations** on Transit Gateway Connect can migrate incrementally to AWS Cloud WAN when multi-Region management complexity grows; AWS Cloud WAN peers with existing Transit Gateways, so SD-WAN traffic doesn't have to move all at once.
-5. **AWS Client VPN** can coexist with AWS Verified Access during migration. See [Remote Access](remote-access.md) for the recommended migration path.
+2. **AWS Interconnect - last mile** can attach to your existing Direct Connect gateway if every virtual private gateway or Transit Gateway associated with it is in the Interconnect's local Region. Cloud WAN associations have no such limit.
+3. **AWS Site-to-Site VPN** remains fully supported. Consider Large tunnels for high-throughput sites and Accelerated VPN for sites distant from the Region.
+4. **Partner-based Direct Connect to another cloud** keeps working and should not be ripped out for its own sake. Before renewing cross-connects or increasing capacity, review current cross-cloud flows and remove repeated or unused transfers. Evaluate AWS Interconnect - multicloud for new multi-cloud pairs or when existing cross-connects come up for renewal.
+5. **SD-WAN integrations** on Transit Gateway Connect can migrate incrementally to Cloud WAN when multi-Region management complexity grows; Cloud WAN peers with existing Transit Gateways, so SD-WAN traffic doesn't have to move all at once.
+6. **AWS Client VPN** can coexist with AWS Verified Access during migration. See [Remote Access](remote-access.md) for the recommended migration path.
