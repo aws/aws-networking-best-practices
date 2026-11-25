@@ -165,6 +165,7 @@ This approach avoids a disruptive one-step migration and lets you validate the n
 | **AWS Cloud WAN + PrivateLink** | Inter-VPC routing | Private access to AWS services (gateway/interface endpoints) |
 | **AWS Cloud WAN + Transit Gateway** | Global policy-driven network (during migration, both run side by side) | Regional hub-and-spoke routing for VPCs not yet migrated |
 | **AWS Cloud WAN + VPC Peering** | Primary network backbone | Direct low-latency, high-throughput connectivity for specific VPC pairs (for example, database replication) |
+| **AWS Cloud WAN + Route 53 Global Resolver** | Private path and segments that act as DNS access sources | DNS resolution for hybrid and branch clients; see [DNS Architecture](../foundation/dns.md#global-resolver-for-clients-outside-vpcs) |
 
 ### Documentation
 
