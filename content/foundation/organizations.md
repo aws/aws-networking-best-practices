@@ -118,6 +118,7 @@ Most organizations think of SCPs as security guardrails. For networking, SCPs ar
 * Deny `ec2:CreateVpc` with CIDR blocks outside your IPAM-managed ranges — this prevents IP conflicts before they happen
 * Require the `network-segment` tag on `ec2:CreateVpc` — this enables automated Cloud WAN attachment acceptance
 * Deny `ec2:CreateTransitGateway` in workload accounts — only the networking account should own Transit Gateways
+* Deny `route53:DeleteResourceRecordSetProtections` except for the central DNS or networking admin role. Record set protection is only as strong as the control over who can remove it (see [DNS Architecture](dns.md#protect-critical-records-from-accidental-change))
 
 The key insight: SCPs make your network architecture self-enforcing. Teams cannot accidentally (or intentionally) deviate from the intended topology because the API calls that would create deviations are denied at the Organizations level.
 
