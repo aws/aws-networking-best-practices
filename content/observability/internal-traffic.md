@@ -240,7 +240,7 @@ When using dual-stack VPCs, include `pkt-srcaddr` and `pkt-dstaddr` in your cust
 
 #### Understand the cost model before scaling Flow Log collection
 
-VPC, Transit Gateway, and Cloud WAN Flow Logs have no charge for the feature itself. You pay for what happens to the logs: ingestion, storage, and analysis. At scale, these add up:
+VPC, Transit Gateway, and Cloud WAN Flow Logs have no charge for the feature itself. You pay for what happens to the logs: ingestion, storage, and analysis. Cloud WAN Flow Logs are vended logs, so [vended-log ingestion and destination charges](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html#cwan-flow-logs-pricing) apply. At scale, these add up:
 
 * **Ingestion**: The per-GB charge for delivering logs to the destination. S3 is cheapest (tiered per-GB rate), CloudWatch Logs is roughly 2× the S3 rate. See [CloudWatch pricing](https://aws.amazon.com/cloudwatch/pricing/) for current values.
 * **Storage**: S3 Standard charges per-GB/month. Use S3 Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.
