@@ -134,6 +134,25 @@ For workloads that handle sensitive data or operate in regulated environments, c
 
 Allow-list mode is operationally heavier — every new external dependency requires a rule update — but it eliminates entire categories of exfiltration risk. Pair it with a self-service process for application teams to request domain additions through your change management system.
 
+#### Build the allow list with an Automated Allowlist rule
+
+If you do not know in advance every domain your workloads need, let DNS Firewall build the first version of the allow list. An [Automated Allowlist rule](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/firewall-advanced-automated-allowlists.html) is a DNS Firewall Advanced rule with the `ALLOW` action. DNS Firewall reads the queries from every VPC that its rule group is associated with, including VPCs that use the rule group through Route 53 Profiles or that receive it through Firewall Manager or AWS RAM. It lists the domains those VPCs queried during a look-back period you choose, from 1 hour to 1 week, as observed domains. You review them and add the ones you want to the rule's domain list.
+
+Lay out the rule group in this order, using the priority numbers (lowest runs first):
+
+1. Optionally, rules that block known threats, so that approving an observed domain cannot override a threat block. In the same rule group, give them lower priority numbers than the Automated Allowlist rule. When they are in another rule group, associate that group with your VPCs at a lower priority number than the Automated Allowlist rule's group.
+2. The Automated Allowlist rule.
+3. A rule that blocks all other domains, using a domain list that contains the wildcard `*`, with a higher priority number than the Automated Allowlist rule.
+
+Keep these points in mind:
+
+* **Set the look-back period to cover your normal activity.** You can't change it after you create the rule. Choose a period long enough to include periodic jobs, such as weekly batch runs.
+* **Review the observed domains soon after you create the rule.** Domains from the look-back period that your VPCs keep querying and that no rule blocks move to `ALLOWED` within about a day. After the rule is created, DNS Firewall adds a domain to the observed list when a DNS Firewall rule blocks a query for it, so the block-all rule is what surfaces new domains for review.
+* **Allow the redirection targets as well.** The observed list shows the names your VPCs queried, not the targets in the answers, such as CNAME targets. Before you add the block-all rule, check the Resolver query logs and add the targets, or a wildcard domain that covers them. Otherwise queries for those domains are blocked.
+* **Treat approval as a review step.** Observed domains can include domains that another rule blocked. Approve each one deliberately.
+* **Keep a copy of the list outside the rule.** Deleting the rule also deletes its domain list, and a new rule starts with a new list and none of the previous rule's observed or rejected domains. If you already have an allow list, you can copy it into the new rule once when you create it. Keeping your approved domains in code makes it possible to rebuild the rule.
+* **Plan around the rule's limits.** A rule group can hold one Automated Allowlist rule, the rule is Regional, and DNS Firewall keeps up to 10,000 domains in each status.
+
 #### Deploy managed domain lists for threat intelligence
 
 AWS provides [managed domain lists](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall-managed-domain-lists.html) for DNS Firewall that cover known malware domains, botnet C2 infrastructure, and newly observed domains. Enable these as a baseline block list in every VPC, even when you also run allow-list mode on specific workloads. The managed lists are updated by AWS threat intelligence and require no maintenance from your team.
@@ -214,6 +233,8 @@ A practical model for multi-account egress governance:
 | **Workload-specific rules** | Application team | Single VPC or account | Application-specific third-party APIs, partner endpoints |
 
 Firewall Manager's priority ordering makes this layering work: central rules evaluate first, application-team rules layer on top without overriding the baseline.
+
+The exception is a rule that blocks all other domains, as in allow-list mode. It must have a higher priority number than every allow rule, including the allow rules that application teams add, or it blocks them. See [Build the allow list with an Automated Allowlist rule](#build-the-allow-list-with-an-automated-allowlist-rule) for the ordering.
 
 ### IPv6 egress security
 
