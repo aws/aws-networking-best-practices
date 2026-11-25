@@ -1342,7 +1342,7 @@
   <a href="#transit-gateway-flow-logs-for-cross-vpc-visibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transit Gateway Flow Logs for cross-VPC visibility
+        Transit Gateway and Cloud WAN Flow Logs for cross-VPC visibility
       
     </span>
   </a>
@@ -1458,7 +1458,7 @@
   <a href="#transit-gateway-flow-logs-for-org-wide-visibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transit Gateway Flow Logs for org-wide visibility
+        Transit Gateway and Cloud WAN Flow Logs for org-wide visibility
       
     </span>
   </a>
@@ -1962,7 +1962,7 @@
   <a href="#transit-gateway-flow-logs-for-cross-vpc-visibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transit Gateway Flow Logs for cross-VPC visibility
+        Transit Gateway and Cloud WAN Flow Logs for cross-VPC visibility
       
     </span>
   </a>
@@ -2078,7 +2078,7 @@
   <a href="#transit-gateway-flow-logs-for-org-wide-visibility" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transit Gateway Flow Logs for org-wide visibility
+        Transit Gateway and Cloud WAN Flow Logs for org-wide visibility
       
     </span>
   </a>
@@ -2151,10 +2151,10 @@
 <p>This section assumes familiarity with <a href="../../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../../foundation/subnets/">Subnets</a>, and <a href="../../connectivity/within-aws/">Connectivity Within AWS</a>. Review those topics first if you're new to AWS networking fundamentals.</p>
 </div>
 <p>Understanding what traffic flows between your internal resources is the foundation of network security, cost optimization, and troubleshooting in AWS. Security groups and NACLs define what's <em>allowed</em> — internal traffic monitoring tells you what's <em>actually happening</em>. Without it, you're operating blind: unable to detect lateral movement, unable to identify unexpected cross-<abbr title="Availability Zone">AZ</abbr> data transfer costs, and unable to troubleshoot connectivity failures beyond "it doesn't work."</p>
-<p>Internal traffic monitoring in AWS is not a single tool — it's a layered approach. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs provide packet-level metadata at the network layer. Transit Gateway Flow Logs give you centralized cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility. <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs capture per-request application-layer detail. Network Firewall logs record stateful inspection decisions. Each data source answers different questions, and a production environment needs most of them working together.</p>
+<p>Internal traffic monitoring in AWS is not a single tool — it's a layered approach. <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs provide packet-level metadata at the network layer. AWS Transit Gateway Flow Logs and AWS Cloud WAN Flow Logs give you centralized cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility from the account that owns the transit layer. <abbr title="Virtual Private Cloud">VPC</abbr> Lattice access logs capture per-request application-layer detail. Network Firewall logs record stateful inspection decisions. Each data source answers different questions, and a production environment needs most of them working together.</p>
 <p>This page is organized around data sources and the decisions you face when building internal traffic visibility: what to enable, where to send the data, how to query it cost-effectively, and how to correlate across sources.</p>
 <figure>
-<p><img alt="Internal traffic monitoring sources showing data sources (VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to destinations (S3, CloudWatch Logs, Firehose) and then to analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics)" src="../../assets/observability/internal-traffic-sources.png" /></p>
+<p><img alt="Internal traffic monitoring sources showing data sources (VPC Flow Logs, Transit Gateway Flow Logs, Cloud WAN Flow Logs, VPC Lattice Access Logs, Network Firewall Logs) flowing to destinations (S3, CloudWatch Logs, Firehose) and then to analysis tools (Athena, CloudWatch Insights, CloudWatch Metrics)" src="../../assets/observability/internal-traffic-sources.png" /></p>
 <figcaption>
 <p>Internal traffic monitoring sources — <a href="../../assets/observability/internal-traffic-sources.drawio">Drawio Source</a></p>
 </figcaption>
@@ -2171,6 +2171,11 @@
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 11h-3.18C14.4 9.84 13.3 9 12 9s-2.4.84-2.82 2H6c-.33 0-2-.1-2-2V8c0-1.83 1.54-2 2-2h10.18C16.6 7.16 17.7 8 19 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3c-1.3 0-2.4.84-2.82 2H6C4.39 4 2 5.06 2 8v1c0 2.94 2.39 4 4 4h3.18c.42 1.16 1.52 2 2.82 2s2.4-.84 2.82-2H18c.33 0 2 .1 2 2v1c0 1.83-1.54 2-2 2H7.82C7.4 16.84 6.3 16 5 16a3 3 0 0 0-3 3 3 3 0 0 0 3 3c1.3 0 2.4-.84 2.82-2H18c1.61 0 4-1.07 4-4v-1c0-2.93-2.39-4-4-4m1-7a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1M5 20a1 1 0 0 1-1-1 1 1 0 0 1 1-1 1 1 0 0 1 1 1 1 1 0 0 1-1 1"/></svg></span> <strong>Transit Gateway Flow Logs</strong></p>
 <hr />
 <p>Centralized view of all traffic crossing your Transit Gateway — cross-<abbr title="Virtual Private Cloud">VPC</abbr>, cross-account, and hybrid. One configuration provides org-wide visibility without per-<abbr title="Virtual Private Cloud">VPC</abbr> setup.</p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 4.03 3 7.42 7 7.93V19h-1a1 1 0 0 0-1 1H2v2h7a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1h7v-2h-7a1 1 0 0 0-1-1h-1v-1.07c4-.5 7-3.9 7-7.93a8 8 0 0 0-8-8m0 2s.74 1.28 1.26 3h-2.52C11.26 5.28 12 4 12 4m-2.23.43c-.27.5-.68 1.41-1.03 2.57H6.81C7.5 5.84 8.5 4.93 9.77 4.43m4.46.01c1.27.5 2.27 1.4 2.96 2.56h-1.93c-.35-1.16-.76-2.07-1.03-2.56M6.09 9h2.23c-.04.33-.07.66-.07 1s.03.67.07 1H6.09a5.6 5.6 0 0 1 0-2m4.23 0h3.36c.04.33.07.66.07 1s-.03.67-.07 1h-3.36c-.04-.33-.07-.66-.07-1s.03-.67.07-1m5.36 0h2.23a5.6 5.6 0 0 1 0 2h-2.23c.04-.33.07-.66.07-1s-.03-.67-.07-1m-8.87 4h1.93c.35 1.16.76 2.07 1.03 2.56-1.27-.5-2.27-1.4-2.96-2.56m3.93 0h2.52c-.52 1.72-1.26 3-1.26 3s-.74-1.28-1.26-3m4.52 0h1.93c-.69 1.16-1.69 2.07-2.96 2.57.27-.5.68-1.41 1.03-2.57"/></svg></span> <strong>Cloud WAN Flow Logs</strong></p>
+<hr />
+<p>Central view of traffic crossing the core network, for the whole network, one core network edge, or one attachment. Records add segment, Region, inspection hops, and drop reasons.</p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m21 9-4-4v3h-7v2h7v3M7 11l-4 4 4 4v-3h7v-2H7z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Access Logs</strong></p>
@@ -2324,18 +2329,19 @@
 </span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="p">);</span>
 </span></code></pre></div>
 <p>This approach means Athena queries only scan the partitions you specify, reducing both query time and cost dramatically.</p>
-<h3 id="transit-gateway-flow-logs-for-cross-vpc-visibility">Transit Gateway Flow Logs for cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility<a class="headerlink" href="#transit-gateway-flow-logs-for-cross-vpc-visibility" title="Permanent link">&para;</a></h3>
-<h4 id="enable-transit-gateway-flow-logs-for-organization-wide-traffic-visibility">Enable Transit Gateway Flow Logs for organization-wide traffic visibility<a class="headerlink" href="#enable-transit-gateway-flow-logs-for-organization-wide-traffic-visibility" title="Permanent link">&para;</a></h4>
-<p>Transit Gateway Flow Logs capture traffic at the Transit Gateway level — every packet crossing between VPCs, between accounts, or between your AWS network and on-premises. This provides a single, centralized view of cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic without requiring per-<abbr title="Virtual Private Cloud">VPC</abbr> Flow Log configuration in every account.</p>
-<p>This is particularly valuable in multi-account environments where you may not have direct access to enable <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs in every workload account. Transit Gateway Flow Logs are configured in the networking account that owns the Transit Gateway, giving the networking team visibility into all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic patterns regardless of workload account configurations.</p>
-<h4 id="use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication">Use Transit Gateway Flow Logs to detect unauthorized cross-<abbr title="Virtual Private Cloud">VPC</abbr> communication<a class="headerlink" href="#use-transit-gateway-flow-logs-to-detect-unauthorized-cross-vpc-communication" title="Permanent link">&para;</a></h4>
-<p>Transit Gateway route tables and attachments define what <em>can</em> communicate. Transit Gateway Flow Logs show what <em>does</em> communicate. Compare the two to identify:</p>
+<h3 id="transit-gateway-flow-logs-for-cross-vpc-visibility">Transit Gateway and Cloud WAN Flow Logs for cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility<a class="headerlink" href="#transit-gateway-flow-logs-for-cross-vpc-visibility" title="Permanent link">&para;</a></h3>
+<h4 id="enable-flow-logs-centrally-on-the-transit-layer">Enable flow logs centrally on the transit layer<a class="headerlink" href="#enable-flow-logs-centrally-on-the-transit-layer" title="Permanent link">&para;</a></h4>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html">Transit Gateway Flow Logs</a> and <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html">Cloud WAN Flow Logs</a> capture traffic as it crosses the transit gateway or core network: between VPCs, accounts, and Regions, and to and from on-premises. You configure them once, in the account that owns the transit gateway or core network, so the networking team sees all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic without enabling <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs in every workload account.</p>
+<h4 id="use-flow-logs-to-detect-unauthorized-cross-vpc-communication">Use flow logs to detect unauthorized cross-<abbr title="Virtual Private Cloud">VPC</abbr> communication<a class="headerlink" href="#use-flow-logs-to-detect-unauthorized-cross-vpc-communication" title="Permanent link">&para;</a></h4>
+<p>Route tables and segments define what <em>can</em> communicate. Flow logs show what <em>does</em> communicate. Compare the two to identify:</p>
 <ul>
 <li>Traffic between VPCs that should be isolated (for example, production to development)</li>
 <li>Unexpected traffic volumes between specific <abbr title="Virtual Private Cloud">VPC</abbr> pairs (potential data exfiltration)</li>
-<li>Traffic patterns that indicate misconfigured route tables (traffic taking unexpected paths)</li>
+<li>Traffic patterns that indicate misconfigured route tables or segment routing (traffic taking unexpected paths)</li>
 </ul>
-<p><strong><em>Key insight:</em></strong> <em>Transit Gateway Flow Logs are the only native way to get a single-pane view of all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic in your organization without configuring Flow Logs in every individual <abbr title="Virtual Private Cloud">VPC</abbr>. For networking teams managing hundreds of accounts, this is the starting point for cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility.</em></p>
+<h4 id="use-flow-logs-to-confirm-what-happened-to-a-flow">Use flow logs to confirm what happened to a flow<a class="headerlink" href="#use-flow-logs-to-confirm-what-happened-to-a-flow" title="Permanent link">&para;</a></h4>
+<p>Flow logs record why packets were dropped (no route, blackhole, <abbr title="Maximum Transmission Unit">MTU</abbr> exceeded, or <abbr title="Time To Live">TTL</abbr> expired) and, on Cloud WAN, the segment each flow landed in and the inspection it passed through. Use them to confirm a fault, not to detect it: alarm on CloudWatch drop metrics, find the cause in the route tables or core network policy, then use the logs to see which flows were affected.</p>
+<p><strong><em>Key insight:</em></strong> <em>Transit Gateway Flow Logs cover a transit gateway; Cloud WAN Flow Logs cover the core network. While you migrate from Transit Gateway to Cloud WAN, run both, or the traffic still on Transit Gateway drops out of view.</em></p>
 <h3 id="choosing-delivery-destinations">Choosing delivery destinations<a class="headerlink" href="#choosing-delivery-destinations" title="Permanent link">&para;</a></h3>
 <h4 id="match-the-delivery-destination-to-the-use-case">Match the delivery destination to the use case<a class="headerlink" href="#match-the-delivery-destination-to-the-use-case" title="Permanent link">&para;</a></h4>
 <p>The choice between <abbr title="Simple Storage Service">S3</abbr>, CloudWatch Logs, and Kinesis Data Firehose is not about preference — it's about what you need to do with the data:</p>
@@ -2394,10 +2400,10 @@
 <p>Use the timestamp and 5-tuple as the correlation key. Athena queries that join Flow Log and Network Firewall log tables on these fields are the most effective approach for incident investigation.</p>
 <h3 id="ipv6-traffic-visibility"><abbr title="Internet Protocol version 6">IPv6</abbr> traffic visibility<a class="headerlink" href="#ipv6-traffic-visibility" title="Permanent link">&para;</a></h3>
 <h4 id="use-the-same-flow-logs-for-ipv4-and-ipv6-no-separate-configuration-needed">Use the same Flow Logs for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> — no separate configuration needed<a class="headerlink" href="#use-the-same-flow-logs-for-ipv4-and-ipv6-no-separate-configuration-needed" title="Permanent link">&para;</a></h4>
-<p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs capture both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic in the same log stream. You do not need separate Flow Log configurations for <abbr title="Internet Protocol version 6">IPv6</abbr>. The <code>type</code> field in the custom log format distinguishes between <abbr title="Internet Protocol version 4">IPv4</abbr> (<code>3</code>) and <abbr title="Internet Protocol version 6">IPv6</abbr> (<code>6</code>) flows.</p>
+<p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs capture both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> traffic in the same log stream. You do not need separate Flow Log configurations for <abbr title="Internet Protocol version 6">IPv6</abbr>. The <code>type</code> field in the custom log format distinguishes between <code>IPv4</code> and <code>IPv6</code> flows.</p>
 <p>Include the <code>type</code> field in your custom log format to enable filtering. Common use cases:</p>
 <ul>
-<li>Track <abbr title="Internet Protocol version 6">IPv6</abbr> adoption rate across your VPCs (ratio of type=6 to type=3 flows)</li>
+<li>Track <abbr title="Internet Protocol version 6">IPv6</abbr> adoption rate across your VPCs (ratio of <code>IPv6</code> to <code>IPv4</code> flows)</li>
 <li>Identify workloads that have migrated to <abbr title="Internet Protocol version 6">IPv6</abbr> and validate they're no longer using <abbr title="Internet Protocol version 4">IPv4</abbr></li>
 <li>Detect unexpected <abbr title="Internet Protocol version 6">IPv6</abbr> traffic in VPCs where <abbr title="Internet Protocol version 6">IPv6</abbr> is not yet intentionally deployed</li>
 </ul>
@@ -2405,7 +2411,7 @@
 <p>When using dual-stack VPCs, include <code>pkt-srcaddr</code> and <code>pkt-dstaddr</code> in your custom format. These fields show the original packet addresses before any translation, which is essential when traffic traverses NAT64 or other translation mechanisms. The standard <code>srcaddr</code>/<code>dstaddr</code> fields show the post-translation addresses at the ENI, while <code>pkt-srcaddr</code>/<code>pkt-dstaddr</code> show what was on the wire.</p>
 <h3 id="cost-optimization">Cost optimization<a class="headerlink" href="#cost-optimization" title="Permanent link">&para;</a></h3>
 <h4 id="understand-the-cost-model-before-scaling-flow-log-collection">Understand the cost model before scaling Flow Log collection<a class="headerlink" href="#understand-the-cost-model-before-scaling-flow-log-collection" title="Permanent link">&para;</a></h4>
-<p>Flow Log costs have three components: ingestion, storage, and analysis. At scale, these add up:</p>
+<p><abbr title="Virtual Private Cloud">VPC</abbr>, Transit Gateway, and Cloud WAN Flow Logs have no charge for the feature itself. You pay for what happens to the logs: ingestion, storage, and analysis. Cloud WAN Flow Logs are vended logs, so <a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html#cwan-flow-logs-pricing">vended-log ingestion and destination charges</a> apply. At scale, these add up:</p>
 <ul>
 <li><strong>Ingestion</strong>: The per-GB charge for delivering logs to the destination. <abbr title="Simple Storage Service">S3</abbr> is cheapest (tiered per-GB rate), CloudWatch Logs is roughly 2× the <abbr title="Simple Storage Service">S3</abbr> rate. See <a href="https://aws.amazon.com/cloudwatch/pricing/">CloudWatch pricing</a> for current values.</li>
 <li><strong>Storage</strong>: <abbr title="Simple Storage Service">S3</abbr> Standard charges per-GB/month. Use <abbr title="Simple Storage Service">S3</abbr> Intelligent-Tiering or lifecycle rules to move older logs to Glacier after 90 days.</li>
@@ -2434,14 +2440,19 @@
 <td>Provides per-interface traffic metadata with source/destination</td>
 </tr>
 <tr>
-<td>"Is traffic flowing between <abbr title="Virtual Private Cloud">VPC</abbr> A and <abbr title="Virtual Private Cloud">VPC</abbr> B?"</td>
-<td>Transit Gateway Flow Logs</td>
-<td>Centralized cross-<abbr title="Virtual Private Cloud">VPC</abbr> view without per-<abbr title="Virtual Private Cloud">VPC</abbr> configuration</td>
+<td>"Which VPCs and accounts are talking to each other?"</td>
+<td>Transit Gateway Flow Logs or Cloud WAN Flow Logs</td>
+<td>Central cross-<abbr title="Virtual Private Cloud">VPC</abbr> view, with the account that owns each attachment</td>
 </tr>
 <tr>
-<td>"Why is Service A getting 500 errors from Service B?"</td>
+<td>"Which segment did this flow use, and did it pass inspection?"</td>
+<td>Cloud WAN Flow Logs</td>
+<td>Records carry source and destination segments and the network function group attachments traversed</td>
+</tr>
+<tr>
+<td>"Why is Service A getting errors from Service B, and was the request authorized?"</td>
 <td><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Access Logs</td>
-<td>Per-request detail with response codes, latency, and identity</td>
+<td>Per-request detail with response codes, latency, identity, and the auth policy decision</td>
 </tr>
 <tr>
 <td>"What did the firewall block in the last hour?"</td>
@@ -2454,16 +2465,6 @@
 <td>The <code>az-id</code> field identifies which Availability Zone each flow originates from</td>
 </tr>
 <tr>
-<td>"Which accounts are generating the most inter-<abbr title="Virtual Private Cloud">VPC</abbr> traffic?"</td>
-<td>Transit Gateway Flow Logs</td>
-<td>Account-level attribution for all Transit Gateway traffic</td>
-</tr>
-<tr>
-<td>"Was this request authorized by the auth policy?"</td>
-<td><abbr title="Virtual Private Cloud">VPC</abbr> Lattice Access Logs</td>
-<td>Logs include auth policy decision (allow/deny) and principal</td>
-</tr>
-<tr>
 <td>"What's the total network throughput for this instance?"</td>
 <td>CloudWatch Metrics (NetworkIn/Out)</td>
 <td>Pre-aggregated metrics without log parsing</td>
@@ -2471,7 +2472,7 @@
 <tr>
 <td>"Is <abbr title="Internet Protocol version 6">IPv6</abbr> traffic flowing in this <abbr title="Virtual Private Cloud">VPC</abbr>?"</td>
 <td><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs + <code>type</code> field</td>
-<td>Filter on type=6 to isolate <abbr title="Internet Protocol version 6">IPv6</abbr> flows</td>
+<td>Filter on <code>type</code> = <code>IPv6</code> to isolate <abbr title="Internet Protocol version 6">IPv6</abbr> flows</td>
 </tr>
 <tr>
 <td>"Is the AWS network causing the degradation on this path?"</td>
@@ -2517,7 +2518,7 @@
 <td>Cost breakdowns by service, showing data transfer charges</td>
 </tr>
 <tr>
-<td><strong>Transit Gateway Flow Logs + AWS Network Manager</strong></td>
+<td><strong>Transit Gateway or Cloud WAN Flow Logs + AWS Network Manager</strong></td>
 <td>Per-flow traffic detail</td>
 <td>Topology visualization and route analysis for Transit Gateway and Cloud WAN</td>
 </tr>
@@ -2544,7 +2545,7 @@
 <p>In an AWS Organizations environment, deploy a centralized logging architecture:</p>
 <ol>
 <li><strong>Log archive account</strong> owns the <abbr title="Simple Storage Service">S3</abbr> bucket where all Flow Logs are delivered</li>
-<li><strong>Networking account</strong> owns Transit Gateway Flow Logs and Network Firewall logs</li>
+<li><strong>Networking account</strong> owns Transit Gateway Flow Logs, Cloud WAN Flow Logs, and Network Firewall logs</li>
 <li><strong>Workload accounts</strong> deliver <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs cross-account to the centralized bucket</li>
 <li><strong>Security account</strong> runs Athena queries and CloudWatch dashboards against the centralized data</li>
 </ol>
@@ -2552,9 +2553,9 @@
 <h3 id="cross-account-flow-log-delivery">Cross-account Flow Log delivery<a class="headerlink" href="#cross-account-flow-log-delivery" title="Permanent link">&para;</a></h3>
 <p><abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs support cross-account delivery to <abbr title="Simple Storage Service">S3</abbr> natively. The Flow Log in the source account specifies the destination <abbr title="Simple Storage Service">S3</abbr> bucket <abbr title="Amazon Resource Name">ARN</abbr> in the log archive account. The bucket policy grants <code>delivery.logs.amazonaws.com</code> permission to write, conditioned on the organization ID. No additional <abbr title="Identity and Access Management">IAM</abbr> roles or cross-account trust relationships are needed beyond the bucket policy.</p>
 <p>For CloudWatch Logs delivery, cross-account requires a CloudWatch Logs destination in the receiving account with a resource policy allowing the source accounts. This is more complex to manage and is generally not recommended for large-scale centralized logging — use <abbr title="Simple Storage Service">S3</abbr> instead.</p>
-<h3 id="transit-gateway-flow-logs-for-org-wide-visibility">Transit Gateway Flow Logs for org-wide visibility<a class="headerlink" href="#transit-gateway-flow-logs-for-org-wide-visibility" title="Permanent link">&para;</a></h3>
-<p>Transit Gateway Flow Logs are configured in the account that owns the Transit Gateway (typically the networking account). Since all cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic in a hub-and-spoke architecture traverses the Transit Gateway, these logs provide organization-wide cross-<abbr title="Virtual Private Cloud">VPC</abbr> visibility from a single configuration point. This is significantly simpler than ensuring every workload account has <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs enabled and properly delivered.</p>
-<p>However, Transit Gateway Flow Logs only capture traffic that <em>crosses</em> the Transit Gateway. Traffic within a single <abbr title="Virtual Private Cloud">VPC</abbr> (subnet-to-subnet, ENI-to-ENI) is not visible. You still need <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs for intra-<abbr title="Virtual Private Cloud">VPC</abbr> visibility.</p>
+<h3 id="transit-gateway-flow-logs-for-org-wide-visibility">Transit Gateway and Cloud WAN Flow Logs for org-wide visibility<a class="headerlink" href="#transit-gateway-flow-logs-for-org-wide-visibility" title="Permanent link">&para;</a></h3>
+<p>Transit Gateway and Cloud WAN Flow Logs are configured in the account that owns the transit gateway or core network, typically the networking account. Because cross-<abbr title="Virtual Private Cloud">VPC</abbr> traffic crosses that transit layer, one configuration gives organization-wide visibility, which is simpler than making sure every workload account enables and delivers <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs.</p>
+<p>They don't capture traffic within a single <abbr title="Virtual Private Cloud">VPC</abbr> (subnet-to-subnet, ENI-to-ENI), so you still need <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs for intra-<abbr title="Virtual Private Cloud">VPC</abbr> visibility. Cloud WAN Flow Logs also don't record flows on tunnel-less Connect or Transit Gateway route table attachments; those appear on the underlying <abbr title="Virtual Private Cloud">VPC</abbr> attachment or peering, so during a migration over peering, run Transit Gateway Flow Logs too.</p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
 <div class="grid cards">
 <ul>
@@ -2569,6 +2570,12 @@
 <hr />
 <p>Configuration and field reference for Transit Gateway Flow Logs, including cross-account delivery.</p>
 <p><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-flow-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Cloud WAN Flow Logs</strong></p>
+<hr />
+<p>Scope, record fields, limitations, and delivery options for core network flow logs.</p>
+<p><a href="https://docs.aws.amazon.com/network-manager/latest/cloudwan/cwan-flow-logs.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.68 12.32a4.49 4.49 0 0 0-6.36.01 4.49 4.49 0 0 0 0 6.36 4.51 4.51 0 0 0 5.57.63L21 22.39 22.39 21l-3.09-3.11c1.13-1.77.87-4.09-.62-5.57m-1.41 4.95c-.98.98-2.56.97-3.54 0-.97-.98-.97-2.56.01-3.54.97-.97 2.55-.97 3.53 0 .97.98.97 2.56 0 3.54M10.9 20.1a6.5 6.5 0 0 1-1.48-2.32C6.27 17.25 4 15.76 4 14v3c0 2.21 3.58 4 8 4-.4-.26-.77-.56-1.1-.9M4 9v3c0 1.68 2.07 3.12 5 3.7v-.2c0-.93.2-1.85.58-2.69C6.34 12.3 4 10.79 4 9m8-6C7.58 3 4 4.79 4 7c0 2 3 3.68 6.85 4h.05c1.2-1.26 2.86-2 4.6-2 .91 0 1.81.19 2.64.56A3.22 3.22 0 0 0 20 7c0-2.21-3.58-4-8-4"/></svg></span> <strong>Querying Flow Logs with Athena</strong></p>
@@ -2611,7 +2618,7 @@
 </ul>
 <p><strong>Relationship to Connectivity:</strong></p>
 <ul>
-<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Transit Gateway Flow Logs provide visibility into the traffic that Transit Gateway and Cloud WAN route between VPCs. The <code>traffic-path</code> field in <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs identifies which connectivity service a flow used.</li>
+<li><strong><a href="../../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Transit Gateway Flow Logs and Cloud WAN Flow Logs provide visibility into the traffic each service routes between VPCs. The <code>traffic-path</code> field in <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs identifies which connectivity service a flow used.</li>
 </ul>
 
 
@@ -2635,7 +2642,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 19, 2026 22:07:05 UTC">November 19, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 21:52:43 UTC">November 25, 2026</span>
   </span>
 
     
