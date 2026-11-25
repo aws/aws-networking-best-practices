@@ -1452,6 +1452,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1770,6 +1781,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#november-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        November 2026
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#october-2026" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1869,8 +1891,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="november-2026">November 2026<a class="headerlink" href="#november-2026" title="Permanent link">&para;</a></h2>
+<ul>
+<li>🆕 <strong>New guidance</strong> — <a href="../observability/network-performance/#network-health-indicator">Network Performance Monitoring</a>: New guidance on choosing between Network Synthetic Monitor, Network Flow Monitor, and Internet Monitor, and on using the network health indicator to attribute path degradation to the AWS network. (<a href="https://github.com/aws/aws-networking-best-practices/pull/213">#213</a>)</li>
+<li>🔄 <strong>Changed recommendation</strong> — <a href="../connectivity/hybrid-multicloud/#use-aws-interconnect-last-mile-where-your-network-provider-supports-it">Hybrid &amp; Multi-Cloud</a>: Previously, connectivity needed within days pointed only to Site-to-Site <abbr title="Virtual Private Network">VPN</abbr>, and Direct Connect was the only private on-premises option. Now AWS Interconnect - last mile is the preferred managed private path where your sites already connect to a supported provider in your metro, with Direct Connect as the default elsewhere. (<a href="https://github.com/aws/aws-networking-best-practices/pull/208">#208</a>)</li>
+<li>🆕 <strong>New guidance</strong> — <a href="../connectivity/internet/#external-security-provider-egress">Internet Connectivity</a>: Added routed egress through an external secure access service edge (SASE) or proxy provider as an alternative to AWS-native egress. The guidance covers a dedicated regional routing domain for internet-bound traffic, advertising only each Region's return prefixes to the provider, the trade-off between keeping source addresses and applying source <abbr title="Network Address Translation">NAT</abbr>, and resilience, monitoring and <abbr title="Internet Protocol version 6">IPv6</abbr> design. (<a href="https://github.com/aws/aws-networking-best-practices/pull/203">#203</a>)</li>
+<li>🔄 <strong>Changed recommendation</strong> — <a href="../connectivity/hybrid-multicloud/#private-on-premises-connectivity-with-aws-direct-connect">Hybrid and Multi-Cloud Connectivity</a>, <a href="../observability/service-monitoring/#direct-connect">AWS Services Monitoring</a>: Previously, the Direct Connect guidance covered location resiliency, BFD, and operational metrics separately but did not explain LAG failure boundaries, failure-state capacity, gateway capacity boundaries, or prefix allocation before turn-up. Now these concerns form one connected design: independent paths across devices and locations, sufficient surviving capacity, gateways aligned with routing and allocation boundaries, and prefix capacity planned and monitored before migration. (<a href="https://github.com/aws/aws-networking-best-practices/pull/202">#202</a>)</li>
+<li>🆕 <strong>New guidance</strong> — <a href="../connectivity/within-aws/#build-segmentation-with-purpose-specific-route-tables">Connectivity Within AWS</a>, <a href="../observability/service-monitoring/#monitor-quotas-before-you-hit-them">AWS Services Monitoring</a>: Turn off default association, default propagation, and automatic acceptance of shared attachments on Transit Gateway, and classify attachments through central automation that fails closed. Routing policies control default-route propagation, while service insertion steers traffic through inspection. Quota monitoring now tracks total routes across all Transit Gateway route tables, routes exchanged with each Connect peer, and Direct Connect <abbr title="Border Gateway Protocol">BGP</abbr> prefix counts. (<a href="https://github.com/aws/aws-networking-best-practices/pull/201">#201</a>)</li>
+<li>🔄 <strong>Changed recommendation</strong> — <a href="../foundation/cidr/#allocate-contiguously-for-route-summarization"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>, <a href="../foundation/ipam/#design-pools-top-down-organization-region-environment-workload">AWS <abbr title="IP Address Manager">IPAM</abbr></a>, <a href="../foundation/vpc/#enable-dual-stack-from-day-one-on-new-vpcs">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a>, <a href="../foundation/aws-prerequisites/#ipv6-readiness">AWS prerequisites</a>: Previously, the guide treated <abbr title="Internet Protocol version 6">IPv6</abbr> summarization separately, presented BYOIP as the only organization-wide source, and prescribed <code>/56</code> <abbr title="Virtual Private Cloud">VPC</abbr> and <code>/64</code> subnet allocations. Now <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> use one contiguous hierarchy, private ULA/GUA supports internal-only organization-wide addressing, and <abbr title="IP Address Manager">IPAM</abbr> allocation rules size <abbr title="Virtual Private Cloud">VPC</abbr> and subnet prefixes for their hierarchy and growth. (<a href="https://github.com/aws/aws-networking-best-practices/pull/200">#200</a>)</li>
+<li>🆕 <strong>New guidance</strong> — <a href="../connectivity/hybrid-multicloud/#multi-cloud-connectivity">Hybrid and Multi-Cloud Connectivity</a>: Decide application and data placement before choosing or sizing a cloud-to-cloud connection. Keep chatty tiers in the same cloud, move compute to repeatedly read data, transfer only the objects a workload consumes, and use temporary capacity for one-time bulk moves, then size the link from the traffic that remains. (<a href="https://github.com/aws/aws-networking-best-practices/pull/204">#204</a>)</li>
+<li>🔧 <strong>Correction</strong> — <a href="../foundation/ipam/#ipam-pricing-and-cost-considerations">AWS <abbr title="IP Address Manager">IPAM</abbr></a>: Previously the page said <abbr title="IP Address Manager">IPAM</abbr> is effectively free for private address governance. Now it states that the Organization-wide features the page recommends need the Advanced Tier, which bills per active IP address (private or public), and lists how to scope that cost: exclude OUs, limit operating Regions, and use cost distribution. (<a href="https://github.com/aws/aws-networking-best-practices/pull/199">#199</a>)</li>
+</ul>
 <h2 id="october-2026">October 2026<a class="headerlink" href="#october-2026" title="Permanent link">&para;</a></h2>
 <ul>
+<li>🔧 <strong>Correction</strong> — <a href="../foundation/cidr/#plan-for-hybrid-connectivity-from-day-one"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>: The hybrid connectivity paragraph no longer states that a <abbr title="Classless Inter-Domain Routing">CIDR</abbr> overlap always requires re-IPing; it names re-IPing or permanent address translation on the hybrid path as the two costly remediation paths. (<a href="https://github.com/aws/aws-networking-best-practices/pull/185">#185</a>)</li>
+<li>🔧 <strong>Correction</strong> — <a href="../foundation/cidr/#never-overlap-cidr-blocks-across-vpcs-you-might-connect"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a>, <a href="../foundation/ipam/"><abbr title="IP Address Manager">IPAM</abbr></a>, <a href="../foundation/#5-ip-address-planning-with-cidr-blocks">Foundation</a>, <a href="../application-networking/container-mesh/#when-amazon-vpc-lattices-model-doesnt-fit">Container Mesh</a>, <a href="../connectivity/within-aws/#migrating-from-transit-gateway">Connectivity Within AWS</a>: Correct statements that described overlapping CIDRs as impossible to connect through Transit Gateway or AWS Cloud WAN and <abbr title="Virtual Private Cloud">VPC</abbr> recreation as the only network-level remedy. Non-overlapping allocation remains the recommendation; managed 1:1 <abbr title="Network Address Translation">NAT</abbr> is documented only where it corrects or changes existing guidance. (<a href="https://github.com/aws/aws-networking-best-practices/pull/183">#183</a>)</li>
+<li>🆕 <strong>New guidance</strong> — <a href="../security/outbound/#prefer-domain-based-filtering-over-ip-based-filtering-for-outbound-controls">Outbound Controls</a>: Network Firewall domain filtering can now cover non-<abbr title="Transport Layer Security">TLS</abbr> protocols and resist SNI/Host spoofing through Resolved IP Validation, which uses a <abbr title="Domain Name System">DNS</abbr> Firewall rule group associated with your VPCs. (<a href="https://github.com/aws/aws-networking-best-practices/pull/182">#182</a>)</li>
 <li>🆕 <strong>New guidance</strong> — <a href="../security/perimeter-inbound/#choose-between-centralized-and-per-vpc-inspection-deliberately">Perimeter Controls</a>: AWS Cloud WAN service insertion is a second way to route traffic to a centralized inspection <abbr title="Virtual Private Cloud">VPC</abbr>, alongside AWS Transit Gateway routing to a shared inspection <abbr title="Virtual Private Cloud">VPC</abbr>. AWS Firewall Manager is optional for centralized inspection. Per-<abbr title="Virtual Private Cloud">VPC</abbr> inspection through Firewall Manager remains the default for environments with many VPCs. (<a href="https://github.com/aws/aws-networking-best-practices/pull/166">#166</a>)</li>
 <li>🔧 <strong>Correction</strong> — <a href="../security/perimeter-inbound/#use-stateless-rules-for-high-volume-simple-filtering-and-stateful-rules-for-protocol-aware-inspection">Perimeter Controls</a>: Previously the stateless and stateful rule split was presented as a cost lever. Now the page states that AWS Network Firewall charges for endpoint hours and gigabytes processed regardless of which rule engine evaluates the traffic, so the split is a rule design choice, not a way to reduce the processing charge. (<a href="https://github.com/aws/aws-networking-best-practices/pull/166">#166</a>)</li>
 <li>🆕 <strong>New guidance</strong> — <a href="../application-networking/load-balancing/#manage-flow-lifetime-and-failure-recovery">Load Balancing</a>: Gateway Load Balancer can send a <abbr title="Transmission Control Protocol">TCP</abbr> reset when a target becomes unhealthy, is deregistered, or a flow idles out, so senders open a new flow instead of waiting for <abbr title="Transmission Control Protocol">TCP</abbr> retries to expire. All three settings are off by default, including on existing load balancers, and require 5-tuple flow stickiness. When you raise the <abbr title="Transmission Control Protocol">TCP</abbr> idle timeout above 350 seconds, keep the target's connection-tracking idle timeout at or above the Gateway Load Balancer value. (<a href="https://github.com/aws/aws-networking-best-practices/pull/167">#167</a>)</li>
@@ -1916,7 +1952,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="October 17, 2026 01:18:44 UTC">October 17, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 20:52:37 UTC">November 25, 2026</span>
   </span>
 
     
