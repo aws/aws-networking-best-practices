@@ -2285,6 +2285,7 @@
 <li>Deny <code>ec2:CreateVpc</code> with <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks outside your <abbr title="IP Address Manager">IPAM</abbr>-managed ranges — this prevents IP conflicts before they happen</li>
 <li>Require the <code>network-segment</code> tag on <code>ec2:CreateVpc</code> — this enables automated Cloud WAN attachment acceptance</li>
 <li>Deny <code>ec2:CreateTransitGateway</code> in workload accounts — only the networking account should own Transit Gateways</li>
+<li>Deny <code>route53:DeleteResourceRecordSetProtections</code> except for the central <abbr title="Domain Name System">DNS</abbr> or networking admin role. Record set protection is only as strong as the control over who can remove it (see <a href="../dns/#protect-critical-records-from-accidental-change"><abbr title="Domain Name System">DNS</abbr> Architecture</a>)</li>
 </ul>
 <p>The key insight: SCPs make your network architecture self-enforcing. Teams cannot accidentally (or intentionally) deviate from the intended topology because the API calls that would create deviations are denied at the Organizations level.</p>
 <h3 id="delegate-ipam-administration-to-the-networking-account">Delegate <abbr title="IP Address Manager">IPAM</abbr> administration to the networking account<a class="headerlink" href="#delegate-ipam-administration-to-the-networking-account" title="Permanent link">&para;</a></h3>
@@ -2473,7 +2474,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="July 8, 2026 04:23:37 UTC">July 8, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 21:59:05 UTC">November 25, 2026</span>
   </span>
 
     

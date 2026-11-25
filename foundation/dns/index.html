@@ -711,6 +711,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#protecting-critical-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protecting critical records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ipv6-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1898,6 +1909,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#protecting-critical-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protecting critical records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ipv6-considerations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2057,6 +2079,23 @@
 <h4 id="turn-dns-query-logs-and-dns-firewall-activity-into-metrics-and-alarms">Turn <abbr title="Domain Name System">DNS</abbr> query logs and <abbr title="Domain Name System">DNS</abbr> Firewall activity into metrics and alarms<a class="headerlink" href="#turn-dns-query-logs-and-dns-firewall-activity-into-metrics-and-alarms" title="Permanent link">&para;</a></h4>
 <p>To alert on <abbr title="Domain Name System">DNS</abbr> activity rather than just retain it, deliver Resolver query logs to CloudWatch Logs: metric filters, Contributor Insights, and Logs Insights run on log groups, not on the <abbr title="Simple Storage Service">S3</abbr> copy you keep for forensics. <abbr title="Domain Name System">DNS</abbr> Firewall also publishes per-<abbr title="Virtual Private Cloud">VPC</abbr> and per-rule-group query-volume metrics to CloudWatch every few minutes, which you can alarm on directly without parsing logs.</p>
 <p>Alarm on a baseline you establish, not a fixed count: query logs record only unique queries, so lookups answered from the cache are not logged and counts run low. Treat this as detection, not prevention — it sees only what reaches the resolver, so <abbr title="Domain Name System">DNS</abbr>-over-HTTPS and hardcoded-IP traffic bypass it; keep Network Firewall or other inspection for those.</p>
+<h3 id="protecting-critical-records">Protecting critical records<a class="headerlink" href="#protecting-critical-records" title="Permanent link">&para;</a></h3>
+<h4 id="protect-critical-records-from-accidental-change">Protect critical records from accidental change<a class="headerlink" href="#protect-critical-records-from-accidental-change" title="Permanent link">&para;</a></h4>
+<p>Route 53 record set protection rejects any <code>ChangeResourceRecordSets</code> request that creates, updates, or deletes records with a protected name and type, in public and private hosted zones. The protection applies to every principal, including those with full Route 53 permissions, so a direct change is blocked and a deliberate extra step is forced. It prevents accidents and is not a security boundary: a principal with broad permissions, such as <code>route53:*</code>, can also delete the protection and then change the record (see the permission guidance below). Use it for records that rarely change and would cause an outage if changed by mistake, such as the apex records of a production domain, MX records, and records that route traffic to critical endpoints. Protect only the few records where a mistake is expensive. Each protection turns a routine change into a privileged two-step change, and the number of protections per hosted zone is limited by a <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#limits-api-entities-records">quota</a>, so protecting broadly slows down routine changes and can exhaust that quota.</p>
+<p>Know how it behaves before you rely on it:</p>
+<ul>
+<li><strong>Scope is name and type.</strong> One protection covers every record with that name and type, whatever its set identifier. You can't protect only some of a set of weighted records. The type is part of the scope: a protection on <code>A</code> doesn't cover <code>AAAA</code> for the same name, so a dual-stack name needs one protection for each. With only <code>A</code> protected, someone can still change or delete the <code>AAAA</code> record, and <abbr title="Internet Protocol version 6">IPv6</abbr> clients fail while <abbr title="Internet Protocol version 4">IPv4</abbr> clients keep working, which is a partial outage that is hard to spot.</li>
+<li><strong>Rejection is whole-batch.</strong> If any change in a request touches a protected name and type, Route 53 rejects the entire request with <code>InvalidChangeBatch</code> and applies none of it. A change that touches a protected record fails in the AWS CLI, the AWS SDKs, and AWS CloudFormation; the <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html#rrset-protection-blocked-changes">Route 53 documentation</a> and the <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html#aws-resource-route53-recordsetprotection--remarks">CloudFormation reference</a> name the error differently (<code>InvalidChangeBatch</code> and <code>ResourceConflict</code>), so don't key a runbook or alarm to one error name.</li>
+<li><strong>CloudFormation updates are ordered.</strong> CloudFormation deletes a removed protection only in its cleanup phase, after it changes the record, so a stack update that changes a protected record and removes its protection fails. Adding a protection and changing the same record in one update can leave the stack in a failed rollback state, and changing a protection's comment replaces it, so the record is unprotected during the replacement. A protection that stays behind, for example with <code>DeletionPolicy: Retain</code>, blocks deleting the record and fails teardown. Ship record changes and protection changes as separate stack updates or pipeline stages, and let one pipeline own removal of stray protections. The CloudFormation reference describes the procedures.</li>
+<li><strong>A protection can reserve a name.</strong> You can create one for a name and type that has no records yet, which stops anyone from creating that record.</li>
+<li><strong>Write a useful comment.</strong> The optional comment (up to 256 characters) appears in the error when a change is rejected. Say why the record is protected and whom to contact.</li>
+</ul>
+<p>Changing a protected record is deliberate: delete the protection, make the change, then create the protection again. A protection can't be edited, so changing its comment also means deleting and recreating it. Plan this into your change process and runbooks. Until the protection is recreated, any principal with change permission can alter the record, and if the change step fails and nothing recreates the protection, the record stays unprotected with no signal. Have automation treat delete, change, and recreate as one unit that restores the protection on failure, and alert on <code>DeleteResourceRecordSetProtections</code> calls: <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/logging-using-cloudtrail.html">AWS CloudTrail</a> logs requests to create, delete, and list protections.</p>
+<p>Protections are only as strong as who can remove them. Any principal with <code>route53:DeleteResourceRecordSetProtections</code> on the hosted zone can delete any protection in it, and the three record set protection actions (create, delete, and list) support only the hosted zone resource and no service-specific condition keys. Grant that permission to a small set of administrators and consider denying it to everyone else. In an AWS Organizations environment where a networking account owns the hosted zones, apply a <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html">service control policy</a> (SCP) deny at the OU that contains the accounts that own hosted zones, and exempt the central <abbr title="Domain Name System">DNS</abbr> or networking admin role. SCPs don't apply to the management account, and because the actions have no condition keys you can't allow removal of some protections and deny others in the same zone. The protection is only as strong as the broadest delete grant.</p>
+<p>A hosted zone that has any protections, including protections on names with no records, can't be deleted. Add a step to teardown automation that lists and deletes the protections first.</p>
+<p>Protections don't change how Route 53 answers <abbr title="Domain Name System">DNS</abbr> queries. They only control changes to records.</p>
+<p><strong><em>Key insight:</em></strong> <em>Record set protection prevents accidents, not deliberate changes. It is only as strong as the control over who can delete protections.</em></p>
+<p>For the console and CLI steps, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html">Protecting records from changes</a>. For an example policy that denies removing protections, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/access-control-managing-permissions.html#access-policy-example-deny-delete-rrset-protections">Example 5: Deny removal of record set protections</a>.</p>
 <h3 id="ipv6-considerations"><abbr title="Internet Protocol version 6">IPv6</abbr> considerations<a class="headerlink" href="#ipv6-considerations" title="Permanent link">&para;</a></h3>
 <h4 id="configure-dual-stack-resolver-endpoints-from-the-start">Configure dual-stack Resolver endpoints from the start<a class="headerlink" href="#configure-dual-stack-resolver-endpoints-from-the-start" title="Permanent link">&para;</a></h4>
 <p>Resolver inbound and outbound endpoints support <abbr title="Internet Protocol version 6">IPv6</abbr> ENI addresses. If your VPCs are dual-stack, configure Resolver endpoints with both <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> addresses so <abbr title="Internet Protocol version 6">IPv6</abbr>-only workloads can forward and resolve without NAT64. On-premises <abbr title="Domain Name System">DNS</abbr> servers forwarding to AWS inbound endpoints need reachability to the endpoint's <abbr title="Internet Protocol version 6">IPv6</abbr> address if the on-premises network is also dual-stack.</p>
@@ -2103,6 +2142,18 @@
 <p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Protecting records from changes</strong></p>
+<hr />
+<p>How record set protections work, which records to protect, how rejected changes and zone deletion behave, and the permissions that control removal.</p>
+<p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>AWS::Route53::RecordSetProtection</strong></p>
+<hr />
+<p>CloudFormation resource for managing protections, including update ordering, rollback behavior, and importing existing protections.</p>
+<p><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>Route 53 blog posts</strong></p>
 <hr />
 <p>Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.</p>
@@ -2114,7 +2165,7 @@
 <p><strong>Relationship to other Foundation topics:</strong></p>
 <ul>
 <li><strong><a href="../vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: Every <abbr title="Virtual Private Cloud">VPC</abbr> gets a Route 53 Resolver automatically. <abbr title="Virtual Private Cloud">VPC</abbr> design (number of VPCs, account placement) determines how many private hosted zone associations and Resolver endpoints you need.</li>
-<li><strong><a href="../organizations/">AWS Organizations</a></strong>: Route 53 Profiles share <abbr title="Domain Name System">DNS</abbr> configuration at the OU level. Your OU structure determines how <abbr title="Domain Name System">DNS</abbr> configuration is distributed.</li>
+<li><strong><a href="../organizations/">AWS Organizations</a></strong>: Route 53 Profiles share <abbr title="Domain Name System">DNS</abbr> configuration at the OU level, and an SCP at the OU restricts who can remove record set protections. Your OU structure determines how <abbr title="Domain Name System">DNS</abbr> configuration is distributed and where that control applies.</li>
 </ul>
 <p><strong>Relationship to Connectivity topics:</strong></p>
 <ul>
@@ -2155,7 +2206,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 22, 2026 19:47:11 UTC">November 22, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 25, 2026 21:59:05 UTC">November 25, 2026</span>
   </span>
 
     
