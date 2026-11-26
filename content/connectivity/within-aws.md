@@ -174,7 +174,7 @@ This approach avoids a disruptive one-step migration and lets you validate the n
 | **AWS Cloud WAN + VPC Peering** | Primary network backbone | Direct low-latency, high-throughput connectivity for specific VPC pairs (for example, database replication) |
 | **AWS Cloud WAN + Route 53 Global Resolver** | Private path and segments that act as DNS access sources | DNS resolution for hybrid and branch clients; see [DNS Architecture](../foundation/dns.md#global-resolver-for-clients-outside-vpcs) |
 
-Global Resolver over Cloud WAN requires core network policy version 2026.10 or later. With that version, Cloud WAN breaks ties between equivalent cross-Region routes with a default MED, so if you have not set a routing preference, traffic to a destination with multiple equivalent routes can shift to a different Region once, when the update takes effect. Set the preference with an edge location routing policy before you update. See [policy versions](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-policies-json.html#cloudwan-version-json).
+Global Resolver over Cloud WAN needs core network policy version 2026.10 or later for closest-Region routing. With that version, Cloud WAN breaks ties between equivalent cross-Region routes with a default MED, so if you have not set a routing preference, traffic to a destination with multiple equivalent routes can shift to a different Region once, when the update takes effect. Set the preference with an edge location routing policy before you update. See [policy versions](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-policies-json.html#cloudwan-version-json).
 
 ### Documentation
 
