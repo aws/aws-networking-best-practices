@@ -144,6 +144,20 @@ Protections don't change how Route 53 answers DNS queries. They only control cha
 
 For the console and CLI steps, see [Protecting records from changes](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/rrset-protection.html). For an example policy that denies removing protections, see [Example 5: Deny removal of record set protections](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/access-control-managing-permissions.html#access-policy-example-deny-delete-rrset-protections).
 
+#### Protect delegation NS records only where a resolver follows them
+
+A delegation NS record in a parent zone matters only when a resolver follows it to reach the sub-zone's name servers. Protect it in those cases and skip it elsewhere.
+
+**Public delegation: protect the record.** Internet resolvers learn a public sub-zone's name servers from the NS record in the parent zone. If someone changes or deletes that record, the whole sub-zone stops resolving even though its own records are intact. When the parent zone's account delegates a subdomain to a zone in an application account, a protection in the parent zone keeps routine automation and the application account's roles from altering the delegation. Recreating a sub-zone gives it a new set of name servers, so re-delegating requires removing the protection first, which is the deliberate step protection is meant to force. See [Routing traffic for subdomains](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-routing-traffic-for-subdomains.html) for how the delegation works.
+
+**Private zones hosted in AWS: don't rely on the record.** Route 53 Resolver answers a query from the most specific private hosted zone that matches the name and is associated with the VPC, so a private sub-zone resolves through its VPC association, not through an NS record in the parent zone. Deleting that NS record doesn't make the sub-zone unresolvable. Removing the sub-zone's VPC association does. Protecting the NS record therefore adds nothing for the central parent zone with sub-zones pattern described earlier on this page. Protect the sub-zone's VPC associations through the controls on the account that manages them (Route 53 Profiles or direct association), not through a record protection. See [Considerations when working with a private hosted zone](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zone-private-considerations.html) for the matching rules.
+
+**Private zones delegated to external name servers: protect the record.** When a private hosted zone delegates a subdomain to on-premises or public name servers through a Resolver delegation rule, the NS record is what Route 53 Resolver follows. Treat it like a public delegation. See [Resolver delegation rules](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/outbound-delegation-tutorial.html).
+
+A protection covers only the record in the parent zone. It doesn't stop the sub-zone's owner from changing records in the sub-zone or deleting it, which leaves the delegation pointing at name servers that no longer answer. Restrict who can delete the sub-zone as a separate control.
+
+***Key insight:*** *Protect a delegation NS record only where a resolver follows it: public delegations and delegations to external name servers. A private sub-zone hosted in AWS resolves through its VPC association, not through the parent's NS record.*
+
 ### IPv6 considerations
 
 #### Configure dual-stack Resolver endpoints from the start
