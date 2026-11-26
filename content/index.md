@@ -19,6 +19,8 @@ AWS Network Reference Architecture
 
 If you know what you're trying to accomplish, start with the **[Decision Map](decisions.md)** — it maps common AWS networking questions directly to recommended services, patterns, and trade-offs.
 
+If you need to know which decisions are hard to reverse and when a design stops fitting, read the **[Decision Framework](decision-framework.md)**. It classifies networking decisions as one-way or two-way doors and names the inflection points that reopen them.
+
 Or, start with Foundation to understand the basics and then explore each pillar based on your specific networking requirements.
 
 <div class="grid cards" markdown>
