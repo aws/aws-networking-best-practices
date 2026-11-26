@@ -176,6 +176,8 @@ Route 53 Resolver DNS Firewall is the cheapest and broadest egress control in AW
 
 Deploy DNS Firewall rule groups via Route 53 Profiles so every VPC in the organization gets the same baseline protection. Layer with Network Firewall or third-party inspection for traffic that bypasses DNS (hardcoded IPs, DNS-over-HTTPS).
 
+Beyond the managed threat lists, an Automated Allowlist rule is the practical route to allow-list mode, because DNS Firewall lists the domains your VPCs actually queried and you approve them instead of writing the list from scratch. See [Build the allow list with an Automated Allowlist rule](../security/outbound.md#build-the-allow-list-with-an-automated-allowlist-rule) in Outbound Controls for the detail.
+
 For detailed DNS Firewall best practices and integration with other egress controls, see [Outbound Controls](../security/outbound.md).
 
 #### Enable Resolver query logging for visibility and forensics
