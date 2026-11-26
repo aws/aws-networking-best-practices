@@ -1,6 +1,6 @@
 # Networking Decision Map
 
-This page maps common AWS networking questions to the right service, pattern, and page in this guide. Use it when you know what you're trying to accomplish but aren't sure which AWS service or architectural pattern fits.
+This page maps common AWS networking questions to the right service, pattern, and page in this guide. Use it when you know what you're trying to accomplish but aren't sure which AWS service or architectural pattern fits. To decide how carefully to make a choice, see the [Decision Framework](decision-framework.md), which separates decisions that are hard to reverse from decisions you can change later.
 
 ## Connecting VPCs and accounts
 
