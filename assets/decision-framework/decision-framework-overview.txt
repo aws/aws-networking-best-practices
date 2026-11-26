@@ -1,0 +1,34 @@
+DIAGRAM: Decision Framework Overview
+PURPOSE: Shows that one-way doors are decided before the first workload, while two-way doors are changed at each inflection point as the network grows.
+LAYOUT: left-to-right growth axis on top, with a staircase of inflection points in the middle and a row of one-way doors along the bottom
+WIDTH: 700px maximum readable width
+
+GROUPS:
+- Inflection points: border style dashed, color blue (#2563eb); contains the five inflection point steps and their two-way door captions. Group label: "Inflection points (example order, yours varies): revisit two-way doors"
+- One-way doors: border style dashed, color purple (#7c3aed); contains the six one-way door nodes. Group label: "One-way doors: decide before the first workload, because every step above depends on them"
+
+NODES:
+- Growth axis label: text only, label "Growth: more accounts, VPCs, Regions, and workloads"
+- First workload marker: text only, label "First workload", placed to the left of the dashed vertical line
+- Step 1: generic box (blue fill), label "Isolated accounts and VPCs"; caption below in gray "Two-way: security groups, network ACLs"
+- Step 2: generic box (blue fill), label "Hub-and-spoke routing"; caption below in gray "Two-way: VPC Peering → Transit Gateway"
+- Step 3: generic box (blue fill), label "Multi-Region"; caption below in gray "Two-way: Transit Gateway peering → Cloud WAN"
+- Step 4: generic box (blue fill), label "Shared services"; caption below in gray "Two-way: egress model, endpoints, DNS placement"
+- Step 5: generic box (blue fill), label "Hybrid connectivity"; caption below in gray "Two-way: VPN → Direct Connect"
+- Door 1: generic box (purple fill), label "Account boundary"
+- Door 2: generic box (purple fill), label "Address plan (IPv4 + IPv6)"
+- Door 3: generic box (purple fill), label "Subnet and Availability Zone layout"
+- Door 4: generic box (purple fill), label "Primary Region"
+- Door 5: generic box (purple fill), label "DNS namespace"
+- Door 6: generic box (purple fill), label "Public addresses and endpoint names"
+
+CONNECTIONS:
+- Growth axis: solid gray arrow running left to right across the full width above both groups
+- First workload line: dashed gray vertical line from the growth axis down to the top edge of the one-way doors group, separating "before" (left) from the inflection point steps (right)
+
+NOTES:
+- BACKGROUND: Transparent (no white background). All text and lines on the transparent background must use #7E7E7E instead of black (#000000). Text inside colored nodes is white.
+- The five inflection point steps rise from lower left to upper right to show growth. The order is an example. The page states that inflection points do not occur in a fixed order.
+- The one-way doors group spans the full width below the staircase to show that every step depends on it.
+- Two-way door captions sit directly beneath the step where that decision typically changes.
+- The DrawIO file is the editable source. The PNG is exported at 1.5x scale.

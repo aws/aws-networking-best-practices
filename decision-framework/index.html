@@ -1,0 +1,3050 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist.">
+      
+      
+      
+        <link rel="canonical" href="https://aws.github.io/aws-networking-best-practices/decision-framework/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../decisions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Decision Framework - Networking Best Practices</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-ZCN9MVZ9P6"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-ZCN9MVZ9P6",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-ZCN9MVZ9P6",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+  
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Decision Framework - Networking Best Practices" />
+<meta property="og:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="og:image" content="https://aws.github.io/aws-networking-best-practices/assets/images/social/decision-framework.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://aws.github.io/aws-networking-best-practices/decision-framework/" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:title" content="Decision Framework - Networking Best Practices" />
+<meta property="twitter:description" content="AWS Networking Architecture guidance and best practices by the AWS user community, vetted by AWS Networking Specialist." />
+<meta property="twitter:image" content="https://aws.github.io/aws-networking-best-practices/assets/images/social/decision-framework.png" />
+</head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#decision-framework-one-way-and-two-way-doors" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Networking Best Practices" class="md-header__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Networking Best Practices
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Decision Framework
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="light" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Networking Best Practices" class="md-nav__button md-logo" aria-label="Networking Best Practices" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Networking Best Practices
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/aws/aws-networking-best-practices/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github Repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Framework
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-combined-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The combined rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The combined rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#doors-change-type-over-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doors change type over time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-way-doors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-way doors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-way-doors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-way doors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hidden-one-way-doors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hidden one-way doors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inflection-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inflection points
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inflection points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evolve-intentionally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolve intentionally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classify-before-you-choose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classify before you choose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decide-one-way-doors-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decide one-way doors early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-two-way-doors-deliberately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change two-way doors deliberately
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-this-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use this framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-the-framework-with-other-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining the framework with other guidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applying-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the framework
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Applying the framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decision Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../foundation/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foundation
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Foundation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/aws-prerequisites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Before You Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/organizations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Organizations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/vpc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon VPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/regions-azs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Regions & Availability Zones
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/cidr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CIDR Planning
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/subnets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/dns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foundation/ipam/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPAM
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../connectivity/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connectivity
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Connectivity
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../connectivity/internet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../connectivity/within-aws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Within AWS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../connectivity/hybrid-multicloud/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid & Multi-Cloud
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../connectivity/remote-access/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Remote Access
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../application-networking/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application Networking
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Application Networking
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../application-networking/load-balancing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Load Balancing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../application-networking/service-to-service/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Service to Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../application-networking/container-mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Container Mesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../security/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/perimeter-inbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Perimeter Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/outbound/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Outbound Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/segmentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Segmentation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../observability/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Observability
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/internal-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Internal Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/external-traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    External Traffic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/service-monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AWS Services
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/network-performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/notifications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Notifications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/contribute/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/report-a-correction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Report a correction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/new-best-practice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    New best practice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/making-a-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Making a pull request
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../community/conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conventions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-combined-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The combined rule
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The combined rule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#doors-change-type-over-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doors change type over time
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#one-way-doors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        One-way doors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#two-way-doors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two-way doors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hidden-one-way-doors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hidden one-way doors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inflection-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inflection points
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inflection points">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evolve-intentionally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evolve intentionally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#classify-before-you-choose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classify before you choose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decide-one-way-doors-early" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decide one-way doors early
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#change-two-way-doors-deliberately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change two-way doors deliberately
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-this-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use this framework
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combining-the-framework-with-other-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combining the framework with other guidance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#applying-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the framework
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Applying the framework">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#existing-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Existing environments
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/aws/aws-networking-best-practices/edit/main/content/decision-framework.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/aws/aws-networking-best-practices/raw/main/content/decision-framework.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5 5 5 0 0 1 5-5 5 5 0 0 1 5 5 5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5"/></svg>
+    </a>
+  
+
+
+<h1 id="decision-framework-one-way-and-two-way-doors">Decision Framework: One-Way and Two-Way Doors<a class="headerlink" href="#decision-framework-one-way-and-two-way-doors" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Prerequisites</p>
+<p>This page assumes familiarity with the five pillars in the <a href="../">Introduction</a> and the multi-account model in <a href="../foundation/organizations/">AWS Organizations</a>. Review those first if you're new to this guide.</p>
+</div>
+<p>A networking decision is a one-way door when reversing it means rebuilding or migrating the workloads that depend on it, and a two-way door when a configuration change reverses it. In AWS networking, the primary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block of a <abbr title="Virtual Private Cloud">VPC</abbr>, the account boundary, subnet and Availability Zone placement, the <abbr title="Internet Protocol version 6">IPv6</abbr> address plan, and public addresses that other parties depend on are one-way doors. The choice between <abbr title="Virtual Private Cloud">VPC</abbr> Peering, AWS Transit Gateway, and AWS Cloud WAN is a two-way door, because the three can run side by side during a migration.</p>
+<p>The cost of a wrong network decision is rarely the fix itself. Every workload built on a network inherits its address plan, account boundary, and subnet layout, so reversal cost grows with each dependent workload. A door that is cheap to change before the first workload can be effectively one-way after hundreds of workloads depend on it. Two tools address this. The door type asks how hard a decision is to undo. Inflection points identify the moments when a current design stops fitting.</p>
+<p>This page is a register, not a design guide. It classifies decisions as one-way or two-way doors, names the triggers that reopen them, and links to the page that owns the detail for each decision. The door terms come from <a href="https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm">Amazon's 2015 letter to shareholders</a>, which separates hard-to-reverse decisions that need deliberation from reversible decisions that should be made quickly.</p>
+<figure>
+<p><img alt="Growth steps from isolated environments to hybrid connectivity, with one-way doors set before the first workload and two-way doors changed at each step" src="../assets/decision-framework/decision-framework-overview.png" /></p>
+<figcaption>
+<p>Decision framework overview — <a href="../assets/decision-framework/decision-framework-overview.drawio">Drawio Source</a></p>
+</figcaption>
+</figure>
+<h2 id="the-combined-rule">The combined rule<a class="headerlink" href="#the-combined-rule" title="Permanent link">&para;</a></h2>
+<p>Door type decides when you decide. Inflection points decide when you revisit.</p>
+<table>
+<thead>
+<tr>
+<th>Door type</th>
+<th>Decide</th>
+<th>Revisit</th>
+<th>Reversal involves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>One-way</strong></td>
+<td>Before the first workload, with input from the platform, security, and network owners</td>
+<td>Before each inflection point, to confirm the decision still supports the next transition</td>
+<td>Rebuilding or migrating dependent workloads, or coordinating with parties you don't control</td>
+</tr>
+<tr>
+<td><strong>Two-way</strong></td>
+<td>At the trigger, not before. Choose the simplest design that fits today</td>
+<td>At each inflection point</td>
+<td>A configuration change, a parallel run, or a staged migration</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>An inflection point is not a reason to defer a one-way door. Each transition depends on one-way decisions made earlier, so a design that moves from one Region to several needs per-Region address blocks and a <abbr title="Domain Name System">DNS</abbr> hierarchy that were set before the second Region existed.</em></p>
+<h3 id="doors-change-type-over-time">Doors change type over time<a class="headerlink" href="#doors-change-type-over-time" title="Permanent link">&para;</a></h3>
+<p>Classify a decision when you make it and reclassify it as dependents accumulate. A <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block with no workloads is a two-way door, because you can delete the <abbr title="Virtual Private Cloud">VPC</abbr> and create another. With hundreds of workloads, peering connections, firewall rules, and on-premises routes that reference it, the same decision is a one-way door. This is why the register below states when each one-way door must be decided, not only that it is hard to reverse.</p>
+<h2 id="one-way-doors">One-way doors<a class="headerlink" href="#one-way-doors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>What reversal involves</th>
+<th>Decide before</th>
+<th><abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr></th>
+<th>Learn more</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> primary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block</strong></td>
+<td>The primary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block can't be removed, and an existing <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block can't be resized. Secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks can be added and removed, but each adds route entries and service-specific restrictions. Reversal means a new <abbr title="Virtual Private Cloud">VPC</abbr> and a workload migration.</td>
+<td>The first <abbr title="Virtual Private Cloud">VPC</abbr> in each Region</td>
+<td>The primary block is <abbr title="Internet Protocol version 4">IPv4</abbr>. <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks are separate associations.</td>
+<td><a href="../foundation/cidr/#start-with-16-for-production-vpcs"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning</a>, <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html"><abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</a></td>
+</tr>
+<tr>
+<td><strong>Address hierarchy and overlap-free space</strong></td>
+<td>Overlapping ranges prevent native routing between the networks and block <abbr title="Virtual Private Cloud">VPC</abbr> Peering outright. Recovery options (re-IP, exposing a service through AWS PrivateLink or Amazon <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, managed 1:1 <abbr title="Network Address Translation">NAT</abbr>) each add cost or address bookkeeping.</td>
+<td>Before the first <abbr title="Virtual Private Cloud">VPC</abbr> is allocated, and before connecting to on-premises or other clouds</td>
+<td>Plan both families from one hierarchy in Amazon <abbr title="Virtual Private Cloud">VPC</abbr> IP Address Manager (<abbr title="IP Address Manager">IPAM</abbr>). Private <abbr title="Internet Protocol version 6">IPv6</abbr> ULA ranges can overlap and aren't translated by managed <abbr title="Network Address Translation">NAT</abbr>.</td>
+<td><a href="../foundation/cidr/#never-overlap-cidr-blocks-across-vpcs-you-might-connect"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> planning</a>, <a href="../foundation/ipam/"><abbr title="IP Address Manager">IPAM</abbr></a></td>
+</tr>
+<tr>
+<td><strong><abbr title="Internet Protocol version 6">IPv6</abbr> address plan and dual-stack readiness</strong></td>
+<td>You can associate an <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block with an existing <abbr title="Virtual Private Cloud">VPC</abbr>, but every subnet, route table, security group, network <abbr title="Access Control List">ACL</abbr>, firewall rule, and application assumption must then change, and that work grows with the age of the <abbr title="Virtual Private Cloud">VPC</abbr>. You can't choose an Amazon-provided block, and you can't expect to receive the same block again after you disassociate it.</td>
+<td>The first <abbr title="Virtual Private Cloud">VPC</abbr>. Enable dual-stack at creation</td>
+<td><abbr title="Internet Protocol version 4">IPv4</abbr> behavior is unchanged. Dual-stack at creation keeps <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets available later.</td>
+<td><a href="../foundation/cidr/#plan-ipv6-alongside-ipv4">Plan <abbr title="Internet Protocol version 6">IPv6</abbr> alongside <abbr title="Internet Protocol version 4">IPv4</abbr></a>, <a href="../foundation/vpc/#enable-dual-stack-from-day-one-on-new-vpcs">Dual-stack from day one</a></td>
+</tr>
+<tr>
+<td><strong>Subnet <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block and Availability Zone placement</strong></td>
+<td>A subnet can't be resized or moved to another Availability Zone. Reversal means a new subnet and a resource migration. Services that place endpoints in your <abbr title="Virtual Private Cloud">VPC</abbr> (firewall endpoints, interface endpoints, transit gateway attachments) need space in each Availability Zone.</td>
+<td>When the first <abbr title="Virtual Private Cloud">VPC</abbr> is designed</td>
+<td><abbr title="Internet Protocol version 4">IPv4</abbr> subnets are sized by workload. Every <abbr title="Internet Protocol version 6">IPv6</abbr> subnet is a /64.</td>
+<td><a href="../foundation/subnets/#size-for-the-workload-not-for-convention">Subnets</a>, <a href="../foundation/regions-azs/#availability-zone-ids-vs-availability-zone-names">Availability Zone IDs</a></td>
+</tr>
+<tr>
+<td><strong>Account boundary and the networking account</strong></td>
+<td>VPCs and most network resources can't move between accounts, so changing the boundary means rebuilding in another account. Accounts can move between organizational units (OUs), which changes the service control policies (SCPs), resource shares, and attachment policies that apply but doesn't rebuild anything.</td>
+<td>Before the first workload account</td>
+<td>Same for both families. <abbr title="IP Address Manager">IPAM</abbr> pools and resource shares are scoped by OU.</td>
+<td><a href="../foundation/organizations/#establish-the-networking-account-before-any-workload-accounts">Networking account first</a></td>
+</tr>
+<tr>
+<td><strong>Shared <abbr title="Virtual Private Cloud">VPC</abbr> or <abbr title="Virtual Private Cloud">VPC</abbr> per workload</strong></td>
+<td>Resources can't move between VPCs. Changing the pattern means recreating workloads in the new <abbr title="Virtual Private Cloud">VPC</abbr> and changing who owns security groups, routes, and endpoints.</td>
+<td>Before onboarding the first workload account</td>
+<td>Same for both families.</td>
+<td><a href="../foundation/vpc/#one-vpc-per-workload-account-is-the-default-pattern"><abbr title="Virtual Private Cloud">VPC</abbr> design patterns</a></td>
+</tr>
+<tr>
+<td><strong>Primary Region</strong></td>
+<td>Moving means migrating data and workloads and rebuilding connectivity. The Region constrains latency, service availability, AWS Direct Connect options, data residency, and cross-Region transfer cost.</td>
+<td>Before the first production workload</td>
+<td><abbr title="Internet Protocol version 6">IPv6</abbr> support differs by service and Region. Check each service in the target Region.</td>
+<td><a href="../foundation/regions-azs/#region-selection-criteria-for-networking">Region selection</a></td>
+</tr>
+<tr>
+<td><strong><abbr title="Domain Name System">DNS</abbr> namespace</strong></td>
+<td>Names are embedded in service discovery, <abbr title="Transport Layer Security">TLS</abbr> certificates, client configuration, and API contracts. A rename means reissuing certificates and changing every client.</td>
+<td>Before services go live</td>
+<td>Publish A and AAAA records for the same names.</td>
+<td><a href="../foundation/dns/#design-your-internal-namespace-hierarchy-deliberately">Namespace hierarchy</a></td>
+</tr>
+<tr>
+<td><strong>Public addresses and endpoint names that other parties depend on</strong></td>
+<td>Partners and SaaS providers allowlist source addresses, and clients cache or hard-code hostnames and IP addresses. Changing them requires coordination with every external party. This covers Elastic IP addresses, static addresses on load balancers and AWS Global Accelerator, bring your own IP (BYOIP) ranges, and published PrivateLink service names.</td>
+<td>Before publishing an address or name outside your organization</td>
+<td>Public <abbr title="Internet Protocol version 6">IPv6</abbr> addresses are allowlisted the same way. Use BYOIP through <abbr title="IP Address Manager">IPAM</abbr> when external parties allowlist <abbr title="Internet Protocol version 6">IPv6</abbr> addresses.</td>
+<td><a href="../foundation/ipam/#use-the-public-scope-for-publicly-routable-address-management"><abbr title="IP Address Manager">IPAM</abbr> public scope</a>, <a href="../connectivity/internet/">Internet connectivity</a></td>
+</tr>
+<tr>
+<td><strong>Amazon-side ASNs on gateways</strong></td>
+<td>A virtual private gateway's ASN can't change after creation. A transit gateway's ASN can change only after its <abbr title="Virtual Private Network">VPN</abbr>, Direct Connect gateway, Connect, <abbr title="Virtual Private Network">VPN</abbr> concentrator, and AWS Client <abbr title="Virtual Private Network">VPN</abbr> attachments are deleted. On-premises routers are configured with these ASNs.</td>
+<td>Before the first gateway is created</td>
+<td>The same ASN plan applies to both families.</td>
+<td><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/how_it_works.html">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> ASN</a>, <a href="https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_ModifyTransitGatewayOptions.html">ModifyTransitGatewayOptions</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="two-way-doors">Two-way doors<a class="headerlink" href="#two-way-doors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>What reversal involves</th>
+<th>Hidden one-way element to check</th>
+<th>Learn more</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><abbr title="Virtual Private Cloud">VPC</abbr> Peering, AWS Transit Gateway, AWS Cloud WAN</strong></td>
+<td>The three coexist. Existing transit gateways can peer with Cloud WAN, so you migrate one <abbr title="Virtual Private Cloud">VPC</abbr> or segment at a time.</td>
+<td>Overlapping or non-contiguous address plans block the move.</td>
+<td><a href="../connectivity/within-aws/#building-your-connectivity-stack">Connectivity within AWS</a></td>
+</tr>
+<tr>
+<td><strong>Centralized or distributed <abbr title="Internet Protocol version 4">IPv4</abbr> egress, and <abbr title="Network Address Translation">NAT</abbr> gateway mode</strong></td>
+<td>Route table changes move a <abbr title="Virtual Private Cloud">VPC</abbr> between its own <abbr title="Network Address Translation">NAT</abbr> gateways and a shared egress path. Regional and zonal <abbr title="Network Address Translation">NAT</abbr> gateways run side by side.</td>
+<td>Source IP addresses that partners allowlist change with the <abbr title="Network Address Translation">NAT</abbr> gateway. <abbr title="Internet Protocol version 6">IPv6</abbr> egress is per-<abbr title="Virtual Private Cloud">VPC</abbr> by design, so the choice applies to <abbr title="Internet Protocol version 4">IPv4</abbr>.</td>
+<td><a href="../connectivity/internet/#comparing-decentralized-vs-centralized-ipv4-egress">Comparing egress patterns</a></td>
+</tr>
+<tr>
+<td><strong>Internet ingress model</strong></td>
+<td>Per-application ingress and shared ingress run side by side, and <abbr title="Domain Name System">DNS</abbr> and routing move traffic between them.</td>
+<td>Published hostnames, static IP addresses, and certificates.</td>
+<td><a href="../connectivity/internet/#decentralized-ingress-preferred">Decentralized ingress</a></td>
+</tr>
+<tr>
+<td><strong>Gateway and interface <abbr title="Virtual Private Cloud">VPC</abbr> endpoints</strong></td>
+<td>Gateway endpoints for Amazon Simple Storage Service (Amazon <abbr title="Simple Storage Service">S3</abbr>) and Amazon DynamoDB cost nothing, and interface endpoints can be added for other services as traffic justifies them.</td>
+<td>Interface endpoints add hourly and processing charges and per-endpoint policies.</td>
+<td><a href="../connectivity/internet/#decentralized-ipv4-egress">Decentralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress</a></td>
+</tr>
+<tr>
+<td><strong>Security groups and network ACLs</strong></td>
+<td>Rules are added or removed in place and take effect immediately.</td>
+<td>The rule is reversible, but a wrong change cuts traffic before anyone notices. Stage and review changes.</td>
+<td><a href="../security/segmentation/#security-groups-micro-segmentation">Security groups</a></td>
+</tr>
+<tr>
+<td><strong>Inspection layers (AWS Network Firewall, Gateway Load Balancer appliances, Amazon Route 53 Resolver <abbr title="Domain Name System">DNS</abbr> Firewall)</strong></td>
+<td>Layers are added incrementally without removing existing controls.</td>
+<td>Inline inspection needs dedicated subnets, route changes, and symmetric routing, so plan the subnet layout in advance.</td>
+<td><a href="../security/perimeter-inbound/#aws-network-firewall">Perimeter controls</a></td>
+</tr>
+<tr>
+<td><strong>Service access pattern (PrivateLink, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, routed connectivity)</strong></td>
+<td>A consumer moves between patterns by changing its endpoint and <abbr title="Domain Name System">DNS</abbr> name.</td>
+<td>Each pattern changes endpoint names, <abbr title="Domain Name System">DNS</abbr>, and authentication. External consumers must change too.</td>
+<td><a href="../connectivity/within-aws/#private-service-access-with-aws-privatelink">PrivateLink</a>, <a href="../connectivity/within-aws/#application-layer-service-communication-with-amazon-vpc-lattice"><abbr title="Virtual Private Cloud">VPC</abbr> Lattice</a></td>
+</tr>
+<tr>
+<td><strong>Load balancer type (Application Load Balancer, Network Load Balancer)</strong></td>
+<td>You can't change a load balancer's type. You create the new one, move traffic with <abbr title="Domain Name System">DNS</abbr>, and retire the old one.</td>
+<td><abbr title="Domain Name System">DNS</abbr> names, static IP addresses, and PrivateLink services tied to a Network Load Balancer change. Gateway Load Balancer inserts appliances and isn't an alternative to either.</td>
+<td><a href="../application-networking/load-balancing/">Load balancing</a></td>
+</tr>
+<tr>
+<td><strong><abbr title="Domain Name System">DNS</abbr> resolution placement</strong></td>
+<td>Resolver endpoints and rules are added, shared, and re-pointed incrementally, including through Amazon Route 53 Profiles.</td>
+<td>On-premises forwarders point at inbound endpoint IP addresses, so endpoint changes require on-premises changes.</td>
+<td><a href="../foundation/dns/#use-route-53-profiles-for-multi-account-dns-distribution">Route 53 Profiles</a></td>
+</tr>
+<tr>
+<td><strong>Direct Connect locations and capacity</strong></td>
+<td>New connections are ordered next to existing ones, and <abbr title="Border Gateway Protocol">BGP</abbr> preference shifts traffic. The constraint is provisioning lead time with cross-connects and providers, not reversibility.</td>
+<td>Lead time. Order capacity before the inflection point, not at it.</td>
+<td><a href="../connectivity/hybrid-multicloud/#design-resiliency-across-locations-and-devices">Resiliency across locations</a></td>
+</tr>
+<tr>
+<td><strong>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> and Direct Connect for on-premises traffic</strong></td>
+<td>Tunnels and circuits coexist, and <abbr title="Border Gateway Protocol">BGP</abbr> route preference moves traffic between them.</td>
+<td>On-premises router configuration and the ASN plan.</td>
+<td><a href="../connectivity/hybrid-multicloud/#aws-site-to-site-vpn-best-practices">Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="hidden-one-way-doors">Hidden one-way doors<a class="headerlink" href="#hidden-one-way-doors" title="Permanent link">&para;</a></h2>
+<p>A decision is a hidden one-way door when the configuration is reversible but a dependency outside your control isn't. These are the most common misclassifications.</p>
+<table>
+<thead>
+<tr>
+<th>Looks two-way</th>
+<th>Hidden dependency</th>
+<th>Check before changing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Changing <abbr title="Network Address Translation">NAT</abbr> gateways or the egress path</td>
+<td>Partner and SaaS allowlists of your source IP addresses</td>
+<td>Inventory external allowlists, and keep the same public addresses</td>
+</tr>
+<tr>
+<td>Changing ingress or replacing a load balancer</td>
+<td>Client-cached hostnames, static IP addresses, and PrivateLink services tied to a Network Load Balancer</td>
+<td>Publish names you control, and point consumers at those</td>
+</tr>
+<tr>
+<td>Moving a service to PrivateLink or <abbr title="Virtual Private Cloud">VPC</abbr> Lattice</td>
+<td>Consumer endpoints, <abbr title="Domain Name System">DNS</abbr> names, and authentication</td>
+<td>Treat it as a new interface for consumers, and run both paths in parallel</td>
+</tr>
+<tr>
+<td>Re-pointing hybrid <abbr title="Domain Name System">DNS</abbr></td>
+<td>On-premises forwarders configured with endpoint IP addresses</td>
+<td>Change the forwarders in the same change window</td>
+</tr>
+<tr>
+<td>Adding <abbr title="Internet Protocol version 6">IPv6</abbr> later</td>
+<td>Applications, firewall rules, and log parsers that assume <abbr title="Internet Protocol version 4">IPv4</abbr></td>
+<td>Test dual-stack in a non-production <abbr title="Virtual Private Cloud">VPC</abbr> before enabling it</td>
+</tr>
+<tr>
+<td>Route table changes</td>
+<td>A wrong route drops traffic immediately</td>
+<td>Define the rollback path before the change</td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>Reversible in design is not the same as safe on a live network. The risk of a two-way door is the window between a wrong change and its detection, so the control is a staged change with a defined rollback, not a classification.</em></p>
+<h2 id="inflection-points">Inflection points<a class="headerlink" href="#inflection-points" title="Permanent link">&para;</a></h2>
+<p>An inflection point is the moment a current design stops fitting. Each has a trigger you can name and a signal you can measure. They don't occur in a fixed order, and many organizations never reach all of them.</p>
+<table>
+<thead>
+<tr>
+<th>Transition</th>
+<th>Trigger</th>
+<th>Signal and where to see it</th>
+<th>One-way doors already set</th>
+<th>Typical response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single shared network → isolated accounts and VPCs</strong></td>
+<td>Blast-radius or compliance separation between workloads or environments</td>
+<td>Not a metric. Incident reviews and audit findings raise it</td>
+<td>Account boundary, address plan</td>
+<td><a href="../security/segmentation/#account-level-isolation-the-strongest-boundary">Account-level isolation</a></td>
+</tr>
+<tr>
+<td><strong>Point-to-point → hub-and-spoke routing</strong></td>
+<td>Need for transitive routing, shared on-premises access, or central inspection, or pairwise route management that no longer scales</td>
+<td>Growth in peering connections and per-<abbr title="Virtual Private Cloud">VPC</abbr> route entries, and the topology view in AWS Network Manager</td>
+<td>Non-overlapping, contiguous address plan</td>
+<td><abbr title="Virtual Private Cloud">VPC</abbr> Peering → <a href="../connectivity/within-aws/#regional-hub-and-spoke-with-aws-transit-gateway">Transit Gateway</a></td>
+</tr>
+<tr>
+<td><strong>Single Region → multi-Region</strong></td>
+<td>Latency, data residency, or recovery objectives that one Region can't meet</td>
+<td>Client latency by geography and cross-Region traffic (<a href="../observability/network-performance/">Network performance</a>, <a href="../observability/external-traffic/">External traffic</a>)</td>
+<td>Region choice, per-Region address blocks, <abbr title="Domain Name System">DNS</abbr> hierarchy</td>
+<td>Transit Gateway inter-Region peering or <a href="../connectivity/within-aws/#policy-driven-network-management-with-aws-cloud-wan">Cloud WAN</a></td>
+</tr>
+<tr>
+<td><strong>Distributed → shared services</strong></td>
+<td>Per-<abbr title="Virtual Private Cloud">VPC</abbr> duplicate charges (<abbr title="Network Address Translation">NAT</abbr> gateway hours, interface endpoint hours in each Availability Zone, firewall endpoint hours) exceed the shared design's data processing and ownership cost</td>
+<td>AWS Cost and Usage Reports by usage type per <abbr title="Virtual Private Cloud">VPC</abbr>, and <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs bytes by destination (<a href="../observability/external-traffic/#cost-management">Cost management</a>)</td>
+<td>Networking account, hub attachment model</td>
+<td>Shared endpoints, centralized <abbr title="Internet Protocol version 4">IPv4</abbr> egress, shared Resolver rules. Ingress stays decentralized by default</td>
+</tr>
+<tr>
+<td><strong>Manual → dynamic route management</strong></td>
+<td>Manual route updates across VPCs or on-premises can't keep up with changes or failover requirements</td>
+<td>Count of static routes and manual route changes (AWS Config, AWS CloudTrail), and failover time in tests</td>
+<td>Contiguous address plan for summarization, ASN plan</td>
+<td><a href="../foundation/cidr/#allocate-contiguously-for-route-summarization">Route summarization</a>, route propagation, <abbr title="Border Gateway Protocol">BGP</abbr></td>
+</tr>
+<tr>
+<td><strong>Per-account → organization-wide networking</strong></td>
+<td>Governance and consistency outweigh team autonomy: duplicated gateways, inconsistent policy, overlapping VPCs</td>
+<td><abbr title="IP Address Manager">IPAM</abbr> compliance findings, and accounts running their own transit gateways or <abbr title="Virtual Private Network">VPN</abbr> connections</td>
+<td>AWS Organizations structure, networking account, address plan</td>
+<td><a href="../foundation/ipam/"><abbr title="IP Address Manager">IPAM</abbr></a>, AWS Resource Access Manager (AWS RAM) shares at OU level, SCPs. New environments start here</td>
+</tr>
+<tr>
+<td><strong>Cloud-only → hybrid</strong></td>
+<td>A persistent on-premises dependency: steady traffic, directory services, data synchronization</td>
+<td><abbr title="Virtual Private Network">VPN</abbr> tunnel throughput and latency, Direct Connect connection metrics, Network Synthetic Monitor</td>
+<td>Address plan without on-premises overlap, <abbr title="Domain Name System">DNS</abbr> namespace, ASN plan</td>
+<td>Site-to-Site <abbr title="Virtual Private Network">VPN</abbr> first, then Direct Connect or AWS Interconnect - last mile. Centralized hybrid <abbr title="Domain Name System">DNS</abbr> is often the first shared service</td>
+</tr>
+<tr>
+<td><strong><abbr title="Internet Protocol version 4">IPv4</abbr> address pressure → <abbr title="Internet Protocol version 6">IPv6</abbr>-first workloads</strong></td>
+<td><abbr title="Internet Protocol version 4">IPv4</abbr> consumption in a subnet tier or <abbr title="IP Address Manager">IPAM</abbr> pool nears its allocation, or <abbr title="Network Address Translation">NAT</abbr> gateway processing grows on east-west traffic</td>
+<td><abbr title="IP Address Manager">IPAM</abbr> pool utilization and free addresses per subnet</td>
+<td><abbr title="Internet Protocol version 6">IPv6</abbr> plan, subnet sizing</td>
+<td><a href="../foundation/vpc/#use-ipv6-for-east-west-traffic-to-reduce-nat-dependency"><abbr title="Internet Protocol version 6">IPv6</abbr> for east-west traffic</a>, <abbr title="Internet Protocol version 6">IPv6</abbr>-only subnets for supporting services</td>
+</tr>
+<tr>
+<td><strong>Data transfer cost concentrates on a few paths</strong></td>
+<td>A pricing dimension (per-GB processing on <abbr title="Network Address Translation">NAT</abbr> gateways or transit gateways, cross-<abbr title="Availability Zone">AZ</abbr> transfer) dominates the network bill</td>
+<td>Cost and Usage Reports data-transfer line items, and <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs top talkers (<a href="../observability/internal-traffic/#cost-optimization">Cost optimization</a>)</td>
+<td>Address plan, subnet and Availability Zone layout</td>
+<td>Gateway endpoints for AWS services, <abbr title="Virtual Private Cloud">VPC</abbr> Peering for the heaviest <abbr title="Virtual Private Cloud">VPC</abbr> pairs, same-<abbr title="Availability Zone">AZ</abbr> routing. See the <a href="../decisions/">Decision Map</a></td>
+</tr>
+<tr>
+<td><strong>Compliance requires inline inspection</strong></td>
+<td>A requirement to inspect or log traffic between segments or on egress</td>
+<td>Not a metric. Audit and regulatory requirements raise it</td>
+<td>Subnet layout with infrastructure tiers, segment design</td>
+<td><a href="../security/perimeter-inbound/#aws-network-firewall">AWS Network Firewall</a>, Gateway Load Balancer, Cloud WAN service insertion</td>
+</tr>
+</tbody>
+</table>
+<p>Identity-based access, often called zero trust, isn't a scale trigger. See <a href="../security/segmentation/">Network Segmentation</a> and <a href="../connectivity/remote-access/">Remote Access</a>.</p>
+<h3 id="evolve-intentionally">Evolve intentionally<a class="headerlink" href="#evolve-intentionally" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Start with the simplest design that fits today</strong> for every two-way door. Designing for the final state on day one is inefficient and often impossible.</li>
+<li><strong>Treat an inflection point as a sign of growth, not failure.</strong> The failure is reaching one with a one-way door that doesn't support the transition.</li>
+<li><strong>Keep an architecture roadmap, not a premature implementation.</strong> List the next likely transitions and the one-way doors each one needs.</li>
+<li><strong>Review the signals on a schedule.</strong> A trigger noticed late turns a planned migration into an incident response.</li>
+</ul>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="classify-before-you-choose">Classify before you choose<a class="headerlink" href="#classify-before-you-choose" title="Permanent link">&para;</a></h3>
+<h4 id="classify-every-decision-as-a-one-way-or-two-way-door-before-choosing-a-service">Classify every decision as a one-way or two-way door before choosing a service<a class="headerlink" href="#classify-every-decision-as-a-one-way-or-two-way-door-before-choosing-a-service" title="Permanent link">&para;</a></h4>
+<p>Ask what reversal involves. If it means rebuilding or migrating dependent workloads, or coordinating with parties you don't control, treat the decision as a one-way door: involve the platform, security, and network owners, and write the decision down. If a configuration change reverses it, decide quickly with the simplest design that fits today.</p>
+<p>Classifying first prevents two opposite failures. Applying "start small" to the address plan creates re-IP projects. Applying heavyweight review to security group rules or load balancer choices slows every team and teaches them to bypass the process.</p>
+<p><strong><em>Key insight:</em></strong> <em>Spend design time on the doors you can't walk back through, and move quickly on the rest.</em></p>
+<h4 id="reclassify-decisions-as-dependents-accumulate">Reclassify decisions as dependents accumulate<a class="headerlink" href="#reclassify-decisions-as-dependents-accumulate" title="Permanent link">&para;</a></h4>
+<p>Review the register at each inflection point. A decision that was a two-way door at the start, such as a flat address range or a single shared account, becomes a one-way door as workloads, routes, and external allowlists build up around it.</p>
+<h3 id="decide-one-way-doors-early">Decide one-way doors early<a class="headerlink" href="#decide-one-way-doors-early" title="Permanent link">&para;</a></h3>
+<h4 id="settle-one-way-doors-before-the-first-workload-not-at-the-inflection-point">Settle one-way doors before the first workload, not at the inflection point<a class="headerlink" href="#settle-one-way-doors-before-the-first-workload-not-at-the-inflection-point" title="Permanent link">&para;</a></h4>
+<p>Each inflection point depends on one-way decisions made earlier. If you decide the address plan when you connect to on-premises, you decide it under pressure with workloads running, and an overlap found at that moment forces a re-IP, permanent translation, or service-level exposure.</p>
+<h4 id="keep-one-way-doors-open-with-identities-you-control">Keep one-way doors open with identities you control<a class="headerlink" href="#keep-one-way-doors-open-with-identities-you-control" title="Permanent link">&para;</a></h4>
+<p>You can't make a one-way door reversible, but you can reduce what it commits you to.</p>
+<table>
+<thead>
+<tr>
+<th>One-way door</th>
+<th>Option-preserving design</th>
+<th>Learn more</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Address plan</td>
+<td>Reserve a summary block per Region in <abbr title="IP Address Manager">IPAM</abbr>, allocate every <abbr title="Virtual Private Cloud">VPC</abbr> from it, and leave unallocated space for new accounts, Regions, and acquisitions</td>
+<td><a href="../foundation/ipam/#design-pools-top-down-organization-region-environment-workload">Pool hierarchy</a></td>
+</tr>
+<tr>
+<td><abbr title="Internet Protocol version 6">IPv6</abbr></td>
+<td>Associate an <abbr title="Internet Protocol version 6">IPv6</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block from the same hierarchy at <abbr title="Virtual Private Cloud">VPC</abbr> creation, even before workloads use it</td>
+<td><a href="../foundation/vpc/#enable-dual-stack-from-day-one-on-new-vpcs">Dual-stack from day one</a></td>
+</tr>
+<tr>
+<td>Public identity</td>
+<td>Publish addresses you own or retain (BYOIP through <abbr title="IP Address Manager">IPAM</abbr>, retained Elastic IP addresses, static addresses from Global Accelerator or Network Load Balancer) and names you control, so the backend behind them can change</td>
+<td><a href="../foundation/ipam/#use-the-public-scope-for-publicly-routable-address-management"><abbr title="IP Address Manager">IPAM</abbr> public scope</a></td>
+</tr>
+<tr>
+<td><abbr title="Domain Name System">DNS</abbr> namespace</td>
+<td>Publish aliases in zones you own instead of service-generated <abbr title="Domain Name System">DNS</abbr> names, and divide the internal namespace by environment, Region, or domain</td>
+<td><a href="../foundation/dns/#design-your-internal-namespace-hierarchy-deliberately">Namespace hierarchy</a></td>
+</tr>
+<tr>
+<td>Subnet layout</td>
+<td>Keep an infrastructure subnet tier and reserved ranges in each Availability Zone, and add secondary <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks instead of oversizing</td>
+<td><a href="../foundation/subnets/#reserve-address-ranges-for-specific-resource-types">Reserve address ranges</a></td>
+</tr>
+<tr>
+<td>Overlap</td>
+<td>Keep a recovery path (PrivateLink, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice, or managed 1:1 <abbr title="Network Address Translation">NAT</abbr>), and treat it as recovery, not design</td>
+<td><a href="../foundation/cidr/#never-overlap-cidr-blocks-across-vpcs-you-might-connect">Never overlap <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong><em>Key insight:</em></strong> <em>Give external parties a name or address that you own, and change what sits behind it.</em></p>
+<h4 id="enforce-one-way-decisions-with-guardrails">Enforce one-way decisions with guardrails<a class="headerlink" href="#enforce-one-way-decisions-with-guardrails" title="Permanent link">&para;</a></h4>
+<p>A decision that nothing enforces gets undone by drift. Set minimum and maximum <abbr title="Classless Inter-Domain Routing">CIDR</abbr> sizes and require tags on <abbr title="IP Address Manager">IPAM</abbr> pools, so teams can't allocate outside the plan. Use SCPs to control who can create VPCs, internet gateways, and gateways. Turn on <abbr title="IP Address Manager">IPAM</abbr> compliance monitoring to catch overlaps and VPCs without an <abbr title="Internet Protocol version 6">IPv6</abbr> allocation. Without guardrails, teams allocate from spreadsheets, and the overlap shows up when two networks first connect.</p>
+<p><a href="../foundation/ipam/#set-minimum-and-maximum-cidr-sizes-on-every-pool"><abbr title="IP Address Manager">IPAM</abbr> allocation rules</a>, <a href="../foundation/organizations/#use-scps-to-enforce-network-architecture-not-just-security">SCPs for network architecture</a>, and <a href="../foundation/ipam/#enable-ipam-compliance-monitoring-across-your-organization">compliance monitoring</a> cover the mechanisms.</p>
+<h4 id="record-each-one-way-decision-with-the-trigger-that-reopens-it">Record each one-way decision with the trigger that reopens it<a class="headerlink" href="#record-each-one-way-decision-with-the-trigger-that-reopens-it" title="Permanent link">&para;</a></h4>
+<p>A decision record ties the two tools together. Without the trigger, a record explains the past and doesn't prompt a review.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>What it captures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Decision</strong></td>
+<td>What was decided and which pages of this guide it follows</td>
+</tr>
+<tr>
+<td><strong>Context</strong></td>
+<td>The constraints at the time, including the planned Regions, accounts, and on-premises networks</td>
+</tr>
+<tr>
+<td><strong>Rejected alternatives</strong></td>
+<td>What was considered and why it wasn't chosen</td>
+</tr>
+<tr>
+<td><strong>Reversal involves</strong></td>
+<td>The migration or external coordination that undoing it would need</td>
+</tr>
+<tr>
+<td><strong>Revisit when</strong></td>
+<td>The inflection point and the signal that should reopen it</td>
+</tr>
+</tbody>
+</table>
+<h3 id="change-two-way-doors-deliberately">Change two-way doors deliberately<a class="headerlink" href="#change-two-way-doors-deliberately" title="Permanent link">&para;</a></h3>
+<h4 id="wait-for-the-trigger-then-change-in-stages">Wait for the trigger, then change in stages<a class="headerlink" href="#wait-for-the-trigger-then-change-in-stages" title="Permanent link">&para;</a></h4>
+<p>Wait for the trigger, because a two-way door changed early adds operating cost without a benefit. When the trigger arrives, run the new path next to the old one, move one environment, Region, or segment at a time starting with non-production, and define the rollback before the change. AWS Cloud WAN policy changes are versioned and applied through a change set, which gives a built-in review point. Use <abbr title="Virtual Private Cloud">VPC</abbr> Flow Logs to compare traffic before and after.</p>
+<p>A staged change prevents the common failure: a wrong route or security group change that is easy to reverse and still causes an outage, because nobody noticed it for hours. The <a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/plan-your-network-topology.html">AWS Well-Architected Reliability pillar</a> covers change management for network topology.</p>
+<h2 id="when-to-use-this-framework">When to use this framework<a class="headerlink" href="#when-to-use-this-framework" title="Permanent link">&para;</a></h2>
+<p>The door check is the right choice when:</p>
+<ul>
+<li>You design a new landing zone, a new Region, or a new type of account</li>
+<li>You review a network design and need to decide which choices need wider input</li>
+<li>You plan a migration and need to know which dependencies must be settled first</li>
+</ul>
+<p>The door check is <strong>not</strong> the right choice when:</p>
+<ul>
+<li>You need to choose a service. Use the <a href="../decisions/">Decision Map</a> for that, and use the register to decide how carefully to choose</li>
+<li>The environment is a short-lived sandbox or proof of concept that you will discard. Every door is cheap there, but still allocate from the organization's address plan, because a sandbox that later connects to other networks inherits its overlap</li>
+<li>You are restoring service during an incident. Restore first, and reclassify afterward</li>
+</ul>
+<h2 id="combining-the-framework-with-other-guidance">Combining the framework with other guidance<a class="headerlink" href="#combining-the-framework-with-other-guidance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Combination</th>
+<th>The framework provides</th>
+<th>The other guidance provides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Framework + <a href="../decisions/">Decision Map</a></strong></td>
+<td>When to decide and how much deliberation a choice needs</td>
+<td>Which service or pattern fits the requirement</td>
+</tr>
+<tr>
+<td><strong>Framework + <a href="../foundation/ipam/"><abbr title="IP Address Manager">IPAM</abbr></a> and <a href="../foundation/organizations/">Organizations</a></strong></td>
+<td>Which decisions need enforcement</td>
+<td>The guardrails that enforce them</td>
+</tr>
+<tr>
+<td><strong>Framework + <a href="../observability/">Observability</a></strong></td>
+<td>The triggers to watch</td>
+<td>The logs, metrics, and tools that show them</td>
+</tr>
+<tr>
+<td><strong>Framework + <a href="../security/">Security</a></strong></td>
+<td>Which controls can be layered on later</td>
+<td>Which controls the subnet and routing layout must already support</td>
+</tr>
+</tbody>
+</table>
+<h2 id="applying-the-framework">Applying the framework<a class="headerlink" href="#applying-the-framework" title="Permanent link">&para;</a></h2>
+<h3 id="new-environments">New environments<a class="headerlink" href="#new-environments" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Settle the one-way doors first</strong>, in this order: account boundary and networking account, address hierarchy for <abbr title="Internet Protocol version 4">IPv4</abbr> and <abbr title="Internet Protocol version 6">IPv6</abbr> in <abbr title="IP Address Manager">IPAM</abbr>, Region, subnet and Availability Zone layout, <abbr title="Domain Name System">DNS</abbr> namespace, and the public addresses and names you will publish.</li>
+<li><strong>Start every two-way door with the simplest design that fits today.</strong> Connect VPCs with the smallest hub that works, and add layers when a trigger appears.</li>
+<li><strong>Record each one-way decision</strong> with the inflection point that should reopen it.</li>
+<li><strong>Choose the signals</strong> for each trigger and set up the logs and metrics before you need them.</li>
+</ol>
+<h3 id="existing-environments">Existing environments<a class="headerlink" href="#existing-environments" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Audit the one-way doors.</strong> For each row of the register, find out whether the decision was made deliberately or inherited by default, and list the external parties that depend on it.</li>
+<li><strong>Stop adding dependents to doors you intend to change.</strong> Allocate every new <abbr title="Virtual Private Cloud">VPC</abbr> from the planned hierarchy first, then reduce the existing problem workload by workload, as described in <a href="../foundation/cidr/#retrofit-summarization-into-an-existing-network">Retrofit summarization into an existing network</a>.</li>
+<li><strong>Check two-way doors for hidden dependencies</strong> before the next inflection point, starting with egress addresses and <abbr title="Domain Name System">DNS</abbr> forwarders.</li>
+<li><strong>Prioritize by the nearest inflection point.</strong> Fix the one-way door that the next likely transition depends on.</li>
+</ol>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<div class="grid cards">
+<ul>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Amazon's 2015 letter to shareholders</strong></p>
+<hr />
+<p>The 2015 letter is the source of the one-way door and two-way door terms, with the argument for matching decision speed to reversibility.</p>
+<p><a href="https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Read the letter</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Plan your network topology</strong></p>
+<hr />
+<p>AWS Well-Architected Reliability pillar guidance on address space, connectivity, and topology decisions.</p>
+<p><a href="https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/plan-your-network-topology.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Plan your network topology</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong><abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</strong></p>
+<hr />
+<p>Which <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks you can associate or disassociate, and the restrictions that apply to secondary blocks.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> <abbr title="Virtual Private Cloud">VPC</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> blocks</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>What is <abbr title="IP Address Manager">IPAM</abbr>?</strong></p>
+<hr />
+<p>How Amazon <abbr title="Virtual Private Cloud">VPC</abbr> IP Address Manager plans, tracks, and monitors IP addresses across accounts and Regions.</p>
+<p><a href="https://docs.aws.amazon.com/vpc/latest/ipam/what-it-is-ipam.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> What is <abbr title="IP Address Manager">IPAM</abbr></a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Building a scalable and secure multi-<abbr title="Virtual Private Cloud">VPC</abbr> network infrastructure</strong></p>
+<hr />
+<p>AWS whitepaper on connecting multiple VPCs with <abbr title="Virtual Private Cloud">VPC</abbr> Peering, Transit Gateway, and PrivateLink.</p>
+<p><a href="https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/welcome.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Read the whitepaper</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Organizing your AWS environment using multiple accounts</strong></p>
+<hr />
+<p>AWS whitepaper on the account and OU structure that the account boundary decision depends on.</p>
+<p><a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Read the whitepaper</a></p>
+</li>
+</ul>
+</div>
+<h2 id="related-pages">Related pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../decisions/">Decision Map</a></strong>: Maps a requirement to the service or pattern. This page tells you how carefully to make that choice.</li>
+<li><strong><a href="../foundation/cidr/"><abbr title="Classless Inter-Domain Routing">CIDR</abbr> Planning</a></strong> and <strong><a href="../foundation/ipam/"><abbr title="IP Address Manager">IPAM</abbr></a></strong>: Own the address plan, the largest one-way door in the register.</li>
+<li><strong><a href="../foundation/organizations/">AWS Organizations</a></strong> and <strong><a href="../foundation/vpc/">Amazon <abbr title="Virtual Private Cloud">VPC</abbr></a></strong>: Own the account boundary and the shared-<abbr title="Virtual Private Cloud">VPC</abbr> decision.</li>
+<li><strong><a href="../connectivity/within-aws/">Connectivity Within AWS</a></strong>: Owns the migration path from <abbr title="Virtual Private Cloud">VPC</abbr> Peering to Transit Gateway to Cloud WAN.</li>
+<li><strong><a href="../observability/">Observability</a></strong>: Owns the logs and metrics that show each inflection point.</li>
+</ul>
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 01:15:03 UTC">November 26, 2026</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 01:11:07 UTC">November 26, 2026</span>
+  </span>
+
+    
+    
+    
+  </aside>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m7 0c0 .8-.7 1.5-1.5 1.5S14 10.3 14 9.5 14.7 8 15.5 8s1.5.7 1.5 1.5m-5 7.73c-1.75 0-3.29-.73-4.19-1.81L9.23 14c.45.72 1.52 1.23 2.77 1.23s2.32-.51 2.77-1.23l1.42 1.42c-.9 1.08-2.44 1.81-4.19 1.81"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8 8 8 0 0 0 8-8m2 0a10 10 0 0 1-10 10A10 10 0 0 1 2 12 10 10 0 0 1 12 2a10 10 0 0 1 10 10m-6.5-4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5-1.5-.7-1.5-1.5.7-1.5 1.5-1.5M10 9.5c0 .8-.7 1.5-1.5 1.5S7 10.3 7 9.5 7.7 8 8.5 8s1.5.7 1.5 1.5m2 4.5c1.75 0 3.29.72 4.19 1.81l-1.42 1.42C14.32 16.5 13.25 16 12 16s-2.32.5-2.77 1.23l-1.42-1.42C8.71 14.72 10.25 14 12 14"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+              
+                
+                
+              
+              Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/aws/aws-networking-best-practices/issues/new/choose" target="_blank" rel="noopener">feedback form</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Introduction
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../decisions/" class="md-footer__link md-footer__link--next" aria-label="Next: Decision Map">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Decision Map
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      <a href="https://aws.amazon.com/privacy/" target="_blank">Privacy</a> | <a href="https://aws.amazon.com/accessibility/" target="_blank">Accessibility</a> | <a href="https://aws.amazon.com/terms/" target="_blank">Site Terms</a> | <a href="#__consent">Cookie Preferences </a> | &copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="analytics" checked>
+      <span class="task-list-indicator"></span>
+      Google Analytics
+    </label>
+  </li>
+
+      
+    
+    
+      
+        
+  
+  
+    
+    
+  
+  <li class="task-list-item">
+    <label class="task-list-control">
+      <input type="checkbox" name="github" checked>
+      <span class="task-list-indicator"></span>
+      GitHub
+    </label>
+  </li>
+
+      
+    
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["tabs", "content.code.copy", "content.action.edit", "content.action.view", "content.code.annotate", "announce.dismiss", "header.autohide", "toc.follow", "navigation.top", "navigation.tracking", "navigation.indexes", "navigation.expand", "navigation.footer"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
