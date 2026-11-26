@@ -35,6 +35,12 @@ DNS in AWS operates across three layers that must be designed together: **resolu
 
     Inbound endpoints let on-premises DNS servers resolve AWS private hosted zones. Outbound endpoints let VPC workloads resolve on-premises domains by forwarding to on-premises DNS servers.
 
+*   :material-earth: **Route 53 Global Resolver**
+
+    ---
+
+    A managed DNS resolver for clients outside your VPCs, such as branch offices, on-premises sites, and remote users. Resolves public domains and private hosted zones from anycast addresses in the Regions you choose, with DNS filtering, over the internet or over AWS Cloud WAN.
+
 *   :material-shield-lock: **DNS Firewall**
 
     ---
@@ -59,7 +65,7 @@ Every VPC gets a Route 53 Resolver at the VPC+2 address automatically. Do not de
 
 #### Design forwarding rules for hybrid DNS resolution
 
-When workloads in AWS need to resolve on-premises domain names (for example, `corp.example.com`), create Resolver outbound endpoints and forwarding rules that send those queries to on-premises DNS servers over Direct Connect or VPN. Conversely, when on-premises workloads need to resolve AWS private hosted zone names, create Resolver inbound endpoints that on-premises DNS servers forward to.
+When workloads in AWS need to resolve on-premises domain names (for example, `corp.example.com`), create Resolver outbound endpoints and forwarding rules that send those queries to on-premises DNS servers over Direct Connect or VPN. Conversely, when on-premises workloads need to resolve AWS private hosted zone names, create Resolver inbound endpoints that on-premises DNS servers forward to. For branch offices, on-premises sites, and remote users that you want to serve from one multi-Region anycast address set, [Route 53 Global Resolver](#global-resolver-for-clients-outside-vpcs) is the alternative to per-Region inbound endpoints. Outbound endpoints are still required for VPC workloads that resolve on-premises domains.
 
 Design the forwarding rules to be as specific as possible. Forward `corp.example.com` to on-premises, not `.` (the root). A wildcard forward rule sends all DNS traffic to on-premises, which adds latency to every query, creates a dependency on hybrid connectivity for all DNS resolution, and bypasses DNS Firewall for forwarded queries.
 
@@ -69,6 +75,63 @@ Resolver inbound and outbound endpoints create ENIs in the subnets you specify. 
 
 ***Key insight:*** *DNS is the most failure-sensitive dependency in any network. A 30-second DNS resolution failure causes cascading timeouts across every service that makes outbound calls. Design DNS infrastructure for the same availability standard as your most critical workload.*
 
+### Global Resolver for clients outside VPCs
+
+#### Use Route 53 Global Resolver for branch offices, on-premises sites, and remote users
+
+Route 53 Global Resolver answers DNS queries from authorized clients outside your VPCs. It resolves public domains and the private hosted zones you associate with a DNS view, and clients reach it on anycast IP addresses that route each query to the closest of the two or more Regions you select. If a Region becomes unavailable, queries fail over to the next closest Region ([how it works](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-how-it-works.html)). Clients use one set of addresses instead of per-Region forwarding rules, and DNS filtering applies to these clients through the view.
+
+Choose between Global Resolver and Resolver inbound endpoints by where the clients are and what already exists:
+
+* Choose Global Resolver for multi-Region anycast, no per-Region forwarding, and DNS filtering for clients that are not in a VPC.
+* Keep inbound endpoints when resolution must stay inside specific VPCs, or when you run an existing resolver estate that you are not replacing.
+
+Keep VPC workloads on the VPC Resolver as described above. It is built in, works with Route 53 Profiles, per-VPC DNS Firewall, and Resolver query logging, and has no access-source authorization to manage. This is a recommendation, not a limitation: the [AWS blog](https://aws.amazon.com/blogs/networking-and-content-delivery/hybrid-dns-with-amazon-route-53-global-resolver-for-private-connections-on-aws-cloud-wan/) shows VPC instances querying Global Resolver over Cloud WAN. If you send VPC workloads to Global Resolver anyway, you manage a second authorization model and a second place to apply filtering and logging, and you give up the per-VPC controls. Outbound endpoints and forwarding rules are still how VPC workloads reach on-premises domains.
+
+Plan cost before you choose the number of Regions. The [Route 53 pricing page](https://aws.amazon.com/route53/pricing/) bills a charge per Region per hour and a charge per query, and bills internet access and private (Cloud WAN) access separately.
+
+Plan IPv6 from the start. The resolver address type is IPv4 by default, and dual-stack adds IPv6 anycast addresses ([CreateGlobalResolver](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53globalresolver_CreateGlobalResolver.html)). Choose dual-stack when clients or sites use dual-stack or IPv6, and treat IPv6 access sources as their own dimension on the [quotas page](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-load-balancer-limits.html), separate from IPv4 access sources.
+
+#### Choose the access path and keep authorization narrow
+
+A global resolver can be reached over the internet, over AWS Cloud WAN, or both. Over the internet, authorize clients with access sources (CIDR ranges, for DNS over port 53 (Do53), DNS over TLS (DoT), and DNS over HTTPS (DoH)) or access tokens (DoT and DoH only), as described in [managing access controls](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-managing-access-controls.html). Use access sources for offices and VPN egress with predictable addresses, and tokens for mobile or remote users whose addresses change. Access sources rely on trusting the source IP address, so keep the ranges as narrow as the clients allow.
+
+If every client is on a private network, turn public IP connectivity off so the resolver is reachable only from a connected core network. There are two ways to do this ([CreateGlobalResolver](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53globalresolver_CreateGlobalResolver.html)). Disabled with the anycast addresses kept reserved lets you re-enable public access later with the same addresses. Disabled with the addresses released frees them, so clients configured with those addresses stop working and the resolver cannot get the same addresses back. Use reserved unless you are certain you do not need the addresses again.
+
+#### Plan the Cloud WAN connection deliberately
+
+Connecting a core network endpoint makes the core network's segments available as access sources in every Region where the resolver runs, so connect only core networks you trust as DNS sources. Plan the following before you create the endpoint ([core network endpoints](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-core-network-endpoints.html), [AWS blog](https://aws.amazon.com/blogs/networking-and-content-delivery/hybrid-dns-with-amazon-route-53-global-resolver-for-private-connections-on-aws-cloud-wan/)):
+
+* One global resolver connects to one core network through one core network endpoint.
+* The endpoint needs at least two Regions, taken from the resolver's Regions. The number of private IP addresses per endpoint is limited, so check the [quotas page](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-load-balancer-limits.html). Each IP address can be associated with a different subset of Regions, which lets you steer clients to different Regions and gives them a second IP for redundancy. Associate each IP address with two or more Regions so it can fail over.
+* Keep resolver IP addresses from conflicting with the network's CIDR blocks or the core network's inside CIDR blocks, and do not route public IP addresses externally. If they overlap, traffic to the resolver address can follow the wrong route.
+* Align the Region sets deliberately. Only Regions that are part of both the global resolver and the core network can provide resolution, so a Region present in only one of them gives clients no resolution path from that Region.
+* Use core network policy version 2026.10 or later so queries route to the closest Region. With that version, Cloud WAN breaks ties between equivalent cross-Region routes with a default Multi-Exit Discriminator (MED). If you have not set a routing preference, traffic to destinations with multiple equivalent routes can shift to a different Region once, when the update takes effect. Set the preference with an edge location routing policy before you update to keep traffic on the intended path. See [policy versions](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-policies-json.html#cloudwan-version-json).
+* Map DNS views to segments on purpose. Clients in a segment are authorized through the view whose access source references it.
+* If the resolver does not run in the Region of a Direct Connect interface, queries are ECMP'd across all the resolver's Regions on the same continent instead of going to the closest one. Consider running the resolver in the Regions where your Direct Connect interfaces terminate.
+* Transit Gateway and Direct Connect gateway topologies can also use a private connection to the resolver, as long as there is a path from the transit gateway to the Cloud WAN network.
+
+#### Use DNS views to separate client groups
+
+A DNS view has its own access sources, tokens, firewall rules, and private hosted zone associations ([managing DNS views](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-manage-dns-views.html)). Create separate views for groups with different security needs, locations, or device types, and give each view only the zones and access it needs. Three view settings need a deliberate choice:
+
+* **DNSSEC validation** applies to public domains only. Invalid signatures return `SERVFAIL`.
+* **EDNS Client Subnet** sends a partial client address (up to a /24 for IPv4 or a /48 for IPv6) to authoritative servers. It can improve CDN routing, and it is a privacy trade-off.
+* **Firewall fail open** is disabled by default, so queries are blocked when firewall rules can't be evaluated. Enable it only where availability matters more than filtering.
+
+Four quota dimensions shape the view layout, and the [quotas page](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-load-balancer-limits.html) has the current values:
+
+* **DNS views per resolver** limits how finely you can split client groups. Merge groups with the same security needs rather than creating a view for each office.
+* **Firewall rules per view** limits how much filtering policy one client group can carry. Use domain lists to keep the rule count low.
+* **Access sources per resolver** limits how many separate ranges you can authorize. Summarize ranges where the clients allow.
+* **Total access source CIDR size per resolver** cannot be raised. Wide ranges consume this budget and also widen who can query, so authorize the narrowest ranges that cover your clients.
+
+#### Apply DNS filtering and logging to these clients too
+
+DNS Firewall rules in a view can allow, alert on, or block queries using custom or AWS managed domain lists, plus advanced protections against domain generation algorithms and DNS tunneling. This complements Route 53 Resolver DNS Firewall in VPCs; it does not replace it. Query logging is off unless you set an observability Region when you create the resolver ([CreateGlobalResolver](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53globalresolver_CreateGlobalResolver.html)). Without it there is no DNS record of what these clients resolved, which removes the forensics and detection value this practice describes. Logs go to a single destination Region you choose ([use cases](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-cloud-resolver-use-cases.html)), so pick that Region with your audit and retention requirements in mind. Deliver them to Amazon CloudWatch Logs, Amazon Data Firehose, or Amazon S3.
+
+***Key insight:*** *The access and authorization model, meaning who may query and through which view, drives every other Global Resolver decision. Settle it before Regions, addresses, and logging.*
+
 ### Multi-account DNS sharing
 
 #### Use Route 53 Profiles for multi-account DNS distribution
@@ -76,6 +139,15 @@ Resolver inbound and outbound endpoints create ENIs in the subnets you specify. 
 Route 53 Profiles let you bundle private hosted zone associations, Resolver forwarding rules, and DNS Firewall rule groups into a single profile that you share via AWS RAM at the OU level. New accounts added to the OU inherit the full DNS configuration automatically — no custom automation, no cross-account Lambda functions, no manual association steps.
 
 Without Profiles, sharing DNS configuration across accounts requires per-account private hosted zone associations (one API call per VPC per hosted zone), per-account forwarding rule shares, and per-account DNS Firewall associations. That automation is fragile and hard to audit. Profiles replace it with a first-class operation.
+
+#### Share DNS views through AWS RAM, not Route 53 Profiles
+
+Global Resolver has its own sharing model. A DNS view can be shared through AWS RAM so other accounts can associate their own private hosted zones with it without transferring ownership of the zone or the view ([sharing DNS views](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-sharing-dns-views.html)). This is separate from Route 53 Profiles, which cover VPCs. Four points matter for governance:
+
+* **Grant associate-only by default.** Use the default AWS RAM managed permission, which lets the consumer view the shared view and associate its own hosted zones. The other managed permissions let a consumer update, enable, or disable the shared view, and a change to the view affects every client of that view in every Region. Granting more than association is a governance risk, not a convenience.
+* **Default to central ownership of zone associations.** A shared view lets consumers publish names that resolve for every client of the view. Have the networking account associate the zones, and use consumer-owned associations only for delegated sub-zones. Per-account zones fragment the namespace, as described below.
+* **Residency.** The consumer's hosted zone ID and domain name are copied to every Region where the owner's resolver runs, including opt-in Regions the consumer has not enabled, so share views only with accounts you trust and check data residency requirements.
+* **Stopping a share is not removal.** Stopping the share does not remove existing associations: they keep resolving until the owner or the consumer removes them.
 
 #### Centralize private hosted zone ownership in the networking account
 
@@ -105,6 +177,8 @@ Avoid flat namespaces where hundreds of records pile into a single zone. Avoid o
 Route 53 Resolver DNS Firewall is the cheapest and broadest egress control in AWS. It evaluates every DNS query made from a VPC against domain lists (managed threat intelligence lists from AWS, or your own custom lists) and can block, allow, or alert. Because virtually all outbound connections start with a DNS lookup, blocking resolution of a malicious domain prevents the connection from ever being attempted.
 
 Deploy DNS Firewall rule groups via Route 53 Profiles so every VPC in the organization gets the same baseline protection. Layer with Network Firewall or third-party inspection for traffic that bypasses DNS (hardcoded IPs, DNS-over-HTTPS).
+
+Beyond the managed threat lists, an [Automated Allowlist rule](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/firewall-advanced-automated-allowlists.html) is the practical route to allow-list mode (permit only approved domains and block the rest) when you do not know every domain your workloads need. DNS Firewall lists the domains your VPCs queried during a look-back period, and you review and approve them instead of writing the list from scratch. The rule requires the DNS Firewall Advanced tier and enforces nothing until you add a block-all rule after it, which you add only after you review the list, because an earlier block-all rule blocks legitimate traffic. See [Build the allow list with an Automated Allowlist rule](../security/outbound.md#build-the-allow-list-with-an-automated-allowlist-rule) in Outbound Controls for the rule order and the checks before you block.
 
 For detailed DNS Firewall best practices and integration with other egress controls, see [Outbound Controls](../security/outbound.md).
 
@@ -152,6 +226,10 @@ For the console and CLI steps, see [Protecting records from changes](https://doc
 
 Resolver inbound and outbound endpoints support IPv6 ENI addresses. If your VPCs are dual-stack, configure Resolver endpoints with both IPv4 and IPv6 addresses so IPv6-only workloads can forward and resolve without NAT64. On-premises DNS servers forwarding to AWS inbound endpoints need reachability to the endpoint's IPv6 address if the on-premises network is also dual-stack.
 
+#### Choose dual-stack when you create a Global Resolver
+
+A global resolver uses IPv4 anycast addresses by default, and dual-stack adds IPv6 anycast addresses. If any branch, on-premises, or remote clients use IPv6, choose dual-stack so they can reach the resolver over IPv6 instead of depending on an IPv4 path. Plan IPv6 access sources separately from IPv4 access sources, because they are constrained by their own dimension. See [Global Resolver for clients outside VPCs](#global-resolver-for-clients-outside-vpcs).
+
 #### Include AAAA records alongside A records in private hosted zones
 
 For every internal service running on dual-stack infrastructure, publish both A and AAAA records in the private hosted zone. Applications that prefer IPv6 (or run IPv6-only) will use the AAAA record; IPv4-only consumers use the A record. This is the same principle as dual-stack VPC design: include IPv6 from the start rather than retrofitting later.
@@ -170,6 +248,18 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 * On-premises workloads need to resolve AWS private hosted zone names (inbound endpoints)
 * AWS workloads need to resolve on-premises domain names (outbound endpoints + forwarding rules)
 * You operate in a hybrid environment with any DNS dependency crossing the AWS boundary
+
+**Route 53 Global Resolver** is the right choice when:
+
+* Branch offices, on-premises sites, or remote users need to resolve private hosted zone names without a resolver endpoint in every Region
+* You want one anycast address set with multi-Region failover and DNS filtering for clients outside VPCs
+* You connect those clients over AWS Cloud WAN and want private-only DNS resolution
+
+Global Resolver is **not** the right choice when:
+
+* The clients are VPC workloads (use the VPC Resolver)
+* A site needs conditional forwarding to an existing resolver estate and has no Cloud WAN or anycast need (use Resolver inbound endpoints)
+* Clients cannot be authorized by source address, segment, or token (keep them on their existing resolver)
 
 **Route 53 Profiles** are the right choice when:
 
@@ -205,6 +295,14 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
     Domain-based filtering configuration, managed domain lists, and integration with Firewall Manager.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-dns-firewall.html)
+
+*   :material-file-document: **Route 53 Global Resolver documentation**
+
+    ---
+
+    Concepts, DNS views, access control, core network endpoints, sharing, and quotas for Global Resolver.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-what-is-global-resolver.html)
 
 *   :material-file-document: **Protecting records from changes**
 
