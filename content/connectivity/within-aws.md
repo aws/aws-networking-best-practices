@@ -172,6 +172,9 @@ This approach avoids a disruptive one-step migration and lets you validate the n
 | **AWS Cloud WAN + PrivateLink** | Inter-VPC routing | Private access to AWS services (gateway/interface endpoints) |
 | **AWS Cloud WAN + Transit Gateway** | Global policy-driven network (during migration, both run side by side) | Regional hub-and-spoke routing for VPCs not yet migrated |
 | **AWS Cloud WAN + VPC Peering** | Primary network backbone | Direct low-latency, high-throughput connectivity for specific VPC pairs (for example, database replication) |
+| **AWS Cloud WAN + Route 53 Global Resolver** | Private path and segments that act as DNS access sources | DNS resolution for hybrid and branch clients; see [DNS Architecture](../foundation/dns.md#global-resolver-for-clients-outside-vpcs) |
+
+Global Resolver over Cloud WAN needs core network policy version 2026.10 or later for closest-Region routing. With that version, Cloud WAN breaks ties between equivalent cross-Region routes with a default MED, so if you have not set a routing preference, traffic to a destination with multiple equivalent routes can shift to a different Region once, when the update takes effect. Set the preference with an edge location routing policy before you update. See [policy versions](https://docs.aws.amazon.com/network-manager/latest/cloudwan/cloudwan-policies-json.html#cloudwan-version-json).
 
 ### Documentation
 
@@ -502,7 +505,14 @@ Plan this up front rather than discovering it under load. A resource gateway's I
 
 When you create a resource configuration, assign a custom domain name that consumers will use (for example, `payments-db.internal.example.com`). The name is decoupled from the underlying IP or resource ARN, so the provider can change the backing resource (failover, migration, version upgrade) without consumers updating their configuration.
 
-Consumers can let VPC Lattice manage a private hosted zone in their VPC for the custom domain, which makes the resource resolve locally without manual DNS configuration. (This does not apply to CIDR-range configurations, which have no custom domain name.)
+Consumers can let VPC Lattice manage a private hosted zone in their VPC for the custom domain, which makes the resource resolve locally without manual DNS configuration in the usual case. By default, VPC Lattice creates these zones only for domains the provider has verified. If the consumer already owns a private hosted zone for the same domain, the consumer has to map the names by hand (see the third bullet below). This does not apply to CIDR-range configurations, which have no custom domain name.
+
+Four decisions follow from how consumer VPCs resolve these names:
+
+* **Plan private DNS changes as a reconnect window.** A consumer can turn private DNS on or off, and change its preference and specified domains, after the endpoint or service network association exists. The new settings apply only to resource configurations connected afterward. Resource configurations that are already connected keep their old DNS behavior until they are reconnected, and reconnecting interrupts connectivity to them. For an endpoint that points to a single resource configuration, an update does not take effect and the endpoint has to be re-created. Before turning private DNS on later, enable the VPC DNS hostnames and DNS support attributes (`enableDnsHostnames` and `enableDnsSupport`). VPC Lattice does not check them when you update the endpoint or association, so the update succeeds and the names stay unresolvable until both attributes are on.
+* **Assign domain names from a namespace the provider owns.** When two connections in the same VPC claim the same domain name, the first one keeps the DNS record. On the second connection only the resource configuration with that name fails, and it stays unreachable even if the first connection is later deleted, until the second connection is re-created. Names drawn from a namespace owned by the provider reduce the chance that two providers publish the same name to a consumer VPC. The custom domain name of a resource configuration cannot be changed after creation, and a configuration has only one, so a provider cannot fix a collision by renaming. The only provider-side correction is a new resource configuration with a different name, so choose the name carefully at creation. The same applies across connection types: with private DNS on, one VPC cannot reach the same resource configuration through both a resource endpoint and a service-network endpoint, because the first connection keeps the name and the association for the second one fails. Resource endpoints and service-network endpoints report the conflict per resource. A service network VPC association does not, so the only check is to resolve the name from an instance in the VPC.
+* **Exclude domains that the consumer already hosts.** If the consumer owns a private hosted zone for the same domain and has it associated with the VPC, VPC Lattice reports `PrivateDnsAlreadyExists` for that domain and leaves the consumer's zone unchanged. Exclude that domain from the private DNS settings before connecting, and publish the names in the consumer's own zone, pointing each custom domain name at the endpoint-specific domain name that VPC Lattice generates for the resource configuration. Without that mapping, the custom domain name does not resolve to the endpoint. The collision case is a group domain that equals a zone the consumer owns: a group domain of `internal.example.com` against a centrally owned `internal.example.com` zone reports `PrivateDnsAlreadyExists`.
+* **Limit private DNS to the domains you want routed through VPC Lattice.** A private hosted zone that VPC Lattice manages for a domain answers for every name under that domain in the consumer VPC, so a zone for a broad parent domain stops other names under it from resolving. For a group resource configuration, when you list specified domains, include a wildcard for the group domain, otherwise VPC Lattice creates no private DNS records for the group. Keep the default preference of managing zones only for domains the provider has verified, which AWS recommends as the consumer-side control, and widen it only for domains whose traffic you want to send through VPC Lattice. Providers support this by verifying the custom domain names they publish.
 
 #### Enable access logs for visibility
 
@@ -587,6 +597,14 @@ With a single service network association, the consumer reaches all three. The c
     Complete documentation on resource configurations, resource gateways, service network associations, and custom domain names.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/vpc-resources.html)
+
+*   :material-dns: **Custom domain names and private DNS**
+
+    ---
+
+    How consumers enable private DNS for resource configurations, how to update those settings after creation, and how VPC Lattice handles private hosted zone reuse and name conflicts.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-configuration.html)
 
 *   :material-file-document-outline: **Resource gateways documentation**
 
