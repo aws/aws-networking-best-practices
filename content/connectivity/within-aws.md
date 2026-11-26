@@ -504,6 +504,13 @@ When you create a resource configuration, assign a custom domain name that consu
 
 Consumers can let VPC Lattice manage a private hosted zone in their VPC for the custom domain, which makes the resource resolve locally without manual DNS configuration. (This does not apply to CIDR-range configurations, which have no custom domain name.)
 
+Four decisions follow from how consumer VPCs resolve these names:
+
+* **Plan private DNS changes as a reconnect window.** A consumer can turn private DNS on or off, and change its preference and specified domains, after the endpoint or service network association exists. The new settings apply only to resource configurations connected afterward. Resource configurations that are already connected keep their old DNS behavior until they are reconnected, and reconnecting interrupts connectivity to them. For an endpoint that points to a single resource configuration, an update does not take effect and the endpoint has to be re-created.
+* **Assign domain names from a namespace the provider owns.** When two connections in the same VPC claim the same domain name, the first one keeps the DNS record. On the second connection only the resource configuration with that name fails, and it stays unreachable even if the first connection is later deleted, until the second connection is re-created. Names drawn from a namespace owned by the provider reduce the chance that two providers publish the same name to a consumer VPC.
+* **Exclude domains that the consumer already hosts.** If the consumer owns a private hosted zone for the same domain and has it associated with the VPC, VPC Lattice reports `PrivateDnsAlreadyExists` for that domain and leaves the consumer's zone unchanged. Exclude that domain from the private DNS settings before connecting, and publish the names in the consumer's own zone, pointing each custom domain name at the endpoint-specific domain name that VPC Lattice generates for the resource configuration. Without that mapping, the custom domain name does not resolve to the endpoint. The documented conflict is for the same domain: `payments-db.internal.example.com` next to a centrally owned `internal.example.com` zone is a different domain.
+* **Limit private DNS to the domains you want routed through VPC Lattice.** A private hosted zone that VPC Lattice manages for a domain answers for every name under that domain in the consumer VPC, so a zone for a broad parent domain stops other names under it from resolving. For a group resource configuration, when you list specified domains, include a wildcard for the group domain, otherwise VPC Lattice creates no private DNS records for the group. Keep the default preference of managing zones only for domains the provider has verified, which AWS recommends as the consumer-side control, and widen it only for domains whose traffic you want to send through VPC Lattice. Providers support this by verifying the custom domain names they publish.
+
 #### Enable access logs for visibility
 
 Configure access logging on the service network or resource configuration. Logs capture connection attempts, source identity, and auth decisions, which is essential for security auditing and troubleshooting. Without logs, diagnosing a rejected connection through a resource gateway is significantly harder.
@@ -587,6 +594,14 @@ With a single service network association, the consumer reaches all three. The c
     Complete documentation on resource configurations, resource gateways, service network associations, and custom domain names.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/vpc-resources.html)
+
+*   :material-dns: **Custom domain names and private DNS**
+
+    ---
+
+    How consumers enable private DNS for resource configurations, how to update those settings after creation, and how VPC Lattice handles private hosted zone reuse and name conflicts.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/vpc-lattice/latest/ug/resource-configuration.html)
 
 *   :material-file-document-outline: **Resource gateways documentation**
 
