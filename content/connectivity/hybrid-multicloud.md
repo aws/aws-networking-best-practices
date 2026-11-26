@@ -173,6 +173,7 @@ For production resilience, use independent Direct Connect connections across loc
 | **Direct Connect + SD-WAN (via TGW/Cloud WAN Connect)** | Underlying transport between on-premises SD-WAN appliances and AWS | Overlay delivered by the SD-WAN solution |
 | **Direct Connect + AWS Interconnect - last mile** | Private path for sites and metros that Interconnect - last mile does not cover | Managed private path for sites served by a supported network provider; both can attach to the same Direct Connect gateway |
 | **Direct Connect + AWS Interconnect - multicloud** | On-premises hybrid path | Cloud-to-cloud path between AWS and another provider; the two can share a Direct Connect gateway |
+| **Direct Connect + Route 53 Global Resolver (via Cloud WAN)** | Private path for on-premises DNS queries into AWS Cloud WAN | Anycast, multi-Region DNS resolution with DNS filtering for on-premises clients, without per-Region inbound endpoints. If the resolver does not run in the Region of a Direct Connect interface, queries are spread across all the resolver's Regions on the same continent instead of the closest one, so run the resolver in the Regions where your Direct Connect interfaces terminate. See [DNS Architecture](../foundation/dns.md#global-resolver-for-clients-outside-vpcs) |
 
 ### Documentation
 

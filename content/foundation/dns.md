@@ -65,7 +65,7 @@ Every VPC gets a Route 53 Resolver at the VPC+2 address automatically. Do not de
 
 #### Design forwarding rules for hybrid DNS resolution
 
-When workloads in AWS need to resolve on-premises domain names (for example, `corp.example.com`), create Resolver outbound endpoints and forwarding rules that send those queries to on-premises DNS servers over Direct Connect or VPN. Conversely, when on-premises workloads need to resolve AWS private hosted zone names, create Resolver inbound endpoints that on-premises DNS servers forward to.
+When workloads in AWS need to resolve on-premises domain names (for example, `corp.example.com`), create Resolver outbound endpoints and forwarding rules that send those queries to on-premises DNS servers over Direct Connect or VPN. Conversely, when on-premises workloads need to resolve AWS private hosted zone names, create Resolver inbound endpoints that on-premises DNS servers forward to. For branch offices, on-premises sites, and remote users that you want to serve from one multi-Region anycast address set, [Route 53 Global Resolver](#global-resolver-for-clients-outside-vpcs) is the alternative to per-Region inbound endpoints. Outbound endpoints are still required for VPC workloads that resolve on-premises domains.
 
 Design the forwarding rules to be as specific as possible. Forward `corp.example.com` to on-premises, not `.` (the root). A wildcard forward rule sends all DNS traffic to on-premises, which adds latency to every query, creates a dependency on hybrid connectivity for all DNS resolution, and bypasses DNS Firewall for forwarded queries.
 
@@ -129,12 +129,6 @@ Four quota dimensions shape the view layout, and the [quotas page](https://docs.
 #### Apply DNS filtering and logging to these clients too
 
 DNS Firewall rules in a view can allow, alert on, or block queries using custom or AWS managed domain lists, plus advanced protections against domain generation algorithms and DNS tunneling. This complements Route 53 Resolver DNS Firewall in VPCs; it does not replace it. Query logging is off unless you set an observability Region when you create the resolver ([CreateGlobalResolver](https://docs.aws.amazon.com/Route53/latest/APIReference/API_route53globalresolver_CreateGlobalResolver.html)). Without it there is no DNS record of what these clients resolved, which removes the forensics and detection value this practice describes. Logs go to a single destination Region you choose ([use cases](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-cloud-resolver-use-cases.html)), so pick that Region with your audit and retention requirements in mind. Deliver them to Amazon CloudWatch Logs, Amazon Data Firehose, or Amazon S3.
-
-#### Know when Global Resolver is not the right choice
-
-* VPC workloads: use the VPC Resolver.
-* Sites that need conditional forwarding to an existing resolver estate, with no Cloud WAN or anycast need: use Resolver inbound endpoints.
-* Clients that you cannot authorize by source address, segment, or token: Global Resolver has no way to admit them, so keep them on their existing resolver.
 
 ***Key insight:*** *The access and authorization model, meaning who may query and through which view, drives every other Global Resolver decision. Settle it before Regions, addresses, and logging.*
 
@@ -228,6 +222,10 @@ For the console and CLI steps, see [Protecting records from changes](https://doc
 
 Resolver inbound and outbound endpoints support IPv6 ENI addresses. If your VPCs are dual-stack, configure Resolver endpoints with both IPv4 and IPv6 addresses so IPv6-only workloads can forward and resolve without NAT64. On-premises DNS servers forwarding to AWS inbound endpoints need reachability to the endpoint's IPv6 address if the on-premises network is also dual-stack.
 
+#### Choose dual-stack when you create a Global Resolver
+
+A global resolver uses IPv4 anycast addresses by default, and dual-stack adds IPv6 anycast addresses. If any branch, on-premises, or remote clients use IPv6, choose dual-stack so they can reach the resolver over IPv6 instead of depending on an IPv4 path. Plan IPv6 access sources separately from IPv4 access sources, because they are constrained by their own dimension. See [Global Resolver for clients outside VPCs](#global-resolver-for-clients-outside-vpcs).
+
 #### Include AAAA records alongside A records in private hosted zones
 
 For every internal service running on dual-stack infrastructure, publish both A and AAAA records in the private hosted zone. Applications that prefer IPv6 (or run IPv6-only) will use the AAAA record; IPv4-only consumers use the A record. This is the same principle as dual-stack VPC design: include IPv6 from the start rather than retrofitting later.
@@ -253,7 +251,11 @@ Route 53 Resolver is always in use — it's the default resolver in every VPC. T
 * You want one anycast address set with multi-Region failover and DNS filtering for clients outside VPCs
 * You connect those clients over AWS Cloud WAN and want private-only DNS resolution
 
-Global Resolver is not the right choice for VPC workloads, which stay on the VPC Resolver; for sites that need conditional forwarding to an existing resolver estate with no Cloud WAN or anycast need, which use Resolver inbound endpoints; or for clients that cannot be authorized by source address, segment, or token.
+Global Resolver is **not** the right choice when:
+
+* The clients are VPC workloads (use the VPC Resolver)
+* A site needs conditional forwarding to an existing resolver estate and has no Cloud WAN or anycast need (use Resolver inbound endpoints)
+* Clients cannot be authorized by source address, segment, or token (keep them on their existing resolver)
 
 **Route 53 Profiles** are the right choice when:
 
