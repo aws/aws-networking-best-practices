@@ -188,6 +188,7 @@ nav:
       - Internal Traffic: observability/internal-traffic.md
       - External Traffic: observability/external-traffic.md
       - AWS Services: observability/service-monitoring.md
+      - Network Performance: observability/network-performance.md
       - Notifications: observability/notifications.md
   - Changelog: changelog.md
   - Community:

@@ -1,6 +1,6 @@
 # Observability
 
-This section covers how to gain visibility into your AWS network — what traffic is flowing, whether the services carrying that traffic are healthy, and how to get notified when something goes wrong. Network observability is not a single dashboard; it is a layered approach where each data source answers different questions, and the combination gives you the full picture.
+This section covers how to gain visibility into your AWS network — what traffic is flowing, whether the services carrying that traffic are healthy, whether the network paths between endpoints perform well and who owns a degradation, and how to get notified when something goes wrong. Network observability is not a single dashboard; it is a layered approach where each data source answers different questions, and the combination gives you the full picture.
 
 Observability operates on top of the connectivity, application networking, and security layers. It consumes the logs, metrics, and events those layers produce and turns them into actionable insight. Without observability, you're operating blind: unable to troubleshoot connectivity failures, unable to detect security incidents, unable to attribute costs, and unable to validate that your architecture is performing as designed.
 
@@ -12,6 +12,7 @@ Observability operates on top of the connectivity, application networking, and s
 
 *   **VPC Flow Logs** — Packet-level metadata at VPC, subnet, or ENI level with 40+ custom format fields
 *   **Transit Gateway Flow Logs** — Centralized cross-VPC and cross-account traffic visibility from a single configuration
+*   **AWS Cloud WAN Flow Logs** — Core network traffic with segment, inspection, and drop-reason detail, from the core network owner account
 *   **VPC Lattice Access Logs** — Per-request service-to-service detail with identity, latency, and auth decisions
 *   **Network Firewall Logs** — Stateful inspection decisions (allowed, denied, alerted) with rule attribution
 *   **Amazon Athena** — SQL-based querying of Flow Logs stored in S3 for large-scale analysis
@@ -46,7 +47,20 @@ Observability operates on top of the connectivity, application networking, and s
 
 ***Key insight:*** *CloudWatch metrics tell you the service is healthy. Synthetic health checks tell you the path works end-to-end. You need both — a healthy service with broken routing still means an outage.*
 
-## 4. Notifications
+## 4. Network Performance Monitoring
+
+**Network performance monitoring** measures the performance of network paths and attributes degradation to the AWS network or to your own segments. Flow logs show what traversed the network and service metrics show whether a service is healthy, but neither shows whether the AWS-controlled part of a path is impaired. Amazon CloudWatch Network Monitoring provides 3 products for this, each with a different vantage point.
+
+**Key products:**
+
+*   **Network Synthetic Monitor** — Managed probes with no agent. Round-trip time, packet loss, and a network health indicator (NHI) for AWS Direct Connect paths and inter-Region paths, including AWS Transit Gateway peering
+*   **Network Flow Monitor** — Agents on Amazon EC2 instances and Amazon EKS nodes report TCP performance for real workload flows, with an NHI per monitor
+*   **Internet Monitor** — City-network and ASN health events for internet-facing applications, with AWS or ISP attribution
+*   **Network health indicator** — A binary attribution signal. NHI 100 means AWS-side degradation was observed. NHI 0 does not mean the whole path is healthy
+
+***Key insight:*** *Pair the NHI with packet loss and round-trip time. The NHI says whether AWS is involved, and the performance metrics say whether anyone is affected.*
+
+## 5. Notifications
 
 **Notifications** bridge the gap between detecting a problem and getting the right person to act on it. The number one operational failure in monitoring is alert fatigue — teams ignoring alerts because too many are false positives or low-priority noise.
 
@@ -70,7 +84,7 @@ Observability operates on top of the connectivity, application networking, and s
 
     ---
 
-    VPC Flow Logs, Transit Gateway Flow Logs, VPC Lattice access logs, Athena integration, and cost-effective log analysis.
+    VPC Flow Logs, Transit Gateway and Cloud WAN Flow Logs, VPC Lattice access logs, Athena integration, and cost-effective log analysis.
 
     [:octicons-arrow-right-24: Internal Traffic Monitoring](internal-traffic.md)
 
@@ -89,6 +103,14 @@ Observability operates on top of the connectivity, application networking, and s
     Critical metrics per service, composite alarms, anomaly detection, centralized dashboards, and automated remediation.
 
     [:octicons-arrow-right-24: AWS Services Monitoring](service-monitoring.md)
+
+*   :material-speedometer: **Network Performance Monitoring**
+
+    ---
+
+    Network Synthetic Monitor, Network Flow Monitor, Internet Monitor, and the network health indicator for attributing path degradation to the AWS network.
+
+    [:octicons-arrow-right-24: Network Performance Monitoring](network-performance.md)
 
 *   :material-bell-alert: **Notifications**
 
