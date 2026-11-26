@@ -155,7 +155,7 @@ Create and manage private hosted zones in your centralized networking account. S
 
 The alternative — letting each account create its own private hosted zones — fragments the namespace, creates resolution conflicts when zones overlap, and makes DNS Firewall and query logging harder to implement consistently.
 
-This also applies to VPC Lattice resource configurations: if a consumer VPC has a private hosted zone for the same domain as a custom domain name that VPC Lattice would manage, VPC Lattice reports `PrivateDnsAlreadyExists` and leaves your zone unchanged. See [Use custom domain names for stable consumer contracts](../connectivity/within-aws.md#use-custom-domain-names-for-stable-consumer-contracts) for how to resolve the overlap.
+This also applies to VPC Lattice resource configurations: if a consumer VPC has a private hosted zone for the same domain as a custom domain name that VPC Lattice would manage, VPC Lattice reports `PrivateDnsAlreadyExists` and leaves your zone unchanged. See [Use custom domain names for stable consumer contracts](../connectivity/within-aws.md#use-custom-domain-names-for-stable-consumer-contracts) for how to resolve the overlap. AWS documentation does not say whether a zone delivered through a Route 53 Profile triggers this, so test your layout before relying on either outcome.
 
 #### Design your internal namespace hierarchy deliberately
 
