@@ -2138,6 +2138,7 @@
 <h4 id="centralize-private-hosted-zone-ownership-in-the-networking-account">Centralize private hosted zone ownership in the networking account<a class="headerlink" href="#centralize-private-hosted-zone-ownership-in-the-networking-account" title="Permanent link">&para;</a></h4>
 <p>Create and manage private hosted zones in your centralized networking account. Share them to consuming accounts through Route 53 Profiles. This gives the networking team control over the authoritative <abbr title="Domain Name System">DNS</abbr> namespace while letting application teams create records in delegated sub-zones where appropriate.</p>
 <p>The alternative — letting each account create its own private hosted zones — fragments the namespace, creates resolution conflicts when zones overlap, and makes <abbr title="Domain Name System">DNS</abbr> Firewall and query logging harder to implement consistently.</p>
+<p>This also applies to <abbr title="Virtual Private Cloud">VPC</abbr> Lattice resource configurations: if a consumer <abbr title="Virtual Private Cloud">VPC</abbr> has a private hosted zone for the same domain as a custom domain name that <abbr title="Virtual Private Cloud">VPC</abbr> Lattice would manage, <abbr title="Virtual Private Cloud">VPC</abbr> Lattice reports <code>PrivateDnsAlreadyExists</code> and leaves your zone unchanged. See <a href="../../connectivity/within-aws/#use-custom-domain-names-for-stable-consumer-contracts">Use custom domain names for stable consumer contracts</a> for how to resolve the overlap. AWS documentation does not say whether a zone delivered through a Route 53 Profile triggers this, so test your layout before relying on either outcome.</p>
 <h4 id="design-your-internal-namespace-hierarchy-deliberately">Design your internal namespace hierarchy deliberately<a class="headerlink" href="#design-your-internal-namespace-hierarchy-deliberately" title="Permanent link">&para;</a></h4>
 <p>Choose a single internal domain (for example, <code>internal.example.com</code>) and create sub-zones per environment, Region, or service domain. A well-designed hierarchy makes <abbr title="Domain Name System">DNS</abbr> records self-documenting and enables route-based resolution policies:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>internal.example.com           (root, networking account)
@@ -2305,7 +2306,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 04:22:07 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 10:19:59 UTC">November 26, 2026</span>
   </span>
 
     
