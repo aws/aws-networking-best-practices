@@ -174,13 +174,57 @@ Avoid flat namespaces where hundreds of records pile into a single zone. Avoid o
 
 #### Use private endpoint health checks for DNS failover of private and hybrid endpoints
 
-Amazon Route 53 private endpoint health checks monitor private IP addresses, FQDNs, and ports from a health check source that you create in a VPC, then mark associated records unhealthy so that a routing policy can send traffic to a healthy endpoint. Use them for active-passive failover of internal APIs, databases, targets behind internal load balancers, and on-premises endpoints reached over Direct Connect or Site-to-Site VPN. The alternative — a CloudWatch alarm that invokes a Lambda function to change record weights — needs custom code and API calls that take minutes to react, and it fails silently when the automation is out of date. Private endpoint health checks remove that loop without requiring a public IP on the target.
+Amazon Route 53 private endpoint health checks probe a private IP address or domain name over HTTP, HTTPS, or TCP from a health check source: network interfaces that Route 53 places in a VPC you choose. When a target fails, Route 53 marks its records in the private hosted zone unhealthy, and the routing policy answers with a healthy endpoint. Use them for active-passive failover of internal APIs, databases, targets behind internal load balancers, and on-premises endpoints over AWS Direct Connect or AWS Site-to-Site VPN, with no public IP address on the target. They replace a custom loop of a CloudWatch alarm and a Lambda function that updates records through the Route 53 API, which takes minutes to fail over and is code you maintain.
 
-Place the health check source in the **same account as the records you associate it with**: cross-account association is not supported. In the centralized private hosted zone model described above, the records live in the networking account, so the source and its checks must live there too. Choose a source VPC in that account that can reach every target — commonly a shared or inspection VPC attached to AWS Transit Gateway or AWS Cloud WAN — because a check runs only in the Region of its source and cannot reach targets that the source's network cannot reach. Deploy a source in each Region where you operate failover records, and alarm on the health check status and CloudWatch metrics in that Region; a source in a single Region leaves other Regions blind to a local failure. A source places interfaces in subnets in multiple Availability Zones (three, or two in US West (N. California)), so a VPC spanning more Availability Zones needs additional sources. Check the current [health check and health check source quotas](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#limits-api-entities-health-checks) when you plan capacity: checks that use a source count toward the account's health check quota, and each source covers a bounded number of checks.
+Detection and the record change are designed to take seconds, but clients move only when their cached answer expires. Record TTLs and resolver caching set the failover time clients see, so keep TTLs short on failover records.
 
-Allow traffic from the source's network interfaces to the targets in security groups and network ACLs, and allow the return path on on-premises firewalls over Direct Connect or Site-to-Site VPN. A blocked path makes the check report the target as unhealthy and fail over records even though the target is up. For FQDN targets, Route 53 resolves the name only through the VPC's Route 53 Resolver, not custom DNS servers in the DHCP options set, and the VPC needs DNS resolution enabled and a primary IPv4 CIDR block from a private range. Names resolvable only on premises therefore need a Resolver forwarding rule, a private hosted zone association, or an IP address health check. Treat the source's network configuration as fixed: its VPC, subnets, and security groups cannot be edited, so changing reach means creating a new source, moving the checks to it, and deleting the old one. Keep `iam:CreateServiceLinkedRole` for `AWSServiceRoleForRoute53PrivateHealthChecks` in deployment roles and custom policies, because Route 53 calls it on every source create and delete request. At launch, calculated health checks cannot reference a private endpoint health check or mix private and public checks, so build failover with routing policies on the records themselves. For configuration details and current constraints, see [Private endpoint health checks](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html) and [Health check sources](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-check-sources.html).
+Private endpoint health checks are **not** the right choice when:
 
-***Key insight:*** *Private DNS failover is only as good as the account and network placement of its health check source: put the source where the records live, in a VPC that can reach every target, in every Region where you need to fail over.*
+* **The target has a public endpoint.** Use public health checks.
+* **Health combines several checks.** Calculated health checks currently can't reference private endpoint health checks ([availability at launch](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html#health-checks-private-endpoints-scope)). For a signal a probe can't measure, such as error rate or queue depth, use a health check based on a CloudWatch alarm.
+* **Clients don't resolve through Route 53.** On-premises clients follow the failover only if they resolve through Route 53, for example through Resolver inbound endpoints or Route 53 Global Resolver. If on-premises DNS is authoritative for the name, they never see the failover.
+
+For configuration, see [Private endpoint health checks](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html) and [Health check sources](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-check-sources.html).
+
+#### Place the health check source in the account that owns the records
+
+A private endpoint health check, its health check source, and the records it is associated with must be in the same account. Cross-account association isn't supported, so the account that owns each hosted zone decides where its checks and sources live:
+
+* **Records in the networking account.** In the [centralized model](#centralize-private-hosted-zone-ownership-in-the-networking-account), records in zones that the networking account owns need their checks and sources in the networking account. Use a shared-services VPC in that account that [reaches every target through AWS Transit Gateway or AWS Cloud WAN](https://aws.amazon.com/blogs/networking-and-content-delivery/fast-failover-with-amazon-route-53-private-endpoint-health-checks/). A check created in a workload account can't be associated with those records.
+* **Records in delegated sub-zones.** Where an application account owns a sub-zone, its records need checks and a source in that application account, in a VPC with its own reach to the targets.
+* **Quotas concentrate in one account.** Centralizing puts every team's checks against the networking account's quotas for health checks per account and health check sources per account, and each source has its own ceiling on the checks that use it. When a quota is reached, new failover records can't get a check. Plan against the total across teams and check the current [health check quotas](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#limits-api-entities-health-checks).
+* **Reach crosses segmentation.** A source that reaches every target needs routes into every Transit Gateway route table or Cloud WAN segment that holds a target. Give the source VPC its own route table or segment that reaches the target networks without connecting them to each other, and make the targets' security groups and network ACLs the control point: allow only the source's subnets, on the health check port.
+
+#### Place health check sources outside the failure domain they monitor
+
+A private endpoint health check runs only from its source's Region, and its status, CloudWatch metrics, and alarms are in that Region. Each check uses one source, and calculated health checks can't combine private checks, so a record's health depends on one source in one Region. A service event in that Region can impair the check.
+
+Place sources so that one Regional event can't affect both a target and the check that watches it:
+
+* **Spread sources across Regions.** Create sources in more than one Region, or use a source VPC with connectivity to another Region ([Regional considerations](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html#health-checks-private-endpoints-regional)).
+* **Check the primary from another Region.** For cross-Region disaster recovery, keep the source that checks the primary out of the primary's Region, so the event that fails the primary doesn't also impair its check.
+* **Alarm in the source's Region**, where the check's status and metrics are.
+
+A source covers a fixed set of Availability Zones. If a VPC spans more Availability Zones than one source covers, targets in the remaining Availability Zones need an additional source.
+
+#### Treat the network path from the source as part of the check
+
+A private endpoint health check measures reachability from its source, not from the clients. Anything on the path that fails or drops traffic looks like a failed target:
+
+* **Network access.** Security groups and network ACLs must allow traffic from the source to the targets, and the source's security groups must allow the traffic in both directions ([launch blog](https://aws.amazon.com/blogs/networking-and-content-delivery/fast-failover-with-amazon-route-53-private-endpoint-health-checks/)). For on-premises targets, firewalls on the Direct Connect or VPN path play the same role, although the AWS documentation names only security groups and network ACLs. If any of them drops health check traffic, the check reports a healthy target as unhealthy and fails over the record.
+* **Hybrid path failure.** A Direct Connect or VPN failure between the source and an on-premises target marks the target unhealthy, even for clients that can still reach it, such as on-premises clients that resolve through inbound endpoints. Build the hybrid path to the same redundancy standard as the target.
+* **FQDN resolution.** For targets checked by domain name, Route 53 resolves the name only through the VPC's Route 53 Resolver, not through custom DNS servers in the DHCP options set. The VPC must have DNS resolution enabled and a primary IPv4 CIDR block in a private range. A name that only on-premises DNS resolves needs a Resolver forwarding rule, a private hosted zone association, or a check on the IP address instead, or the check fails.
+* **IPv6.** A check by domain name looks up the name's A record and probes only that IPv4 address. If a dual-stack target's IPv6 path breaks, the check stays healthy and Route 53 keeps returning the AAAA record, so IPv6 clients fail. If the name has no A record, the check fails with "DNS resolution failed". Give AAAA records their own check on the target's private IPv6 address.
+
+#### Decide the source's configuration up front
+
+After you create a health check source, you can't change its VPC, subnets, or security groups, so decide them before the first check depends on the source. Before you create sources:
+
+* **Manage them as code.** Define sources and their checks in infrastructure as code, so replacing a source is a controlled change, not a manual migration.
+* **Keep the service-linked role permission.** Every request to create or delete a source calls `iam:CreateServiceLinkedRole` for `AWSServiceRoleForRoute53PrivateHealthChecks`, even after the role exists. If an SCP, permission boundary, or pipeline role blocks it, the request fails.
+* **Share sources to control cost.** A source is charged by the hour while it exists, whether or not checks use it. Each check is charged per month, plus a charge for each optional feature, such as HTTPS, string matching, or the fast request interval ([Route 53 pricing](https://aws.amazon.com/route53/pricing/)). A few shared sources per Region cost less than one per team, and during a replacement you pay for both sources.
+
+***Key insight:*** *A private endpoint health check reports only what its source can reach. Put the source in the account that owns the records, outside the target's failure domain, on a path that fails only when the target does.*
 
 ### DNS security
 
@@ -273,6 +317,17 @@ Global Resolver is **not** the right choice when:
 * A site needs conditional forwarding to an existing resolver estate and has no Cloud WAN or anycast need (use Resolver inbound endpoints)
 * Clients cannot be authorized by source address, segment, or token (keep them on their existing resolver)
 
+**Private endpoint health checks** are the right choice when:
+
+* Records in a private hosted zone need DNS failover between private endpoints, across Regions, or to on-premises endpoints over Direct Connect or Site-to-Site VPN
+* You run a custom CloudWatch alarm and Lambda loop to update records for private targets
+
+Private endpoint health checks are **not** the right choice when:
+
+* The target has a public endpoint (use standard public health checks)
+* Failover depends on composite health over several checks (calculated health checks currently can't reference private checks; use a health check based on a CloudWatch alarm)
+* Clients resolve the name through DNS servers that Route 53 doesn't answer for (failover records have no effect for them)
+
 **Route 53 Profiles** are the right choice when:
 
 * You operate more than a handful of accounts and need consistent DNS configuration across all of them
@@ -332,6 +387,22 @@ Global Resolver is **not** the right choice when:
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html)
 
+*   :material-file-document: **Private endpoint health checks**
+
+    ---
+
+    How private endpoint health checks and health check sources work, Regional and account scope, setup considerations, and what is supported at launch.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html)
+
+*   :material-file-document: **Health check sources**
+
+    ---
+
+    Network configuration, Availability Zone coverage, immutability, and the service-linked role permission for the sources that private endpoint health checks run from.
+
+    [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-check-sources.html)
+
 *   :material-post: **Route 53 blog posts**
 
     ---
@@ -339,6 +410,14 @@ Global Resolver is **not** the right choice when:
     Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.
 
     [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-route-53/)
+
+*   :material-currency-usd: **Route 53 pricing**
+
+    ---
+
+    Pricing dimensions for hosted zones, queries, health checks, and health check sources.
+
+    [:octicons-arrow-right-24: Pricing](https://aws.amazon.com/route53/pricing/)
 
 </div>
 
@@ -351,7 +430,7 @@ Global Resolver is **not** the right choice when:
 
 **Relationship to Connectivity topics:**
 
-* **[Hybrid & Multi-Cloud Connectivity](../connectivity/hybrid-multicloud.md)**: Resolver endpoints and forwarding rules are the DNS complement to Direct Connect and VPN — they enable name resolution across the hybrid boundary that the connectivity layer provides at the network level.
+* **[Hybrid & Multi-Cloud Connectivity](../connectivity/hybrid-multicloud.md)**: Resolver endpoints and forwarding rules are the DNS complement to Direct Connect and VPN — they enable name resolution across the hybrid boundary that the connectivity layer provides at the network level. Private endpoint health checks add DNS failover across that boundary: they check on-premises endpoints over the same paths, so a hybrid path failure also fails the check.
 
 **Relationship to Security topics:**
 
