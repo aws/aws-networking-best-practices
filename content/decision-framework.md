@@ -7,7 +7,7 @@ A networking decision is a one-way door when reversing it means rebuilding or mi
 
 The cost of a wrong network decision is rarely the fix itself. Every workload built on a network inherits its address plan, account boundary, and subnet layout, so reversal cost grows with each dependent workload. A door that is cheap to change before the first workload can be effectively one-way after hundreds of workloads depend on it. Two tools address this. The door type asks how hard a decision is to undo. Inflection points identify the moments when a current design stops fitting.
 
-This page is a register, not a design guide. It classifies decisions as one-way or two-way doors, names the triggers that reopen them, and links to the page that owns the detail for each decision. The door terms come from [Amazon's 2015 letter to shareholders](https://ir.aboutamazon.com/annual-reports-proxies-and-shareholder-letters/default.aspx), which separates hard-to-reverse decisions that need deliberation from reversible decisions that should be made quickly.
+This page is a register, not a design guide. It classifies decisions as one-way or two-way doors, names the triggers that reopen them, and links to the page that owns the detail for each decision. The door terms come from [Amazon's 2015 letter to shareholders](https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm), which separates hard-to-reverse decisions that need deliberation from reversible decisions that should be made quickly.
 
 ![Growth steps from isolated environments to hybrid connectivity, with one-way doors set before the first workload and two-way doors changed at each step](assets/decision-framework/decision-framework-overview.png)
 /// caption
@@ -213,7 +213,7 @@ The door check is **not** the right choice when:
 
     The 2015 letter is the source of the one-way door and two-way door terms, with the argument for matching decision speed to reversibility.
 
-    [:octicons-arrow-right-24: Amazon shareholder letters](https://ir.aboutamazon.com/annual-reports-proxies-and-shareholder-letters/default.aspx)
+    [:octicons-arrow-right-24: Read the letter](https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/d168744dex991.htm)
 
 *   :material-file-document: **Plan your network topology**
 

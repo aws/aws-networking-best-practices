@@ -32,6 +32,9 @@
     },
     {
       "pattern": "^https://github.com/aws/aws-networking-best-practices"
+    },
+    {
+      "pattern": "^https://www.sec.gov/Archives/edgar/data/1018724/000119312516530910/"
     }
   ],
   "timeout": "20s",
