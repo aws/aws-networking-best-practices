@@ -74,6 +74,7 @@
     "dhcp",
     "dns",
     "DNSSEC",
+    "EDNS",
     "documentdb",
     "dstaddr",
     "dx",
