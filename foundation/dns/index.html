@@ -738,6 +738,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#dns-failover-for-private-and-hybrid-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS failover for private and hybrid endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dns-security" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1947,6 +1958,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#dns-failover-for-private-and-hybrid-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS failover for private and hybrid endpoints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dns-security" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2174,6 +2196,51 @@
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── hybrid.internal.example.com (on-premises forwarding)
 </span></code></pre></div>
 <p>Avoid flat namespaces where hundreds of records pile into a single zone. Avoid overly deep hierarchies that create long, unreadable FQDNs. Two to three levels below the root is the sweet spot.</p>
+<h3 id="dns-failover-for-private-and-hybrid-endpoints"><abbr title="Domain Name System">DNS</abbr> failover for private and hybrid endpoints<a class="headerlink" href="#dns-failover-for-private-and-hybrid-endpoints" title="Permanent link">&para;</a></h3>
+<h4 id="use-private-endpoint-health-checks-for-dns-failover-of-private-and-hybrid-endpoints">Use private endpoint health checks for <abbr title="Domain Name System">DNS</abbr> failover of private and hybrid endpoints<a class="headerlink" href="#use-private-endpoint-health-checks-for-dns-failover-of-private-and-hybrid-endpoints" title="Permanent link">&para;</a></h4>
+<p>Amazon Route 53 private endpoint health checks probe a private IP address or domain name over HTTP, HTTPS, or <abbr title="Transmission Control Protocol">TCP</abbr> from a health check source: network interfaces that Route 53 places in a <abbr title="Virtual Private Cloud">VPC</abbr> you choose. When a target fails, Route 53 marks its records in the private hosted zone unhealthy, and the routing policy answers with a healthy endpoint. Use them for active-passive failover of internal APIs, databases, targets behind internal load balancers, and on-premises endpoints over AWS Direct Connect or AWS Site-to-Site <abbr title="Virtual Private Network">VPN</abbr>, with no public IP address on the target. They replace a custom loop of a CloudWatch alarm and a Lambda function that updates records through the Route 53 API, which takes minutes to fail over and is code you maintain.</p>
+<p>Detection and the record change are designed to take seconds, but clients move only when their cached answer expires. Record TTLs and resolver caching set the failover time clients see, so keep TTLs short on failover records.</p>
+<p>Private endpoint health checks are <strong>not</strong> the right choice when:</p>
+<ul>
+<li><strong>The target has a public endpoint.</strong> Use public health checks.</li>
+<li><strong>Health combines several checks.</strong> Calculated health checks currently can't reference private endpoint health checks (<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html#health-checks-private-endpoints-scope">availability at launch</a>). For a signal a probe can't measure, such as error rate or queue depth, use a health check based on a CloudWatch alarm.</li>
+<li><strong>Clients don't resolve through Route 53.</strong> On-premises clients follow the failover only if they resolve through Route 53, for example through Resolver inbound endpoints or Route 53 Global Resolver. If on-premises <abbr title="Domain Name System">DNS</abbr> is authoritative for the name, they never see the failover.</li>
+</ul>
+<p>For configuration, see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html">Private endpoint health checks</a> and <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-check-sources.html">Health check sources</a>.</p>
+<h4 id="place-the-health-check-source-in-the-account-that-owns-the-records">Place the health check source in the account that owns the records<a class="headerlink" href="#place-the-health-check-source-in-the-account-that-owns-the-records" title="Permanent link">&para;</a></h4>
+<p>A private endpoint health check, its health check source, and the records it is associated with must be in the same account. Cross-account association isn't supported, so the account that owns each hosted zone decides where its checks and sources live:</p>
+<ul>
+<li><strong>Records in the networking account.</strong> In the <a href="#centralize-private-hosted-zone-ownership-in-the-networking-account">centralized model</a>, records in zones that the networking account owns need their checks and sources in the networking account. Use a shared-services <abbr title="Virtual Private Cloud">VPC</abbr> in that account that <a href="https://aws.amazon.com/blogs/networking-and-content-delivery/fast-failover-with-amazon-route-53-private-endpoint-health-checks/">reaches every target through AWS Transit Gateway or AWS Cloud WAN</a>. A check created in a workload account can't be associated with those records.</li>
+<li><strong>Records in delegated sub-zones.</strong> Where an application account owns a sub-zone, its records need checks and a source in that application account, in a <abbr title="Virtual Private Cloud">VPC</abbr> with its own reach to the targets.</li>
+<li><strong>Quotas concentrate in one account.</strong> Centralizing puts every team's checks against the networking account's quotas for health checks per account and health check sources per account, and each source has its own ceiling on the checks that use it. When a quota is reached, new failover records can't get a check. Plan against the total across teams and check the current <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DNSLimitations.html#limits-api-entities-health-checks">health check quotas</a>.</li>
+<li><strong>Reach crosses segmentation.</strong> A source that reaches every target needs routes into every Transit Gateway route table or Cloud WAN segment that holds a target. Give the source <abbr title="Virtual Private Cloud">VPC</abbr> its own route table or segment that reaches the target networks without connecting them to each other, and make the targets' security groups and network ACLs the control point: allow only the source's subnets, on the health check port.</li>
+</ul>
+<h4 id="place-health-check-sources-outside-the-failure-domain-they-monitor">Place health check sources outside the failure domain they monitor<a class="headerlink" href="#place-health-check-sources-outside-the-failure-domain-they-monitor" title="Permanent link">&para;</a></h4>
+<p>A private endpoint health check runs only from its source's Region, and its status, CloudWatch metrics, and alarms are in that Region. Each check uses one source, and calculated health checks can't combine private checks, so a record gets the resilience of where its one check's source runs, not of several sources. A service event in that Region can affect your ability to health-check endpoints from it, and the Developer Guide doesn't describe how an individual check behaves during such an event.</p>
+<p>Place sources so that one Regional event can't affect both a target and the check that watches it:</p>
+<ul>
+<li><strong>Spread sources across Regions.</strong> Create sources in more than one Region, so that an event in one Region affects only the checks that use that Region's sources (<a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html#health-checks-private-endpoints-regional">Regional considerations</a>).</li>
+<li><strong>Use a source <abbr title="Virtual Private Cloud">VPC</abbr> with connectivity to another Region.</strong> With <abbr title="Virtual Private Cloud">VPC</abbr> peering or Transit Gateway, a source in one Region can check targets in another Region, so the check doesn't have to run in the target's Region.</li>
+<li><strong>Check the primary from outside its Region.</strong> For cross-Region disaster recovery, run the source that checks the primary in the DR Region over that connectivity, so the event that fails the primary doesn't also impair its check. This follows from the Developer Guide's Regional guidance. The guide doesn't state it as a recommendation for disaster recovery.</li>
+<li><strong>Alarm in the source's Region</strong>, where the check's status and metrics are.</li>
+</ul>
+<p>A source covers a fixed set of Availability Zones. If a <abbr title="Virtual Private Cloud">VPC</abbr> spans more Availability Zones than one source covers, targets in the remaining Availability Zones need an additional source.</p>
+<h4 id="treat-the-network-path-from-the-source-as-part-of-the-check">Treat the network path from the source as part of the check<a class="headerlink" href="#treat-the-network-path-from-the-source-as-part-of-the-check" title="Permanent link">&para;</a></h4>
+<p>A private endpoint health check measures reachability from its source, not from the clients. Anything on the path that fails or drops traffic looks like a failed target:</p>
+<ul>
+<li><strong>Network access.</strong> Security groups and network ACLs must allow traffic from the source to the targets, and the source's security groups must allow the traffic in both directions (<a href="https://aws.amazon.com/blogs/networking-and-content-delivery/fast-failover-with-amazon-route-53-private-endpoint-health-checks/">launch blog</a>). For on-premises targets, firewalls on the Direct Connect or <abbr title="Virtual Private Network">VPN</abbr> path play the same role, although the AWS documentation names only security groups and network ACLs. If any of them drops health check traffic, the check reports a healthy target as unhealthy and fails over the record.</li>
+<li><strong>Hybrid path failure.</strong> A Direct Connect or <abbr title="Virtual Private Network">VPN</abbr> failure between the source and an on-premises target marks the target unhealthy, even for clients that can still reach it, such as on-premises clients that resolve through inbound endpoints. Build the hybrid path to the same redundancy standard as the target.</li>
+<li><strong>FQDN resolution.</strong> For targets checked by domain name, Route 53 resolves the name only through the <abbr title="Virtual Private Cloud">VPC</abbr>'s Route 53 Resolver, not through custom <abbr title="Domain Name System">DNS</abbr> servers in the <abbr title="Dynamic Host Configuration Protocol">DHCP</abbr> options set. The <abbr title="Virtual Private Cloud">VPC</abbr> must have <abbr title="Domain Name System">DNS</abbr> resolution enabled and a primary <abbr title="Internet Protocol version 4">IPv4</abbr> <abbr title="Classless Inter-Domain Routing">CIDR</abbr> block in a private range. A name that only on-premises <abbr title="Domain Name System">DNS</abbr> resolves needs a Resolver forwarding rule, a private hosted zone association, or a check on the IP address instead, or the check fails.</li>
+<li><strong><abbr title="Internet Protocol version 6">IPv6</abbr>.</strong> A check by domain name looks up the name's A record and probes only that <abbr title="Internet Protocol version 4">IPv4</abbr> address. If a dual-stack target's <abbr title="Internet Protocol version 6">IPv6</abbr> path breaks, the check stays healthy and Route 53 keeps returning the AAAA record, so <abbr title="Internet Protocol version 6">IPv6</abbr> clients fail. If the name has no A record, the check fails with "<abbr title="Domain Name System">DNS</abbr> resolution failed". Give AAAA records their own check on the target's <abbr title="Internet Protocol version 6">IPv6</abbr> address, and allow the source's <abbr title="Internet Protocol version 6">IPv6</abbr> range in the target's security groups and network ACLs. A source in a dual-stack <abbr title="Virtual Private Cloud">VPC</abbr> can probe <abbr title="Internet Protocol version 6">IPv6</abbr> targets. The AWS documentation doesn't state whether a source supports <abbr title="Internet Protocol version 6">IPv6</abbr>-native subnets, so validate that before relying on it.</li>
+</ul>
+<h4 id="decide-the-sources-configuration-up-front">Decide the source's configuration up front<a class="headerlink" href="#decide-the-sources-configuration-up-front" title="Permanent link">&para;</a></h4>
+<p>After you create a health check source, you can't change its <abbr title="Virtual Private Cloud">VPC</abbr>, subnets, or security groups, so decide them before the first check depends on the source. Before you create sources:</p>
+<ul>
+<li><strong>Manage them as code.</strong> Define sources and their checks in infrastructure as code, so replacing a source is a controlled change, not a manual migration.</li>
+<li><strong>Keep the service-linked role permission.</strong> Every request to create or delete a source calls <code>iam:CreateServiceLinkedRole</code> for <code>AWSServiceRoleForRoute53PrivateHealthChecks</code>, even after the role exists. If an SCP, permission boundary, or pipeline role blocks it, the request fails.</li>
+<li><strong>Share sources to control cost.</strong> A source is charged per Availability Zone association per hour while it exists, whether or not checks use it, so the charge scales with the number of sources and the Availability Zones they cover. Each check is charged per month, plus a charge for each optional feature, such as HTTPS, string matching, or the fast request interval (<a href="https://aws.amazon.com/route53/pricing/">Route 53 pricing</a>). A few shared sources per Region cost less than one per team, and during a replacement you pay for both sources.</li>
+</ul>
+<p><strong><em>Key insight:</em></strong> <em>A private endpoint health check reports only what its source can reach. Put the source in the account that owns the records, outside the target's failure domain, on a path that fails only when the target does.</em></p>
 <h3 id="dns-security"><abbr title="Domain Name System">DNS</abbr> security<a class="headerlink" href="#dns-security" title="Permanent link">&para;</a></h3>
 <h4 id="deploy-dns-firewall-in-every-vpc">Deploy <abbr title="Domain Name System">DNS</abbr> Firewall in every <abbr title="Virtual Private Cloud">VPC</abbr><a class="headerlink" href="#deploy-dns-firewall-in-every-vpc" title="Permanent link">&para;</a></h4>
 <p>Route 53 Resolver <abbr title="Domain Name System">DNS</abbr> Firewall is the cheapest and broadest egress control in AWS. It evaluates every <abbr title="Domain Name System">DNS</abbr> query made from a <abbr title="Virtual Private Cloud">VPC</abbr> against domain lists (managed threat intelligence lists from AWS, or your own custom lists) and can block, allow, or alert. Because virtually all outbound connections start with a <abbr title="Domain Name System">DNS</abbr> lookup, blocking resolution of a malicious domain prevents the connection from ever being attempted.</p>
@@ -2242,6 +2309,17 @@
 <li>A site needs conditional forwarding to an existing resolver estate and has no Cloud WAN or anycast need (use Resolver inbound endpoints)</li>
 <li>Clients cannot be authorized by source address, segment, or token (keep them on their existing resolver)</li>
 </ul>
+<p><strong>Private endpoint health checks</strong> are the right choice when:</p>
+<ul>
+<li>Records in a private hosted zone need <abbr title="Domain Name System">DNS</abbr> failover between private endpoints, across Regions, or to on-premises endpoints over Direct Connect or Site-to-Site <abbr title="Virtual Private Network">VPN</abbr></li>
+<li>You run a custom CloudWatch alarm and Lambda loop to update records for private targets</li>
+</ul>
+<p>Private endpoint health checks are <strong>not</strong> the right choice when:</p>
+<ul>
+<li>The target has a public endpoint (use standard public health checks)</li>
+<li>Failover depends on composite health over several checks (calculated health checks currently can't reference private checks; use a health check based on a CloudWatch alarm)</li>
+<li>Clients resolve the name through <abbr title="Domain Name System">DNS</abbr> servers that Route 53 doesn't answer for (failover records have no effect for them)</li>
+</ul>
 <p><strong>Route 53 Profiles</strong> are the right choice when:</p>
 <ul>
 <li>You operate more than a handful of accounts and need consistent <abbr title="Domain Name System">DNS</abbr> configuration across all of them</li>
@@ -2288,10 +2366,28 @@
 <p><a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-route53-recordsetprotection.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
 </li>
 <li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Private endpoint health checks</strong></p>
+<hr />
+<p>How private endpoint health checks and health check sources work, Regional and account scope, setup considerations, and what is currently supported.</p>
+<p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h5.5L13 3.5zM6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2m9 16v-2H6v2zm3-4v-2H6v2z"/></svg></span> <strong>Health check sources</strong></p>
+<hr />
+<p>Network configuration, Availability Zone coverage, immutability, and the service-linked role permission for the sources that private endpoint health checks run from.</p>
+<p><a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-check-sources.html"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Documentation</a></p>
+</li>
+<li>
 <p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 3v18h18V3zm15 15H6v-1h12zm0-2H6v-1h12zm0-4H6V6h12z"/></svg></span> <strong>Route 53 blog posts</strong></p>
 <hr />
 <p>Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.</p>
 <p><a href="https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-route-53/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Blog posts</a></p>
+</li>
+<li>
+<p><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 15h2c0 1.08 1.37 2 3 2s3-.92 3-2c0-1.1-1.04-1.5-3.24-2.03C9.64 12.44 7 11.78 7 9c0-1.79 1.47-3.31 3.5-3.82V3h3v2.18C15.53 5.69 17 7.21 17 9h-2c0-1.08-1.37-2-3-2s-3 .92-3 2c0 1.1 1.04 1.5 3.24 2.03C14.36 11.56 17 12.22 17 15c0 1.79-1.47 3.31-3.5 3.82V21h-3v-2.18C8.47 18.31 7 16.79 7 15"/></svg></span> <strong>Route 53 pricing</strong></p>
+<hr />
+<p>Pricing dimensions for hosted zones, queries, health checks, and health check sources.</p>
+<p><a href="https://aws.amazon.com/route53/pricing/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Pricing</a></p>
 </li>
 </ul>
 </div>
@@ -2303,7 +2399,7 @@
 </ul>
 <p><strong>Relationship to Connectivity topics:</strong></p>
 <ul>
-<li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud Connectivity</a></strong>: Resolver endpoints and forwarding rules are the <abbr title="Domain Name System">DNS</abbr> complement to Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> — they enable name resolution across the hybrid boundary that the connectivity layer provides at the network level.</li>
+<li><strong><a href="../../connectivity/hybrid-multicloud/">Hybrid &amp; Multi-Cloud Connectivity</a></strong>: Resolver endpoints and forwarding rules are the <abbr title="Domain Name System">DNS</abbr> complement to Direct Connect and <abbr title="Virtual Private Network">VPN</abbr> — they enable name resolution across the hybrid boundary that the connectivity layer provides at the network level. Private endpoint health checks add <abbr title="Domain Name System">DNS</abbr> failover across that boundary: they check on-premises endpoints over the same paths, so a hybrid path failure also fails the check.</li>
 </ul>
 <p><strong>Relationship to Security topics:</strong></p>
 <ul>
@@ -2340,7 +2436,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 26, 2026 18:51:33 UTC">November 26, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date" title="November 27, 2026 00:19:27 UTC">November 27, 2026</span>
   </span>
 
     
