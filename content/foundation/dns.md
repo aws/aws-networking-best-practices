@@ -197,12 +197,13 @@ A private endpoint health check, its health check source, and the records it is 
 
 #### Place health check sources outside the failure domain they monitor
 
-A private endpoint health check runs only from its source's Region, and its status, CloudWatch metrics, and alarms are in that Region. Each check uses one source, and calculated health checks can't combine private checks, so a record's health depends on one source in one Region. A service event in that Region can impair the check.
+A private endpoint health check runs only from its source's Region, and its status, CloudWatch metrics, and alarms are in that Region. Each check uses one source, and calculated health checks can't combine private checks, so a record gets the resilience of where its one check's source runs, not of several sources. A service event in that Region can affect your ability to health-check endpoints from it, and the Developer Guide doesn't describe how an individual check behaves during such an event.
 
 Place sources so that one Regional event can't affect both a target and the check that watches it:
 
-* **Spread sources across Regions.** Create sources in more than one Region, or use a source VPC with connectivity to another Region ([Regional considerations](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html#health-checks-private-endpoints-regional)).
-* **Check the primary from another Region.** For cross-Region disaster recovery, keep the source that checks the primary out of the primary's Region, so the event that fails the primary doesn't also impair its check.
+* **Spread sources across Regions.** Create sources in more than one Region, so that an event in one Region affects only the checks that use that Region's sources ([Regional considerations](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html#health-checks-private-endpoints-regional)).
+* **Use a source VPC with connectivity to another Region.** With VPC peering or Transit Gateway, a source in one Region can check targets in another Region, so the check doesn't have to run in the target's Region.
+* **Check the primary from outside its Region.** For cross-Region disaster recovery, run the source that checks the primary in the DR Region over that connectivity, so the event that fails the primary doesn't also impair its check. This follows from the Developer Guide's Regional guidance. The guide doesn't state it as a recommendation for disaster recovery.
 * **Alarm in the source's Region**, where the check's status and metrics are.
 
 A source covers a fixed set of Availability Zones. If a VPC spans more Availability Zones than one source covers, targets in the remaining Availability Zones need an additional source.
@@ -214,7 +215,7 @@ A private endpoint health check measures reachability from its source, not from 
 * **Network access.** Security groups and network ACLs must allow traffic from the source to the targets, and the source's security groups must allow the traffic in both directions ([launch blog](https://aws.amazon.com/blogs/networking-and-content-delivery/fast-failover-with-amazon-route-53-private-endpoint-health-checks/)). For on-premises targets, firewalls on the Direct Connect or VPN path play the same role, although the AWS documentation names only security groups and network ACLs. If any of them drops health check traffic, the check reports a healthy target as unhealthy and fails over the record.
 * **Hybrid path failure.** A Direct Connect or VPN failure between the source and an on-premises target marks the target unhealthy, even for clients that can still reach it, such as on-premises clients that resolve through inbound endpoints. Build the hybrid path to the same redundancy standard as the target.
 * **FQDN resolution.** For targets checked by domain name, Route 53 resolves the name only through the VPC's Route 53 Resolver, not through custom DNS servers in the DHCP options set. The VPC must have DNS resolution enabled and a primary IPv4 CIDR block in a private range. A name that only on-premises DNS resolves needs a Resolver forwarding rule, a private hosted zone association, or a check on the IP address instead, or the check fails.
-* **IPv6.** A check by domain name looks up the name's A record and probes only that IPv4 address. If a dual-stack target's IPv6 path breaks, the check stays healthy and Route 53 keeps returning the AAAA record, so IPv6 clients fail. If the name has no A record, the check fails with "DNS resolution failed". Give AAAA records their own check on the target's private IPv6 address.
+* **IPv6.** A check by domain name looks up the name's A record and probes only that IPv4 address. If a dual-stack target's IPv6 path breaks, the check stays healthy and Route 53 keeps returning the AAAA record, so IPv6 clients fail. If the name has no A record, the check fails with "DNS resolution failed". Give AAAA records their own check on the target's IPv6 address, and allow the source's IPv6 range in the target's security groups and network ACLs. A source in a dual-stack VPC can probe IPv6 targets. The AWS documentation doesn't state whether a source supports IPv6-native subnets, so validate that before relying on it.
 
 #### Decide the source's configuration up front
 
@@ -222,7 +223,7 @@ After you create a health check source, you can't change its VPC, subnets, or se
 
 * **Manage them as code.** Define sources and their checks in infrastructure as code, so replacing a source is a controlled change, not a manual migration.
 * **Keep the service-linked role permission.** Every request to create or delete a source calls `iam:CreateServiceLinkedRole` for `AWSServiceRoleForRoute53PrivateHealthChecks`, even after the role exists. If an SCP, permission boundary, or pipeline role blocks it, the request fails.
-* **Share sources to control cost.** A source is charged by the hour while it exists, whether or not checks use it. Each check is charged per month, plus a charge for each optional feature, such as HTTPS, string matching, or the fast request interval ([Route 53 pricing](https://aws.amazon.com/route53/pricing/)). A few shared sources per Region cost less than one per team, and during a replacement you pay for both sources.
+* **Share sources to control cost.** A source is charged per Availability Zone association per hour while it exists, whether or not checks use it, so the charge scales with the number of sources and the Availability Zones they cover. Each check is charged per month, plus a charge for each optional feature, such as HTTPS, string matching, or the fast request interval ([Route 53 pricing](https://aws.amazon.com/route53/pricing/)). A few shared sources per Region cost less than one per team, and during a replacement you pay for both sources.
 
 ***Key insight:*** *A private endpoint health check reports only what its source can reach. Put the source in the account that owns the records, outside the target's failure domain, on a path that fails only when the target does.*
 
@@ -391,7 +392,7 @@ Private endpoint health checks are **not** the right choice when:
 
     ---
 
-    How private endpoint health checks and health check sources work, Regional and account scope, setup considerations, and what is supported at launch.
+    How private endpoint health checks and health check sources work, Regional and account scope, setup considerations, and what is currently supported.
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-checks-private-endpoints.html)
 
