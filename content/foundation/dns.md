@@ -352,6 +352,8 @@ Private endpoint health checks are **not** the right choice when:
 
 ## Documentation
 
+### Resolver, Profiles, and Global Resolver
+
 <div class="grid cards" markdown>
 
 *   :material-file-document: **Route 53 Resolver documentation**
@@ -386,6 +388,12 @@ Private endpoint health checks are **not** the right choice when:
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/gr-what-is-global-resolver.html)
 
+</div>
+
+### Record protection and health checks
+
+<div class="grid cards" markdown>
+
 *   :material-file-document: **Protecting records from changes**
 
     ---
@@ -418,23 +426,12 @@ Private endpoint health checks are **not** the right choice when:
 
     [:octicons-arrow-right-24: Documentation](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/health-check-sources.html)
 
-*   :material-post: **Route 53 blog posts**
-
-    ---
-
-    Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.
-
-    [:octicons-arrow-right-24: Blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-route-53/)
-
-*   :material-currency-usd: **Route 53 pricing**
-
-    ---
-
-    Pricing dimensions for hosted zones, queries, health checks, and health check sources.
-
-    [:octicons-arrow-right-24: Pricing](https://aws.amazon.com/route53/pricing/)
-
 </div>
+
+### Blog posts and pricing
+
+* [Route 53 blog posts](https://aws.amazon.com/blogs/networking-and-content-delivery/category/networking-content-delivery/amazon-route-53/): Architecture patterns, feature announcements, and implementation guides from the AWS Networking and Content Delivery blog.
+* [Route 53 pricing](https://aws.amazon.com/route53/pricing/): Pricing dimensions for hosted zones, queries, health checks, and health check sources.
 
 ## Related pages
 
